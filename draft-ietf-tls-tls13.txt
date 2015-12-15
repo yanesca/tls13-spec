@@ -1916,7 +1916,7 @@ Internet-Draft                     TLS                     December 2015
                                       <--------       HelloRetryRequest
 
             ClientHello
-              + keyshare             -------->
+              + key_share             -------->
                                                             ServerHello
                                                             + key_share
                                                   {EncryptedExtensions}
