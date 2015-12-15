@@ -1258,6 +1258,13 @@ Internet-Draft                     TLS                     December 2015
    maximum TLSPlaintext length of 2^14 octets + 1 octet for ContentType
    + the maximum AEAD expansion of 255 octets.
 
+   There is a limitation on the total number of bytes that can be
+   transmitted under one set of keys.  For the AES-GCM ciphersuites this
+   limit is 2^36 bytes.  For ChaCha20-Poly1305 this limit is larger then
+   the size of the nonce, and so does not matter.  Implementations MUST
+   NOT transmit more than 2^36 bytes encrypted under a single key and
+   MUST rekey or close the connection before the limit is reached.
+
 5.2.3.  Record Padding
 
    All encrypted TLS records can be padded to inflate the size of the
@@ -1276,19 +1283,18 @@ Internet-Draft                     TLS                     December 2015
    may be sensitive.  Implementations MUST NOT send Handshake or Alert
    records that have a zero-length fragment.content.
 
-   The padding sent is automatically verified by the record protection
-   mechanism: Upon successful decryption of a TLSCiphertext.fragment,
-   the receiving implementation scans the field from the end toward the
-   beginning until it finds a non-zero octet.  This non-zero octet is
-   the content type of the message.
-
-
 
 
 Rescorla                  Expires June 17, 2016                [Page 23]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   The padding sent is automatically verified by the record protection
+   mechanism: Upon successful decryption of a TLSCiphertext.fragment,
+   the receiving implementation scans the field from the end toward the
+   beginning until it finds a non-zero octet.  This non-zero octet is
+   the content type of the message.
 
    Implementations MUST limit their scanning to the cleartext returned
    from the AEAD decryption.  If a receiving implementation does not
@@ -1330,13 +1336,7 @@ Internet-Draft                     TLS                     December 2015
       state may be null.
 
    cipher spec
-      Specifies the authentication and key establishment algorithms, the
-      hash for use with HKDF to generate keying material, and the record
-      protection algorithm (See Appendix A.5 for formal definition.)
 
-   resumption master secret
-      a secret shared between the client and server that can be used as
-      a PSK in future connections.
 
 
 
@@ -1345,6 +1345,14 @@ Rescorla                  Expires June 17, 2016                [Page 24]
 
 Internet-Draft                     TLS                     December 2015
 
+
+      Specifies the authentication and key establishment algorithms, the
+      hash for use with HKDF to generate keying material, and the record
+      protection algorithm (See Appendix A.5 for formal definition.)
+
+   resumption master secret
+      a secret shared between the client and server that can be used as
+      a PSK in future connections.
 
    These items are then used to create security parameters for use by
    the record layer when protecting application data.  Many connections
@@ -1362,14 +1370,6 @@ Internet-Draft                     TLS                     December 2015
    preventing the failed session from being used to establish new
    connections.  Like other messages, alert messages are encrypted as
    specified by the current connection state.
-
-
-
-
-
-
-
-
 
 
 
