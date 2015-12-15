@@ -4746,8 +4746,8 @@ Internet-Draft                     TLS                     December 2015
               ANSI ANS X9.62-2005, November 2005.
 
    [FI06]     "Bleichenbacher's RSA signature forgery based on
-              implementation error", August 2006, <http://www.imc.org/
-              ietf-openpgp/mail-archive/msg14307.html>.
+              implementation error", August 2006, <https://www.ietf.org/
+              mail-archive/web/openpgp/current/msg00999.html>.
 
    [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
               Operation: Galois/Counter Mode (GCM) and GMAC",
