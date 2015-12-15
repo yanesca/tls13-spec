@@ -80,31 +80,33 @@ table {
   margin-left: 0em;
   border-collapse: collapse;
 }
-table > thead > th {
+th {
+  text-align: left;
   border-bottom: 2px solid #ddd;
 }
-table > tbody > tr > td, table > tbody > tr > th {
+td {
   border-top: 1px solid #ddd;
+  vertical-align: top;
 }
-table > tbody > tr:nth-child(2n+1) > td,
-table > tbody > tr:nth-child(2n+1) > th {
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
   background-color: #f9f9f9;
-}
-td.right {
-  text-align: right;
 }
 td.reference {
   max-width: 200px;
-}
-td.right, td.left, td.reference, td.top {
   border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
 }
 
 
 table.header {
   width: 100%;
 }
-table.header > tbody > tr > td {
+table.header td {
+  border: none;
   background-color: transparent;
   color: black;
 }
@@ -115,7 +117,7 @@ table.header > tbody > tr > td {
   height: auto;
   line-height: 100%;
 }
-#rfc\.abstract+p, #rfc\.abstract +p {
+#rfc\.abstract+p {
   font-size: 20px;
   font-weight: 300;
   line-height: 130%;
@@ -182,10 +184,6 @@ ul.empty {
 ul.empty li {
   margin-top: .5em;
 }
-td.reference {
-  padding-right: 1em;
-  vertical-align: top;
-}
 
 hr {
   border: 0;
@@ -195,10 +193,10 @@ hr {
 a {
   text-decoration: none;
 }
-a:link, a:link:visited {
+a[href] {
   color: #2a6496;
 }
-a:link:hover {
+a[href]:hover {
   background-color: #eee;
 }
 
@@ -1156,12 +1154,12 @@ ol, ul {
 <div id="tls-full"/>
 <pre>
        Client                                               Server
-  
-Key  / ClientHello                                                  
-Exch \  + KeyShare               --------&gt;                           
+
+Key  / ClientHello
+Exch \  + KeyShare               --------&gt;
                                                        ServerHello  \ Key
                                                         + KeyShare  / Exch
-                                             {EncryptedExtensions}  ^ 
+                                             {EncryptedExtensions}  ^
                                              {CertificateRequest*}  | Server
                                             {ServerConfiguration*}  v Params
                                                     {Certificate*}  ^
@@ -1171,16 +1169,16 @@ Exch \  + KeyShare               --------&gt;
 Auth | {CertificateVerify*}
      v {Finished}                --------&gt;
        [Application Data]        &lt;-------&gt;      [Application Data]
-  
+
               +  Indicates extensions sent in the
                  previously noted message.
-  
+
               *  Indicates optional or situation-dependent
                  messages that are not always sent.
-  
+
               {} Indicates messages protected using keys
                  derived from the ephemeral secret.
-  
+
               [] Indicates messages protected using keys
                  derived from the master secret.
 </pre>
@@ -1222,11 +1220,11 @@ Auth | {CertificateVerify*}
 <div id="tls-restart"/>
 <pre>
          Client                                               Server
-  
+
          ClientHello
            + KeyShare              --------&gt;
                                    &lt;--------       HelloRetryRequest
-  
+
          ClientHello
            + KeyShare              --------&gt;
                                                          ServerHello
@@ -1252,7 +1250,7 @@ Auth | {CertificateVerify*}
 <div id="tls-0-rtt"/>
 <pre>
          Client                                               Server
-        
+
          ClientHello
            + KeyShare
            + EarlyDataIndication
@@ -1273,18 +1271,18 @@ Data  |  (Finished)
          {Certificate*}
          {CertificateVerify*}
          {Finished}                --------&gt;
-        
+
          [Application Data]        &lt;-------&gt;      [Application Data]
-        
+
                *  Indicates optional or situation-dependent
                   messages that are not always sent.
-   
+
                () Indicates messages protected using keys
                   derived from the static secret.
-   
+
                {} Indicates messages protected using keys
                   derived from the ephemeral secret.
-   
+
                [] Indicates messages protected using keys
                   derived from the master secret.
 </pre>
@@ -1934,7 +1932,7 @@ Mode             Handshake Context                        Base Key
                  from previous handshake).
 
 1-RTT (Server)   ClientHello ... ServerConfiguration      master_secret
-                 
+
 1-RTT (Client)   ClientHello ... ServerFinished           master_secret
 
 Post-Handshake   ClientHello ... ClientFinished +         master_secret
@@ -2166,7 +2164,7 @@ server_finished_key =
 <pre>
   HKDF-Expand-Label(Secret, Label, HashValue, Length) =
        HKDF-Expand(Secret, HkdfLabel, Length)
- 
+
   Where HkdfLabel is specified as:
 
   struct HkdfLabel {
@@ -2240,12 +2238,12 @@ server_finished_key =
   ----------- ------  -----                           -----------------
   0-RTT          xSS  "early handshake                     ClientHello
   Handshake            key expansion              + ServerConfiguration
-                                                   + Server Certificate  
+                                                   + Server Certificate
 
   0-RTT          xSS  "early application                    ClientHello
   Application          data key expansion"        + ServerConfiguration
                                                    + Server Certificate
-                                                   
+
   Handshake      xES  "handshake key expansion"          ClientHello...
                                                             ServerHello
 
@@ -2254,7 +2252,7 @@ server_finished_key =
 </pre>
 <p id="rfc.section.7.2.p.5">The following table indicates the purpose values for each type of key:</p>
 <pre>
-  Key Type              Purpose 
+  Key Type              Purpose
   --------              -------
   Client Write Key      "client write key"
   Server Write Key      "server write key"
@@ -2281,7 +2279,7 @@ server_finished_key =
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mti-cipher-suites" id="mti-cipher-suites">MTI Cipher Suites</a></h1>
 <p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following cipher suites:</p>
 <pre>
-    TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 
+    TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
     TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 </pre>
 <p id="rfc.section.8.1.p.2">These cipher suites MUST support both digital signatures and key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</a>.</p>
@@ -2348,13 +2346,13 @@ server_finished_key =
   client_certificate_url [RFC6066]                  Yes  Encrypted
   trusted_ca_keys [RFC6066]                         Yes  Encrypted
   truncated_hmac [RFC6066]                          Yes         No
-  status_request [RFC6066]                          Yes         No 
+  status_request [RFC6066]                          Yes         No
   user_mapping [RFC4681]                            Yes  Encrypted
   client_authz [RFC5878]                             No  Encrypted
   server_authz [RFC5878]                             No  Encrypted
   cert_type [RFC6091]                               Yes  Encrypted
   supported_groups                                  Yes     Client
-    [RFC-ietf-tls-negotiated-ff-dhe-10]           
+    [RFC-ietf-tls-negotiated-ff-dhe-10]
   ec_point_formats [RFC4492]                        Yes         No
   srp [RFC5054]                                      No         No
   signature_algorithms [RFC5246]                    Yes     Client
@@ -3306,160 +3304,52 @@ TLS_DHE_RSA_WITH_CHACHA20_POLY1305            {TBD,TBD}   [I-D.ietf-tls-chacha20
 <p id="rfc.section.E.p.1">The discussion list for the IETF TLS working group is located at the e-mail address <a href="mailto:tls@ietf.org">tls@ietf.org</a>. Information on the group and information on how to subscribe to the list is at <a href="https://www1.ietf.org/mailman/listinfo/tls">https://www1.ietf.org/mailman/listinfo/tls</a></p>
 <p id="rfc.section.E.p.2">Archives of the list can be found at: <a href="https://www.ietf.org/mail-archive/web/tls/current/index.html">https://www.ietf.org/mail-archive/web/tls/current/index.html</a></p>
 <h1 id="rfc.appendix.F"><a href="#rfc.appendix.F">Appendix F.</a> <a href="#contributors" id="contributors">Contributors</a></h1>
-<pre>
-Martin Abadi
-University of California, Santa Cruz
-abadi@cs.ucsc.edu
+<p/>
 
-Christopher Allen (co-editor of TLS 1.0)
-Alacrity Ventures
-ChristopherA@AlacrityManagement.com
-
-Steven M. Bellovin
-Columbia University
-smb@cs.columbia.edu
-
-Benjamin Beurdouche
-
-Karthikeyan Bhargavan (co-author of [RFC7627])
-INRIA
-karthikeyan.bhargavan@inria.fr
-
-Simon Blake-Wilson (co-author of [RFC4492])
-BCI
-sblakewilson@bcisse.com
-
-Nelson Bolyard
-Sun Microsystems, Inc.
-nelson@bolyard.com (co-author of [RFC4492])
-
-Ran Canetti
-IBM
-canetti@watson.ibm.com
-
-Pete Chown
-Skygate Technology Ltd
-pc@skygate.co.uk
-
-Antoine Delignat-Lavaud (co-author of [RFC7627])
-INRIA
-antoine.delignat-lavaud@inria.fr
-
-Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2)
-Independent
-tim@dierks.org
-
-Taher Elgamal
-Securify
-taher@securify.com
-
-Pasi Eronen
-Nokia
-pasi.eronen@nokia.com
-
-Anil Gangolli
-anil@busybuddha.org
-
-David M. Garrett
-
-Vipul Gupta (co-author of [RFC4492])
-Sun Microsystems Laboratories
-vipul.gupta@sun.com
-
-Chris Hawk (co-author of [RFC4492])
-Corriente Networks LLC
-chris@corriente.net
-
-Kipp Hickman
-
-Alfred Hoenes
-
-David Hopwood
-Independent Consultant
-david.hopwood@blueyonder.co.uk
-
-Daniel Kahn Gillmor
-ACLU
-dkg@fifthhorseman.net
-
-Phil Karlton (co-author of SSL 3.0)
-
-Paul Kocher (co-author of SSL 3.0)
-Cryptography Research
-paul@cryptography.com
-
-Hugo Krawczyk
-IBM
-hugo@ee.technion.ac.il
-
-Adam Langley (co-author of [RFC7627])
-Google
-agl@google.com
-
-Ilari Liusvaara
-Independent
-ilariliusvaara@welho.com
-
-Jan Mikkelsen
-Transactionware
-janm@transactionware.com
-
-Bodo Moeller (co-author of [RFC4492])
-Google
-bodo@openssl.org
-
-Erik Nygren
-Akamai Technologies
-erik+ietf@nygren.org
-
-Magnus Nystrom
-RSA Security
-magnus@rsasecurity.com
-
-Alfredo Pironti (co-author of [RFC7627])
-INRIA
-alfredo.pironti@inria.fr
-
-Andrei Popov
-Microsoft
-andrei.popov@microsoft.com
-
-Marsh Ray (co-author of [RFC7627])
-Microsoft
-maray@microsoft.com
-
-Robert Relyea
-Netscape Communications
-relyea@netscape.com
-
-Jim Roskind
-Netscape Communications
-jar@netscape.com
-
-Michael Sabin
-
-Dan Simon
-Microsoft, Inc.
-dansimon@microsoft.com
-
-Bjoern Tackmann
-University of California, San Diego
-btackmann@eng.ucsd.edu
-        
-Martin Thomson
-Mozilla
-mt@mozilla.com
-
-Tom Weinstein
-
-Hoeteck Wee
-Ecole Normale Superieure, Paris
-hoeteck@alum.mit.edu
-
-Tim Wright
-Vodafone
-timothy.wright@vodafone.com
-</pre>
+<ul>
+  <li>Martin Abadi <br/> University of California, Santa Cruz <br/> abadi@cs.ucsc.edu</li>
+  <li>Christopher Allen (co-editor of TLS 1.0) <br/> Alacrity Ventures <br/> ChristopherA@AlacrityManagement.com</li>
+  <li>Steven M. Bellovin <br/> Columbia University <br/> smb@cs.columbia.edu</li>
+  <li>Benjamin Beurdouche</li>
+  <li>Karthikeyan Bhargavan (co-author of <a href="#RFC7627">[RFC7627]</a>) <br/> INRIA <br/> karthikeyan.bhargavan@inria.fr</li>
+  <li>Simon Blake-Wilson (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> BCI <br/> sblakewilson@bcisse.com</li>
+  <li>Nelson Bolyard (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Sun Microsystems, Inc. <br/> nelson@bolyard.com</li>
+  <li>Ran Canetti <br/> IBM <br/> canetti@watson.ibm.com</li>
+  <li>Pete Chown <br/> Skygate Technology Ltd <br/> pc@skygate.co.uk</li>
+  <li>Antoine Delignat-Lavaud (co-author of <a href="#RFC7627">[RFC7627]</a>) <br/> INRIA <br/> antoine.delignat-lavaud@inria.fr</li>
+  <li>Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2) <br/> Independent <br/> tim@dierks.org</li>
+  <li>Taher Elgamal <br/> Securify <br/> taher@securify.com</li>
+  <li>Pasi Eronen <br/> Nokia <br/> pasi.eronen@nokia.com</li>
+  <li>Anil Gangolli <br/> anil@busybuddha.org</li>
+  <li>David M. Garrett</li>
+  <li>Vipul Gupta (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Sun Microsystems Laboratories <br/> vipul.gupta@sun.com</li>
+  <li>Chris Hawk (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Corriente Networks LLC <br/> chris@corriente.net</li>
+  <li>Kipp Hickman</li>
+  <li>Alfred Hoenes</li>
+  <li>David Hopwood <br/> Independent Consultant <br/> david.hopwood@blueyonder.co.uk</li>
+  <li>Daniel Kahn Gillmor <br/> ACLU <br/> dkg@fifthhorseman.net</li>
+  <li>Phil Karlton (co-author of SSL 3.0)</li>
+  <li>Paul Kocher (co-author of SSL 3.0) <br/> Cryptography Research <br/> paul@cryptography.com</li>
+  <li>Hugo Krawczyk <br/> IBM <br/> hugo@ee.technion.ac.il</li>
+  <li>Adam Langley (co-author of <a href="#RFC7627">[RFC7627]</a>) <br/> Google <br/> agl@google.com</li>
+  <li>Ilari Liusvaara <br/> Independent <br/> ilariliusvaara@welho.com</li>
+  <li>Jan Mikkelsen <br/> Transactionware <br/> janm@transactionware.com</li>
+  <li>Bodo Moeller (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Google <br/> bodo@openssl.org</li>
+  <li>Erik Nygren <br/> Akamai Technologies <br/> erik+ietf@nygren.org</li>
+  <li>Magnus Nystrom <br/> RSA Security <br/> magnus@rsasecurity.com</li>
+  <li>Alfredo Pironti (co-author of <a href="#RFC7627">[RFC7627]</a>) <br/> INRIA <br/> alfredo.pironti@inria.fr</li>
+  <li>Andrei Popov <br/> Microsoft <br/> andrei.popov@microsoft.com</li>
+  <li>Marsh Ray (co-author of <a href="#RFC7627">[RFC7627]</a>) <br/> Microsoft <br/> maray@microsoft.com</li>
+  <li>Robert Relyea <br/> Netscape Communications <br/> relyea@netscape.com</li>
+  <li>Jim Roskind <br/> Netscape Communications <br/> jar@netscape.com</li>
+  <li>Michael Sabin</li>
+  <li>Dan Simon <br/> Microsoft, Inc. <br/> dansimon@microsoft.com</li>
+  <li>Bjoern Tackmann <br/> University of California, San Diego <br/> btackmann@eng.ucsd.edu</li>
+  <li>Martin Thomson <br/> Mozilla <br/> mt@mozilla.com</li>
+  <li>Tom Weinstein</li>
+  <li>Hoeteck Wee <br/> Ecole Normale Superieure, Paris <br/> hoeteck@alum.mit.edu</li>
+  <li>Tim Wright <br/> Vodafone <br/> timothy.wright@vodafone.com</li>
+</ul>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Author's Address</a>
 </h1>
