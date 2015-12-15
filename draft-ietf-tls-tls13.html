@@ -1158,9 +1158,9 @@ ol, ul {
        Client                                               Server
 
 Key  / ClientHello
-Exch \  + KeyShare               --------&gt;
+Exch \  + key_share              --------&gt;
                                                        ServerHello  \ Key
-                                                        + KeyShare  / Exch
+                                                       + key_share  / Exch
                                              {EncryptedExtensions}  ^
                                              {CertificateRequest*}  | Server
                                             {ServerConfiguration*}  v Params
@@ -1189,8 +1189,8 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.6.2.p.10">Key Exchange: establish shared keying material and select the cryptographic parameters. Everything after this phase is encrypted.</p>
 <p id="rfc.section.6.2.p.11">Server Parameters: establish other handshake parameters (whether the client is authenticated, support for 0-RTT, etc.)</p>
 <p id="rfc.section.6.2.p.12">Authentication: authenticate the server (and optionally the client) and provide key confirmation and handshake integrity.</p>
-<p id="rfc.section.6.2.p.13">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 6.3.1.1</a>) message, which contains a random nonce (ClientHello.random), its offered protocol version, cipher suite, and extensions, and one or more Diffie-Hellman key shares in the KeyShare extension <a href="#key-share">Section 6.3.2.3</a>.</p>
-<p id="rfc.section.6.2.p.14">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>] If DH is in use, this will contain a KeyShare extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the shares offered by the client. The server&#8217;s KeyShare and the client&#8217;s KeyShare corresponding to the negotiated key exchange are used together to derive the Static Secret and Ephemeral Secret (in this mode they are the same).  [<a href="#key-share">Section 6.3.2.3</a>]</p>
+<p id="rfc.section.6.2.p.13">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 6.3.1.1</a>) message, which contains a random nonce (ClientHello.random), its offered protocol version, cipher suite, and extensions, and one or more Diffie-Hellman key shares in the &#8220;key_share&#8221; extension <a href="#key-share">Section 6.3.2.3</a>.</p>
+<p id="rfc.section.6.2.p.14">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>] If DH is in use, this will contain a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the shares offered by the client. The server&#8217;s KeyShare and the client&#8217;s KeyShare corresponding to the negotiated key exchange are used together to derive the Static Secret and Ephemeral Secret (in this mode they are the same).  [<a href="#key-share">Section 6.3.2.3</a>]</p>
 <p id="rfc.section.6.2.p.15">The server then sends three messages to establish the Server Parameters:</p>
 <p/>
 
@@ -1217,20 +1217,20 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.6.2.p.20">At this point, the handshake is complete, and the client and server may exchange application layer data. Application data MUST NOT be sent prior to sending the Finished message. Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is of course being sent to an unauthenticated peer.</p>
 <p id="rfc.section.6.2.p.21">[[TODO: Move this elsewhere? Note that higher layers should not be overly reliant on whether TLS always negotiates the strongest possible connection between two endpoints. There are a number of ways in which a man-in-the-middle attacker can attempt to make two entities drop down to the least secure method they support (i.e., perform a downgrade attack). The TLS protocol has been designed to minimize this risk, but there are still attacks available: for example, an attacker could block access to the port a secure service runs on, or attempt to get the peers to negotiate an unauthenticated connection. The fundamental rule is that higher levels must be cognizant of what their security requirements are and never transmit information over a channel less secure than what they require. The TLS protocol is secure in that any cipher suite offers its promised level of security: if you negotiate AES-GCM <a href="#GCM">[GCM]</a> with a 255-bit ECDHE key exchange with a host whose certificate chain you have verified, you can expect that to be reasonably &#8220;secure&#8221; against algorithmic attacks, at least in the year 2015.]]</p>
 <h3 id="rfc.section.6.2.1"><a href="#rfc.section.6.2.1">6.2.1.</a> <a href="#incorrect-dhe-share" id="incorrect-dhe-share">Incorrect DHE Share</a></h3>
-<p id="rfc.section.6.2.1.p.1">If the client has not provided an appropriate KeyShare extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate KeyShare extension, as shown in Figure 2:</p>
+<p id="rfc.section.6.2.1.p.1">If the client has not provided an appropriate &#8220;key_share&#8221; extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate KeyShare extension, as shown in Figure 2:</p>
 <div id="rfc.figure.2"/>
 <div id="tls-restart"/>
 <pre>
          Client                                               Server
 
          ClientHello
-           + KeyShare              --------&gt;
+           + key_share             --------&gt;
                                    &lt;--------       HelloRetryRequest
 
          ClientHello
-           + KeyShare              --------&gt;
+           + keyshare             --------&gt;
                                                          ServerHello
-                                                          + KeyShare
+                                                         + key_share
                                                {EncryptedExtensions}
                                                {CertificateRequest*}
                                               {ServerConfiguration*}
@@ -1254,16 +1254,16 @@ Auth | {CertificateVerify*}
          Client                                               Server
 
          ClientHello
-           + KeyShare
-           + EarlyDataIndication
+           + key_share
+           + early_data
       ^  (Certificate*)
 0-RTT |  (CertificateVerify*)
 Data  |  (Finished)
       v  (Application Data*)
          (end_of_early_data)        --------&gt;
                                                          ServerHello
-                                               + EarlyDataIndication
-                                                          + KeyShare
+                                                        + early_data
+                                                         + key_share
                                                {EncryptedExtensions}
                                                {CertificateRequest*}
                                               {ServerConfiguration*}
@@ -1311,9 +1311,9 @@ Data  |  (Finished)
 
 Initial Handshake:
        ClientHello
-        + KeyShare               --------&gt;
+        + key_share              --------&gt;
                                                        ServerHello
-                                                        + KeyShare
+                                                       + key_share
                                              {EncryptedExtensions}
                                              {CertificateRequest*}
                                             {ServerConfiguration*}
@@ -1329,10 +1329,10 @@ Initial Handshake:
 
 Subsequent Handshake:
        ClientHello
-         + KeyShare
-         + PreSharedKeyExtension --------&gt;
+         + key_share
+         + pre_shared_key        --------&gt;
                                                        ServerHello
-                                           + PreSharedKeyExtension
+                                                  + pre_shared_key
                                              {EncryptedExtensions}
                                  &lt;--------              {Finished}
        {Finished}                --------&gt;
@@ -1386,7 +1386,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>When a client first connects to a server, it is required to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a ServerHello that selects cryptographic parameters that don&#8217;t match the client&#8217;s KeyShare extension. In that case, the client MUST send the same ClientHello (without modification) except including a new KeyShareEntry as the lowest priority share (i.e., appended to the list of shares in the KeyShare message). [[OPEN ISSUE: New random values? See: https://github.com/tlswg/tls13-spec/issues/185]] If a server receives a ClientHello at any other time, it MUST send a fatal &#8220;unexpected_message&#8221; alert and close the connection.</li>
+  <li>When a client first connects to a server, it is required to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a ServerHello that selects cryptographic parameters that don&#8217;t match the client&#8217;s &#8220;key_share&#8221; extension. In that case, the client MUST send the same ClientHello (without modification) except including a new KeyShareEntry as the lowest priority share (i.e., appended to the list of shares in the KeyShare message). [[OPEN ISSUE: New random values? See: https://github.com/tlswg/tls13-spec/issues/185]] If a server receives a ClientHello at any other time, it MUST send a fatal &#8220;unexpected_message&#8221; alert and close the connection.</li>
 </ul>
 <p id="rfc.section.6.3.1.1.p.3">Structure of this message:</p>
 <p/>
@@ -1590,7 +1590,7 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.6.3.2.1.p.8">The semantics of this extension are somewhat complicated because the cipher suite indicates permissible signature algorithms but not hash algorithms.  <a href="#server-certificate-selection">Section 6.3.4.1.1</a> and <a href="#key-share">Section 6.3.2.3</a> describe the appropriate rules.</p>
 <p id="rfc.section.6.3.2.1.p.9">Clients offering support for SHA-1 for backwards compatibility MUST do so by listing those hash/signature pairs as the lowest priority (listed after all other pairs in the supported_signature_algorithms vector). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>).</p>
-<p id="rfc.section.6.3.2.1.p.10">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a hash or signature algorithm that is not advertised as being supported in the signature_algorithms extension.</p>
+<p id="rfc.section.6.3.2.1.p.10">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a hash or signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
 <p id="rfc.section.6.3.2.1.p.11">Note: TLS 1.3 servers might receive TLS 1.2 ClientHellos which do not contain this extension. If those servers are willing to negotiate TLS 1.2, they MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version.</p>
 <h4 id="rfc.section.6.3.2.2"><a href="#rfc.section.6.3.2.2">6.3.2.2.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a></h4>
 <p id="rfc.section.6.3.2.2.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the named groups which the client supports, ordered from most preferred to least preferred.</p>
@@ -1635,11 +1635,11 @@ Subsequent Handshake:
   <dd style="margin-left: 8"><br/> Indicates support of the corresponding finite field group, defined in <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>.  Values 0x01FC through 0x01FF are reserved for private use.</dd>
 </dl>
 <p id="rfc.section.6.3.2.2.p.6">Items in named_group_list are ordered according to the client&#8217;s preferences (most preferred choice first).</p>
-<p id="rfc.section.6.3.2.2.p.7">As an example, a client that only supports secp256r1 (aka NIST P-256; value 23 = 0x0017) and secp384r1 (aka NIST P-384; value 24 = 0x0018) and prefers to use secp256r1 would include a TLS extension consisting of the following octets.  Note that the first two octets indicate the extension type (Supported Group Extension):</p>
+<p id="rfc.section.6.3.2.2.p.7">As an example, a client that only supports secp256r1 (aka NIST P-256; value 23 = 0x0017) and secp384r1 (aka NIST P-384; value 24 = 0x0018) and prefers to use secp256r1 would include a TLS extension consisting of the following octets.  Note that the first two octets indicate the extension type (&#8220;supported_groups&#8221; extension):</p>
 <pre>
    00 0A 00 06 00 04 00 17 00 18
 </pre>
-<p id="rfc.section.6.3.2.2.p.8">NOTE: A server participating in an ECDHE-ECDSA key exchange may use different curves for (i) the ECDSA or EdDSA key in its certificate, and (ii) the ephemeral ECDH key in its KeyShare extension.  The server must consider the supported groups in both cases.</p>
+<p id="rfc.section.6.3.2.2.p.8">NOTE: A server participating in an ECDHE-ECDSA key exchange may use different curves for (i) the ECDSA or EdDSA key in its certificate, and (ii) the ephemeral ECDH key in its &#8220;key_share&#8221; extension.  The server must consider the supported groups in both cases.</p>
 <p id="rfc.section.6.3.2.2.p.9">[[TODO: IANA Considerations.]]</p>
 <h4 id="rfc.section.6.3.2.3"><a href="#rfc.section.6.3.2.3">6.3.2.3.</a> <a href="#key-share" id="key-share">Key Share</a></h4>
 <p id="rfc.section.6.3.2.3.p.1">The &#8220;key_share&#8221; extension contains the endpoint&#8217;s cryptographic parameters for non-PSK key establishment methods (currently DHE or ECDHE).</p>
@@ -1723,9 +1723,9 @@ Subsequent Handshake:
   <dd style="margin-left: 8"><br/> An opaque label for the pre-shared key.</dd>
 </dl>
 <p id="rfc.section.6.3.2.4.p.5">If no suitable identity is provided, the server MUST NOT negotiate a PSK cipher suite and MAY respond with an &#8220;unknown_psk_identity&#8221; alert message. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity or instead negotiate use of a non-PSK cipher suite, if available.</p>
-<p id="rfc.section.6.3.2.4.p.6">If the server selects a PSK cipher suite, it MUST send a PreSharedKeyExtension with the identity that it selected.  The client MUST verify that the server has selected one of the identities that the client supplied. If any other identity is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
+<p id="rfc.section.6.3.2.4.p.6">If the server selects a PSK cipher suite, it MUST send a &#8220;pre_shared_key&#8221; extension with the identity that it selected.  The client MUST verify that the server has selected one of the identities that the client supplied. If any other identity is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
 <h4 id="rfc.section.6.3.2.5"><a href="#rfc.section.6.3.2.5">6.3.2.5.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h4>
-<p id="rfc.section.6.3.2.5.p.1">In cases where TLS clients have previously interacted with the server and the server has supplied a ServerConfiguration (<a href="#server-configuration">Section 6.3.3.3</a>), the client can send application data and its Certificate/CertificateVerify messages (if client authentication is required). If the client opts to do so, it MUST supply an Early Data Indication extension.</p>
+<p id="rfc.section.6.3.2.5.p.1">In cases where TLS clients have previously interacted with the server and the server has supplied a ServerConfiguration (<a href="#server-configuration">Section 6.3.3.3</a>), the client can send application data and its Certificate/CertificateVerify messages (if client authentication is required). If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension.</p>
 <p id="rfc.section.6.3.2.5.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
@@ -1761,14 +1761,14 @@ Subsequent Handshake:
   <li>Indicate the same parameters as the server indicated in that connection.</li>
 </ul>
 <p id="rfc.section.6.3.2.5.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, a &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.</p>
-<p id="rfc.section.6.3.2.5.p.7">A server which receives an EarlyDataIndication extension can behave in one of two ways:</p>
+<p id="rfc.section.6.3.2.5.p.7">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
 
 <ul>
   <li>Ignore the extension and return no response. This indicates that the server has ignored any early data and an ordinary 1-RTT handshake is required.</li>
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
 </ul>
-<p id="rfc.section.6.3.2.5.p.9">Prior to accepting the EarlyDataIndication extension, the server MUST perform the following checks:</p>
+<p id="rfc.section.6.3.2.5.p.9">Prior to accepting the &#8220;early_data&#8221; extension, the server MUST perform the following checks:</p>
 <p/>
 
 <ul>
@@ -2041,7 +2041,7 @@ Subsequent Handshake:
   <li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension.</li>
 </ul>
 <p id="rfc.section.6.3.4.1.1.p.4">All certificates provided by the server MUST be signed by a hash/signature algorithm pair that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 6.3.2.1</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
-<p id="rfc.section.6.3.4.1.1.p.5">If the server cannot produce a certificate chain that is signed only via the indicated supported pairs, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; +extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST send an &#8220;unsupported_certificate&#8221; alert message and close the connection.</p>
+<p id="rfc.section.6.3.4.1.1.p.5">If the server cannot produce a certificate chain that is signed only via the indicated supported pairs, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST send an &#8220;unsupported_certificate&#8221; alert message and close the connection.</p>
 <p id="rfc.section.6.3.4.1.1.p.6">If the server has multiple certificates, it chooses one of them based on the above-mentioned criteria (in addition to other criteria, such as transport layer endpoint, local configuration and preferences).</p>
 <p id="rfc.section.6.3.4.1.1.p.7">As cipher suites that specify new key exchange methods are specified for the TLS protocol, they will imply the certificate format and the required encoded keying information.</p>
 <h4 id="rfc.section.6.3.4.1.2"><a href="#rfc.section.6.3.4.1.2">6.3.4.1.2.</a> <a href="#client-certificate-selection" id="client-certificate-selection">Client Certificate Selection</a></h4>
@@ -2408,7 +2408,7 @@ server_finished_key =
 </ul>
 <p id="rfc.section.8.2.p.5">When negotiating use of applicable cipher suites, endpoints MUST abort the connection with a &#8220;missing_extension&#8221; alert if the required extension was not provided. Any endpoint that receives any invalid combination of cipher suites and extensions MAY abort the connection with a &#8220;missing_extension&#8221; alert, regardless of negotiated parameters.</p>
 <p id="rfc.section.8.2.p.6">Additionally, all implementations MUST support use of the &#8220;server_name&#8221; extension with applications capable of using it.  Servers MAY require clients to send a valid &#8220;server_name&#8221; extension.  Servers requiring this extension SHOULD respond to a ClientHello lacking a &#8220;server_name&#8221; extension with a fatal &#8220;missing_extension&#8221; alert.</p>
-<p id="rfc.section.8.2.p.7">Some of these extensions exist only for the client to provide additional data to the server in a backwards-compatible way and thus have no meaning when sent from a server. The client-only extensions defined in this document are: &#8220;Signature Algorithms&#8221; &amp; &#8220;Negotiated Groups&#8221;.  Servers MUST NOT send these extensions. Clients receiving any of these extensions MUST respond with a fatal &#8220;unsupported_extension&#8221; alert and close the connection.</p>
+<p id="rfc.section.8.2.p.7">Some of these extensions exist only for the client to provide additional data to the server in a backwards-compatible way and thus have no meaning when sent from a server. The client-only extensions defined in this document are: &#8220;signature_algorithms&#8221; &amp; &#8220;supported_groups&#8221;.  Servers MUST NOT send these extensions. Clients receiving any of these extensions MUST respond with a fatal &#8220;unsupported_extension&#8221; alert and close the connection.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#application-data-protocol" id="application-data-protocol">Application Data Protocol</a></h1>
 <p id="rfc.section.9.p.1">Application data messages are carried by the record layer and are fragmented and encrypted based on the current connection state. The messages are treated as transparent data to the record layer.</p>
 <h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
@@ -3560,7 +3560,7 @@ server_finished_key =
 <ul>
   <li>Do you correctly handle handshake messages that are fragmented to multiple TLS records (see <a href="#fragmentation">Section 5.2.1</a>)? Including corner cases like a ClientHello that is split to several small fragments? Do you fragment handshake messages that exceed the maximum fragment size? In particular, the certificate and certificate request handshake messages can be large enough to require fragmentation.</li>
   <li>Do you ignore the TLS record layer version number in all TLS records? (see <a href="#backward-compatibility">Appendix C</a>)</li>
-  <li>Have you ensured that all support for SSL, RC4, EXPORT ciphers, and MD5 (via the Signature Algorithms extension) is completely removed from all possible configurations that support TLS 1.3 or later, and that attempts to use these obsolete capabilities fail correctly? (see <a href="#backward-compatibility">Appendix C</a>)</li>
+  <li>Have you ensured that all support for SSL, RC4, EXPORT ciphers, and MD5 (via the &#8220;signature_algorithm&#8221; extension) is completely removed from all possible configurations that support TLS 1.3 or later, and that attempts to use these obsolete capabilities fail correctly? (see <a href="#backward-compatibility">Appendix C</a>)</li>
   <li>Do you handle TLS extensions in ClientHello correctly, including omitting the extensions field completely?</li>
   <li>When the server has requested a client certificate, but no suitable certificate is available, do you correctly send an empty Certificate message, instead of omitting the whole message (see <a href="#client-certificate-selection">Section 6.3.4.1.2</a>)?</li>
   <li>When processing the plaintext fragment produced by AEAD-Decrypt and scanning from the end for the ContentType, do you avoid scanning past the start of the cleartext in the event that the peer has sent a malformed plaintext of all-zeros?</li>
@@ -3607,7 +3607,7 @@ server_finished_key =
 <p id="rfc.section.D.1.1.p.1">TLS supports three authentication modes: authentication of both parties, server authentication with an unauthenticated client, and total anonymity. Whenever the server is authenticated, the channel is secure against man-in-the-middle attacks, but completely anonymous sessions are inherently vulnerable to such attacks. Anonymous servers cannot authenticate clients. If the server is authenticated, its certificate message must provide a valid certificate chain leading to an acceptable certificate authority. Similarly, authenticated clients must supply an acceptable certificate to the server. Each party is responsible for verifying that the other&#8217;s certificate is valid and has not expired or been revoked.</p>
 <p id="rfc.section.D.1.1.p.2">[[TODO: Rewrite this because the master_secret is not used this way any more after Hugo&#8217;s changes.]] The general goal of the key exchange process is to create a master_secret known to the communicating parties and not to attackers (see <a href="#key-schedule">Section 7.1</a>). The master_secret is required to generate the Finished messages and record protection keys (see <a href="#finished">Section 6.3.4.3</a> and <a href="#traffic-key-calculation">Section 7.3</a>). By sending a correct Finished message, parties thus prove that they know the correct master_secret.</p>
 <h4 id="rfc.appendix.D.1.1.1"><a href="#rfc.appendix.D.1.1.1">D.1.1.1.</a> <a href="#diffie-hellman-key-exchange-with-authentication" id="diffie-hellman-key-exchange-with-authentication">Diffie-Hellman Key Exchange with Authentication</a></h4>
-<p id="rfc.section.D.1.1.1.p.1">When Diffie-Hellman key exchange is used, the client and server use the KeyShare extension to send temporary Diffie-Hellman parameters. The signature in the certificate verify message (if present) covers the entire handshake up to that point and thus attests the certificate holder&#8217;s desire to use the the ephemeral DHE keys.</p>
+<p id="rfc.section.D.1.1.1.p.1">When Diffie-Hellman key exchange is used, the client and server use the &#8220;key_share&#8221; extension to send temporary Diffie-Hellman parameters. The signature in the certificate verify message (if present) covers the entire handshake up to that point and thus attests the certificate holder&#8217;s desire to use the the ephemeral DHE keys.</p>
 <p id="rfc.section.D.1.1.1.p.2">Peers SHOULD validate each other&#8217;s public key Y (dh_Ys offered by the server or DH_Yc offered by the client) by ensuring that 1 &lt; Y &lt; p-1.  This simple check ensures that the remote peer is properly behaved and isn&#8217;t forcing the local system into a small subgroup.</p>
 <p id="rfc.section.D.1.1.1.p.3">Additionally, using a fresh key for each handshake provides Perfect Forward Secrecy. Implementations SHOULD generate a new X for each handshake when using DHE cipher suites.</p>
 <h3 id="rfc.appendix.D.1.2"><a href="#rfc.appendix.D.1.2">D.1.2.</a> <a href="#version-rollback-attacks" id="version-rollback-attacks">Version Rollback Attacks</a></h3>
