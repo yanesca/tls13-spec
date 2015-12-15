@@ -2021,7 +2021,9 @@ Internet-Draft                     TLS                     December 2015
    authentication even if the client offers a certificate on its first
    flight.  This is consistent with the server being able to ask for
    client authentication after the handshake is complete.  See
-   Section 6.3.5.2.
+   Section 6.3.5.2.  When offering PSK support, the
+   PreSharedKeyExtension will be used instead of (or in addition to) the
+   KeyShare extension as specified above.
 
    Note: because sequence numbers continue to increment between the
    initial (early) application data and the application data sent after
@@ -2064,8 +2066,6 @@ Internet-Draft                     TLS                     December 2015
    negotiate use of the PSK; if the server accepts it, then the security
    context of the original connection is tied to the new connection.  In
    TLS 1.2 and below, this functionality was provided by "session
-   resumption" and "session tickets" [RFC5077].  Both mechanisms are
-   obsoleted in TLS 1.3.
 
 
 
@@ -2073,6 +2073,9 @@ Rescorla                  Expires June 17, 2016                [Page 37]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   resumption" and "session tickets" [RFC5077].  Both mechanisms are
+   obsoleted in TLS 1.3.
 
    PSK cipher suites can either use PSK in combination with an (EC)DHE
    exchange in order to provide forward secrecy in combination with
@@ -2119,9 +2122,6 @@ Internet-Draft                     TLS                     December 2015
    As the server is authenticating via a PSK, it does not send a
    Certificate or a CertificateVerify.  PSK-based resumption cannot be
    used to provide a new ServerConfiguration.  Note that the client
-   supplies a KeyShare to the server as well, which allows the server to
-   decline resumption and fall back to a full handshake.
-
 
 
 
@@ -2129,6 +2129,9 @@ Rescorla                  Expires June 17, 2016                [Page 38]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   supplies a KeyShare to the server as well, which allows the server to
+   decline resumption and fall back to a full handshake.
 
    The contents and significance of each message will be presented in
    detail in the following sections.
@@ -2175,9 +2178,6 @@ Internet-Draft                     TLS                     December 2015
           } body;
       } Handshake;
 
-   The TLS Handshake Protocol messages are presented below in the order
-   they MUST be sent; sending handshake messages in an unexpected order
-
 
 
 
@@ -2186,6 +2186,8 @@ Rescorla                  Expires June 17, 2016                [Page 39]
 Internet-Draft                     TLS                     December 2015
 
 
+   The TLS Handshake Protocol messages are presented below in the order
+   they MUST be sent; sending handshake messages in an unexpected order
    results in an "unexpected_message" fatal error.  Unneeded handshake
    messages can be omitted, however.
 
@@ -2232,8 +2234,6 @@ Internet-Draft                     TLS                     December 2015
    client_version indicating TLS 1.2 or below MUST set the first eight
    bytes of their Random value to the bytes:
 
-     44 4F 57 4E 47 52 44 01
-
 
 
 
@@ -2241,6 +2241,8 @@ Rescorla                  Expires June 17, 2016                [Page 40]
 
 Internet-Draft                     TLS                     December 2015
 
+
+     44 4F 57 4E 47 52 44 01
 
    TLS 1.2 server implementations which respond to a ClientHello with a
    client_version indicating TLS 1.1 or below SHOULD set the first eight
@@ -2280,8 +2282,6 @@ Internet-Draft                     TLS                     December 2015
    contains cipher suites the server does not recognize, support, or
    wish to use, the server MUST ignore those cipher suites, and process
    the remaining ones as usual.
-
-
 
 
 
