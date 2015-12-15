@@ -116,7 +116,7 @@ Internet-Draft                     TLS                     December 2015
 
      6.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . .  39
        6.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . .  40
-       6.3.2.  Hello Extensions  . . . . . . . . . . . . . . . . . .  45
+       6.3.2.  Hello Extensions  . . . . . . . . . . . . . . . . . .  46
        6.3.3.  Server Parameters . . . . . . . . . . . . . . . . . .  58
        6.3.4.  Authentication Messages . . . . . . . . . . . . . . .  62
        6.3.5.  Post-Handshake Messages . . . . . . . . . . . . . . .  71
@@ -2451,7 +2451,7 @@ Internet-Draft                     TLS                     December 2015
       when it was able to find an acceptable set of algorithms and
       groups that are mutually supported, but the client's KeyShare did
       not contain an acceptable offer.  If it cannot find such a match,
-      it will respond with a "handshake_failure" alert.
+      it will respond with a fatal "handshake_failure" alert.
 
    Structure of this message:
 
@@ -2476,18 +2476,21 @@ Internet-Draft                     TLS                     December 2015
    [[OPEN ISSUE: Merge in DTLS Cookies?]]
 
    selected_group
-      The group which the client MUST use for its new ClientHello.
+      The mutually supported group the server intends to negotiate and
+      is requesting a retried ClientHello/KeyShare for.
 
-   The "server_version", "cipher_suite" and "extensions" fields have the
-   same meanings as their corresponding values in the ServerHello.  The
+   The server_version, cipher_suite, and extensions fields have the same
+   meanings as their corresponding values in the ServerHello.  The
    server SHOULD send only the extensions necessary for the client to
-   generate a correct ClientHello pair.
+   generate a correct ClientHello pair.  As with ServerHello, a
+   HelloRetryRequest MUST NOT contain any extensions that were not first
+   offered by the client in its ClientHello.
 
    Upon receipt of a HelloRetryRequest, the client MUST first verify
-   that the "selected_group" field corresponds to a group which was
+   that the selected_group field corresponds to a group which was
    provided in the "supported_groups" extension in the original
-   ClientHello.  It MUST then verify that the "selected_group" field
-   does not correspond to a group which was provided in the "key_share"
+   ClientHello.  It MUST then verify that the selected_group field does
+   not correspond to a group which was provided in the "key_share"
    extension in the original ClientHello.  If either of these checks
    fails, then the client MUST abort the handshake with a fatal
    "handshake_failure" alert.  Clients SHOULD also abort with
@@ -2495,21 +2498,18 @@ Internet-Draft                     TLS                     December 2015
    was sent in the same connection (i.e., where the ClientHello was
    itself in response to a HelloRetryRequest).
 
-   Otherwise, the client MUST send a ClientHello with a new KeyShare
-   extension to the server.  The client MUST append a new KeyShareEntry
-   list which is consistent with the "selected_group" field to the
-   groups in its original KeyShare.
+   Otherwise, the client MUST send a ClientHello with an updated
+   KeyShare extension to the server.  The client MUST append a new
+   KeyShareEntry for the group indicated in the selected_group field to
+   the groups in its original KeyShare.
 
    Upon re-sending the ClientHello and receiving the server's
    ServerHello/KeyShare, the client MUST verify that the selected
    CipherSuite and NamedGroup match that supplied in the
-   HelloRetryRequest.
+   HelloRetryRequest.  If either of these values differ, the client MUST
+   abort the connection with a fatal "handshake_failure" alert.
 
    [[OPEN ISSUE: https://github.com/tlswg/tls13-spec/issues/104]]
-
-6.3.2.  Hello Extensions
-
-   The extension format is:
 
 
 
@@ -2521,6 +2521,10 @@ Rescorla                  Expires June 17, 2016                [Page 45]
 
 Internet-Draft                     TLS                     December 2015
 
+
+6.3.2.  Hello Extensions
+
+   The extension format is:
 
       struct {
           ExtensionType extension_type;
@@ -2565,10 +2569,6 @@ Internet-Draft                     TLS                     December 2015
    ClientHello or ServerHello messages, the extensions MAY appear in any
    order.  There MUST NOT be more than one extension of the same type.
 
-   Finally, note that extensions can be sent both when starting a new
-   session and when requesting session resumption or 0-RTT mode.
-   Indeed, a client that requests session resumption does not in general
-   know whether the server will accept this request, and therefore it
 
 
 
@@ -2578,6 +2578,10 @@ Rescorla                  Expires June 17, 2016                [Page 46]
 Internet-Draft                     TLS                     December 2015
 
 
+   Finally, note that extensions can be sent both when starting a new
+   session and when requesting session resumption or 0-RTT mode.
+   Indeed, a client that requests session resumption does not in general
+   know whether the server will accept this request, and therefore it
    SHOULD send the same extensions as it would send if it were not
    attempting resumption.
 
@@ -2621,10 +2625,6 @@ Internet-Draft                     TLS                     December 2015
       version rollback attacks based on the version number, and the
       possibility of version rollback should be a significant
       consideration in any major design change.
-
-
-
-
 
 
 
