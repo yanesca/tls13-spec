@@ -5442,13 +5442,13 @@ A.6.  Changes to RFC 4492
    4492 and TLS 1.2.  Implementors of TLS 1.2 who are not implementing
    RFC 4492 do not need to read this section.
 
-   This document adds a "signature_algorithm" field to the digitally-
-   signed element in order to identify the signature and digest
-   algorithms used to create a signature.  This change applies to
-   digital signatures formed using ECDSA as well, thus allowing ECDSA
-   signatures to be used with digest algorithms other than SHA-1,
-   provided such use is compatible with the certificate and any
-   restrictions imposed by future revisions of [RFC5280].
+   This document adds an "algorithm" field to the digitally-signed
+   element in order to identify the signature and digest algorithms used
+   to create a signature.  This change applies to digital signatures
+   formed using ECDSA as well, thus allowing ECDSA signatures to be used
+   with digest algorithms other than SHA-1, provided such use is
+   compatible with the certificate and any restrictions imposed by
+   future revisions of [RFC5280].
 
    As described in Section 6.3.4.1.1, the restrictions on the signature
    algorithms used to sign certificates are no longer tied to the cipher
