@@ -1922,24 +1922,45 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.6.3.4.p.6">Because the CertificateVerify signs the Handshake Context + Certificate and the Finished MACs the Handshake Context + Certificate + CertificateVerify, this is mostly equivalent to keeping a running hash of the handshake messages (exactly so in the pure 1-RTT cases). Note, however, the subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
 <p id="rfc.section.6.3.4.p.7">The following table defines the Handshake Context and MAC Key for each scenario:</p>
-<pre>
-Mode             Handshake Context                        Base Key
-----             -----------------                        --------
-0-RTT            ClientHello + ServerConfiguration        xSS
-                             + Server Certificate
-                             + CertificateRequest
-                 (ServerConfiguration, etc. are
-                 from previous handshake).
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Mode</th>
+      <th class="left">Handshake Context</th>
+      <th class="left">Base Key</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">0-RTT</td>
+      <td class="left">ClientHello + ServerConfiguration + Server Certificate + CertificateRequest (where ServerConfiguration, etc. are from the previous handshake)</td>
+      <td class="left">xSS</td>
+    </tr>
+    <tr>
+      <td class="left">1-RTT (Server)</td>
+      <td class="left">ClientHello &#8230; ServerConfiguration</td>
+      <td class="left">master secret</td>
+    </tr>
+    <tr>
+      <td class="left">1-RTT (Client)</td>
+      <td class="left">ClientHello &#8230; ServerFinished</td>
+      <td class="left">master secret</td>
+    </tr>
+    <tr>
+      <td class="left">Post-Handshake</td>
+      <td class="left">ClientHello &#8230; ClientFinished + CertificateRequest</td>
+      <td class="left">master secret</td>
+    </tr>
+  </tbody>
+</table>
+<p/>
 
-1-RTT (Server)   ClientHello ... ServerConfiguration      master_secret
-
-1-RTT (Client)   ClientHello ... ServerFinished           master_secret
-
-Post-Handshake   ClientHello ... ClientFinished +         master_secret
-                 CertificateRequest
-</pre>
-<p id="rfc.section.6.3.4.p.8">Note 1: The ServerConfiguration, CertificateRequest, and Server Certificate in the 0-RTT case are the messages from the handshake where the ServerConfiguration was established.</p>
-<p id="rfc.section.6.3.4.p.9">Note 2: The Handshake Context for the last three rows does not include any 0-RTT handshake messages, regardless of whether 0-RTT is used.</p>
+<dl>
+  <dt>Note 1:</dt>
+  <dd style="margin-left: 8">The ServerConfiguration, CertificateRequest, and Server Certificate in the 0-RTT case are the messages from the handshake where the ServerConfiguration was established.</dd>
+  <dt>Note 2:</dt>
+  <dd style="margin-left: 8">The Handshake Context for the last three rows does not include any 0-RTT handshake messages, regardless of whether 0-RTT is used.</dd>
+</dl>
 <h4 id="rfc.section.6.3.4.1"><a href="#rfc.section.6.3.4.1">6.3.4.1.</a> <a href="#certificate" id="certificate">Certificate</a></h4>
 <p id="rfc.section.6.3.4.1.p.1">When this message will be sent:</p>
 <p/>
@@ -2146,20 +2167,37 @@ server_finished_key =
 <h2 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#key-schedule" id="key-schedule">Key Schedule</a></h2>
 <p id="rfc.section.7.1.p.1">The TLS handshake establishes secret keying material which is then used to protect traffic. This keying material is derived from the two input secret values: Static Secret (SS) and Ephemeral Secret (ES).</p>
 <p id="rfc.section.7.1.p.2">The exact source of each of these secrets depends on the operational mode (DHE, ECDHE, PSK, etc.) and is summarized in the table below:</p>
-<pre>
-    Key Exchange            Static Secret (SS)    Ephemeral Secret (ES)
-    ------------            ------------------    ---------------------
-    (EC)DHE                   Client ephemeral         Client ephemeral
-    (full handshake)       w/ server ephemeral      w/ server ephemeral
-
-    (EC)DHE                   Client ephemeral         Client ephemeral
-    (w/ 0-RTT)                w/ server static      w/ server ephemeral
-
-    PSK                         Pre-Shared Key           Pre-shared key
-
-    PSK + (EC)DHE               Pre-Shared Key         Client ephemeral
-                                                    w/ server ephemeral
-</pre>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Key Exchange</th>
+      <th class="right">Static Secret (SS)</th>
+      <th class="right">Ephemeral Secret (ES)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">(EC)DHE (full handshake)</td>
+      <td class="right">Client ephemeral w/ server ephemeral</td>
+      <td class="right">Client ephemeral w/ server ephemeral</td>
+    </tr>
+    <tr>
+      <td class="left">(EC)DHE (w/ 0-RTT)</td>
+      <td class="right">Client ephemeral w/ server static</td>
+      <td class="right">Client ephemeral w/ server ephemeral</td>
+    </tr>
+    <tr>
+      <td class="left">PSK</td>
+      <td class="right">Pre-Shared Key</td>
+      <td class="right">Pre-shared key</td>
+    </tr>
+    <tr>
+      <td class="left">PSK + (EC)DHE</td>
+      <td class="right">Pre-Shared Key</td>
+      <td class="right">Client ephemeral w/ server ephemeral</td>
+    </tr>
+  </tbody>
+</table>
 <p id="rfc.section.7.1.p.3">These shared secret values are used to generate cryptographic keys as shown below.</p>
 <p id="rfc.section.7.1.p.4">The derivation process is as follows, where L denotes the length of the underlying hash function for HKDF <a href="#RFC5869">[RFC5869]</a>. SS and ES denote the sources from the table above.</p>
 <pre>
@@ -2234,32 +2272,69 @@ server_finished_key =
                            key_length)
 </pre>
 <p id="rfc.section.7.2.p.4">The following table describes the inputs to the key calculation for each class of traffic keys:</p>
-<pre>
-  Record Type Secret  Label                           Handshake Context
-  ----------- ------  -----                           -----------------
-  0-RTT          xSS  "early handshake                     ClientHello
-  Handshake            key expansion              + ServerConfiguration
-                                                   + Server Certificate
-
-  0-RTT          xSS  "early application                    ClientHello
-  Application          data key expansion"        + ServerConfiguration
-                                                   + Server Certificate
-
-  Handshake      xES  "handshake key expansion"          ClientHello...
-                                                            ServerHello
-
-  Application  master "application data key expansion"   ClientHello...
-               secret                                   Server Finished
-</pre>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Record Type</th>
+      <th class="left">Secret</th>
+      <th class="left">Label</th>
+      <th class="right">Handshake Context</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">0-RTT Handshake</td>
+      <td class="left">xSS</td>
+      <td class="left">&#8220;early handshake key expansion&#8221;</td>
+      <td class="right">ClientHello + ServerConfiguration + Server Certificate</td>
+    </tr>
+    <tr>
+      <td class="left">0-RTT Application</td>
+      <td class="left">xSS</td>
+      <td class="left">&#8220;early application data key expansion&#8221;</td>
+      <td class="right">ClientHello + ServerConfiguration + Server Certificate</td>
+    </tr>
+    <tr>
+      <td class="left">Handshake</td>
+      <td class="left">xES</td>
+      <td class="left">&#8220;handshake key expansion&#8221;</td>
+      <td class="right">ClientHello&#8230; ServerHello</td>
+    </tr>
+    <tr>
+      <td class="left">Application Data</td>
+      <td class="left">master secret</td>
+      <td class="left">&#8220;application data key expansion&#8221;</td>
+      <td class="right">ClientHello&#8230; Server Finished</td>
+    </tr>
+  </tbody>
+</table>
 <p id="rfc.section.7.2.p.5">The following table indicates the purpose values for each type of key:</p>
-<pre>
-  Key Type              Purpose
-  --------              -------
-  Client Write Key      "client write key"
-  Server Write Key      "server write key"
-  Client Write IV       "client write IV"
-  Server Write IV       "server write IV"
-</pre>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Key Type</th>
+      <th class="left">Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">Client Write Key</td>
+      <td class="left">&#8220;client write key&#8221;</td>
+    </tr>
+    <tr>
+      <td class="left">Server Write Key</td>
+      <td class="left">&#8220;server write key&#8221;</td>
+    </tr>
+    <tr>
+      <td class="left">Client Write IV</td>
+      <td class="left">&#8220;client write IV&#8221;</td>
+    </tr>
+    <tr>
+      <td class="left">Server Write IV</td>
+      <td class="left">&#8220;server write IV&#8221;</td>
+    </tr>
+  </tbody>
+</table>
 <h3 id="rfc.section.7.2.1"><a href="#rfc.section.7.2.1">7.2.1.</a> <a href="#the-handshake-hash" id="the-handshake-hash">The Handshake Hash</a></h3>
 <p id="rfc.section.7.2.1.p.1">The handshake hash is defined as the hash of all handshake messages sent or received, starting at ClientHello up to the present time, with the exception of the client&#8217;s 0-RTT authentication messages (Certificate, CertificateVerify, and Finished) including the type and length fields of the handshake messages. This is the concatenation the exchanged Handshake structures in plaintext form (even if they were encrypted on the wire).  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/351 for the question of whether the 0-RTT handshake messages are hashed.]]</p>
 <p id="rfc.section.7.2.1.p.2">This final value of the handshake hash is referred to as the &#8220;session hash&#8221; because it contains all the handshake messages involved in establishing the session, up to and including the client&#8217;s Finished.</p>
@@ -2323,70 +2398,181 @@ server_finished_key =
 <p/>
 
 <ul>
-  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL add/has added] a &#8220;Recommended&#8221; column to the cipher suite registry. All cipher suites listed in <a href="#cipher-suites">Appendix A.4</a> are marked as &#8220;Yes&#8221;. All other cipher suites are marked as &#8220;No&#8221;. IANA [SHALL add/has added] add a note to this column reading:</li>
-</ul>
-<pre>
-      Cipher suites marked as "Yes" are those allocated via
-      Standards Track RFCs. Cipher suites marked as "No" are not;
-      cipher suites marked "No" range from "good" to "bad" from a
-      cryptographic standpoint.
-</pre>
-<p/>
-
-<ul>
+  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL add/has added] a &#8220;Recommended&#8221; column to the cipher suite registry. All cipher suites listed in <a href="#cipher-suites">Appendix A.4</a> are marked as &#8220;Yes&#8221;. All other cipher suites are marked as &#8220;No&#8221;. IANA [SHALL add/has added] add a note to this column reading:  <ul class="empty"><li>Cipher suites marked as &#8220;Yes&#8221; are those allocated via Standards Track RFCs. Cipher suites marked as &#8220;No&#8221; are not; cipher suites marked &#8220;No&#8221; range from &#8220;good&#8221; to &#8220;bad&#8221; from a cryptographic standpoint.</li></ul></li>
   <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
 </ul>
-<p id="rfc.section.11.p.5">This document also uses a registry originally created in <a href="#RFC4366">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
-<pre>
-  Extension                                 Recommended    TLS 1.3
-  ----------------------------------------------------------------
-  server_name [RFC6066]                             Yes  Encrypted
-  max_fragment_length [RFC6066]                     Yes  Encrypted
-  client_certificate_url [RFC6066]                  Yes  Encrypted
-  trusted_ca_keys [RFC6066]                         Yes  Encrypted
-  truncated_hmac [RFC6066]                          Yes         No
-  status_request [RFC6066]                          Yes         No
-  user_mapping [RFC4681]                            Yes  Encrypted
-  client_authz [RFC5878]                             No  Encrypted
-  server_authz [RFC5878]                             No  Encrypted
-  cert_type [RFC6091]                               Yes  Encrypted
-  supported_groups                                  Yes     Client
-    [RFC-ietf-tls-negotiated-ff-dhe-10]
-  ec_point_formats [RFC4492]                        Yes         No
-  srp [RFC5054]                                      No         No
-  signature_algorithms [RFC5246]                    Yes     Client
-  use_srtp [RFC5764]                                Yes  Encrypted
-  heartbeat [RFC6520]                               Yes  Encrypted
-  application_layer_protocol_negotiation            Yes  Encrypted
-    [RFC7301]
-  status_request_v2 [RFC6961]                       Yes  Encrypted
-  signed_certificate_timestamp [RFC6962]             No  Encrypted
-  client_certificate_type [RFC7250]                 Yes  Encrypted
-  server_certificate_type [RFC7250]                 Yes  Encrypted
-  padding [RFC7685]                                 Yes     Client
-  encrypt_then_mac [RFC7366]                        Yes         No
-  extended_master_secret [RFC7627]                  Yes         No
-  SessionTicket TLS [RFC4507]                       Yes         No
-  renegotiation_info [RFC5746]                      Yes         No
-  key_share [[this document]]                       Yes      Clear
-  pre_shared_key [[this document]]                  Yes      Clear
-  early_data [[this document]]                      Yes      Clear
-</pre>
+<p id="rfc.section.11.p.4">This document also uses a registry originally created in <a href="#RFC4366">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
 <p/>
 
 <ul>
-  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall be/has been] initially populated with the values in the table below. This column has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.  <br/><br/> </li>
+  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall be/has been] initially populated with the values in the table below. This column has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.</li>
 </ul>
-<p id="rfc.section.11.p.7">This document reuses two registries defined in <a href="#RFC5246">[RFC5246]</a>.</p>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Extension</th>
+      <th class="right">Recommended</th>
+      <th class="right">TLS 1.3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">server_name <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">max_fragment_length <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">client_certificate_url <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">trusted_ca_keys <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">truncated_hmac <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">status_request <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">user_mapping <a href="#RFC4681">[RFC4681]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">client_authz <a href="#RFC5878">[RFC5878]</a></td>
+      <td class="right">No</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">server_authz <a href="#RFC5878">[RFC5878]</a></td>
+      <td class="right">No</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">cert_type <a href="#RFC6091">[RFC6091]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">supported_groups [RFC-ietf-tls-negotiated-ff-dhe]</td>
+      <td class="right">Yes</td>
+      <td class="right">Client</td>
+    </tr>
+    <tr>
+      <td class="left">ec_point_formats <a href="#RFC4492">[RFC4492]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">srp <a href="#RFC5054">[RFC5054]</a></td>
+      <td class="right">No</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">signature_algorithms <a href="#RFC5246">[RFC5246]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Client</td>
+    </tr>
+    <tr>
+      <td class="left">use_srtp <a href="#RFC5764">[RFC5764]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">heartbeat <a href="#RFC6520">[RFC6520]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">application_layer_protocol_negotiation<a href="#RFC7301">[RFC7301]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">status_request_v2 <a href="#RFC6961">[RFC6961]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
+      <td class="right">No</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">client_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">server_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Encrypted</td>
+    </tr>
+    <tr>
+      <td class="left">padding <a href="#RFC7685">[RFC7685]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">Client</td>
+    </tr>
+    <tr>
+      <td class="left">encrypt_then_mac <a href="#RFC7366">[RFC7366]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">extended_master_secret <a href="#RFC7627">[RFC7627]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">SessionTicket TLS <a href="#RFC4507">[RFC4507]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">renegotiation_info <a href="#RFC5746">[RFC5746]</a></td>
+      <td class="right">Yes</td>
+      <td class="right">No</td>
+    </tr>
+    <tr>
+      <td class="left">key_share [[this document]]</td>
+      <td class="right">Yes</td>
+      <td class="right">Clear</td>
+    </tr>
+    <tr>
+      <td class="left">pre_shared_key [[this document]]</td>
+      <td class="right">Yes</td>
+      <td class="right">Clear</td>
+    </tr>
+    <tr>
+      <td class="left">early_data [[this document]]</td>
+      <td class="right">Yes</td>
+      <td class="right">Clear</td>
+    </tr>
+  </tbody>
+</table>
+<p id="rfc.section.11.p.6">This document reuses two registries defined in <a href="#RFC5246">[RFC5246]</a>.</p>
 <p/>
 
 <ul>
   <li>TLS SignatureAlgorithm Registry: The registry has been initially populated with the values described in <a href="#signature-algorithms">Section 6.3.2.1</a>.  Future values in the range 0-63 (decimal) inclusive are assigned via Standards Action <a href="#RFC2434">[RFC2434]</a>.  Values in the range 64-223 (decimal) inclusive are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values from 224-255 (decimal) inclusive are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS HashAlgorithm Registry: The registry has been initially populated with the values described in <a href="#signature-algorithms">Section 6.3.2.1</a>.  Future values in the range 0-63 (decimal) inclusive are assigned via Standards Action <a href="#RFC2434">[RFC2434]</a>.  Values in the range 64-223 (decimal) inclusive are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values from 224-255 (decimal) inclusive are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>.</li>
 </ul>
-<p id="rfc.section.11.p.9">In addition, this document defines a new registry to be maintained by IANA.</p>
+<p id="rfc.section.11.p.8">In addition, this document defines a new registry to be maintained by IANA.</p>
 <p/>
 
 <ul>
@@ -3147,36 +3333,151 @@ server_finished_key =
 <p id="rfc.section.A.4.p.1">A cipher suite defines a cipher specification supported in TLS and negotiated via hello messages in the TLS handshake.  Cipher suite names follow a general naming convention composed of a series of component algorithm names separated by underscores:</p>
 <pre>
    CipherSuite TLS_KEA_SIGN_WITH_CIPHER_HASH = VALUE;
-
-   Component      Contents
-   TLS            The string "TLS"
-   KEA            The key exchange algorithm
-   SIGN           The signature algorithm
-   WITH           The string "WITH"
-   CIPHER         The symmetric cipher used for record protection
-   HASH           The hash algorithm used with HKDF
-   VALUE          The two byte ID assigned for this cipher suite
 </pre>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Component</th>
+      <th class="left">Contents</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">TLS</td>
+      <td class="left">The string &#8220;TLS&#8221;</td>
+    </tr>
+    <tr>
+      <td class="left">KEA</td>
+      <td class="left">The key exchange algorithm</td>
+    </tr>
+    <tr>
+      <td class="left">SIGN</td>
+      <td class="left">The signature algorithm</td>
+    </tr>
+    <tr>
+      <td class="left">WITH</td>
+      <td class="left">The string &#8220;WITH&#8221;</td>
+    </tr>
+    <tr>
+      <td class="left">CIPHER</td>
+      <td class="left">The symmetric cipher used for record protection</td>
+    </tr>
+    <tr>
+      <td class="left">HASH</td>
+      <td class="left">The hash algorithm used with HKDF</td>
+    </tr>
+    <tr>
+      <td class="left">VALUE</td>
+      <td class="left">The two byte ID assigned for this cipher suite</td>
+    </tr>
+  </tbody>
+</table>
 <p id="rfc.section.A.4.p.2">The &#8220;CIPHER&#8221; component commonly has sub-components used to designate the cipher name, bits, and mode, if applicable. For example, &#8220;AES_256_GCM&#8221; represents 256-bit AES in the GCM mode of operation. Cipher suite names that lack a &#8220;HASH&#8221; value that are defined for use with TLS 1.2 or later use the SHA-256 hash algorithm by default.</p>
 <p id="rfc.section.A.4.p.3">The primary key exchange algorithm used in TLS is Ephemeral Diffie-Hellman <a href="#DH">[DH]</a>. The finite field based version is denoted &#8220;DHE&#8221; and the elliptic curve based version is denoted &#8220;ECDHE&#8221;. Prior versions of TLS supported non-ephemeral key exchanges, however these are not supported by TLS 1.3.</p>
 <p id="rfc.section.A.4.p.4">See the definitions of each cipher suite in its specification document for the full details of each combination of algorithms that is specified.</p>
 <p id="rfc.section.A.4.p.5">The following is a list of standards track server-authenticated (and optionally client-authenticated) cipher suites which are currently available in TLS 1.3:</p>
-<pre>
-          Cipher Suite Name                      Value     Specification
-TLS_DHE_RSA_WITH_AES_128_GCM_SHA256           {0x00,0x9E}    [RFC5288]
-TLS_DHE_RSA_WITH_AES_256_GCM_SHA384           {0x00,0x9F}    [RFC5288]
-TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256       {0xC0,0x2B}    [RFC5289]
-TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384       {0xC0,0x2C}    [RFC5289]
-TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256         {0xC0,0x2F}    [RFC5289]
-TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384         {0xC0,0x30}    [RFC5289]
-TLS_DHE_RSA_WITH_AES_128_CCM                  {0xC0,0x9E}    [RFC6655]
-TLS_DHE_RSA_WITH_AES_256_CCM                  {0xC0,0x9F}    [RFC6655]
-TLS_DHE_RSA_WITH_AES_128_CCM_8                {0xC0,0xA2}    [RFC6655]
-TLS_DHE_RSA_WITH_AES_256_CCM_8                {0xC0,0xA3}    [RFC6655]
-TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305          {TBD,TBD}   [I-D.ietf-tls-chacha20-poly1305]
-TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305        {TBD,TBD}   [I-D.ietf-tls-chacha20-poly1305]
-TLS_DHE_RSA_WITH_CHACHA20_POLY1305            {TBD,TBD}   [I-D.ietf-tls-chacha20-poly1305]
-</pre>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Cipher Suite Name</th>
+      <th class="left">Value</th>
+      <th class="left">Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</td>
+      <td class="left">{0x00,0x9E}</td>
+      <td class="left">
+        <a href="#RFC5288">[RFC5288]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</td>
+      <td class="left">{0x00,0x9F}</td>
+      <td class="left">
+        <a href="#RFC5288">[RFC5288]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</td>
+      <td class="left">{0xC0,0x2B}</td>
+      <td class="left">
+        <a href="#RFC5289">[RFC5289]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384</td>
+      <td class="left">{0xC0,0x2C}</td>
+      <td class="left">
+        <a href="#RFC5289">[RFC5289]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</td>
+      <td class="left">{0xC0,0x2F}</td>
+      <td class="left">
+        <a href="#RFC5289">[RFC5289]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</td>
+      <td class="left">{0xC0,0x30}</td>
+      <td class="left">
+        <a href="#RFC5289">[RFC5289]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_128_CCM</td>
+      <td class="left">{0xC0,0x9E}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_256_CCM</td>
+      <td class="left">{0xC0,0x9F}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_128_CCM_8</td>
+      <td class="left">{0xC0,0xA2}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_AES_256_CCM_8</td>
+      <td class="left">{0xC0,0xA3}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">{TBD,TBD}</td>
+      <td class="left">
+        <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">{TBD,TBD}</td>
+      <td class="left">
+        <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_RSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">{TBD,TBD}</td>
+      <td class="left">
+        <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <p id="rfc.section.A.4.p.6">[[TODO: CHACHA20_POLY1305 cipher suite IDs are TBD.]]</p>
 <p id="rfc.section.A.4.p.7">Note: ECDHE AES GCM was not yet standards track prior to the publication of this specification. This document promotes it to Standards Track.</p>
 <p id="rfc.section.A.4.p.8">All cipher suites in this section are specified for use with both TLS 1.2 and TLS 1.3, as well as the corresponding versions of DTLS.  (see <a href="#backward-compatibility">Appendix C</a>)</p>
