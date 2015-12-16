@@ -1761,7 +1761,7 @@ Subsequent Handshake:
   <li>Send the same cryptographic determining parameters (Section <a href="#cryptographic-determining-parameters">Section 6.3.2.5.1</a>) with the previous connection. If a 0-RTT handshake is being used with a PSK that was negotiated via a non-PSK handshake, then the client MUST use the same symmetric cipher parameters as were negotiated on that handshake but with a PSK cipher suite.</li>
   <li>Indicate the same parameters as the server indicated in that connection.</li>
 </ul>
-<p id="rfc.section.6.3.2.5.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, a &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.</p>
+<p id="rfc.section.6.3.2.5.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, a &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  Clients which do 0-RTT MUST always send &#8220;end_of_early_data&#8221; even if the ServerConfiguration indicates that no application data is allowed (EarlyDataType of &#8220;client_authentication&#8221;), though in that case it MUST NOT send any non-empty data records (i.e., those which consist of anything other than padding).</p>
 <p id="rfc.section.6.3.2.5.p.7">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
 
@@ -1871,7 +1871,10 @@ Subsequent Handshake:
 <p id="rfc.section.6.3.3.3.p.3">Structure of this Message:</p>
 <pre>
       enum { (65535) } ConfigurationExtensionType;
-
+      
+      enum { client_authentication(1), early_data(2),
+             client_authentication_and_data(3), (255) } EarlyDataType;
+             
       struct {
           ConfigurationExtensionType extension_type;
           opaque extension_data&lt;0..2^16-1&gt;;
@@ -1898,7 +1901,7 @@ Subsequent Handshake:
   <dt>server_key</dt>
   <dd style="margin-left: 8"><br/> The long-term DH key that is being established for this configuration.</dd>
   <dt>early_data_type</dt>
-  <dd style="margin-left: 8"><br/> The type of 0-RTT handshake that this configuration is to be used for (see <a href="#early-data-indication">Section 6.3.2.5</a>). If &#8220;client_authentication&#8221; or &#8220;client_authentication_and_data&#8221;, then the client should select the certificate for future handshakes based on the CertificateRequest parameters supplied in this handshake. The server MUST NOT send either of these two options unless it also requested a certificate on this handshake.  [[OPEN ISSUE: Should we relax this?]]</dd>
+  <dd style="margin-left: 8"><br/> The type of 0-RTT handshake that this configuration is to be used for (see <a href="#early-data-indication">Section 6.3.2.5</a>). If &#8220;client_authentication&#8221; or &#8220;client_authentication_and_data&#8221;, then the client MUST select the certificate for future handshakes based on the CertificateRequest parameters supplied in this handshake. The server MUST NOT send either of these two options unless it also requested a certificate on this handshake.  [[OPEN ISSUE: Should we relax this?]]</dd>
   <dt>extensions</dt>
   <dd style="margin-left: 8"><br/> This field is a placeholder for future extensions to the ServerConfiguration format.</dd>
 </dl>
@@ -1976,7 +1979,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>The client MUST send a Certificate message whenever the server has requested client authentication via a CertificateRequest message (<a href="#certificate-request">Section 6.3.3.2</a>) or when the EarlyDataIndication indicates client authentication. This message is only sent if the server requests a certificate. If no suitable certificate is available, the client MUST send a Certificate message containing no certificates (i.e., with the &#8220;certificate_list&#8221; field having length 0).</li>
+  <li>The client MUST send a Certificate message whenever the server has requested client authentication via a CertificateRequest message (<a href="#certificate-request">Section 6.3.3.2</a>) or when the EarlyDataType provided with the server configuration indicates a need for client authentication.  This message is only sent if the server requests a certificate via one of these mechanisms. If no suitable certificate is available, the client MUST send a Certificate message containing no certificates (i.e., with the &#8220;certificate_list&#8221; field having length 0).</li>
 </ul>
 <p id="rfc.section.6.3.4.1.p.4">Meaning of this message:</p>
 <p/>
@@ -3312,7 +3315,10 @@ server_finished_key =
    } CertificateRequest;
 
       enum { (65535) } ConfigurationExtensionType;
-
+      
+      enum { client_authentication(1), early_data(2),
+             client_authentication_and_data(3), (255) } EarlyDataType;
+             
       struct {
           ConfigurationExtensionType extension_type;
           opaque extension_data&lt;0..2^16-1&gt;;

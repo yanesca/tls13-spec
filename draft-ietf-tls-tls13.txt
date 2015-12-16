@@ -3129,7 +3129,7 @@ Internet-Draft                     TLS                     December 2015
    as their corresponding messages sent in other flights (handshake,
    application_data, and alert respectively) but are protected under
    different keys.  After all the 0-RTT application data messages (if
-
+   any) have been sent, a "end_of_early_data" alert of type "warning" is
 
 
 
@@ -3138,8 +3138,12 @@ Rescorla                  Expires June 18, 2016                [Page 56]
 Internet-Draft                     TLS                     December 2015
 
 
-   any) have been sent, a "end_of_early_data" alert of type "warning" is
-   sent to indicate the end of the flight.
+   sent to indicate the end of the flight.  Clients which do 0-RTT MUST
+   always send "end_of_early_data" even if the ServerConfiguration
+   indicates that no application data is allowed (EarlyDataType of
+   "client_authentication"), though in that case it MUST NOT send any
+   non-empty data records (i.e., those which consist of anything other
+   than padding).
 
    A server which receives an "early_data" extension can behave in one
    of two ways:
@@ -3182,10 +3186,6 @@ Internet-Draft                     TLS                     December 2015
    -  Whether we really want the Finished to not include the server's
       data at all.
 
-   What's here now needs a lot of cleanup before it is clear and
-   correct.]]
-
-
 
 
 
@@ -3193,6 +3193,9 @@ Rescorla                  Expires June 18, 2016                [Page 57]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   What's here now needs a lot of cleanup before it is clear and
+   correct.]]
 
 6.3.2.5.1.  Cryptographic Determining Parameters
 
@@ -3239,9 +3242,6 @@ Internet-Draft                     TLS                     December 2015
       establish the cryptographic context.  The same extension types
       MUST NOT appear in both the ServerHello and EncryptedExtensions.
       If the same extension appears in both locations, the client MUST
-      rely only on the value in the EncryptedExtensions block.  All
-      server-sent extensions other than those explicitly listed in
-      Section 6.3.1.2 or designated in the IANA registry MUST only
 
 
 
@@ -3250,6 +3250,9 @@ Rescorla                  Expires June 18, 2016                [Page 58]
 Internet-Draft                     TLS                     December 2015
 
 
+      rely only on the value in the EncryptedExtensions block.  All
+      server-sent extensions other than those explicitly listed in
+      Section 6.3.1.2 or designated in the IANA registry MUST only
       appear in EncryptedExtensions.  Extensions which are designated to
       appear in ServerHello MUST NOT appear in EncryptedExtensions.
       Clients MUST check EncryptedExtensions for the presence of any
@@ -3294,10 +3297,7 @@ Internet-Draft                     TLS                     December 2015
       An opaque string which identifies the certificate request and
       which will be echoed in the client's Certificate message.  The
       certificate_request_context MUST be unique within the scope of
-      this connection (thus preventing replay of client
-      CertificateVerify messages).
 
-   supported_signature_algorithms
 
 
 
@@ -3306,6 +3306,10 @@ Rescorla                  Expires June 18, 2016                [Page 59]
 Internet-Draft                     TLS                     December 2015
 
 
+      this connection (thus preventing replay of client
+      CertificateVerify messages).
+
+   supported_signature_algorithms
       A list of the hash/signature algorithm pairs that the server is
       able to verify, listed in descending order of preference.  Any
       certificates provided by the client MUST be signed using a hash/
@@ -3350,10 +3354,6 @@ Internet-Draft                     TLS                     December 2015
          when all key usage bits asserted in the request are also
          asserted in the Key Usage certificate extension.
 
-      o  The Extended Key Usage extension in a certificate matches the
-         request when all key purpose OIDs present in the request are
-         also found in the Extended Key Usage certificate extension.
-
 
 
 
@@ -3362,6 +3362,9 @@ Rescorla                  Expires June 18, 2016                [Page 60]
 Internet-Draft                     TLS                     December 2015
 
 
+      o  The Extended Key Usage extension in a certificate matches the
+         request when all key purpose OIDs present in the request are
+         also found in the Extended Key Usage certificate extension.
          The special anyExtendedKeyUsage OID MUST NOT be used in the
          request.
 
@@ -3382,21 +3385,24 @@ Internet-Draft                     TLS                     December 2015
 
    Structure of this Message:
 
-         enum { (65535) } ConfigurationExtensionType;
+        enum { (65535) } ConfigurationExtensionType;
 
-         struct {
-             ConfigurationExtensionType extension_type;
-             opaque extension_data<0..2^16-1>;
-         } ConfigurationExtension;
+        enum { client_authentication(1), early_data(2),
+               client_authentication_and_data(3), (255) } EarlyDataType;
 
-         struct {
-             opaque configuration_id<1..2^16-1>;
-             uint32 expiration_date;
-             NamedGroup group;
-             opaque server_key<1..2^16-1>;
-             EarlyDataType early_data_type;
-             ConfigurationExtension extensions<0..2^16-1>;
-         } ServerConfiguration;
+        struct {
+            ConfigurationExtensionType extension_type;
+            opaque extension_data<0..2^16-1>;
+        } ConfigurationExtension;
+
+        struct {
+            opaque configuration_id<1..2^16-1>;
+            uint32 expiration_date;
+            NamedGroup group;
+            opaque server_key<1..2^16-1>;
+            EarlyDataType early_data_type;
+            ConfigurationExtension extensions<0..2^16-1>;
+        } ServerConfiguration;
 
    configuration_id
       The configuration identifier to be used in 0-RTT mode.
@@ -3405,12 +3411,6 @@ Internet-Draft                     TLS                     December 2015
       The group for the long-term DH key that is being established for
       this configuration.
 
-   expiration_date
-      The last time when this configuration is expected to be valid (in
-      seconds since the Unix epoch).  Servers MUST NOT use any value
-      more than 604800 seconds (7 days) in the future.  Clients MUST NOT
-      cache configurations for longer than 7 days, regardless of the
-
 
 
 Rescorla                  Expires June 18, 2016                [Page 61]
@@ -3418,6 +3418,11 @@ Rescorla                  Expires June 18, 2016                [Page 61]
 Internet-Draft                     TLS                     December 2015
 
 
+   expiration_date
+      The last time when this configuration is expected to be valid (in
+      seconds since the Unix epoch).  Servers MUST NOT use any value
+      more than 604800 seconds (7 days) in the future.  Clients MUST NOT
+      cache configurations for longer than 7 days, regardless of the
       expiration_date.  [[OPEN ISSUE: Is this the right value?  The idea
       is just to minimize exposure.]]
 
@@ -3428,12 +3433,11 @@ Internet-Draft                     TLS                     December 2015
    early_data_type
       The type of 0-RTT handshake that this configuration is to be used
       for (see Section 6.3.2.5).  If "client_authentication" or
-      "client_authentication_and_data", then the client should select
-      the certificate for future handshakes based on the
-      CertificateRequest parameters supplied in this handshake.  The
-      server MUST NOT send either of these two options unless it also
-      requested a certificate on this handshake.  [[OPEN ISSUE: Should
-      we relax this?]]
+      "client_authentication_and_data", then the client MUST select the
+      certificate for future handshakes based on the CertificateRequest
+      parameters supplied in this handshake.  The server MUST NOT send
+      either of these two options unless it also requested a certificate
+      on this handshake.  [[OPEN ISSUE: Should we relax this?]]
 
    extensions
       This field is a placeholder for future extensions to the
@@ -3463,16 +3467,15 @@ Internet-Draft                     TLS                     December 2015
    certain circumstances, as defined below.  The Finished message is
    always sent as part of the Authentication block.
 
-   The computations for the Authentication messages all uniformly take
-   the following inputs:
-
-
 
 
 Rescorla                  Expires June 18, 2016                [Page 62]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   The computations for the Authentication messages all uniformly take
+   the following inputs:
 
    -  The certificate and signing key to be used.
 
@@ -3504,9 +3507,6 @@ Internet-Draft                     TLS                     December 2015
 
    The following table defines the Handshake Context and MAC Key for
    each scenario:
-
-
-
 
 
 
@@ -3568,15 +3568,15 @@ Internet-Draft                     TLS                     December 2015
 
       The client MUST send a Certificate message whenever the server has
       requested client authentication via a CertificateRequest message
-      (Section 6.3.3.2) or when the EarlyDataIndication indicates client
-      authentication.  This message is only sent if the server requests
-      a certificate.  If no suitable certificate is available, the
-      client MUST send a Certificate message containing no certificates
-      (i.e., with the "certificate_list" field having length 0).
+      (Section 6.3.3.2) or when the EarlyDataType provided with the
+      server configuration indicates a need for client authentication.
+      This message is only sent if the server requests a certificate via
+      one of these mechanisms.  If no suitable certificate is available,
+      the client MUST send a Certificate message containing no
+      certificates (i.e., with the "certificate_list" field having
+      length 0).
 
    Meaning of this message:
-
-      This message conveys the endpoint's certificate chain to the peer.
 
 
 
@@ -3585,6 +3585,8 @@ Rescorla                  Expires June 18, 2016                [Page 64]
 
 Internet-Draft                     TLS                     December 2015
 
+
+      This message conveys the endpoint's certificate chain to the peer.
 
       The certificate MUST be appropriate for the negotiated cipher
       suite's key exchange algorithm and any negotiated extensions.
@@ -3628,12 +3630,10 @@ Internet-Draft                     TLS                     December 2015
    appropriate certificate to send in response to the server's
    authentication request.
 
-6.3.4.1.1.  Server Certificate Selection
 
-   The following rules apply to the certificates sent by the server:
 
-   -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
-      negotiated otherwise (e.g., [RFC5081]).
+
+
 
 
 
@@ -3641,6 +3641,13 @@ Rescorla                  Expires June 18, 2016                [Page 65]
 
 Internet-Draft                     TLS                     December 2015
 
+
+6.3.4.1.1.  Server Certificate Selection
+
+   The following rules apply to the certificates sent by the server:
+
+   -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
+      negotiated otherwise (e.g., [RFC5081]).
 
    -  The server's end-entity certificate's public key (and associated
       restrictions) MUST be compatible with the selected key exchange
@@ -3682,13 +3689,6 @@ Internet-Draft                     TLS                     December 2015
    algorithm only if the "signature_algorithms" extension provided by
    the client permits it.  If the client cannot construct an acceptable
    chain using the provided certificates and decides to abort the
-   handshake, then it MUST send an "unsupported_certificate" alert
-   message and close the connection.
-
-   If the server has multiple certificates, it chooses one of them based
-   on the above-mentioned criteria (in addition to other criteria, such
-   as transport layer endpoint, local configuration and preferences).
-
 
 
 
@@ -3697,6 +3697,13 @@ Rescorla                  Expires June 18, 2016                [Page 66]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   handshake, then it MUST send an "unsupported_certificate" alert
+   message and close the connection.
+
+   If the server has multiple certificates, it chooses one of them based
+   on the above-mentioned criteria (in addition to other criteria, such
+   as transport layer endpoint, local configuration and preferences).
 
    As cipher suites that specify new key exchange methods are specified
    for the TLS protocol, they will imply the certificate format and the
@@ -3738,13 +3745,6 @@ Internet-Draft                     TLS                     December 2015
    If server supplies an empty Certificate message, the client MUST
    terminate the handshake with a fatal "decode_error" alert.
 
-   If the client does not send any certificates, the server MAY at its
-   discretion either continue the handshake without client
-   authentication, or respond with a fatal "handshake_failure" alert.
-   Also, if some aspect of the certificate chain was unacceptable (e.g.,
-   it was not signed by a known, trusted CA), the server MAY at its
-   discretion either continue the handshake (considering the client
-   unauthenticated) or send a fatal alert.
 
 
 
@@ -3753,6 +3753,14 @@ Rescorla                  Expires June 18, 2016                [Page 67]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   If the client does not send any certificates, the server MAY at its
+   discretion either continue the handshake without client
+   authentication, or respond with a fatal "handshake_failure" alert.
+   Also, if some aspect of the certificate chain was unacceptable (e.g.,
+   it was not signed by a known, trusted CA), the server MAY at its
+   discretion either continue the handshake (considering the client
+   unauthenticated) or send a fatal alert.
 
    Any endpoint receiving any certificate signed using any signature
    algorithm using an MD5 hash MUST send a "bad_certificate" alert
@@ -3794,14 +3802,6 @@ Internet-Draft                     TLS                     December 2015
 
       Where handshake_hash is as described in Section 7.3.1 and includes
       the messages sent or received, starting at ClientHello and up to,
-      but not including, this message, including the type and length
-      fields of the handshake messages.  This is a digest of the
-      concatenation of all the Handshake structures (as defined in
-      Section 6.3) exchanged thus far.  The digest MUST be the Hash used
-      as the basis for HKDF.
-
-      The context string for a server signature is "TLS 1.3, server
-      CertificateVerify" and for a client signature is "TLS 1.3, client
 
 
 
@@ -3810,6 +3810,14 @@ Rescorla                  Expires June 18, 2016                [Page 68]
 Internet-Draft                     TLS                     December 2015
 
 
+      but not including, this message, including the type and length
+      fields of the handshake messages.  This is a digest of the
+      concatenation of all the Handshake structures (as defined in
+      Section 6.3) exchanged thus far.  The digest MUST be the Hash used
+      as the basis for HKDF.
+
+      The context string for a server signature is "TLS 1.3, server
+      CertificateVerify" and for a client signature is "TLS 1.3, client
       CertificateVerify".  A hash of the handshake messages is signed
       rather than the messages themselves because the digitally-signed
       format requires padding and context bytes at the beginning of the
@@ -3850,14 +3858,6 @@ Internet-Draft                     TLS                     December 2015
    from a certificate-authenticated handshake.  [PSK-FINISHED] describes
    a concrete attack on this mode if the Finished is omitted from the
    signature.  It is unsafe to use certificate-based client
-   authentication when the client might potentially share the same PSK/
-   key-id pair with two different endpoints.  In order to ensure this,
-   implementations MUST NOT mix certificate-based client authentication
-   with pure PSK modes.
-
-
-
-
 
 
 
@@ -3865,6 +3865,11 @@ Rescorla                  Expires June 18, 2016                [Page 69]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   authentication when the client might potentially share the same PSK/
+   key-id pair with two different endpoints.  In order to ensure this,
+   implementations MUST NOT mix certificate-based client authentication
+   with pure PSK modes.
 
 6.3.4.3.  Finished
 
@@ -3908,11 +3913,6 @@ Internet-Draft                     TLS                     December 2015
 
       * Only included if present.
 
-   Where HMAC [RFC2104] uses the Hash algorithm for the handshake.  As
-   noted above: the HMAC input can generally be implemented by a running
-   hash, i.e., just the handshake hash at this point.
-
-
 
 
 
@@ -3921,6 +3921,10 @@ Rescorla                  Expires June 18, 2016                [Page 70]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   Where HMAC [RFC2104] uses the Hash algorithm for the handshake.  As
+   noted above: the HMAC input can generally be implemented by a running
+   hash, i.e., just the handshake hash at this point.
 
    In previous versions of TLS, the verify_data was always 12 octets
    long.  In the current version of TLS, it is the size of the HMAC
@@ -3966,10 +3970,6 @@ Internet-Draft                     TLS                     December 2015
 
    The ticket itself is an opaque label.  It MAY either be a database
    lookup key or a self-encrypted and self-authenticated value.
-   Section 4 of [RFC5077] describes a recommended ticket construction
-   mechanism.
-
-
 
 
 
@@ -3977,6 +3977,9 @@ Rescorla                  Expires June 18, 2016                [Page 71]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   Section 4 of [RFC5077] describes a recommended ticket construction
+   mechanism.
 
    [[TODO: Should we require that tickets be bound to the existing
    symmetric cipher suite.  See the TODO above about early_data and
@@ -4022,10 +4025,7 @@ Internet-Draft                     TLS                     December 2015
    updates its receive keys and notes that the generations match and
    thus no send update is needed.
 
-   Note that the side which sends its KeyUpdate first needs to retain
-   the traffic keys (though not the traffic secret) for the previous
-   generation of keys until it receives the KeyUpdate from the other
-   side.
+
 
 
 
@@ -4033,6 +4033,11 @@ Rescorla                  Expires June 18, 2016                [Page 72]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   Note that the side which sends its KeyUpdate first needs to retain
+   the traffic keys (though not the traffic secret) for the previous
+   generation of keys until it receives the KeyUpdate from the other
+   side.
 
 7.  Cryptographic Computations
 
@@ -4077,11 +4082,6 @@ Internet-Draft                     TLS                     December 2015
    the sources from the table above.
 
      HKDF-Expand-Label(Secret, Label, HashValue, Length) =
-          HKDF-Expand(Secret, HkdfLabel, Length)
-
-     Where HkdfLabel is specified as:
-
-     struct HkdfLabel {
 
 
 
@@ -4090,6 +4090,11 @@ Rescorla                  Expires June 18, 2016                [Page 73]
 Internet-Draft                     TLS                     December 2015
 
 
+          HKDF-Expand(Secret, HkdfLabel, Length)
+
+     Where HkdfLabel is specified as:
+
+     struct HkdfLabel {
        uint16 length;
        opaque label<9..255>;
        opaque hash_value<0..255>;
@@ -4133,11 +4138,6 @@ Internet-Draft                     TLS                     December 2015
 
      8. exporter_secret = HKDF-Expand-Label(master_secret,
                                             "exporter master secret",
-                                            session_hash, L)
-
-
-     Where session_hash is the session hash as defined in
-     {{the-handshake-hash}}. I.e., the entire handshake up to
 
 
 
@@ -4146,6 +4146,11 @@ Rescorla                  Expires June 18, 2016                [Page 74]
 Internet-Draft                     TLS                     December 2015
 
 
+                                            session_hash, L)
+
+
+     Where session_hash is the session hash as defined in
+     {{the-handshake-hash}}. I.e., the entire handshake up to
      and including the client's Finished, but not including
      any 0-RTT handshake messages.
 
@@ -4190,17 +4195,16 @@ Internet-Draft                     TLS                     December 2015
 
    -  A purpose value indicating the specific value being generated
 
-   -  The length of the key.
-
-   -  The handshake context which is used to generate the keys.
-
-
 
 
 Rescorla                  Expires June 18, 2016                [Page 75]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   -  The length of the key.
+
+   -  The handshake context which is used to generate the keys.
 
    The keying material is computed using:
 
@@ -4246,10 +4250,6 @@ Internet-Draft                     TLS                     December 2015
                  |                  |                    |
                  | Server Write IV  | "server write IV"  |
                  +------------------+--------------------+
-
-
-
-
 
 
 
@@ -5436,45 +5436,45 @@ Internet-Draft                     TLS                     December 2015
 
 A.3.2.  Server Parameters Messages
 
-      struct {
-          Extension extensions<0..2^16-1>;
-      } EncryptedExtensions;
+     struct {
+         Extension extensions<0..2^16-1>;
+     } EncryptedExtensions;
 
-      opaque DistinguishedName<1..2^16-1>;
+     opaque DistinguishedName<1..2^16-1>;
 
-      struct {
-          opaque certificate_extension_oid<1..2^8-1>;
-          opaque certificate_extension_values<0..2^16-1>;
-      } CertificateExtension;
+     struct {
+         opaque certificate_extension_oid<1..2^8-1>;
+         opaque certificate_extension_values<0..2^16-1>;
+     } CertificateExtension;
 
-      struct {
-          opaque certificate_request_context<0..2^8-1>;
-          SignatureAndHashAlgorithm
-            supported_signature_algorithms<2..2^16-2>;
-          DistinguishedName certificate_authorities<0..2^16-1>;
-          CertificateExtension certificate_extensions<0..2^16-1>;
-      } CertificateRequest;
+     struct {
+         opaque certificate_request_context<0..2^8-1>;
+         SignatureAndHashAlgorithm
+           supported_signature_algorithms<2..2^16-2>;
+         DistinguishedName certificate_authorities<0..2^16-1>;
+         CertificateExtension certificate_extensions<0..2^16-1>;
+     } CertificateRequest;
 
-         enum { (65535) } ConfigurationExtensionType;
+        enum { (65535) } ConfigurationExtensionType;
 
-         struct {
-             ConfigurationExtensionType extension_type;
-             opaque extension_data<0..2^16-1>;
-         } ConfigurationExtension;
+        enum { client_authentication(1), early_data(2),
+               client_authentication_and_data(3), (255) } EarlyDataType;
 
-         struct {
-             opaque configuration_id<1..2^16-1>;
-             uint32 expiration_date;
-             NamedGroup group;
-             opaque server_key<1..2^16-1>;
-             EarlyDataType early_data_type;
-             ConfigurationExtension extensions<0..2^16-1>;
-         } ServerConfiguration;
+        struct {
+            ConfigurationExtensionType extension_type;
+            opaque extension_data<0..2^16-1>;
+        } ConfigurationExtension;
+
+        struct {
+            opaque configuration_id<1..2^16-1>;
+            uint32 expiration_date;
+            NamedGroup group;
+            opaque server_key<1..2^16-1>;
+            EarlyDataType early_data_type;
+            ConfigurationExtension extensions<0..2^16-1>;
+        } ServerConfiguration;
 
 A.3.3.  Authentication Messages
-
-
-
 
 
 
