@@ -303,7 +303,7 @@ ol, ul {
 <link href="#rfc.section.6.3.5" rel="Chapter" title="6.3.5 Post-Handshake Messages"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Cryptographic Computations"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Key Schedule"/>
-<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Updating Traffic Keys"/>
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Updating Traffic Keys and IVs"/>
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Traffic Key Calculation"/>
 <link href="#rfc.section.7.3.1" rel="Chapter" title="7.3.1 The Handshake Hash"/>
 <link href="#rfc.section.7.3.2" rel="Chapter" title="7.3.2 Diffie-Hellman"/>
@@ -465,7 +465,7 @@ ol, ul {
 <li>6.3.5.   <a href="#rfc.section.6.3.5">Post-Handshake Messages</a></li>
 </ul></ul><li>7.   <a href="#rfc.section.7">Cryptographic Computations</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Key Schedule</a></li>
-<li>7.2.   <a href="#rfc.section.7.2">Updating Traffic Keys</a></li>
+<li>7.2.   <a href="#rfc.section.7.2">Updating Traffic Keys and IVs</a></li>
 <li>7.3.   <a href="#rfc.section.7.3">Traffic Key Calculation</a></li>
 <ul><li>7.3.1.   <a href="#rfc.section.7.3.1">The Handshake Hash</a></li>
 <li>7.3.2.   <a href="#rfc.section.7.3.2">Diffie-Hellman</a></li>
@@ -900,7 +900,7 @@ ol, ul {
   <dt>cipher state</dt>
   <dd style="margin-left: 8"><br/> The current state of the encryption algorithm.  This will consist of the scheduled key for that connection.</dd>
   <dt>sequence number</dt>
-  <dd style="margin-left: 8"><br/> Each connection state contains a sequence number, which is maintained separately for read and write states.  The sequence number is set to zero at the beginning of a connection and incremented by one thereafter.  Sequence numbers are of type uint64 and MUST NOT exceed 2^64-1.  Sequence numbers do not wrap.  If a TLS implementation would need to wrap a sequence number, it MUST terminate the connection.  A sequence number is incremented after each record: specifically, the first record transmitted under a particular connection state MUST use sequence number 0.  NOTE: This is a change from previous versions of TLS, where sequence numbers were reset whenever keys were changed.</dd>
+  <dd style="margin-left: 8"><br/> Each connection state contains a sequence number, which is maintained separately for read and write states.  The sequence number is set to zero at the beginning of a connection, and whenever the key is changed.  The sequence number is incremented after each record: specifically, the first record transmitted under a particular connection state and record key MUST use sequence number 0.  Sequence numbers are of type uint64 and MUST NOT exceed 2^64-1.  Sequence numbers do not wrap.  If a TLS implementation would need to wrap a sequence number, it MUST either rekey (<a href="#key-update">Section 6.3.5.3</a>) or terminate the connection.</dd>
 </dl>
 <h2 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> <a href="#record-layer" id="record-layer">Record Layer</a></h2>
 <p id="rfc.section.5.2.p.1">The TLS record layer receives uninterpreted data from higher layers in non-empty blocks of arbitrary size.</p>
@@ -2170,7 +2170,7 @@ server_finished_key =
 <p id="rfc.section.6.3.5.1.p.5">[[TODO: Should we require that tickets be bound to the existing symmetric cipher suite. See the TODO above about early_data and PSK.??]</p>
 <h4 id="rfc.section.6.3.5.2"><a href="#rfc.section.6.3.5.2">6.3.5.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h4>
 <p id="rfc.section.6.3.5.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.  Note: Because there may already be application data messages in flight, the server MUST be prepared to receive an arbitrary number of such messages before receiving the Authentication messages.</p>
-<h4 id="rfc.section.6.3.5.3"><a href="#rfc.section.6.3.5.3">6.3.5.3.</a> <a href="#key-update" id="key-update">Key Update</a></h4>
+<h4 id="rfc.section.6.3.5.3"><a href="#rfc.section.6.3.5.3">6.3.5.3.</a> <a href="#key-update" id="key-update">Key and IV Update</a></h4>
 <p id="rfc.section.6.3.5.3.p.1">struct {} KeyUpdate;</p>
 <p id="rfc.section.6.3.5.3.p.2">The KeyUpdate handshake message is used to indicate that the sender is updating its sending cryptographic keys. This message can be sent by the server after sending its first flight and the client after sending its second flight. Implementations that receive a KeyUpdate message prior to receiving a Finished message as part of the 1-RTT handshake MUST generate a fatal &#8220;unexpected_message&#8221; alert.  After sending a KeyUpdate message, the sender SHALL send all its traffic using the next generation of keys, computed as described in <a href="#updating-traffic-keys">Section 7.2</a>. Upon receiving a KeyUpdate, the receiver MUST update their receiving keys and if they have not already updated their sending state up to or past the then current receiving generation MUST send their own KeyUpdate prior to sending any other messages.  This mechanism allows either side to force an update to the entire connection. Note that implementations may receive an arbitrary number of messages between sending a KeyUpdate and receiving the peer&#8217;s KeyUpdate because those messages may already be in flight.</p>
 <p id="rfc.section.6.3.5.3.p.3">Note that if implementations independently send their own KeyUpdates and they cross in flight, this only results in an update of one generation; when each side receives the other side&#8217;s update it just updates its receive keys and notes that the generations match and thus no send update is needed.</p>
@@ -2273,7 +2273,7 @@ server_finished_key =
 </pre>
 <p id="rfc.section.7.1.p.5">The traffic keys are computed from xSS, xES, and the traffic_secret as described in <a href="#traffic-key-calculation">Section 7.3</a> below. The traffic_secret may be updated throughout the connection as described in <a href="#updating-traffic-keys">Section 7.2</a>.</p>
 <p id="rfc.section.7.1.p.6">Note: although the steps above are phrased as individual HKDF-Extract and HKDF-Expand operations, because each HKDF-Expand operation is paired with an HKDF-Extract, it is possible to implement this key schedule with a black-box HKDF API, albeit at some loss of efficiency as some HKDF-Extract operations will be repeated.</p>
-<h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys</a></h2>
+<h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
 <p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message <a href="#key-update">Section 6.3.5.3</a>.  The next generation of traffic keys is computed by generating traffic_secret_N+1 from traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
 <p id="rfc.section.7.2.p.2">The next-generation traffic_secret is computed as:</p>
 <p id="rfc.section.7.2.p.3">traffic_secret_N+1 = HKDF-Expand-Label(traffic_secret_N, &#8220;traffic secret&#8221;, &#8220;&#8221;, L)</p>
@@ -2360,6 +2360,7 @@ server_finished_key =
     </tr>
   </tbody>
 </table>
+<p id="rfc.section.7.3.p.6">All the traffic keying material is recomputed, whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
 <h3 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> <a href="#the-handshake-hash" id="the-handshake-hash">The Handshake Hash</a></h3>
 <p id="rfc.section.7.3.1.p.1">The handshake hash is defined as the hash of all handshake messages sent or received, starting at ClientHello up to the present time, with the exception of the client&#8217;s 0-RTT authentication messages (Certificate, CertificateVerify, and Finished) including the type and length fields of the handshake messages. This is the concatenation the exchanged Handshake structures in plaintext form (even if they were encrypted on the wire).  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/351 for the question of whether the 0-RTT handshake messages are hashed.]]</p>
 <p id="rfc.section.7.3.1.p.2">This final value of the handshake hash is referred to as the &#8220;session hash&#8221; because it contains all the handshake messages involved in establishing the session, up to and including the client&#8217;s Finished.</p>
@@ -2387,9 +2388,9 @@ server_finished_key =
 <p id="rfc.section.8.1.p.3">A TLS-compliant application SHOULD implement the following cipher suites:</p>
 <pre>
     TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
-    TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+    TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
     TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-    TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+    TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
 </pre>
 <h2 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#mti-extensions" id="mti-extensions">MTI Extensions</a></h2>
 <p id="rfc.section.8.2.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following TLS extensions:</p>
@@ -3486,21 +3487,21 @@ server_finished_key =
       </td>
     </tr>
     <tr>
-      <td class="left">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</td>
       <td class="left">{TBD,TBD}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
       </td>
     </tr>
     <tr>
-      <td class="left">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256</td>
       <td class="left">{TBD,TBD}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
       </td>
     </tr>
     <tr>
-      <td class="left">TLS_DHE_RSA_WITH_CHACHA20_POLY1305</td>
+      <td class="left">TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256</td>
       <td class="left">{TBD,TBD}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
@@ -3508,7 +3509,7 @@ server_finished_key =
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.A.4.p.6">[[TODO: CHACHA20_POLY1305 cipher suite IDs are TBD.]]</p>
+<p id="rfc.section.A.4.p.6">[[TODO: CHACHA20_POLY1305_SHA256 cipher suite IDs are TBD.]]</p>
 <p id="rfc.section.A.4.p.7">Note: ECDHE AES GCM was not yet standards track prior to the publication of this specification. This document promotes it to Standards Track.</p>
 <p id="rfc.section.A.4.p.8">All cipher suites in this section are specified for use with both TLS 1.2 and TLS 1.3, as well as the corresponding versions of DTLS.  (see <a href="#backward-compatibility">Appendix C</a>)</p>
 <p id="rfc.section.A.4.p.9">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 11</a>.</p>
