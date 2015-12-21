@@ -175,7 +175,7 @@ Internet-Draft                     TLS                     December 2015
      D.4.  Final Notes . . . . . . . . . . . . . . . . . . . . . . . 111
    Appendix E.  Working Group Information  . . . . . . . . . . . . . 111
    Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 111
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 114
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 115
 
 1.  Introduction
 
@@ -6254,6 +6254,10 @@ Internet-Draft                     TLS                     December 2015
       Nokia
       pasi.eronen@nokia.com
 
+   -  Cedric Fournet
+      Microsoft
+      fournet@microsoft.com
+
    -  Anil Gangolli
       anil@busybuddha.org
 
@@ -6263,16 +6267,16 @@ Internet-Draft                     TLS                     December 2015
       Sun Microsystems Laboratories
       vipul.gupta@sun.com
 
-   -  Chris Hawk (co-author of [RFC4492])
-      Corriente Networks LLC
-      chris@corriente.net
-
 
 
 Rescorla                  Expires June 23, 2016               [Page 112]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   -  Chris Hawk (co-author of [RFC4492])
+      Corriente Networks LLC
+      chris@corriente.net
 
    -  Kipp Hickman
 
@@ -6318,10 +6322,6 @@ Internet-Draft                     TLS                     December 2015
 
    -  Magnus Nystrom
       RSA Security
-      magnus@rsasecurity.com
-
-   -  Alfredo Pironti (co-author of [RFC7627])
-      INRIA
 
 
 
@@ -6330,6 +6330,10 @@ Rescorla                  Expires June 23, 2016               [Page 113]
 Internet-Draft                     TLS                     December 2015
 
 
+      magnus@rsasecurity.com
+
+   -  Alfredo Pironti (co-author of [RFC7627])
+      INRIA
       alfredo.pironti@inria.fr
 
    -  Andrei Popov
@@ -6372,6 +6376,16 @@ Internet-Draft                     TLS                     December 2015
       Vodafone
       timothy.wright@vodafone.com
 
+
+
+
+
+
+Rescorla                  Expires June 23, 2016               [Page 114]
+
+Internet-Draft                     TLS                     December 2015
+
+
 Author's Address
 
    Eric Rescorla
@@ -6381,4 +6395,46 @@ Author's Address
 
 
 
-Rescorla                  Expires June 23, 2016               [Page 114]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires June 23, 2016               [Page 115]
