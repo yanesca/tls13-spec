@@ -71,6 +71,7 @@ ul.toc li {
   text-indent: -2.5em;
   padding-left: 2.5em;
   padding-bottom: 5px;
+  margin: 0;
 }
 ul.toc, ul.toc ul {
   margin: 0 0 0 1.5em;
@@ -200,9 +201,12 @@ a[href]:hover {
   background-color: #eee;
 }
 
-ol, ul {
+ol, ul, li, p {
   padding: 0;
   margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
 }
 
 .github-fork-ribbon-wrapper {
@@ -356,7 +360,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-12-21" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-12-23" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -377,7 +381,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 21, 2015</td>
+  <td class="right">December 23, 2015</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -392,7 +396,7 @@ ol, ul {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 23, 2016</td>
+  <td class="left">Expires: June 25, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -413,7 +417,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 23, 2016.</p>
+<p>This Internet-Draft will expire on June 25, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -559,6 +563,7 @@ ol, ul {
   <li>Update IANA considerations section and relax some of the policies.</li>
   <li>Unify authentication modes. Add post-handshake client authentication.</li>
   <li>Remove early_handshake content type. Terminate 0-RTT data with an alert.</li>
+  <li>Reset sequence number upon key change (as proposed by Fournet et al.)</li>
 </ul>
 <p id="rfc.section.1.2.p.3">draft-10</p>
 <p/>
@@ -1147,11 +1152,12 @@ ol, ul {
   <li>A pre-shared symmetric key (PSK)</li>
   <li>A combination of a symmetric key and Diffie-Hellman</li>
 </ul>
-<p id="rfc.section.6.2.p.4">Which mode is used depends on the negotiated cipher suite. Conceptually, the handshake establishes two secrets which are used to derive all the keys.</p>
+<p id="rfc.section.6.2.p.4">Which mode is used depends on the negotiated cipher suite. Conceptually, the handshake establishes three secrets which are used to derive all the keys.</p>
 <p id="rfc.section.6.2.p.5">Ephemeral Secret (ES): A secret which is derived from fresh (EC)DHE shares for this connection. Keying material derived from ES is intended to be forward secret (with the exception of pre-shared key only modes).</p>
 <p id="rfc.section.6.2.p.6">Static Secret (SS): A secret which may be derived from static or semi-static keying material, such as a pre-shared key or the server&#8217;s semi-static (EC)DH share.</p>
-<p id="rfc.section.6.2.p.7">In some cases, as with the DH handshake shown in <a href="#tls-full">Figure 1</a>, these secrets are the same, but having both allows for a uniform key derivation scheme for all cipher modes.</p>
-<p id="rfc.section.6.2.p.8">The basic TLS Handshake for DH is shown in <a href="#tls-full">Figure 1</a>:</p>
+<p id="rfc.section.6.2.p.7">Master Secret (MS): A secret derived from both the static and the ephemeral secret.</p>
+<p id="rfc.section.6.2.p.8">In some cases, as with the DH handshake shown in <a href="#tls-full">Figure 1</a>, the ephemeral and shared secrets are the same, but having both allows for a uniform key derivation scheme for all cipher modes.</p>
+<p id="rfc.section.6.2.p.9">The basic TLS Handshake for DH is shown in <a href="#tls-full">Figure 1</a>:</p>
 <div id="rfc.figure.1"/>
 <div id="tls-full"/>
 <pre>
@@ -1185,24 +1191,24 @@ Auth | {CertificateVerify*}
                  derived from the master secret.
 </pre>
 <p class="figure">Figure 1: Message flow for full TLS Handshake</p>
-<p id="rfc.section.6.2.p.9">The handshake can be thought of as having three phases, indicated in the diagram above.</p>
-<p id="rfc.section.6.2.p.10">Key Exchange: establish shared keying material and select the cryptographic parameters. Everything after this phase is encrypted.</p>
-<p id="rfc.section.6.2.p.11">Server Parameters: establish other handshake parameters (whether the client is authenticated, support for 0-RTT, etc.)</p>
-<p id="rfc.section.6.2.p.12">Authentication: authenticate the server (and optionally the client) and provide key confirmation and handshake integrity.</p>
-<p id="rfc.section.6.2.p.13">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 6.3.1.1</a>) message, which contains a random nonce (ClientHello.random), its offered protocol version, cipher suite, and extensions, and one or more Diffie-Hellman key shares in the &#8220;key_share&#8221; extension <a href="#key-share">Section 6.3.2.3</a>.</p>
-<p id="rfc.section.6.2.p.14">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>] If DH is in use, this will contain a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the shares offered by the client. The server&#8217;s KeyShare and the client&#8217;s KeyShare corresponding to the negotiated key exchange are used together to derive the Static Secret and Ephemeral Secret (in this mode they are the same).  [<a href="#key-share">Section 6.3.2.3</a>]</p>
-<p id="rfc.section.6.2.p.15">The server then sends three messages to establish the Server Parameters:</p>
+<p id="rfc.section.6.2.p.10">The handshake can be thought of as having three phases, indicated in the diagram above.</p>
+<p id="rfc.section.6.2.p.11">Key Exchange: establish shared keying material and select the cryptographic parameters. Everything after this phase is encrypted.</p>
+<p id="rfc.section.6.2.p.12">Server Parameters: establish other handshake parameters (whether the client is authenticated, support for 0-RTT, etc.)</p>
+<p id="rfc.section.6.2.p.13">Authentication: authenticate the server (and optionally the client) and provide key confirmation and handshake integrity.</p>
+<p id="rfc.section.6.2.p.14">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 6.3.1.1</a>) message, which contains a random nonce (ClientHello.random), its offered protocol version, cipher suite, and extensions, and one or more Diffie-Hellman key shares in the &#8220;key_share&#8221; extension <a href="#key-share">Section 6.3.2.3</a>.</p>
+<p id="rfc.section.6.2.p.15">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>] If DH is in use, this will contain a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the shares offered by the client. The server&#8217;s KeyShare and the client&#8217;s KeyShare corresponding to the negotiated key exchange are used together to derive the Static Secret and Ephemeral Secret (in this mode they are the same).  [<a href="#key-share">Section 6.3.2.3</a>]</p>
+<p id="rfc.section.6.2.p.16">The server then sends three messages to establish the Server Parameters:</p>
 <p/>
 
 <dl>
   <dt>EncryptedExtensions</dt>
-  <dd style="margin-left: 8">responses to any extensions which are not required in order to determine the cryptographic parameters. [<a href="#encrypted-extensions">Section 6.3.3.1</a>]</dd>
+  <dd style="margin-left: 8"><br/> responses to any extensions which are not required in order to determine the cryptographic parameters. [<a href="#encrypted-extensions">Section 6.3.3.1</a>]</dd>
   <dt>CertificateRequest</dt>
-  <dd style="margin-left: 8">if certificate-based client authentication is desired, the desired parameters for that certificate. This message will be omitted if client authentication is not desired.  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/184]].  [<a href="#certificate-request">Section 6.3.3.2</a>]</dd>
+  <dd style="margin-left: 8"><br/> if certificate-based client authentication is desired, the desired parameters for that certificate. This message will be omitted if client authentication is not desired.  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/184]].  [<a href="#certificate-request">Section 6.3.3.2</a>]</dd>
   <dt>ServerConfiguration</dt>
-  <dd style="margin-left: 8">supplies a configuration for 0-RTT handshakes (see <a href="#zero-rtt-exchange">Section 6.2.2</a>).  [<a href="#server-configuration">Section 6.3.3.3</a>]</dd>
+  <dd style="margin-left: 8"><br/> supplies a configuration for 0-RTT handshakes (see <a href="#zero-rtt-exchange">Section 6.2.2</a>).  [<a href="#server-configuration">Section 6.3.3.3</a>]</dd>
 </dl>
-<p id="rfc.section.6.2.p.17">Finally, the client and server exchange Authentication messages. TLS uses the same set of messages every time that authentication is needed.  Specifically:</p>
+<p id="rfc.section.6.2.p.18">Finally, the client and server exchange Authentication messages. TLS uses the same set of messages every time that authentication is needed.  Specifically:</p>
 <p/>
 
 <dl>
@@ -1213,9 +1219,9 @@ Auth | {CertificateVerify*}
   <dt>Finished</dt>
   <dd style="margin-left: 8"><br/> a MAC over the entire handshake. This message provides key confirmation, binds the endpoint&#8217;s identity to the exchanged keys, and in some modes (0-RTT and PSK) also authenticates the handshake using the the Static Secret. [<a href="#finished">Section 6.3.4.3</a>]</dd>
 </dl>
-<p id="rfc.section.6.2.p.19">Upon receiving the server&#8217;s messages, the client responds with its Authentication messages, namely Certificate and CertificateVerify (if requested), and Finished.</p>
-<p id="rfc.section.6.2.p.20">At this point, the handshake is complete, and the client and server may exchange application layer data. Application data MUST NOT be sent prior to sending the Finished message. Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is of course being sent to an unauthenticated peer.</p>
-<p id="rfc.section.6.2.p.21">[[TODO: Move this elsewhere? Note that higher layers should not be overly reliant on whether TLS always negotiates the strongest possible connection between two endpoints. There are a number of ways in which a man-in-the-middle attacker can attempt to make two entities drop down to the least secure method they support (i.e., perform a downgrade attack). The TLS protocol has been designed to minimize this risk, but there are still attacks available: for example, an attacker could block access to the port a secure service runs on, or attempt to get the peers to negotiate an unauthenticated connection. The fundamental rule is that higher levels must be cognizant of what their security requirements are and never transmit information over a channel less secure than what they require. The TLS protocol is secure in that any cipher suite offers its promised level of security: if you negotiate AES-GCM <a href="#GCM">[GCM]</a> with a 255-bit ECDHE key exchange with a host whose certificate chain you have verified, you can expect that to be reasonably &#8220;secure&#8221; against algorithmic attacks, at least in the year 2015.]]</p>
+<p id="rfc.section.6.2.p.20">Upon receiving the server&#8217;s messages, the client responds with its Authentication messages, namely Certificate and CertificateVerify (if requested), and Finished.</p>
+<p id="rfc.section.6.2.p.21">At this point, the handshake is complete, and the client and server may exchange application layer data. Application data MUST NOT be sent prior to sending the Finished message. Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is of course being sent to an unauthenticated peer.</p>
+<p id="rfc.section.6.2.p.22">[[TODO: Move this elsewhere? Note that higher layers should not be overly reliant on whether TLS always negotiates the strongest possible connection between two endpoints. There are a number of ways in which a man-in-the-middle attacker can attempt to make two entities drop down to the least secure method they support (i.e., perform a downgrade attack). The TLS protocol has been designed to minimize this risk, but there are still attacks available: for example, an attacker could block access to the port a secure service runs on, or attempt to get the peers to negotiate an unauthenticated connection. The fundamental rule is that higher levels must be cognizant of what their security requirements are and never transmit information over a channel less secure than what they require. The TLS protocol is secure in that any cipher suite offers its promised level of security: if you negotiate AES-GCM <a href="#GCM">[GCM]</a> with a 255-bit ECDHE key exchange with a host whose certificate chain you have verified, you can expect that to be reasonably &#8220;secure&#8221; against algorithmic attacks, at least in the year 2015.]]</p>
 <h3 id="rfc.section.6.2.1"><a href="#rfc.section.6.2.1">6.2.1.</a> <a href="#incorrect-dhe-share" id="incorrect-dhe-share">Incorrect DHE Share</a></h3>
 <p id="rfc.section.6.2.1.p.1">If the client has not provided an appropriate &#8220;key_share&#8221; extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate KeyShare extension, as shown in Figure 2:</p>
 <div id="rfc.figure.2"/>
@@ -1289,9 +1295,8 @@ Data  |  (Finished)
                   derived from the master secret.
 </pre>
 <p class="figure">Figure 3: Message flow for a zero round trip handshake</p>
-<p id="rfc.section.6.2.2.p.2">As shown in <a href="#tls-0-rtt">Figure 3</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. Specifically, the client sends its Authentication messages after the ClientHello, followed by any application data. The rest of the handshake messages are the same as with <a href="#tls-full">Figure 1</a>. This implies that the server can request client authentication even if the client offers a certificate on its first flight. This is consistent with the server being able to ask for client authentication after the handshake is complete. See <a href="#post-handshake-authentication">Section 6.3.5.2</a>.  When offering PSK support, the PreSharedKeyExtension will be used instead of (or in addition to) the KeyShare extension as specified above.</p>
-<p id="rfc.section.6.2.2.p.3">Note: because sequence numbers continue to increment between the initial (early) application data and the application data sent after the handshake has completed, an attacker cannot remove early application data messages.</p>
-<p id="rfc.section.6.2.2.p.4">IMPORTANT NOTE: The security properties for 0-RTT data (regardless of the cipher suite) are weaker than those for other kinds of TLS data.  Specifically:</p>
+<p id="rfc.section.6.2.2.p.2">As shown in <a href="#tls-0-rtt">Figure 3</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. Specifically, the client sends its Authentication messages after the ClientHello, followed by any application data. The rest of the handshake messages are the same as with <a href="#tls-full">Figure 1</a>. This implies that the server can request client authentication even if the client offers a certificate on its first flight. This is consistent with the server being able to ask for client authentication after the handshake is complete (see <a href="#post-handshake-authentication">Section 6.3.5.2</a>).  When offering PSK support, the PreSharedKeyExtension will be used instead of (or in addition to) the KeyShare extension as specified above.</p>
+<p id="rfc.section.6.2.2.p.3">IMPORTANT NOTE: The security properties for 0-RTT data (regardless of the cipher suite) are weaker than those for other kinds of TLS data.  Specifically:</p>
 <p/>
 
 <ol>
@@ -1605,7 +1610,7 @@ Subsequent Handshake:
        // ECDH functions.
        ecdh_x25519 (29), ecdh_x448 (30),
 
-       // Signature curves.
+       // Signature-only curves.
        eddsa_ed25519 (31), eddsa_ed448 (32),
 
        // Finite Field Groups.
@@ -1696,7 +1701,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>point</dt>
-  <dd style="margin-left: 8"><br/> For secp256r1, secp384r1 and secp521r1, this is the byte string representation of an elliptic curve point following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.  For ecdh_x25519 and ecdh_x448, this is raw opaque octet-string representation of point (in the format those functions use), 32 octets for ecdh_x25519(29) and 56 octets for ecdh_x448(30).</dd>
+  <dd style="margin-left: 8"><br/> For secp256r1, secp384r1 and secp521r1, this is the byte string representation of an elliptic curve point following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.  For ecdh_x25519 and ecdh_x448, this is raw opaque octet-string representation of point (in the format those functions use), 32 octets for ecdh_x25519 and 56 octets for ecdh_x448.</dd>
 </dl>
 <p id="rfc.section.6.3.2.3.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed).</p>
 <p id="rfc.section.6.3.2.3.2.p.4">Note: Versions of TLS prior to 1.3 permitted point negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
@@ -1793,7 +1798,7 @@ Subsequent Handshake:
 
 <ul>
   <li>The cipher suite identifier.</li>
-  <li>&#8220;key_share&#8221; if (EC)DHE is being used.</li>
+  <li>If (EC)DHE is being used, the server&#8217;s version of &#8220;key_share&#8221;.</li>
   <li>If PSK is being used, the server&#8217;s version of the &#8220;pre_shared_key&#8221; (indicating the PSK the client is using).</li>
 </ul>
 <h4 id="rfc.section.6.3.2.5.2"><a href="#rfc.section.6.3.2.5.2">6.3.2.5.2.</a> <a href="#replay-properties" id="replay-properties">Replay Properties</a></h4>
@@ -1928,7 +1933,7 @@ Subsequent Handshake:
   <dt>Finished</dt>
   <dd style="margin-left: 8"><br/> A MAC over Handshake Context + Certificate + CertificateVerify using a MAC key derived from the base key.</dd>
 </dl>
-<p id="rfc.section.6.3.4.p.6">Because the CertificateVerify signs the Handshake Context + Certificate and the Finished MACs the Handshake Context + Certificate + CertificateVerify, this is mostly equivalent to keeping a running hash of the handshake messages (exactly so in the pure 1-RTT cases). Note, however, the subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
+<p id="rfc.section.6.3.4.p.6">Because the CertificateVerify signs the Handshake Context + Certificate and the Finished MACs the Handshake Context + Certificate + CertificateVerify, this is mostly equivalent to keeping a running hash of the handshake messages (exactly so in the pure 1-RTT cases). Note, however, that subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
 <p id="rfc.section.6.3.4.p.7">The following table defines the Handshake Context and MAC Key for each scenario:</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -2100,14 +2105,14 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>If sent by a server, the hash and signature algorithms used in the signature MUST be one of those present in the supported_signature_algorithms field of the CertificateRequest message.</li>
+  <li>If sent by a client, the hash and signature algorithms used in the signature MUST be one of those present in the supported_signature_algorithms field of the CertificateRequest message.</li>
 </ul>
 <p/>
 
 <ul class="empty">
   <li>In addition, the hash and signature algorithms MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA keys MAY be used with any permitted hash algorithm, subject to restrictions in the certificate, if any.  RSA signatures MUST be based on RSASSA-PSS, regardless of whether RSASSA-PKCS-v1_5 appears in &#8220;signature_algorithms&#8221;.  SHA-1 MUST NOT be used in any signatures in CertificateVerify, regardless of whether SHA-1 appears in &#8220;signature_algorithms&#8221;.</li>
 </ul>
-<p id="rfc.section.6.3.4.2.p.9">Note: when used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes.</p>
+<p id="rfc.section.6.3.4.2.p.9">Note: when used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
 <h4 id="rfc.section.6.3.4.3"><a href="#rfc.section.6.3.4.3">6.3.4.3.</a> <a href="#finished" id="finished">Finished</a></h4>
 <p id="rfc.section.6.3.4.3.p.1">When this message will be sent:</p>
 <p/>
@@ -2169,7 +2174,8 @@ server_finished_key =
 <p id="rfc.section.6.3.5.1.p.4">The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</p>
 <p id="rfc.section.6.3.5.1.p.5">[[TODO: Should we require that tickets be bound to the existing symmetric cipher suite. See the TODO above about early_data and PSK.??]</p>
 <h4 id="rfc.section.6.3.5.2"><a href="#rfc.section.6.3.5.2">6.3.5.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h4>
-<p id="rfc.section.6.3.5.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.  Note: Because there may already be application data messages in flight, the server MUST be prepared to receive an arbitrary number of such messages before receiving the Authentication messages.</p>
+<p id="rfc.section.6.3.5.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.</p>
+<p id="rfc.section.6.3.5.2.p.2">Note: Because client authentication may requires prompting the user servers MUST be prepared for some delay, including receiving an arbitrary number of other messages, between sending the CertificateRequest. In addition, clients which receive multiple CertificateRequests in close succession MAY respond to them in a different order than they were received (the certificate_request_context value allows the server to disambiguate the responses).</p>
 <h4 id="rfc.section.6.3.5.3"><a href="#rfc.section.6.3.5.3">6.3.5.3.</a> <a href="#key-update" id="key-update">Key and IV Update</a></h4>
 <p id="rfc.section.6.3.5.3.p.1">struct {} KeyUpdate;</p>
 <p id="rfc.section.6.3.5.3.p.2">The KeyUpdate handshake message is used to indicate that the sender is updating its sending cryptographic keys. This message can be sent by the server after sending its first flight and the client after sending its second flight. Implementations that receive a KeyUpdate message prior to receiving a Finished message as part of the 1-RTT handshake MUST generate a fatal &#8220;unexpected_message&#8221; alert.  After sending a KeyUpdate message, the sender SHALL send all its traffic using the next generation of keys, computed as described in <a href="#updating-traffic-keys">Section 7.2</a>. Upon receiving a KeyUpdate, the receiver MUST update their receiving keys and if they have not already updated their sending state up to or past the then current receiving generation MUST send their own KeyUpdate prior to sending any other messages.  This mechanism allows either side to force an update to the entire connection. Note that implementations may receive an arbitrary number of messages between sending a KeyUpdate and receiving the peer&#8217;s KeyUpdate because those messages may already be in flight.</p>
@@ -2360,7 +2366,7 @@ server_finished_key =
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.7.3.p.6">All the traffic keying material is recomputed, whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
+<p id="rfc.section.7.3.p.6">All the traffic keying material is recomputed whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
 <h3 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> <a href="#the-handshake-hash" id="the-handshake-hash">The Handshake Hash</a></h3>
 <p id="rfc.section.7.3.1.p.1">The handshake hash is defined as the hash of all handshake messages sent or received, starting at ClientHello up to the present time, with the exception of the client&#8217;s 0-RTT authentication messages (Certificate, CertificateVerify, and Finished) including the type and length fields of the handshake messages. This is the concatenation the exchanged Handshake structures in plaintext form (even if they were encrypted on the wire).  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/351 for the question of whether the 0-RTT handshake messages are hashed.]]</p>
 <p id="rfc.section.7.3.1.p.2">This final value of the handshake hash is referred to as the &#8220;session hash&#8221; because it contains all the handshake messages involved in establishing the session, up to and including the client&#8217;s Finished.</p>
@@ -2433,7 +2439,7 @@ server_finished_key =
 <p/>
 
 <ul>
-  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall be/has been] initially populated with the values in the table below. This column has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.</li>
+  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.</li>
 </ul>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -2624,7 +2630,7 @@ server_finished_key =
       <td class="reference">
         <b id="I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</b>
       </td>
-      <td class="top"><a>Langley, A.</a>, <a>Chang, W.</a>, <a>Mavrogiannopoulos, N.</a>, <a>Strombergson, J.</a> and <a>S. Josefsson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-chacha20-poly1305-02">ChaCha20-Poly1305 Cipher Suites for Transport Layer Security (TLS)</a>", Internet-Draft draft-ietf-tls-chacha20-poly1305-02, November 2015.</td>
+      <td class="top"><a>Langley, A.</a>, <a>Chang, W.</a>, <a>Mavrogiannopoulos, N.</a>, <a>Strombergson, J.</a> and <a>S. Josefsson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-chacha20-poly1305-04">ChaCha20-Poly1305 Cipher Suites for Transport Layer Security (TLS)</a>", Internet-Draft draft-ietf-tls-chacha20-poly1305-04, December 2015.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -2636,7 +2642,7 @@ server_finished_key =
       <td class="reference">
         <b id="I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</b>
       </td>
-      <td class="top"><a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-eddsa-00">Edwards-curve Digital Signature Algorithm (EdDSA)</a>", Internet-Draft draft-irtf-cfrg-eddsa-00, October 2015.</td>
+      <td class="top"><a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-eddsa-01">Edwards-curve Digital Signature Algorithm (EdDSA)</a>", Internet-Draft draft-irtf-cfrg-eddsa-01, December 2015.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3273,7 +3279,7 @@ server_finished_key =
        // ECDH functions.
        ecdh_x25519 (29), ecdh_x448 (30),
 
-       // Signature curves.
+       // Signature-only curves.
        eddsa_ed25519 (31), eddsa_ed448 (32),
 
        // Finite Field Groups.
