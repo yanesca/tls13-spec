@@ -1926,9 +1926,9 @@ Subsequent Handshake:
   <dt>Certificate</dt>
   <dd style="margin-left: 8"><br/> The certificate to be used for authentication and any supporting certificates in the chain.</dd>
   <dt>CertificateVerify</dt>
-  <dd style="margin-left: 8"><br/> A signature over Handshake Context + Certificate.</dd>
+  <dd style="margin-left: 8"><br/> A signature over the hash of Handshake Context + Certificate.</dd>
   <dt>Finished</dt>
-  <dd style="margin-left: 8"><br/> A MAC over Handshake Context + Certificate + CertificateVerify using a MAC key derived from the base key.</dd>
+  <dd style="margin-left: 8"><br/> A MAC over the hash of Handshake Context + Certificate + CertificateVerify using a MAC key derived from the base key.</dd>
 </dl>
 <p id="rfc.section.6.3.4.p.6">Because the CertificateVerify signs the Handshake Context + Certificate and the Finished MACs the Handshake Context + Certificate + CertificateVerify, this is mostly equivalent to keeping a running hash of the handshake messages (exactly so in the pure 1-RTT cases). Note, however, that subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
 <p id="rfc.section.6.3.4.p.7">The following table defines the Handshake Context and MAC Key for each scenario:</p>
@@ -2080,14 +2080,14 @@ Subsequent Handshake:
 <pre>
    struct {
         digitally-signed struct {
-           opaque handshake_hash[hash_length];
+           opaque hashed_data[hash_length];
         };
    } CertificateVerify;
 </pre>
 <p/>
 
 <ul class="empty">
-  <li>Where handshake_hash is as described in <a href="#the-handshake-hash">Section 7.3.1</a> and includes the messages sent or received, starting at ClientHello and up to, but not including, this message, including the type and length fields of the handshake messages. This is a digest of the concatenation of all the Handshake structures (as defined in <a href="#handshake-protocol">Section 6.3</a>) exchanged thus far. The digest MUST be the Hash used as the basis for HKDF.</li>
+  <li>Where hashed_data is the hash output described in <a href="#authentication-messages">Section 6.3.4</a>, namely Hash(Handshake Context + Certificate).</li>
 </ul>
 <p/>
 
@@ -2245,7 +2245,6 @@ server_finished_key =
   4. mES = HKDF-Expand-Label(xES, "expanded ephemeral secret",
                              handshake_hash, L)
 
-
   5. master_secret = HKDF-Extract(mSS, mES)
 
 
@@ -2258,21 +2257,23 @@ server_finished_key =
   0-RTT handshake messages (the server's Finished is not
   included because the master_secret is need to compute
   the finished key). [[OPEN ISSUE: Should we be including
-  0-RTT handshake messages here and below?]]
+  0-RTT handshake messages here and below?]] At this point,
+  SS, ES, xSS, xES, mSS, and mSS SHOULD be securely deleted,
+  along with any ephemeral (EC)DH secrets.
 
   7. resumption_secret = HKDF-Expand-Label(master_secret,
                                            "resumption master secret"
-                                           session_hash, L)
+                                           handshake_hash, L)
 
   8. exporter_secret = HKDF-Expand-Label(master_secret,
                                          "exporter master secret",
-                                         session_hash, L)
+                                         handshake_hash, L)
 
   
-  Where session_hash is the session hash as defined in
-  {{the-handshake-hash}}. I.e., the entire handshake up to
+  Where handshake_hash contains the entire handshake up to
   and including the client's Finished, but not including
-  any 0-RTT handshake messages.
+  any 0-RTT handshake messages or post-handshake messages.
+  AT this point master_secret SHOULD be securely deleted.
 </pre>
 <p id="rfc.section.7.1.p.5">The traffic keys are computed from xSS, xES, and the traffic_secret as described in <a href="#traffic-key-calculation">Section 7.3</a> below. The traffic_secret may be updated throughout the connection as described in <a href="#updating-traffic-keys">Section 7.2</a>.</p>
 <p id="rfc.section.7.1.p.6">Note: although the steps above are phrased as individual HKDF-Extract and HKDF-Expand operations, because each HKDF-Expand operation is paired with an HKDF-Extract, it is possible to implement this key schedule with a black-box HKDF API, albeit at some loss of efficiency as some HKDF-Extract operations will be repeated.</p>
@@ -2366,7 +2367,6 @@ server_finished_key =
 <p id="rfc.section.7.3.p.6">All the traffic keying material is recomputed whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
 <h3 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> <a href="#the-handshake-hash" id="the-handshake-hash">The Handshake Hash</a></h3>
 <p id="rfc.section.7.3.1.p.1">The handshake hash is defined as the hash of all handshake messages sent or received, starting at ClientHello up to the present time, with the exception of the client&#8217;s 0-RTT authentication messages (Certificate, CertificateVerify, and Finished) including the type and length fields of the handshake messages. This is the concatenation the exchanged Handshake structures in plaintext form (even if they were encrypted on the wire).  [[OPEN ISSUE: See https://github.com/tlswg/tls13-spec/issues/351 for the question of whether the 0-RTT handshake messages are hashed.]]</p>
-<p id="rfc.section.7.3.1.p.2">This final value of the handshake hash is referred to as the &#8220;session hash&#8221; because it contains all the handshake messages involved in establishing the session, up to and including the client&#8217;s Finished.</p>
 <h3 id="rfc.section.7.3.2"><a href="#rfc.section.7.3.2">7.3.2.</a> <a href="#diffie-hellman" id="diffie-hellman">Diffie-Hellman</a></h3>
 <p id="rfc.section.7.3.2.p.1">A conventional Diffie-Hellman computation is performed. The negotiated key (Z) is used as the shared secret, and is used in the key schedule as specified above. Leading bytes of Z that contain all zero bits are stripped before it is used as the input to HKDF.</p>
 <h3 id="rfc.section.7.3.3"><a href="#rfc.section.7.3.3">7.3.3.</a> <a href="#elliptic-curve-diffie-hellman" id="elliptic-curve-diffie-hellman">Elliptic Curve Diffie-Hellman</a></h3>
@@ -3347,7 +3347,7 @@ server_finished_key =
 
    struct {
         digitally-signed struct {
-           opaque handshake_hash[hash_length];
+           opaque hashed_data[hash_length];
         };
    } CertificateVerify;
 
