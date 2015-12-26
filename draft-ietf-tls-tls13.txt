@@ -92,7 +92,7 @@ Table of Contents
      4.8.  Cryptographic Attributes  . . . . . . . . . . . . . . . .  14
        4.8.1.  Digital Signing . . . . . . . . . . . . . . . . . . .  15
        4.8.2.  Authenticated Encryption with Additional Data (AEAD)   16
-   5.  The TLS Record Protocol . . . . . . . . . . . . . . . . . . .  16
+   5.  The TLS Record Protocol . . . . . . . . . . . . . . . . . . .  17
      5.1.  Connection States . . . . . . . . . . . . . . . . . . . .  17
      5.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  19
        5.2.1.  Fragmentation . . . . . . . . . . . . . . . . . . . .  19
@@ -813,13 +813,14 @@ Internet-Draft                     TLS                     December 2015
    versions, the contents of the element always start with 64 bytes of
    octet 32 in order to clear that chosen-prefix.
 
-   Following that padding is a NUL-terminated context string in order to
-   disambiguate signatures for different purposes.  The context string
-   will be specified whenever a digitally-signed element is used.
+   Following that padding is a context string used to disambiguate
+   signatures for different purposes.  The context string will be
+   specified whenever a digitally-signed element is used.  A single 0
+   byte is appended to the context to act as a separator.
 
    Finally, the specified contents of the digitally-signed structure
-   follow the NUL at the end of the context string.  (See the example at
-   the end of this section.)
+   follow the NUL after the context string.  (See the example at the end
+   of this section.)
 
    In RSA signing, the opaque vector contains the signature generated
    using the RSASSA-PSS signature scheme defined in [RFC3447] with MGF1.
@@ -833,7 +834,6 @@ Internet-Draft                     TLS                     December 2015
    [X962] or its successors.  Data to be signed/verified is hashed, and
    the result run directly through the ECDSA algorithm with no
    additional hashing.  The SignatureAndHashAlgorithm parameter in the
-   DigitallySigned object indicates the digest algorithm which was used
 
 
 
@@ -842,6 +842,7 @@ Rescorla                  Expires June 28, 2016                [Page 15]
 Internet-Draft                     TLS                     December 2015
 
 
+   DigitallySigned object indicates the digest algorithm which was used
    in the signature.  Signature-only curves MUST NOT be used for ECDSA
    unless otherwise noted.
 
@@ -885,11 +886,10 @@ Internet-Draft                     TLS                     December 2015
    ciphered output is generally larger than the input in order to
    accommodate the integrity check value.
 
-5.  The TLS Record Protocol
 
-   The TLS Record Protocol is a layered protocol.  At each layer,
-   messages may include fields for length, description, and content.
-   The TLS Record Protocol takes messages to be transmitted, fragments
+
+
+
 
 
 
@@ -898,6 +898,11 @@ Rescorla                  Expires June 28, 2016                [Page 16]
 Internet-Draft                     TLS                     December 2015
 
 
+5.  The TLS Record Protocol
+
+   The TLS Record Protocol is a layered protocol.  At each layer,
+   messages may include fields for length, description, and content.
+   The TLS Record Protocol takes messages to be transmitted, fragments
    the data into manageable blocks, protects the records, and transmits
    the result.  Received data is decrypted and verified, reassembled,
    and then delivered to higher-level clients.
@@ -941,11 +946,6 @@ Internet-Draft                     TLS                     December 2015
    The security parameters for a TLS Connection read and write state are
    set by providing the following values:
 
-   connection end
-      Whether this entity is considered the "client" or the "server" in
-      this connection.
-
-   Hash algorithm
 
 
 
@@ -954,6 +954,11 @@ Rescorla                  Expires June 28, 2016                [Page 17]
 Internet-Draft                     TLS                     December 2015
 
 
+   connection end
+      Whether this entity is considered the "client" or the "server" in
+      this connection.
+
+   Hash algorithm
       An algorithm used to generate keys from the appropriate secret
       (see Section 7.1 and Section 7.3).
 
@@ -997,11 +1002,6 @@ Internet-Draft                     TLS                     December 2015
           opaque                 server_random[32];
       } SecurityParameters;
 
-   [TODO: update this to handle new key hierarchy.]
-
-   The connection state will use the security parameters to generate the
-   following four items:
-
 
 
 
@@ -1009,6 +1009,11 @@ Rescorla                  Expires June 28, 2016                [Page 18]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   [TODO: update this to handle new key hierarchy.]
+
+   The connection state will use the security parameters to generate the
+   following four items:
 
       client write key
       server write key
@@ -1053,11 +1058,6 @@ Internet-Draft                     TLS                     December 2015
    message boundaries are not preserved in the record layer (i.e.,
    multiple client messages of the same ContentType MAY be coalesced
    into a single TLSPlaintext record, or a single message MAY be
-   fragmented across several records).  Alert messages Section 6.1 MUST
-   NOT be fragmented across records.
-
-
-
 
 
 
@@ -1065,6 +1065,9 @@ Rescorla                  Expires June 28, 2016                [Page 19]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   fragmented across several records).  Alert messages Section 6.1 MUST
+   NOT be fragmented across records.
 
       struct {
           uint8 major;
@@ -1110,10 +1113,7 @@ Internet-Draft                     TLS                     December 2015
    version to use by following the procedure and requirements in
    Appendix C.
 
-   Implementations MUST NOT send zero-length fragments of Handshake or
-   Alert types, even if those fragments contain padding.  Zero-length
-   fragments of Application data MAY be sent as they are potentially
-   useful as a traffic analysis countermeasure.
+
 
 
 
@@ -1121,6 +1121,11 @@ Rescorla                  Expires June 28, 2016                [Page 20]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   Implementations MUST NOT send zero-length fragments of Handshake or
+   Alert types, even if those fragments contain padding.  Zero-length
+   fragments of Application data MAY be sent as they are potentially
+   useful as a traffic analysis countermeasure.
 
    When record protection has not yet been engaged, TLSPlaintext
    structures are written directly onto the wire.  Once record
@@ -1165,11 +1170,6 @@ Internet-Draft                     TLS                     December 2015
       The record_version field is identical to
       TLSPlaintext.record_version and is always { 3, 1 }.  Note that the
       handshake protocol including the ClientHello and ServerHello
-      messages authenticates the protocol version, so this value is
-      redundant.
-
-   length
-
 
 
 
@@ -1178,6 +1178,10 @@ Rescorla                  Expires June 28, 2016                [Page 21]
 Internet-Draft                     TLS                     December 2015
 
 
+      messages authenticates the protocol version, so this value is
+      redundant.
+
+   length
       The length (in bytes) of the following TLSCiphertext.fragment.
       The length MUST NOT exceed 2^14 + 256.  An endpoint that receives
       a record that exceeds this length MUST generate a fatal
@@ -1222,10 +1226,6 @@ Internet-Draft                     TLS                     December 2015
 
    The AEAD output consists of the ciphertext output by the AEAD
    encryption operation.  The length of the plaintext is greater than
-   TLSPlaintext.length due to the inclusion of TLSPlaintext.type and
-   however much padding is supplied by the sender.  The length of
-   aead_output will generally be larger than the plaintext, but by an
-   amount that varies with the AEAD cipher.  Since the ciphers might
 
 
 
@@ -1234,6 +1234,10 @@ Rescorla                  Expires June 28, 2016                [Page 22]
 Internet-Draft                     TLS                     December 2015
 
 
+   TLSPlaintext.length due to the inclusion of TLSPlaintext.type and
+   however much padding is supplied by the sender.  The length of
+   aead_output will generally be larger than the plaintext, but by an
+   amount that varies with the AEAD cipher.  Since the ciphers might
    incorporate padding, the amount of overhead could vary with different
    lengths of plaintext.  Symbolically,
 
@@ -1278,10 +1282,6 @@ Internet-Draft                     TLS                     December 2015
 
    The padding sent is automatically verified by the record protection
    mechanism: Upon successful decryption of a TLSCiphertext.fragment,
-   the receiving implementation scans the field from the end toward the
-   beginning until it finds a non-zero octet.  This non-zero octet is
-   the content type of the message.
-
 
 
 
@@ -1289,6 +1289,10 @@ Rescorla                  Expires June 28, 2016                [Page 23]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   the receiving implementation scans the field from the end toward the
+   beginning until it finds a non-zero octet.  This non-zero octet is
+   the content type of the message.
 
    Implementations MUST limit their scanning to the cleartext returned
    from the AEAD decryption.  If a receiving implementation does not
@@ -1334,10 +1338,6 @@ Internet-Draft                     TLS                     December 2015
       hash for use with HKDF to generate keying material, and the record
       protection algorithm (See Appendix A.5 for formal definition.)
 
-   resumption master secret
-      a secret shared between the client and server that can be used as
-      a PSK in future connections.
-
 
 
 
@@ -1345,6 +1345,10 @@ Rescorla                  Expires June 28, 2016                [Page 24]
 
 Internet-Draft                     TLS                     December 2015
 
+
+   resumption master secret
+      a secret shared between the client and server that can be used as
+      a PSK in future connections.
 
    These items are then used to create security parameters for use by
    the record layer when protecting application data.  Many connections
@@ -1362,10 +1366,6 @@ Internet-Draft                     TLS                     December 2015
    preventing the failed session from being used to establish new
    connections.  Like other messages, alert messages are encrypted as
    specified by the current connection state.
-
-
-
-
 
 
 
