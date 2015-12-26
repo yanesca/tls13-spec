@@ -1888,8 +1888,7 @@ Subsequent Handshake:
       struct {
           opaque configuration_id&lt;1..2^16-1&gt;;
           uint32 expiration_date;
-          NamedGroup group;
-          opaque server_key&lt;1..2^16-1&gt;;
+          KeyShareEntry static_key_share;
           EarlyDataType early_data_type;
           ConfigurationExtension extensions&lt;0..2^16-1&gt;;
       } ServerConfiguration;
@@ -1899,11 +1898,9 @@ Subsequent Handshake:
 <dl>
   <dt>configuration_id</dt>
   <dd style="margin-left: 8"><br/> The configuration identifier to be used in 0-RTT mode.</dd>
-  <dt>group</dt>
-  <dd style="margin-left: 8"><br/> The group for the long-term DH key that is being established for this configuration.</dd>
   <dt>expiration_date</dt>
   <dd style="margin-left: 8"><br/> The last time when this configuration is expected to be valid (in seconds since the Unix epoch). Servers MUST NOT use any value more than 604800 seconds (7 days) in the future. Clients MUST NOT cache configurations for longer than 7 days, regardless of the expiration_date. [[OPEN ISSUE: Is this the right value? The idea is just to minimize exposure.]]</dd>
-  <dt>server_key</dt>
+  <dt>static_key_share</dt>
   <dd style="margin-left: 8"><br/> The long-term DH key that is being established for this configuration.</dd>
   <dt>early_data_type</dt>
   <dd style="margin-left: 8"><br/> The type of 0-RTT handshake that this configuration is to be used for (see <a href="#early-data-indication">Section 6.3.2.5</a>). If &#8220;client_authentication&#8221; or &#8220;client_authentication_and_data&#8221;, then the client MUST select the certificate for future handshakes based on the CertificateRequest parameters supplied in this handshake. The server MUST NOT send either of these two options unless it also requested a certificate on this handshake.  [[OPEN ISSUE: Should we relax this?]]</dd>
@@ -3334,8 +3331,7 @@ server_finished_key =
       struct {
           opaque configuration_id&lt;1..2^16-1&gt;;
           uint32 expiration_date;
-          NamedGroup group;
-          opaque server_key&lt;1..2^16-1&gt;;
+          KeyShareEntry static_key_share;
           EarlyDataType early_data_type;
           ConfigurationExtension extensions&lt;0..2^16-1&gt;;
       } ServerConfiguration;

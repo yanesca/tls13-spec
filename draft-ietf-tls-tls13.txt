@@ -3402,8 +3402,7 @@ Internet-Draft                     TLS                     December 2015
         struct {
             opaque configuration_id<1..2^16-1>;
             uint32 expiration_date;
-            NamedGroup group;
-            opaque server_key<1..2^16-1>;
+            KeyShareEntry static_key_share;
             EarlyDataType early_data_type;
             ConfigurationExtension extensions<0..2^16-1>;
         } ServerConfiguration;
@@ -3413,14 +3412,11 @@ Internet-Draft                     TLS                     December 2015
 
 
 
+
 Rescorla                  Expires June 28, 2016                [Page 61]
 
 Internet-Draft                     TLS                     December 2015
 
-
-   group
-      The group for the long-term DH key that is being established for
-      this configuration.
 
    expiration_date
       The last time when this configuration is expected to be valid (in
@@ -3430,7 +3426,7 @@ Internet-Draft                     TLS                     December 2015
       expiration_date.  [[OPEN ISSUE: Is this the right value?  The idea
       is just to minimize exposure.]]
 
-   server_key
+   static_key_share
       The long-term DH key that is being established for this
       configuration.
 
@@ -3466,6 +3462,10 @@ Internet-Draft                     TLS                     December 2015
    As discussed in Section 6.2, TLS uses a common set of messages for
    authentication, key confirmation, and handshake integrity:
    Certificate, CertificateVerify, and Finished.  These messages are
+   always sent as the last messages in their handshake flight.  The
+   Certificate and CertificateVerify messages are only sent under
+   certain circumstances, as defined below.  The Finished message is
+   always sent as part of the Authentication block.
 
 
 
@@ -3473,11 +3473,6 @@ Rescorla                  Expires June 28, 2016                [Page 62]
 
 Internet-Draft                     TLS                     December 2015
 
-
-   always sent as the last messages in their handshake flight.  The
-   Certificate and CertificateVerify messages are only sent under
-   certain circumstances, as defined below.  The Finished message is
-   always sent as part of the Authentication block.
 
    The computations for the Authentication messages all uniformly take
    the following inputs:
@@ -3512,6 +3507,11 @@ Internet-Draft                     TLS                     December 2015
 
    The following table defines the Handshake Context and MAC Key for
    each scenario:
+
+
+
+
+
 
 
 
@@ -5468,13 +5468,13 @@ A.3.2.  Server Parameters Messages
         struct {
             opaque configuration_id<1..2^16-1>;
             uint32 expiration_date;
-            NamedGroup group;
-            opaque server_key<1..2^16-1>;
+            KeyShareEntry static_key_share;
             EarlyDataType early_data_type;
             ConfigurationExtension extensions<0..2^16-1>;
         } ServerConfiguration;
 
 A.3.3.  Authentication Messages
+
 
 
 
