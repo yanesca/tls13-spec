@@ -1074,7 +1074,7 @@ li, p {
   <dt>close_notify</dt>
   <dd style="margin-left: 8"><br/> This alert notifies the recipient that the sender will not send any more messages on this connection. Any data received after a closure MUST be ignored.</dd>
   <dt>end_of_early_data</dt>
-  <dd style="margin-left: 8"><br/> This alert is sent by the client to indicate that all 0-RTT application_data messages have been transmitted and that the next message will be handshake message protected with the 1-RTT handshake keys. This alert MUST be at the warning level.  Servers MUST NOT send this alert and clients receiving this alert MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
+  <dd style="margin-left: 8"><br/> This alert is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that this is the end of the flight. This alert MUST be at the warning level. Servers MUST NOT send this alert and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
   <dt>user_canceled</dt>
   <dd style="margin-left: 8"><br/> This alert notifies the recipient that the sender is canceling the handshake for some reason unrelated to a protocol failure. If a user cancels an operation after the handshake is complete, just closing the connection by sending a &#8220;close_notify&#8221; is more appropriate. This alert SHOULD be followed by a &#8220;close_notify&#8221;. This alert is generally a warning.</dd>
 </dl>
