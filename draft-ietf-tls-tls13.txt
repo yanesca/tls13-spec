@@ -1912,7 +1912,7 @@ Internet-Draft                     TLS                     December 2015
    (e.g. it includes only DHE or ECDHE groups unacceptable or
    unsupported by the server), the server corrects the mismatch with a
    HelloRetryRequest and the client will need to restart the handshake
-   with an appropriate KeyShare extension, as shown in Figure 2:
+   with an appropriate "key_share" extension, as shown in Figure 2:
 
             Client                                               Server
 
@@ -2026,9 +2026,9 @@ Internet-Draft                     TLS                     December 2015
    authentication even if the client offers a certificate on its first
    flight.  This is consistent with the server being able to ask for
    client authentication after the handshake is complete (see
-   Section 6.3.5.2).  When offering PSK support, the
-   PreSharedKeyExtension will be used instead of (or in addition to) the
-   KeyShare extension as specified above.
+   Section 6.3.5.2).  When offering PSK support, the "pre_shared_key"
+   extension will be used instead of (or in addition to) the "key_share"
+   extension as specified above.
 
    IMPORTANT NOTE: The security properties for 0-RTT data (regardless of
    the cipher suite) are weaker than those for other kinds of TLS data.
@@ -2382,9 +2382,9 @@ Internet-Draft                     TLS                     December 2015
 
       The server will send this message in response to a ClientHello
       message when it was able to find an acceptable set of algorithms
-      and the client's KeyShare extension was acceptable.  If the client
-      proposed groups are not acceptable by the server, it will respond
-      with a "handshake_failure" fatal alert.
+      and the client's "key_share" extension was acceptable.  If the
+      client proposed groups are not acceptable by the server, it will
+      respond with a "handshake_failure" fatal alert.
 
    Structure of this message:
 
@@ -3662,7 +3662,7 @@ Internet-Draft                     TLS                     December 2015
            +----------------------+---------------------------+
 
    -  The certificate MUST allow the key to be used for signing (i.e.,
-      the digitalSignature bit MUST be set if the key usage extension is
+      the digitalSignature bit MUST be set if the Key Usage extension is
       present) with a signature scheme and hash algorithm pair indicated
       in the client's "signature_algorithms" extension.
 
@@ -4382,7 +4382,7 @@ Internet-Draft                     TLS                     December 2015
 
    -  Key Share ("key_share"; Section 6.3.2.3)
 
-   -  Pre-Shared Key Extension ("pre_shared_key"; Section 6.3.2.4)
+   -  Pre-Shared Key ("pre_shared_key"; Section 6.3.2.4)
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
 

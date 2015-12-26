@@ -1223,7 +1223,7 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.6.2.p.21">At this point, the handshake is complete, and the client and server may exchange application layer data. Application data MUST NOT be sent prior to sending the Finished message. Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is of course being sent to an unauthenticated peer.</p>
 <p id="rfc.section.6.2.p.22">[[TODO: Move this elsewhere? Note that higher layers should not be overly reliant on whether TLS always negotiates the strongest possible connection between two endpoints. There are a number of ways in which a man-in-the-middle attacker can attempt to make two entities drop down to the least secure method they support (i.e., perform a downgrade attack). The TLS protocol has been designed to minimize this risk, but there are still attacks available: for example, an attacker could block access to the port a secure service runs on, or attempt to get the peers to negotiate an unauthenticated connection. The fundamental rule is that higher levels must be cognizant of what their security requirements are and never transmit information over a channel less secure than what they require. The TLS protocol is secure in that any cipher suite offers its promised level of security: if you negotiate AES-GCM <a href="#GCM">[GCM]</a> with a 255-bit ECDHE key exchange with a host whose certificate chain you have verified, you can expect that to be reasonably &#8220;secure&#8221; against algorithmic attacks, at least in the year 2015.]]</p>
 <h3 id="rfc.section.6.2.1"><a href="#rfc.section.6.2.1">6.2.1.</a> <a href="#incorrect-dhe-share" id="incorrect-dhe-share">Incorrect DHE Share</a></h3>
-<p id="rfc.section.6.2.1.p.1">If the client has not provided an appropriate &#8220;key_share&#8221; extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate KeyShare extension, as shown in Figure 2:</p>
+<p id="rfc.section.6.2.1.p.1">If the client has not provided an appropriate &#8220;key_share&#8221; extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate &#8220;key_share&#8221; extension, as shown in Figure 2:</p>
 <div id="rfc.figure.2"/>
 <div id="tls-restart"/>
 <pre>
@@ -1295,7 +1295,7 @@ Data  |  (Finished)
                   derived from the master secret.
 </pre>
 <p class="figure">Figure 3: Message flow for a zero round trip handshake</p>
-<p id="rfc.section.6.2.2.p.2">As shown in <a href="#tls-0-rtt">Figure 3</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. Specifically, the client sends its Authentication messages after the ClientHello, followed by any application data. The rest of the handshake messages are the same as with <a href="#tls-full">Figure 1</a>. This implies that the server can request client authentication even if the client offers a certificate on its first flight. This is consistent with the server being able to ask for client authentication after the handshake is complete (see <a href="#post-handshake-authentication">Section 6.3.5.2</a>).  When offering PSK support, the PreSharedKeyExtension will be used instead of (or in addition to) the KeyShare extension as specified above.</p>
+<p id="rfc.section.6.2.2.p.2">As shown in <a href="#tls-0-rtt">Figure 3</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. Specifically, the client sends its Authentication messages after the ClientHello, followed by any application data. The rest of the handshake messages are the same as with <a href="#tls-full">Figure 1</a>. This implies that the server can request client authentication even if the client offers a certificate on its first flight. This is consistent with the server being able to ask for client authentication after the handshake is complete (see <a href="#post-handshake-authentication">Section 6.3.5.2</a>).  When offering PSK support, the &#8220;pre_shared_key&#8221; extension will be used instead of (or in addition to) the &#8220;key_share&#8221; extension as specified above.</p>
 <p id="rfc.section.6.2.2.p.3">IMPORTANT NOTE: The security properties for 0-RTT data (regardless of the cipher suite) are weaker than those for other kinds of TLS data.  Specifically:</p>
 <p/>
 
@@ -1458,7 +1458,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>The server will send this message in response to a ClientHello message when it was able to find an acceptable set of algorithms and the client&#8217;s KeyShare extension was acceptable. If the client proposed groups are not acceptable by the server, it will respond with a &#8220;handshake_failure&#8221; fatal alert.</li>
+  <li>The server will send this message in response to a ClientHello message when it was able to find an acceptable set of algorithms and the client&#8217;s &#8220;key_share&#8221; extension was acceptable. If the client proposed groups are not acceptable by the server, it will respond with a &#8220;handshake_failure&#8221; fatal alert.</li>
 </ul>
 <p id="rfc.section.6.3.1.2.p.3">Structure of this message:</p>
 <pre>
@@ -2042,7 +2042,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the key usage extension is present) with a signature scheme and hash algorithm pair indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
+  <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the Key Usage extension is present) with a signature scheme and hash algorithm pair indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
   <li>An ECDSA or EdDSA public key MUST use a curve and point format supported by the client, as described in <a href="#RFC4492">[RFC4492]</a>.</li>
   <li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension.</li>
 </ul>
@@ -2403,7 +2403,7 @@ server_finished_key =
   <li>Signature Algorithms (&#8220;signature_algorithms&#8221;; <a href="#signature-algorithms">Section 6.3.2.1</a>)</li>
   <li>Negotiated Groups (&#8220;supported_groups&#8221;; <a href="#negotiated-groups">Section 6.3.2.2</a>)</li>
   <li>Key Share (&#8220;key_share&#8221;; <a href="#key-share">Section 6.3.2.3</a>)</li>
-  <li>Pre-Shared Key Extension (&#8220;pre_shared_key&#8221;; <a href="#pre-shared-key-extension">Section 6.3.2.4</a>)</li>
+  <li>Pre-Shared Key (&#8220;pre_shared_key&#8221;; <a href="#pre-shared-key-extension">Section 6.3.2.4</a>)</li>
   <li>Server Name Indication (&#8220;server_name&#8221;; Section 3 of <a href="#RFC6066">[RFC6066]</a>)</li>
 </ul>
 <p id="rfc.section.8.2.p.3">All implementations MUST send and use these extensions when offering applicable cipher suites:</p>
