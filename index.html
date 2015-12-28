@@ -1782,7 +1782,7 @@ Subsequent Handshake:
   <li>The client&#8217;s cryptographic determining parameters match the parameters that the server has negotiated based on the rest of the ClientHello. If (EC)DHE is selected, this includes verifying that (1) the ClientHello contains a key from the same group that is indicated by the server configuration and (2) that the server has negotiated that group and will therefore include a share from that group in its own &#8220;key_share&#8221; extension.</li>
 </ul>
 <p id="rfc.section.6.3.2.5.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and will instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
-<p id="rfc.section.6.3.2.5.p.12">If the server choosed to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2.2</a>.</p>
+<p id="rfc.section.6.3.2.5.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2.2</a>.</p>
 <p id="rfc.section.6.3.2.5.p.13">[[TODO: How does the client behave if the indication is rejected.]]</p>
 <p id="rfc.section.6.3.2.5.p.14">[[OPEN ISSUE: This just specifies the signaling for 0-RTT but not the the 0-RTT cryptographic transforms, including:</p>
 <p/>
@@ -1799,8 +1799,8 @@ Subsequent Handshake:
 
 <ul>
   <li>The cipher suite identifier.</li>
-  <li>If (EC)DHE is being used, the server&#8217;s version of &#8220;key_share&#8221;.</li>
-  <li>If PSK is being used, the server&#8217;s version of the &#8220;pre_shared_key&#8221; (indicating the PSK the client is using).</li>
+  <li>If (EC)DHE is being used, the server&#8217;s version of the &#8220;key_share&#8221; extension.</li>
+  <li>If PSK is being used, the server&#8217;s version of the &#8220;pre_shared_key&#8221; extension (indicating the PSK the client is using).</li>
 </ul>
 <h4 id="rfc.section.6.3.2.5.2"><a href="#rfc.section.6.3.2.5.2">6.3.2.5.2.</a> <a href="#replay-properties" id="replay-properties">Replay Properties</a></h4>
 <p id="rfc.section.6.3.2.5.2.p.1">As noted in <a href="#zero-rtt-exchange">Section 6.2.2</a>, TLS does not provide any inter-connection mechanism for replay protection for data sent by the client in the first flight.  As a special case, implementations where the server configuration, is delivered out of band (as has been proposed for DTLS-SRTP <a href="#RFC5763">[RFC5763]</a>), MAY use a unique server configuration identifier for each connection, thus preventing replay. Implementations are responsible for ensuring uniqueness of the identifier in this case.</p>
@@ -2013,7 +2013,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8"><br/> This is a sequence (chain) of certificates. The sender&#8217;s certificate MUST come first in the list. Each following certificate SHOULD directly certify one preceding it. Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</dd>
 </dl>
 <p id="rfc.section.6.3.4.1.p.9">Note: Prior to TLS 1.3, &#8220;certificate_list&#8221; ordering required each certificate to certify the one immediately preceding it, however some implementations allowed some flexibility. Servers sometimes send both a current and deprecated intermediate for transitional purposes, and others are simply configured incorrectly, but these cases can nonetheless be validated properly. For maximum compatibility, all implementations SHOULD be prepared to handle potentially extraneous certificates and arbitrary orderings from any TLS version, with the exception of the end-entity certificate which MUST be first.</p>
-<p id="rfc.section.6.3.4.1.p.10">The server&#8217;s certificate list MUST always be non-empty. A client will MAY send an empty certificate list if it does not have an appropriate certificate to send in response to the server&#8217;s authentication request.</p>
+<p id="rfc.section.6.3.4.1.p.10">The server&#8217;s certificate list MUST always be non-empty. A client will send an empty certificate list if it does not have an appropriate certificate to send in response to the server&#8217;s authentication request.</p>
 <h4 id="rfc.section.6.3.4.1.1"><a href="#rfc.section.6.3.4.1.1">6.3.4.1.1.</a> <a href="#server-certificate-selection" id="server-certificate-selection">Server Certificate Selection</a></h4>
 <p id="rfc.section.6.3.4.1.1.p.1">The following rules apply to the certificates sent by the server:</p>
 <p/>
