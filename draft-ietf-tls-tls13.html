@@ -360,7 +360,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-12-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-12-28" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -381,7 +381,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 26, 2015</td>
+  <td class="right">December 28, 2015</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -396,7 +396,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 28, 2016</td>
+  <td class="left">Expires: June 30, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -417,7 +417,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 28, 2016.</p>
+<p>This Internet-Draft will expire on June 30, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1782,8 +1782,9 @@ Subsequent Handshake:
   <li>The client&#8217;s cryptographic determining parameters match the parameters that the server has negotiated based on the rest of the ClientHello. If (EC)DHE is selected, this includes verifying that (1) the ClientHello contains a key from the same group that is indicated by the server configuration and (2) that the server has negotiated that group and will therefore include a share from that group in its own &#8220;key_share&#8221; extension.</li>
 </ul>
 <p id="rfc.section.6.3.2.5.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and will instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
-<p id="rfc.section.6.3.2.5.p.12">[[TODO: How does the client behave if the indication is rejected.]]</p>
-<p id="rfc.section.6.3.2.5.p.13">[[OPEN ISSUE: This just specifies the signaling for 0-RTT but not the the 0-RTT cryptographic transforms, including:</p>
+<p id="rfc.section.6.3.2.5.p.12">If the server choosed to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2.2</a>.</p>
+<p id="rfc.section.6.3.2.5.p.13">[[TODO: How does the client behave if the indication is rejected.]]</p>
+<p id="rfc.section.6.3.2.5.p.14">[[OPEN ISSUE: This just specifies the signaling for 0-RTT but not the the 0-RTT cryptographic transforms, including:</p>
 <p/>
 
 <ul>
@@ -1791,7 +1792,7 @@ Subsequent Handshake:
   <li>What is signed in the client&#8217;s CertificateVerify.</li>
   <li>Whether we really want the Finished to not include the server&#8217;s data at all.</li>
 </ul>
-<p id="rfc.section.6.3.2.5.p.15">What&#8217;s here now needs a lot of cleanup before it is clear and correct.]]</p>
+<p id="rfc.section.6.3.2.5.p.16">What&#8217;s here now needs a lot of cleanup before it is clear and correct.]]</p>
 <h4 id="rfc.section.6.3.2.5.1"><a href="#rfc.section.6.3.2.5.1">6.3.2.5.1.</a> <a href="#cryptographic-determining-parameters" id="cryptographic-determining-parameters">Cryptographic Determining Parameters</a></h4>
 <p id="rfc.section.6.3.2.5.1.p.1">In order to allow the server to decrypt 0-RTT data, the client needs to provide enough information to allow the server to decrypt the traffic without negotiation. This is accomplished by having the client indicate the &#8220;cryptographic determining parameters&#8221; in its ClientHello, which are necessary to decrypt the client&#8217;s packets (i.e., those present in the ServerHello).  This includes the following values:</p>
 <p/>
