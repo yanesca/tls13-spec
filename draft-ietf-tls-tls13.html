@@ -360,7 +360,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-12-28" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-1-05" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -381,7 +381,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 28, 2015</td>
+  <td class="right">January 05, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -396,7 +396,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 30, 2016</td>
+  <td class="left">Expires: July 8, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -417,11 +417,11 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 30, 2016.</p>
+<p>This Internet-Draft will expire on July 8, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
-<p>Copyright (c) 2015 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2016 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <p>This document may contain material from IETF Documents or IETF Contributions published or made publicly available before November 10, 2008.  The person(s) controlling the copyright in some of this material may not have granted the IETF Trust the right to allow modifications of such material outside the IETF Standards Process. Without obtaining an adequate license from the person(s) controlling the copyright in such materials, this document may not be modified outside the IETF Standards Process, and derivative works of it may not be created outside the IETF Standards Process, except to format it for publication as an RFC or to translate it into languages other than English.</p>
 
@@ -815,7 +815,7 @@ li, p {
 <p id="rfc.section.4.8.1.p.2">The algorithm field specifies the algorithm used (see <a href="#signature-algorithms">Section 6.3.2.1</a> for the definition of this field). Note that the algorithm field was introduced in TLS 1.2, and is not in earlier versions. The signature is a digital signature using those algorithms over the contents of the element. The contents themselves do not appear on the wire but are simply calculated. The length of the signature is specified by the signing algorithm and key.</p>
 <p id="rfc.section.4.8.1.p.3">In previous versions of TLS, the ServerKeyExchange format meant that attackers can obtain a signature of a message with a chosen, 32-byte prefix. Because TLS 1.3 servers are likely to also implement prior versions, the contents of the element always start with 64 bytes of octet 32 in order to clear that chosen-prefix.</p>
 <p id="rfc.section.4.8.1.p.4">Following that padding is a context string used to disambiguate signatures for different purposes. The context string will be specified whenever a digitally-signed element is used. A single 0 byte is appended to the context to act as a separator.</p>
-<p id="rfc.section.4.8.1.p.5">Finally, the specified contents of the digitally-signed structure follow the NUL after the context string. (See the example at the end of this section.)</p>
+<p id="rfc.section.4.8.1.p.5">Finally, the specified contents of the digitally-signed structure follow the 0 byte after the context string. (See the example at the end of this section.)</p>
 <p id="rfc.section.4.8.1.p.6">In RSA signing, the opaque vector contains the signature generated using the RSASSA-PSS signature scheme defined in <a href="#RFC3447">[RFC3447]</a> with MGF1. The digest used in the mask generation function MUST be the same as the digest which is being signed (i.e., what appears in algorithm.signature). The length of the salt MUST be equal to the length of the digest output. Note that previous versions of TLS used RSASSA-PKCS1-v1_5, not RSASSA-PSS.</p>
 <p id="rfc.section.4.8.1.p.7">All ECDSA computations MUST be performed according to ANSI X9.62 <a href="#X962">[X962]</a> or its successors.  Data to be signed/verified is hashed, and the result run directly through the ECDSA algorithm with no additional hashing.  The SignatureAndHashAlgorithm parameter in the DigitallySigned object indicates the digest algorithm which was used in the signature.  Signature-only curves MUST NOT be used for ECDSA unless otherwise noted.</p>
 <p id="rfc.section.4.8.1.p.8">All EdDSA computations MUST be performed according to <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Data to be signed/verified is passed as-is to the EdDSA algorithm with no hashing. The signature output is placed as-is in the signature field. The SignatureAndHashAlgorithm.hash value MUST set to none(0).</p>
@@ -2309,7 +2309,7 @@ server_finished_key =
     <tr>
       <th class="left">Record Type</th>
       <th class="left">Secret</th>
-      <th class="left">Label</th>
+      <th class="left">Phase</th>
       <th class="right">Handshake Context</th>
     </tr>
   </thead>
