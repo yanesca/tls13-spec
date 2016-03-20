@@ -1995,7 +1995,7 @@ Subsequent Handshake:
    opaque ASN1Cert&lt;1..2^24-1&gt;;
 
    struct {
-       opaque certificate_request_context&lt;0..255&gt;;
+       opaque certificate_request_context&lt;0..2^8-1&gt;;
        ASN1Cert certificate_list&lt;0..2^24-1&gt;;
    } Certificate;
 </pre>
@@ -2003,7 +2003,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>certificate_request_context:</dt>
-  <dd style="margin-left: 8"><br/> If this message is in response to a CertificateRequest, the value if certificate_request_context in that message. Otherwise, in the case of server authentication or client authentication in 0-RTT, this field SHALL be zero length.</dd>
+  <dd style="margin-left: 8"><br/> If this message is in response to a CertificateRequest, the value of certificate_request_context in that message. Otherwise, in the case of server authentication or client authentication in 0-RTT, this field SHALL be zero length.</dd>
   <dt>certificate_list</dt>
   <dd style="margin-left: 8"><br/> This is a sequence (chain) of certificates. The sender&#8217;s certificate MUST come first in the list. Each following certificate SHOULD directly certify one preceding it. Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</dd>
 </dl>
@@ -3338,7 +3338,7 @@ server_finished_key =
    opaque ASN1Cert&lt;1..2^24-1&gt;;
 
    struct {
-       opaque certificate_request_context&lt;0..255&gt;;
+       opaque certificate_request_context&lt;0..2^8-1&gt;;
        ASN1Cert certificate_list&lt;0..2^24-1&gt;;
    } Certificate;
 
