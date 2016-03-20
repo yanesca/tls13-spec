@@ -1434,7 +1434,7 @@ Subsequent Handshake:
        Extension extensions&lt;0..2^16-1&gt;;
    } ClientHello;
 </pre>
-<p id="rfc.section.6.3.1.1.p.12">TLS allows extensions to follow the compression_methods field in an extensions block. The presence of extensions can be detected by determining whether there are bytes following the compression_methods at the end of the ClientHello. Note that this method of detecting optional data differs from the normal TLS method of having a variable-length field, but it is used for compatibility with TLS before extensions were defined.</p>
+<p id="rfc.section.6.3.1.1.p.12">TLS allows extensions to follow the compression_methods field in an extensions block. The presence of extensions can be detected by determining whether there are bytes following the compression_methods at the end of the ClientHello. Note that this method of detecting optional data differs from the normal TLS method of having a variable-length field, but it is used for compatibility with TLS before extensions were defined.  As of TLS 1.3, all clients and servers will send at least one extension (at least &#8220;key_share&#8221; or &#8220;pre_shared_key&#8221;).</p>
 <p/>
 
 <dl>
@@ -1449,7 +1449,7 @@ Subsequent Handshake:
   <dt>legacy_compression_methods</dt>
   <dd style="margin-left: 8"><br/> Versions of TLS before 1.3 supported compression and the list of compression methods was supplied in this field. For any TLS 1.3 ClientHello, this vector MUST contain exactly one byte set to zero, which corresponds to the &#8220;null&#8221; compression method in prior versions of TLS. If a TLS 1.3 ClientHello is received with any other value in this field, the server MUST generate a fatal &#8220;illegal_parameter&#8221; alert. Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and MUST follow the procedures for the appropriate prior version of TLS.</dd>
   <dt>extensions</dt>
-  <dd style="margin-left: 8"><br/> Clients MAY request extended functionality from servers by sending data in the extensions field.  The actual &#8220;Extension&#8221; format is defined in <a href="#hello-extensions">Section 6.3.2</a>.</dd>
+  <dd style="margin-left: 8"><br/> Clients request extended functionality from servers by sending data in the extensions field.  The actual &#8220;Extension&#8221; format is defined in <a href="#hello-extensions">Section 6.3.2</a>.</dd>
 </dl>
 <p id="rfc.section.6.3.1.1.p.14">In the event that a client requests additional functionality using extensions, and this functionality is not supplied by the server, the client MAY abort the handshake. A server MUST accept ClientHello messages both with and without the extensions field, and (as for all other messages) it MUST check that the amount of data in the message precisely matches one of these formats; if not, then it MUST send a fatal &#8220;decode_error&#8221; alert.</p>
 <p id="rfc.section.6.3.1.1.p.15">After sending the ClientHello message, the client waits for a ServerHello or HelloRetryRequest message.</p>
@@ -1466,15 +1466,10 @@ Subsequent Handshake:
        ProtocolVersion server_version;
        Random random;
        CipherSuite cipher_suite;
-       select (extensions_present) {
-           case false:
-               struct {};
-           case true:
-               Extension extensions&lt;0..2^16-1&gt;;
-       };
+       Extension extensions&lt;0..2^16-1&gt;;
    } ServerHello;
 </pre>
-<p id="rfc.section.6.3.1.2.p.4">The presence of extensions can be detected by determining whether there are bytes following the cipher_suite field at the end of the ServerHello.</p>
+<p id="rfc.section.6.3.1.2.p.4">In prior versions of TLS, the extensions field could be omitted entirely if not needed, similar to ClientHello.  As of TLS 1.3, all clients and servers will send at least one extension (at least &#8220;key_share&#8221; or &#8220;pre_shared_key&#8221;).</p>
 <p/>
 
 <dl>
@@ -3171,12 +3166,7 @@ server_finished_key =
        ProtocolVersion server_version;
        Random random;
        CipherSuite cipher_suite;
-       select (extensions_present) {
-           case false:
-               struct {};
-           case true:
-               Extension extensions&lt;0..2^16-1&gt;;
-       };
+       Extension extensions&lt;0..2^16-1&gt;;
    } ServerHello;
 
    struct {
