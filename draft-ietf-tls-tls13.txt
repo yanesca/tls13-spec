@@ -105,7 +105,7 @@ Table of Contents
      6.2.  Handshake Protocol Overview . . . . . . . . . . . . . . .  31
        6.2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . .  35
        6.2.2.  Zero-RTT Exchange . . . . . . . . . . . . . . . . . .  36
-       6.2.3.  Resumption and PSK  . . . . . . . . . . . . . . . . .  37
+       6.2.3.  Resumption and Pre-Shared Key (PSK) . . . . . . . . .  37
 
 
 
@@ -1348,7 +1348,7 @@ Internet-Draft                     TLS                        March 2016
 
    resumption master secret
       a secret shared between the client and server that can be used as
-      a PSK in future connections.
+      a pre-shared symmetric key (PSK) in future connections.
 
    These items are then used to create security parameters for use by
    the record layer when protecting application data.  Many connections
@@ -2053,7 +2053,7 @@ Internet-Draft                     TLS                        March 2016
        share is compromised and client authentication is used, then the
        attacker can impersonate the client on subsequent connections.
 
-6.2.3.  Resumption and PSK
+6.2.3.  Resumption and Pre-Shared Key (PSK)
 
    Finally, TLS provides a pre-shared key (PSK) mode which allows a
    client and server who share an existing secret (e.g., a key

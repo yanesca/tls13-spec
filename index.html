@@ -298,7 +298,7 @@ li, p {
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Handshake Protocol Overview"/>
 <link href="#rfc.section.6.2.1" rel="Chapter" title="6.2.1 Incorrect DHE Share"/>
 <link href="#rfc.section.6.2.2" rel="Chapter" title="6.2.2 Zero-RTT Exchange"/>
-<link href="#rfc.section.6.2.3" rel="Chapter" title="6.2.3 Resumption and PSK"/>
+<link href="#rfc.section.6.2.3" rel="Chapter" title="6.2.3 Resumption and Pre-Shared Key (PSK)"/>
 <link href="#rfc.section.6.3" rel="Chapter" title="6.3 Handshake Protocol"/>
 <link href="#rfc.section.6.3.1" rel="Chapter" title="6.3.1 Key Exchange Messages"/>
 <link href="#rfc.section.6.3.2" rel="Chapter" title="6.3.2 Hello Extensions"/>
@@ -460,7 +460,7 @@ li, p {
 </ul><li>6.2.   <a href="#rfc.section.6.2">Handshake Protocol Overview</a></li>
 <ul><li>6.2.1.   <a href="#rfc.section.6.2.1">Incorrect DHE Share</a></li>
 <li>6.2.2.   <a href="#rfc.section.6.2.2">Zero-RTT Exchange</a></li>
-<li>6.2.3.   <a href="#rfc.section.6.2.3">Resumption and PSK</a></li>
+<li>6.2.3.   <a href="#rfc.section.6.2.3">Resumption and Pre-Shared Key (PSK)</a></li>
 </ul><li>6.3.   <a href="#rfc.section.6.3">Handshake Protocol</a></li>
 <ul><li>6.3.1.   <a href="#rfc.section.6.3.1">Key Exchange Messages</a></li>
 <li>6.3.2.   <a href="#rfc.section.6.3.2">Hello Extensions</a></li>
@@ -1021,7 +1021,7 @@ li, p {
   <dt>cipher spec</dt>
   <dd style="margin-left: 8"><br/> Specifies the authentication and key establishment algorithms, the hash for use with HKDF to generate keying material, and the record protection algorithm (See <a href="#the-security-parameters">Appendix A.5</a> for formal definition.)</dd>
   <dt>resumption master secret</dt>
-  <dd style="margin-left: 8"><br/> a secret shared between the client and server that can be used as a PSK in future connections.</dd>
+  <dd style="margin-left: 8"><br/> a secret shared between the client and server that can be used as a pre-shared symmetric key (PSK) in future connections.</dd>
 </dl>
 <p id="rfc.section.6.p.4">These items are then used to create security parameters for use by the record layer when protecting application data. Many connections can be instantiated using the same session using a PSK established in an initial handshake.</p>
 <h2 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h2>
@@ -1307,7 +1307,7 @@ Data  |  (Finished)
   <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS (See <a href="#replay-properties">Section 6.3.2.5.2</a>), the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections.  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and also cannot be sent as if it were ordinary TLS data.</li>
   <li>If the server key is compromised, then the attacker can tamper with the 0-RTT data without detection. If the client&#8217;s ephemeral share is compromised and client authentication is used, then the attacker can impersonate the client on subsequent connections.</li>
 </ol>
-<h3 id="rfc.section.6.2.3"><a href="#rfc.section.6.2.3">6.2.3.</a> <a href="#resumption-and-psk" id="resumption-and-psk">Resumption and PSK</a></h3>
+<h3 id="rfc.section.6.2.3"><a href="#rfc.section.6.2.3">6.2.3.</a> <a href="#resumption-and-psk" id="resumption-and-psk">Resumption and Pre-Shared Key (PSK)</a></h3>
 <p id="rfc.section.6.2.3.p.1">Finally, TLS provides a pre-shared key (PSK) mode which allows a client and server who share an existing secret (e.g., a key established out of band) to establish a connection authenticated by that key. PSKs can also be established in a previous session and then reused (&#8220;session resumption&#8221;). Once a handshake has completed, the server can send the client a PSK identity which corresponds to a key derived from the initial handshake (See <a href="#new-session-ticket-message">Section 6.3.5.1</a>). The client can then use that PSK identity in future handshakes to negotiate use of the PSK; if the server accepts it, then the security context of the original connection is tied to the new connection. In TLS 1.2 and below, this functionality was provided by &#8220;session resumption&#8221; and &#8220;session tickets&#8221; <a href="#RFC5077">[RFC5077]</a>. Both mechanisms are obsoleted in TLS 1.3.</p>
 <p id="rfc.section.6.2.3.p.2">PSK cipher suites can either use PSK in combination with an (EC)DHE exchange in order to provide forward secrecy in combination with shared keys, or can use PSKs alone, at the cost of losing forward secrecy.</p>
 <p><a href="#tls-resumption-psk">Figure 4</a> shows a pair of handshakes in which the first establishes a PSK and the second uses it:</p>
