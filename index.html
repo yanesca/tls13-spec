@@ -1368,17 +1368,17 @@ Subsequent Handshake:
        HandshakeType msg_type;    /* handshake type */
        uint24 length;             /* bytes in message */
        select (HandshakeType) {
-           case client_hello:        ClientHello;
-           case server_hello:        ServerHello;
-           case hello_retry_request: HelloRetryRequest;
-           case encrypted_extensions: EncryptedExtensions;
-           case certificate_request: CertificateRequest;
-           case server_configuration:ServerConfiguration;
-           case certificate:         Certificate;
-           case certificate_verify:  CertificateVerify;
-           case finished:            Finished;
-           case session_ticket:      NewSessionTicket;
-           case key_update:          KeyUpdate;
+           case client_hello:          ClientHello;
+           case server_hello:          ServerHello;
+           case hello_retry_request:   HelloRetryRequest;
+           case encrypted_extensions:  EncryptedExtensions;
+           case certificate_request:   CertificateRequest;
+           case server_configuration:  ServerConfiguration;
+           case certificate:           Certificate;
+           case certificate_verify:    CertificateVerify;
+           case finished:              Finished;
+           case session_ticket:        NewSessionTicket;
+           case key_update:            KeyUpdate;
        } body;
    } Handshake;
 </pre>
@@ -1872,10 +1872,10 @@ Subsequent Handshake:
 <p id="rfc.section.6.3.3.3.p.3">Structure of this Message:</p>
 <pre>
       enum { (65535) } ConfigurationExtensionType;
-      
+
       enum { client_authentication(1), early_data(2),
              client_authentication_and_data(3), (255) } EarlyDataType;
-             
+
       struct {
           ConfigurationExtensionType extension_type;
           opaque extension_data&lt;0..2^16-1&gt;;
@@ -2266,7 +2266,7 @@ server_finished_key =
                                          "exporter master secret",
                                          handshake_hash, L)
 
-  
+
   Where handshake_hash contains the entire handshake up to
   and including the client's Finished, but not including
   any 0-RTT handshake messages or post-handshake messages.
@@ -3131,17 +3131,17 @@ server_finished_key =
        HandshakeType msg_type;    /* handshake type */
        uint24 length;             /* bytes in message */
        select (HandshakeType) {
-           case client_hello:        ClientHello;
-           case server_hello:        ServerHello;
-           case hello_retry_request: HelloRetryRequest;
-           case encrypted_extensions: EncryptedExtensions;
-           case certificate_request: CertificateRequest;
-           case server_configuration:ServerConfiguration;
-           case certificate:         Certificate;
-           case certificate_verify:  CertificateVerify;
-           case finished:            Finished;
-           case session_ticket:      NewSessionTicket;
-           case key_update:          KeyUpdate;
+           case client_hello:          ClientHello;
+           case server_hello:          ServerHello;
+           case hello_retry_request:   HelloRetryRequest;
+           case encrypted_extensions:  EncryptedExtensions;
+           case certificate_request:   CertificateRequest;
+           case server_configuration:  ServerConfiguration;
+           case certificate:           Certificate;
+           case certificate_verify:    CertificateVerify;
+           case finished:              Finished;
+           case session_ticket:        NewSessionTicket;
+           case key_update:            KeyUpdate;
        } body;
    } Handshake;
 </pre>
@@ -3316,10 +3316,10 @@ server_finished_key =
    } CertificateRequest;
 
       enum { (65535) } ConfigurationExtensionType;
-      
+
       enum { client_authentication(1), early_data(2),
              client_authentication_and_data(3), (255) } EarlyDataType;
-             
+
       struct {
           ConfigurationExtensionType extension_type;
           opaque extension_data&lt;0..2^16-1&gt;;
