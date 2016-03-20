@@ -5735,20 +5735,20 @@ Internet-Draft                     TLS                        March 2016
    | TLS_PSK_DHE_WITH_AES_256_CCM | {0xC0,0x | [RFC6655]               |
    | _8                           | AB}      |                         |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_AES_128_G | {0xC0,0x | [I-D.mattsson-tls-ecdhe |
-   | CM_SHA256                    | B0}      | -psk-aead]              |
+   | TLS_ECDHE_PSK_WITH_AES_128_G | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
+   | CM_SHA256                    | 01}      | -psk-aead]              |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_AES_256_G | {0xC0,0x | [I-D.mattsson-tls-ecdhe |
-   | CM_SHA384                    | B1}      | -psk-aead]              |
+   | TLS_ECDHE_PSK_WITH_AES_256_G | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
+   | CM_SHA384                    | 02}      | -psk-aead]              |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_AES_128_C | {0xC0,0x | [I-D.mattsson-tls-ecdhe |
-   | CM_8_SHA256                  | B2}      | -psk-aead]              |
+   | TLS_ECDHE_PSK_WITH_AES_128_C | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
+   | CM_8_SHA256                  | 03}      | -psk-aead]              |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_AES_128_C | {0xC0,0x | [I-D.mattsson-tls-ecdhe |
-   | CM_SHA256                    | B3}      | -psk-aead]              |
+   | TLS_ECDHE_PSK_WITH_AES_128_C | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
+   | CM_SHA256                    | 04}      | -psk-aead]              |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_AES_256_C | {0xC0,0x | [I-D.mattsson-tls-ecdhe |
-   | CM_SHA384                    | B4}      | -psk-aead]              |
+   | TLS_ECDHE_PSK_WITH_AES_256_C | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
+   | CM_SHA384                    | 05}      | -psk-aead]              |
    |                              |          |                         |
    | TLS_ECDHE_PSK_WITH_CHACHA20_ | {0xCC,0x | [I-D.ietf-tls-chacha20- |
    | POLY1305_SHA256              | AC}      | poly1305]               |
