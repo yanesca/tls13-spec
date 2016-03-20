@@ -2376,7 +2376,7 @@ server_finished_key =
   <li>The public key to put into ECPoint.point structure is the result of applying the ECDH function to the secret key of appropriate length (into scalar input) and the standard public basepoint (into u-coordinate point input).</li>
   <li>The ECDH shared secret is the result of applying ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
 </ul>
-<p id="rfc.section.7.3.3.p.5">For X25519 and X448, see <a href="#I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</a>.</p>
+<p id="rfc.section.7.3.3.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#mandatory-algorithms" id="mandatory-algorithms">Mandatory Algorithms</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mti-cipher-suites" id="mti-cipher-suites">MTI Cipher Suites</a></h2>
 <p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following cipher suites:</p>
@@ -2384,7 +2384,7 @@ server_finished_key =
     TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
     TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 </pre>
-<p id="rfc.section.8.1.p.2">These cipher suites MUST support both digital signatures and key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</a>.</p>
+<p id="rfc.section.8.1.p.2">These cipher suites MUST support both digital signatures and key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748">[RFC7748]</a>.</p>
 <p id="rfc.section.8.1.p.3">A TLS-compliant application SHOULD implement the following cipher suites:</p>
 <pre>
     TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
@@ -2628,12 +2628,6 @@ server_finished_key =
     </tr>
     <tr>
       <td class="reference">
-        <b id="I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</b>
-      </td>
-      <td class="top"><a>Langley, A.</a> and <a>M. Hamburg</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-curves-11">Elliptic Curves for Security</a>", Internet-Draft draft-irtf-cfrg-curves-11, October 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</b>
       </td>
       <td class="top"><a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-eddsa-04">Edwards-curve Digital Signature Algorithm (EdDSA)</a>", Internet-Draft draft-irtf-cfrg-eddsa-04, March 2016.</td>
@@ -2715,6 +2709,12 @@ server_finished_key =
         <b id="RFC7251">[RFC7251]</b>
       </td>
       <td class="top"><a>McGrew, D.</a>, <a>Bailey, D.</a>, <a>Campagna, M.</a> and <a>R. Dugal</a>, "<a href="http://tools.ietf.org/html/rfc7251">AES-CCM Elliptic Curve Cryptography (ECC) Cipher Suites for TLS</a>", RFC 7251, DOI 10.17487/RFC7251, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7748">[RFC7748]</b>
+      </td>
+      <td class="top"><a>Langley, A.</a>, <a>Hamburg, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/rfc7748">Elliptic Curves for Security</a>", RFC 7748, DOI 10.17487/RFC7748, January 2016.</td>
     </tr>
     <tr>
       <td class="reference">

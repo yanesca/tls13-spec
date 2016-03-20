@@ -4331,7 +4331,7 @@ Internet-Draft                     TLS                        March 2016
       u-coordinate point input).  The output is used raw, with no
       processing.
 
-   For X25519 and X448, see [I-D.irtf-cfrg-curves].
+   For X25519 and X448, see [RFC7748].
 
 8.  Mandatory Algorithms
 
@@ -4346,7 +4346,7 @@ Internet-Draft                     TLS                        March 2016
 
    These cipher suites MUST support both digital signatures and key
    exchange with secp256r1 (NIST P-256) and SHOULD support key exchange
-   with X25519 [I-D.irtf-cfrg-curves].
+   with X25519 [RFC7748].
 
    A TLS-compliant application SHOULD implement the following cipher
    suites:
@@ -4624,11 +4624,6 @@ Internet-Draft                     TLS                        March 2016
               ietf-tls-chacha20-poly1305-04 (work in progress), December
               2015.
 
-   [I-D.irtf-cfrg-curves]
-              Langley, A. and M. Hamburg, "Elliptic Curves for
-              Security", draft-irtf-cfrg-curves-11 (work in progress),
-              October 2015.
-
    [I-D.irtf-cfrg-eddsa]
               Josefsson, S. and I. Liusvaara, "Edwards-curve Digital
               Signature Algorithm (EdDSA)", draft-irtf-cfrg-eddsa-04
@@ -4638,6 +4633,11 @@ Internet-Draft                     TLS                        March 2016
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
               <http://www.rfc-editor.org/info/rfc2104>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
 
 
 
@@ -4649,11 +4649,6 @@ Rescorla               Expires September 21, 2016              [Page 83]
 
 Internet-Draft                     TLS                        March 2016
 
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
 
    [RFC2434]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", RFC 2434,
@@ -4696,6 +4691,11 @@ Internet-Draft                     TLS                        March 2016
               RFC 6209, DOI 10.17487/RFC6209, April 2011,
               <http://www.rfc-editor.org/info/rfc6209>.
 
+   [RFC6367]  Kanno, S. and M. Kanda, "Addition of the Camellia Cipher
+              Suites to Transport Layer Security (TLS)", RFC 6367,
+              DOI 10.17487/RFC6367, September 2011,
+              <http://www.rfc-editor.org/info/rfc6367>.
+
 
 
 
@@ -4706,11 +4706,6 @@ Rescorla               Expires September 21, 2016              [Page 84]
 Internet-Draft                     TLS                        March 2016
 
 
-   [RFC6367]  Kanno, S. and M. Kanda, "Addition of the Camellia Cipher
-              Suites to Transport Layer Security (TLS)", RFC 6367,
-              DOI 10.17487/RFC6367, September 2011,
-              <http://www.rfc-editor.org/info/rfc6367>.
-
    [RFC6655]  McGrew, D. and D. Bailey, "AES-CCM Cipher Suites for
               Transport Layer Security (TLS)", RFC 6655,
               DOI 10.17487/RFC6655, July 2012,
@@ -4720,6 +4715,10 @@ Internet-Draft                     TLS                        March 2016
               CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
               TLS", RFC 7251, DOI 10.17487/RFC7251, June 2014,
               <http://www.rfc-editor.org/info/rfc7251>.
+
+   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
+              for Security", RFC 7748, DOI 10.17487/RFC7748, January
+              2016, <http://www.rfc-editor.org/info/rfc7748>.
 
    [SHS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Secure Hash Standard", NIST FIPS
@@ -4753,6 +4752,7 @@ Internet-Draft                     TLS                        March 2016
    [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
+
 
 
 
