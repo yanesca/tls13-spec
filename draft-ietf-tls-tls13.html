@@ -2639,6 +2639,12 @@ server_finished_key =
     </tr>
     <tr>
       <td class="reference">
+        <b id="I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</b>
+      </td>
+      <td class="top"><a>Mattsson, J.</a> and <a>D. Migault</a>, "<a href="http://tools.ietf.org/html/draft-mattsson-tls-ecdhe-psk-aead-03">ECDHE_PSK with AES-GCM and AES-CCM Cipher Suites for Transport Layer Security (TLS)</a>", Internet-Draft draft-mattsson-tls-ecdhe-psk-aead-03, December 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC2104">[RFC2104]</b>
       </td>
       <td class="top"><a>Krawczyk, H.</a>, <a>Bellare, M.</a> and <a>R. Canetti</a>, "<a href="http://tools.ietf.org/html/rfc2104">HMAC: Keyed-Hashing for Message Authentication</a>", RFC 2104, DOI 10.17487/RFC2104, February 1997.</td>
@@ -2678,6 +2684,12 @@ server_finished_key =
         <b id="RFC5289">[RFC5289]</b>
       </td>
       <td class="top"><a>Rescorla, E.</a>, "<a href="http://tools.ietf.org/html/rfc5289">TLS Elliptic Curve Cipher Suites with SHA-256/384 and AES Galois Counter Mode (GCM)</a>", RFC 5289, DOI 10.17487/RFC5289, August 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5487">[RFC5487]</b>
+      </td>
+      <td class="top"><a>Badra, M.</a>, "<a href="http://tools.ietf.org/html/rfc5487">Pre-Shared Key Cipher Suites for TLS with SHA-256/384 and AES Galois Counter Mode</a>", RFC 5487, DOI 10.17487/RFC5487, March 2009.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3367,7 +3379,7 @@ server_finished_key =
 <h2 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
 <p id="rfc.section.A.4.p.1">A cipher suite defines a cipher specification supported in TLS and negotiated via hello messages in the TLS handshake.  Cipher suite names follow a general naming convention composed of a series of component algorithm names separated by underscores:</p>
 <pre>
-   CipherSuite TLS_KEA_SIGN_WITH_CIPHER_HASH = VALUE;
+   CipherSuite TLS_KEA_AUTH_WITH_CIPHER_HASH = VALUE;
 </pre>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -3383,11 +3395,11 @@ server_finished_key =
     </tr>
     <tr>
       <td class="left">KEA</td>
-      <td class="left">The key exchange algorithm</td>
+      <td class="left">The key exchange algorithm (e.g. ECDHE, DHE)</td>
     </tr>
     <tr>
-      <td class="left">SIGN</td>
-      <td class="left">The signature algorithm</td>
+      <td class="left">AUTH</td>
+      <td class="left">The authentication algorithm (e.g. certificates, PSK)</td>
     </tr>
     <tr>
       <td class="left">WITH</td>
@@ -3492,31 +3504,136 @@ server_finished_key =
     </tr>
     <tr>
       <td class="left">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</td>
-      <td class="left">{TBD,TBD}</td>
+      <td class="left">{0xCC,0xA8}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
       </td>
     </tr>
     <tr>
       <td class="left">TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256</td>
-      <td class="left">{TBD,TBD}</td>
+      <td class="left">{0xCC,0xA9}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
       </td>
     </tr>
     <tr>
       <td class="left">TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256</td>
-      <td class="left">{TBD,TBD}</td>
+      <td class="left">{0xCC,0xAA}</td>
       <td class="left">
         <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
       </td>
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.A.4.p.6">[[TODO: CHACHA20_POLY1305_SHA256 cipher suite IDs are TBD.]]</p>
+<p id="rfc.section.A.4.p.6">Note: The values listed for ChaCha/Poly are preliminary but are being or will be used for interop testing and therefore are likely to be assigned.</p>
 <p id="rfc.section.A.4.p.7">Note: ECDHE AES GCM was not yet standards track prior to the publication of this specification. This document promotes it to Standards Track.</p>
-<p id="rfc.section.A.4.p.8">All cipher suites in this section are specified for use with both TLS 1.2 and TLS 1.3, as well as the corresponding versions of DTLS.  (see <a href="#backward-compatibility">Appendix C</a>)</p>
-<p id="rfc.section.A.4.p.9">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 11</a>.</p>
+<p id="rfc.section.A.4.p.8">The following is a list of standards track ephemeral pre-shared key cipher suites which are currently available in TLS 1.3:</p>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Cipher Suite Name</th>
+      <th class="left">Value</th>
+      <th class="left">Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">TLS_DHE_PSK_WITH_AES_128_GCM_SHA256</td>
+      <td class="left">{0x00,0xAA}</td>
+      <td class="left">
+        <a href="#RFC5487">[RFC5487]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_PSK_WITH_AES_256_GCM_SHA384</td>
+      <td class="left">{0x00,0xAB}</td>
+      <td class="left">
+        <a href="#RFC5487">[RFC5487]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_PSK_WITH_AES_128_CCM</td>
+      <td class="left">{0xC0,0xA6}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_PSK_WITH_AES_256_CCM</td>
+      <td class="left">{0xC0,0xA7}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_PSK_DHE_WITH_AES_128_CCM_8</td>
+      <td class="left">{0xC0,0xAA}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_PSK_DHE_WITH_AES_256_CCM_8</td>
+      <td class="left">{0xC0,0xAB}</td>
+      <td class="left">
+        <a href="#RFC6655">[RFC6655]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256</td>
+      <td class="left">{0xC0,0xB0}</td>
+      <td class="left">
+        <a href="#I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384</td>
+      <td class="left">{0xC0,0xB1}</td>
+      <td class="left">
+        <a href="#I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_AES_128_CCM_8_SHA256</td>
+      <td class="left">{0xC0,0xB2}</td>
+      <td class="left">
+        <a href="#I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256</td>
+      <td class="left">{0xC0,0xB3}</td>
+      <td class="left">
+        <a href="#I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_AES_256_CCM_SHA384</td>
+      <td class="left">{0xC0,0xB4}</td>
+      <td class="left">
+        <a href="#I-D.mattsson-tls-ecdhe-psk-aead">[I-D.mattsson-tls-ecdhe-psk-aead]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256</td>
+      <td class="left">{0xCC,0xAC}</td>
+      <td class="left">
+        <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="left">TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256</td>
+      <td class="left">{0xCC,0xAD}</td>
+      <td class="left">
+        <a href="#I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p id="rfc.section.A.4.p.9">Note: The values listed for ECDHE and ChaCha/Poly are preliminary but are being or will be used for interop testing and therefore are likely to be assigned.</p>
+<p id="rfc.section.A.4.p.10">Note: <a href="#RFC6655">[RFC6655]</a> is inconsistent with respect to the ordering of components within PSK AES CCM cipher suite names. The names above are as defined.</p>
+<p id="rfc.section.A.4.p.11">All cipher suites in this section are specified for use with both TLS 1.2 and TLS 1.3, as well as the corresponding versions of DTLS.  (see <a href="#backward-compatibility">Appendix C</a>)</p>
+<p id="rfc.section.A.4.p.12">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 11</a>.</p>
 <h3 id="rfc.appendix.A.4.1"><a href="#rfc.appendix.A.4.1">A.4.1.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h3>
 <p id="rfc.section.A.4.1.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These cipher suites have been deprecated in TLS 1.3. However, it is still possible to negotiate cipher suites that do not provide verifiable server authentication by several methods, including:</p>
 <p/>
