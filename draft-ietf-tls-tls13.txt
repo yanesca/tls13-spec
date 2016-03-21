@@ -4300,7 +4300,7 @@ Internet-Draft                     TLS                        March 2016
    |             |         | expansion"      |             ServerHello |
    |             |         |                 |                         |
    | Application | traffic | "application    |   ClientHello... Server |
-   | Data        | secret  | data key        |       CertificateVerify |
+   | Data        | secret  | data key        |                Finished |
    |             |         | expansion"      |                         |
    +-------------+---------+-----------------+-------------------------+
 
