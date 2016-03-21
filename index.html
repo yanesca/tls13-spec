@@ -2099,8 +2099,9 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>Where hashed_data is the hash output described in <a href="#authentication-messages">Section 6.3.4</a>, namely Hash(Handshake Context + Certificate).</li>
+  <li>Where hashed_data is the hash output described in <a href="#authentication-messages">Section 6.3.4</a>, namely Hash(Handshake Context + Certificate). For concreteness, this means that the value that is signed is:</li>
 </ul>
+<p id="rfc.section.6.3.4.2.p.5">padding + context_string + 00 + hashed_data</p>
 <p/>
 
 <ul class="empty">
@@ -2121,7 +2122,7 @@ Subsequent Handshake:
 <ul class="empty">
   <li>In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. (Note that rsa_pkcs1_sha1 and dsa_sha1, the only defined SHA-1 signature algorithms, are undefined for CertificateVerify signatures.)</li>
 </ul>
-<p id="rfc.section.6.3.4.2.p.9">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
+<p id="rfc.section.6.3.4.2.p.10">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
 <h4 id="rfc.section.6.3.4.3"><a href="#rfc.section.6.3.4.3">6.3.4.3.</a> <a href="#finished" id="finished">Finished</a></h4>
 <p id="rfc.section.6.3.4.3.p.1">When this message will be sent:</p>
 <p/>
