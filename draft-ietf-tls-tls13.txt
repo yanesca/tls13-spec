@@ -6394,6 +6394,10 @@ Internet-Draft                     TLS                        March 2016
       Columbia University
       smb@cs.columbia.edu
 
+   -  David Benjamin
+      Google
+      davidben@google.com
+
    -  Benjamin Beurdouche
 
    -  Karthikeyan Bhargavan (co-author of [RFC7627])
@@ -6430,10 +6434,6 @@ Internet-Draft                     TLS                        March 2016
 
    -  Pasi Eronen
       Nokia
-      pasi.eronen@nokia.com
-
-   -  Cedric Fournet
-      Microsoft
 
 
 
@@ -6442,6 +6442,10 @@ Rescorla               Expires September 22, 2016             [Page 115]
 Internet-Draft                     TLS                        March 2016
 
 
+      pasi.eronen@nokia.com
+
+   -  Cedric Fournet
+      Microsoft
       fournet@microsoft.com
 
    -  Anil Gangolli
@@ -6487,16 +6491,16 @@ Internet-Draft                     TLS                        March 2016
       Independent
       ilariliusvaara@welho.com
 
-   -  Jan Mikkelsen
-      Transactionware
-      janm@transactionware.com
-
 
 
 Rescorla               Expires September 22, 2016             [Page 116]
 
 Internet-Draft                     TLS                        March 2016
 
+
+   -  Jan Mikkelsen
+      Transactionware
+      janm@transactionware.com
 
    -  Bodo Moeller (co-author of [RFC4492])
       Google
@@ -6536,16 +6540,12 @@ Internet-Draft                     TLS                        March 2016
       Microsoft, Inc.
       dansimon@microsoft.com
 
+   -  Nick Sullivan
+      CloudFlare Inc.
+      nick@cloudflare.com
+
    -  Bjoern Tackmann
       University of California, San Diego
-      btackmann@eng.ucsd.edu
-
-   -  Martin Thomson
-      Mozilla
-      mt@mozilla.com
-
-   -  Tom Weinstein
-
 
 
 
@@ -6553,6 +6553,14 @@ Rescorla               Expires September 22, 2016             [Page 117]
 
 Internet-Draft                     TLS                        March 2016
 
+
+      btackmann@eng.ucsd.edu
+
+   -  Martin Thomson
+      Mozilla
+      mt@mozilla.com
+
+   -  Tom Weinstein
 
    -  Hoeteck Wee
       Ecole Normale Superieure, Paris
@@ -6562,20 +6570,12 @@ Internet-Draft                     TLS                        March 2016
       Vodafone
       timothy.wright@vodafone.com
 
-   -  Nick Sullivan
-      CloudFlare Inc.
-      nick@cloudflare.com
-
 Author's Address
 
    Eric Rescorla
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
