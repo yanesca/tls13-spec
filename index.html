@@ -808,18 +808,16 @@ li, p {
 <p id="rfc.section.4.8.1.p.1">A digitally-signed element is encoded as a struct DigitallySigned:</p>
 <pre>
    struct {
-      SignatureAndHashAlgorithm algorithm;
+      SignatureScheme algorithm;
       opaque signature&lt;0..2^16-1&gt;;
    } DigitallySigned;
 </pre>
-<p id="rfc.section.4.8.1.p.2">The algorithm field specifies the algorithm used (see <a href="#signature-algorithms">Section 6.3.2.1</a> for the definition of this field). Note that the algorithm field was introduced in TLS 1.2, and is not in earlier versions. The signature is a digital signature using those algorithms over the contents of the element. The contents themselves do not appear on the wire but are simply calculated. The length of the signature is specified by the signing algorithm and key.</p>
+<p id="rfc.section.4.8.1.p.2">The algorithm field specifies the algorithm used (see <a href="#signature-algorithms">Section 6.3.2.1</a> for the definition of this field). The signature is a digital signature using those algorithms over the contents of the element. The contents themselves do not appear on the wire but are simply calculated. The length of the signature is specified by the signing algorithm and key.</p>
 <p id="rfc.section.4.8.1.p.3">In previous versions of TLS, the ServerKeyExchange format meant that attackers can obtain a signature of a message with a chosen, 32-byte prefix. Because TLS 1.3 servers are likely to also implement prior versions, the contents of the element always start with 64 bytes of octet 32 in order to clear that chosen-prefix.</p>
 <p id="rfc.section.4.8.1.p.4">Following that padding is a context string used to disambiguate signatures for different purposes. The context string will be specified whenever a digitally-signed element is used. A single 0 byte is appended to the context to act as a separator.</p>
 <p id="rfc.section.4.8.1.p.5">Finally, the specified contents of the digitally-signed structure follow the 0 byte after the context string. (See the example at the end of this section.)</p>
-<p id="rfc.section.4.8.1.p.6">In RSA signing, the opaque vector contains the signature generated using the RSASSA-PSS signature scheme defined in <a href="#RFC3447">[RFC3447]</a> with MGF1. The digest used in the mask generation function MUST be the same as the digest which is being signed (i.e., what appears in algorithm.signature). The length of the salt MUST be equal to the length of the digest output. Note that previous versions of TLS used RSASSA-PKCS1-v1_5, not RSASSA-PSS.</p>
-<p id="rfc.section.4.8.1.p.7">All ECDSA computations MUST be performed according to ANSI X9.62 <a href="#X962">[X962]</a> or its successors.  Data to be signed/verified is hashed, and the result run directly through the ECDSA algorithm with no additional hashing.  The SignatureAndHashAlgorithm parameter in the DigitallySigned object indicates the digest algorithm which was used in the signature.  Signature-only curves MUST NOT be used for ECDSA unless otherwise noted.</p>
-<p id="rfc.section.4.8.1.p.8">All EdDSA computations MUST be performed according to <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Data to be signed/verified is passed as-is to the EdDSA algorithm with no hashing. The signature output is placed as-is in the signature field. The SignatureAndHashAlgorithm.hash value MUST set to none(0).</p>
-<p id="rfc.section.4.8.1.p.9">In the following example</p>
+<p id="rfc.section.4.8.1.p.6">The combined input is then fed into the corresponding signature algorithm to produce the signature value on the wire. See <a href="#signature-algorithms">Section 6.3.2.1</a> for algorithms defined in this specification.</p>
+<p id="rfc.section.4.8.1.p.7">In the following example</p>
 <pre>
    struct {
        uint8 field1;
@@ -830,14 +828,14 @@ li, p {
        };
    } UserType;
 </pre>
-<p id="rfc.section.4.8.1.p.10">Assume that the context string for the signature was specified as &#8220;Example&#8221;.  The input for the signature/hash algorithm would be:</p>
+<p id="rfc.section.4.8.1.p.8">Assume that the context string for the signature was specified as &#8220;Example&#8221;.  The input for the signature/hash algorithm would be:</p>
 <pre>
    2020202020202020202020202020202020202020202020202020202020202020
    2020202020202020202020202020202020202020202020202020202020202020
    4578616d706c6500
 </pre>
-<p id="rfc.section.4.8.1.p.11">followed by the encoding of the inner struct (field3 and field4).</p>
-<p id="rfc.section.4.8.1.p.12">The length of the structure, in bytes, would be equal to two bytes for field1 and field2, plus two bytes for the signature and hash algorithm, plus two bytes for the length of the signature, plus the length of the output of the signing algorithm. The length of the signature is known because the algorithm and key used for the signing are known prior to encoding or decoding this structure.</p>
+<p id="rfc.section.4.8.1.p.9">followed by the encoding of the inner struct (field3 and field4).</p>
+<p id="rfc.section.4.8.1.p.10">The length of the structure, in bytes, would be equal to two bytes for field1 and field2, plus two bytes for the signature algorithm, plus two bytes for the length of the signature, plus the length of the output of the signing algorithm. The length of the signature is known because the algorithm and key used for the signing are known prior to encoding or decoding this structure.</p>
 <h3 id="rfc.section.4.8.2"><a href="#rfc.section.4.8.2">4.8.2.</a> <a href="#authenticated-encryption-with-additional-data-aead" id="authenticated-encryption-with-additional-data-aead">Authenticated Encryption with Additional Data (AEAD)</a></h3>
 <p id="rfc.section.4.8.2.p.1">In AEAD encryption, the plaintext is simultaneously encrypted and integrity protected. The input may be of any length, and aead-ciphered output is generally larger than the input in order to accommodate the integrity check value.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#the-tls-record-protocol" id="the-tls-record-protocol">The TLS Record Protocol</a></h1>
@@ -1554,66 +1552,85 @@ Subsequent Handshake:
   <li>It would be technically possible to use extensions to change major aspects of the design of TLS; for example the design of cipher suite negotiation.  This is not recommended; it would be more appropriate to define a new version of TLS &#8212; particularly since the TLS handshake algorithms have specific protection against version rollback attacks based on the version number, and the possibility of version rollback should be a significant consideration in any major design change.</li>
 </ul>
 <h4 id="rfc.section.6.3.2.1"><a href="#rfc.section.6.3.2.1">6.3.2.1.</a> <a href="#signature-algorithms" id="signature-algorithms">Signature Algorithms</a></h4>
-<p id="rfc.section.6.3.2.1.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature/hash algorithm pairs may be used in digital signatures.</p>
+<p id="rfc.section.6.3.2.1.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature algorithms may be used in digital signatures.</p>
 <p id="rfc.section.6.3.2.1.p.2">Clients which offer one or more cipher suites which use certificate authentication (i.e., any non-PSK cipher suite) MUST send the &#8220;signature_algorithms&#8221; extension.  If this extension is not provided and no alternative cipher suite is available, the server MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>)</p>
 <p id="rfc.section.6.3.2.1.p.3">The &#8220;extension_data&#8221; field of this extension contains a &#8220;supported_signature_algorithms&#8221; value:</p>
 <pre>
    enum {
-       none(0),
-       sha1(2),
-       sha256(4), sha384(5), sha512(6),
-       (255)
-   } HashAlgorithm;
+       // RSASSA-PKCS-v1_5 algorithms.
+       rsa_pkcs1_sha1 (0x0201),
+       rsa_pkcs1_sha256 (0x0401),
+       rsa_pkcs1_sha384 (0x0501),
+       rsa_pkcs1_sha512 (0x0601),
 
-   enum {
-       rsa(1),
-       dsa(2),
-       ecdsa(3),
-       rsapss(4),
-       eddsa(5),
-       (255)
-   } SignatureAlgorithm;
+       // DSA algorithms (deprecated).
+       dsa_sha1 (0x0202),
+       dsa_sha256 (0x0402),
+       dsa_sha384 (0x0502),
+       dsa_sha512 (0x0602),
 
-   struct {
-       HashAlgorithm hash;
-       SignatureAlgorithm signature;
-   } SignatureAndHashAlgorithm;
+       // ECDSA algorithms.
+       ecdsa_secp256r1_sha256 (0x0403),
+       ecdsa_secp384r1_sha384 (0x0503),
+       ecdsa_secp521r1_sha512 (0x0603),
 
-   SignatureAndHashAlgorithm
-     supported_signature_algorithms&lt;2..2^16-2&gt;;
+       // RSASSA-PSS algorithms.
+       rsa_pss_sha256 (0x0700),
+       rsa_pss_sha384 (0x0701),
+       rsa_pss_sha512 (0x0702),
+
+       // EdDSA algorithms.
+       ed25519 (0x0703),
+       ed448 (0x0704),
+
+       // Reserved Code Points.
+       private_use (0xFE00..0xFFFF),
+       (0xFFFF)
+   } SignatureScheme;
+
+   SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
 </pre>
-<p id="rfc.section.6.3.2.1.p.4">[[TODO: IANA considerations for new SignatureAlgorithm value]]</p>
-<p id="rfc.section.6.3.2.1.p.5">Each SignatureAndHashAlgorithm value lists a single hash/signature pair that the client is willing to verify. The values are indicated in descending order of preference.</p>
-<p id="rfc.section.6.3.2.1.p.6">Note: Because not all signature algorithms and hash algorithms may be accepted by an implementation (e.g., ECDSA with SHA-256, but not SHA-384), algorithms here are listed in pairs.</p>
+<p id="rfc.section.6.3.2.1.p.4">Note: This production is named &#8220;SignatureScheme&#8221; because there is already a SignatureAlgorithm type in TLS 1.2. We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
+<p id="rfc.section.6.3.2.1.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash function and then proceed as usual.</p>
 <p/>
 
 <dl>
-  <dt>hash</dt>
-  <dd style="margin-left: 8"><br/> This field indicates the hash algorithms which may be used.  The values indicate support for unhashed data, SHA-1, SHA-256, SHA-384, and SHA-512 <a href="#SHS">[SHS]</a>, respectively. The &#8220;none&#8221; value is provided for signature algorithms which do not require hashing before signing, such as EdDSA.  Previous versions of TLS supported MD5, SHA-1, and SHA-224.  These algorithms are now deprecated.  MD5 and SHA-224 MUST NOT be offered by TLS 1.3 implementations; SHA-1 SHOULD NOT be offered.  Clients MAY offer support for SHA-1 for backwards compatibility, either with TLS 1.2 servers or for servers that have certification paths with signatures based on SHA-1.</dd>
-  <dt>signature</dt>
-  <dd style="margin-left: 8"><br/> This field indicates the signature algorithm that may be used.  The values indicate RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a>, DSA <a href="#DSS">[DSS]</a>, ECDSA <a href="#ECDSA">[ECDSA]</a>, RSASSA-PSS <a href="#RFC3447">[RFC3447]</a>, and EdDSA <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> respectively. Because all RSA signatures used in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>), as opposed to those in certificates, are RSASSA-PSS, the &#8220;rsa&#8221; value refers solely to signatures which appear in certificates.  The use of DSA and anonymous is deprecated. Previous versions of TLS supported DSA. DSA is deprecated as of TLS 1.3 and SHOULD NOT be offered or negotiated by any implementation.</dd>
+  <dt>rsa_pkcs1_sha1, etc.</dt>
+  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
+  <dt>dsa_sha1, etc.</dt>
+  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using DSA {{DSS} with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
+  <dt></dt>
+  <dd style="margin-left: 8">DSA is deprecated as of TLS 1.3. These values SHOULD NOT be offered or negotiated by any implementation. It is believed that the vast majority of implementations will not need to offer these values in order to interoperate with lesser TLS versions.</dd>
+  <dt>ecdsa_secp256r1_sha256, etc.</dt>
+  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
+  <dt>rsa_pss_sha256, etc.</dt>
+  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PSS <a href="#RFC3447">[RFC3447]</a> with MGF1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. When used in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>), the length of the salt MUST be equal to the length of the digest output.</dd>
+  <dt>ed25519, ed448</dt>
+  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
-<p id="rfc.section.6.3.2.1.p.8">The semantics of this extension are somewhat complicated because the cipher suite indicates permissible signature algorithms but not hash algorithms.  <a href="#server-certificate-selection">Section 6.3.4.1.1</a> and <a href="#key-share">Section 6.3.2.3</a> describe the appropriate rules.</p>
-<p id="rfc.section.6.3.2.1.p.9">Clients offering support for SHA-1 for backwards compatibility MUST do so by listing those hash/signature pairs as the lowest priority (listed after all other pairs in the supported_signature_algorithms vector). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>).</p>
-<p id="rfc.section.6.3.2.1.p.10">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a hash or signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.6.3.2.1.p.11">Note: TLS 1.3 servers might receive TLS 1.2 ClientHellos which do not contain this extension. If those servers are willing to negotiate TLS 1.2, they MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version.</p>
+<p id="rfc.section.6.3.2.1.p.7">The semantics of this extension are somewhat complicated because the cipher suite adds additional constraints on signature algorithms.  <a href="#server-certificate-selection">Section 6.3.4.1.1</a> describes the appropriate rules.</p>
+<p id="rfc.section.6.3.2.1.p.8">rsa_pkcs1_sha1 and dsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in the supported_signature_algorithms vector). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>).</p>
+<p id="rfc.section.6.3.2.1.p.9">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
+<p id="rfc.section.6.3.2.1.p.10">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version. In particular:</p>
+<p/>
+
+<ul>
+  <li>TLS 1.2 ClientHellos may omit this extension.</li>
+  <li>In TLS 1.2, the extension contained hash/signature pairs. The pairs are encoded in two octets, so SignatureScheme values have been allocated to align with TLS 1.2&#8217;s encoding. Some legacy pairs are left unallocated. These algorithms are deprecated as of TLS 1.3. They MUST NOT be offered or negotiated by any implementation. In particular, MD5 <a href="#SLOTH">[SLOTH]</a> and SHA-224 MUST NOT be used.</li>
+  <li>ecdsa_secp256r1_sha256, etc., align with TLS 1.2&#8217;s ECDSA hash/signature pairs.  However, the old semantics did not constrain the signing curve.</li>
+</ul>
 <h4 id="rfc.section.6.3.2.2"><a href="#rfc.section.6.3.2.2">6.3.2.2.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a></h4>
-<p id="rfc.section.6.3.2.2.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the named groups which the client supports, ordered from most preferred to least preferred.</p>
-<p id="rfc.section.6.3.2.2.p.2">Note: In versions of TLS prior to TLS 1.3, this extension was named &#8220;elliptic_curves&#8221; and only contained elliptic curve groups. See <a href="#RFC4492">[RFC4492]</a> and <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>.</p>
+<p id="rfc.section.6.3.2.2.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the (EC)DHE groups which the client supports, ordered from most preferred to least preferred.</p>
+<p id="rfc.section.6.3.2.2.p.2">Note: In versions of TLS prior to TLS 1.3, this extension was named &#8220;elliptic_curves&#8221; and only contained elliptic curve groups. See <a href="#RFC4492">[RFC4492]</a> and <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>. This extension was also used to negotiate ECDSA curves. Signature algorithms are now negotiated independently (see <a href="#signature-algorithms">Section 6.3.2.1</a>).</p>
 <p id="rfc.section.6.3.2.2.p.3">Clients which offer one or more (EC)DHE cipher suites MUST send at least one supported NamedGroup value and servers MUST NOT negotiate any of these cipher suites unless a supported value was provided.  If this extension is not provided and no alternative cipher suite is available, the server MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>) If the extension is provided, but no compatible group is offered, the server MUST NOT negotiate a cipher suite of the relevant type. For instance, if a client supplies only ECDHE groups, the server MUST NOT negotiate finite field Diffie-Hellman. If no acceptable group can be selected across all cipher suites, then the server MUST generate a fatal &#8220;handshake_failure&#8221; alert.</p>
 <p id="rfc.section.6.3.2.2.p.4">The &#8220;extension_data&#8221; field of this extension contains a &#8220;NamedGroupList&#8221; value:</p>
 <pre>
    enum {
-       // Elliptic Curve Groups.
+       // Elliptic Curve Groups (ECDHE).
        secp256r1 (23), secp384r1 (24), secp521r1 (25),
+       x25519 (29), x448 (30),
 
-       // ECDH functions.
-       ecdh_x25519 (29), ecdh_x448 (30),
-
-       // Signature-only curves.
-       eddsa_ed25519 (31), eddsa_ed448 (32),
-
-       // Finite Field Groups.
+       // Finite Field Groups (DHE).
        ffdhe2048 (256), ffdhe3072 (257), ffdhe4096 (258),
        ffdhe6144 (259), ffdhe8192 (260),
 
@@ -1631,11 +1648,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>secp256r1, etc.</dt>
-  <dd style="margin-left: 8"><br/> Indicates support of the corresponding named curve.  Note that some curves are also recommended in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>.  Values 0xFE00 through 0xFEFF are reserved for private use.</dd>
-  <dt>ecdh_x25519 and ecdh_x448</dt>
-  <dd style="margin-left: 8"><br/> Indicates support of the corresponding ECDH functions X25519 and X448.</dd>
-  <dt>eddsa_ed25519 and eddsa_ed448</dt>
-  <dd style="margin-left: 8"><br/> Indicates support of the corresponding curve for signatures.</dd>
+  <dd style="margin-left: 8"><br/> Indicates support of the corresponding named curve.  Note that some curves are also recommended in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>. Others are recommended in <a href="#I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</a>.  Values 0xFE00 through 0xFEFF are reserved for private use.</dd>
   <dt>ffdhe2048, etc.</dt>
   <dd style="margin-left: 8"><br/> Indicates support of the corresponding finite field group, defined in <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>.  Values 0x01FC through 0x01FF are reserved for private use.</dd>
 </dl>
@@ -1644,8 +1657,7 @@ Subsequent Handshake:
 <pre>
    00 0A 00 06 00 04 00 17 00 18
 </pre>
-<p id="rfc.section.6.3.2.2.p.8">NOTE: A server participating in an ECDHE-ECDSA key exchange may use different curves for (i) the ECDSA or EdDSA key in its certificate, and (ii) the ephemeral ECDH key in its &#8220;key_share&#8221; extension.  The server must consider the supported groups in both cases.</p>
-<p id="rfc.section.6.3.2.2.p.9">[[TODO: IANA Considerations.]]</p>
+<p id="rfc.section.6.3.2.2.p.8">[[TODO: IANA Considerations.]]</p>
 <h4 id="rfc.section.6.3.2.3"><a href="#rfc.section.6.3.2.3">6.3.2.3.</a> <a href="#key-share" id="key-share">Key Share</a></h4>
 <p id="rfc.section.6.3.2.3.p.1">The &#8220;key_share&#8221; extension contains the endpoint&#8217;s cryptographic parameters for non-PSK key establishment methods (currently DHE or ECDHE).</p>
 <p id="rfc.section.6.3.2.3.p.2">Clients which offer one or more (EC)DHE cipher suites MUST send this extension and SHOULD send at least one supported KeyShareEntry value.  Servers MUST NOT negotiate any of these cipher suites unless a supported value was provided.  If this extension is not provided in a ServerHello or ClientHello, and the peer is offering (EC)DHE cipher suites, then the endpoint MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>) Clients MAY send an empty client_shares vector in order to request group selection from the server at the cost of an additional round trip.  (see <a href="#hello-retry-request">Section 6.3.1.3</a>)</p>
@@ -1659,7 +1671,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>group</dt>
-  <dd style="margin-left: 8"><br/> The named group for the key being exchanged.  Finite Field Diffie-Hellman <a href="#DH">[DH]</a> parameters are described in <a href="#ffdhe-param">Section 6.3.2.3.1</a>; Elliptic Curve Diffie-Hellman parameters are described in <a href="#ecdhe-param">Section 6.3.2.3.2</a>. Signature-only curves, currently eddsa_ed25519 (31) and eddsa_ed448 (32), MUST NOT be used for key exchange.</dd>
+  <dd style="margin-left: 8"><br/> The named group for the key being exchanged.  Finite Field Diffie-Hellman <a href="#DH">[DH]</a> parameters are described in <a href="#ffdhe-param">Section 6.3.2.3.1</a>; Elliptic Curve Diffie-Hellman parameters are described in <a href="#ecdhe-param">Section 6.3.2.3.2</a>.</dd>
   <dt>key_exchange</dt>
   <dd style="margin-left: 8"><br/> Key exchange information.  The contents of this field are determined by the specified group and its corresponding definition.  Endpoints MUST NOT send empty or otherwise invalid key_exchange values for any reason.</dd>
 </dl>
@@ -1701,7 +1713,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>point</dt>
-  <dd style="margin-left: 8"><br/> For secp256r1, secp384r1 and secp521r1, this is the byte string representation of an elliptic curve point following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.  For ecdh_x25519 and ecdh_x448, this is raw opaque octet-string representation of point (in the format those functions use), 32 octets for ecdh_x25519 and 56 octets for ecdh_x448.</dd>
+  <dd style="margin-left: 8"><br/> For secp256r1, secp384r1 and secp521r1, this is the byte string representation of an elliptic curve point following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.  For x25519 and x448, this is raw opaque octet-string representation of point (in the format those functions use), 32 octets for x25519 and 56 octets for x448.</dd>
 </dl>
 <p id="rfc.section.6.3.2.3.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed).</p>
 <p id="rfc.section.6.3.2.3.2.p.4">Note: Versions of TLS prior to 1.3 permitted point negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
@@ -1848,7 +1860,7 @@ Subsequent Handshake:
 
    struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       SignatureAndHashAlgorithm
+       SignatureScheme
          supported_signature_algorithms&lt;2..2^16-2&gt;;
        DistinguishedName certificate_authorities&lt;0..2^16-1&gt;;
        CertificateExtension certificate_extensions&lt;0..2^16-1&gt;;
@@ -1860,7 +1872,7 @@ Subsequent Handshake:
   <dt>certificate_request_context</dt>
   <dd style="margin-left: 8"><br/> An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages).</dd>
   <dt>supported_signature_algorithms</dt>
-  <dd style="margin-left: 8"><br/> A list of the hash/signature algorithm pairs that the server is able to verify, listed in descending order of preference. Any certificates provided by the client MUST be signed using a hash/signature algorithm pair found in supported_signature_algorithms.</dd>
+  <dd style="margin-left: 8"><br/> A list of the signature algorithms that the server is able to verify, listed in descending order of preference. Any certificates provided by the client MUST be signed using a signature algorithm found in supported_signature_algorithms.</dd>
   <dt>certificate_authorities</dt>
   <dd style="margin-left: 8"><br/> A list of the distinguished names <a href="#X501">[X501]</a> of acceptable certificate_authorities, represented in DER-encoded <a href="#X690">[X690]</a> format.  These distinguished names may specify a desired distinguished name for a root CA or for a subordinate CA; thus, this message can be used to describe known roots as well as a desired authorization space.  If the certificate_authorities list is empty, then the client MAY send any certificate that meets the rest of the selection criteria in the CertificateRequest, unless there is some external arrangement to the contrary.</dd>
   <dt>certificate_extensions</dt>
@@ -2043,12 +2055,11 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the Key Usage extension is present) with a signature scheme and hash algorithm pair indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
-  <li>An ECDSA or EdDSA public key MUST use a curve and point format supported by the client, as described in <a href="#RFC4492">[RFC4492]</a>.</li>
+  <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the Key Usage extension is present) with a signature scheme indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
   <li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension.</li>
 </ul>
-<p id="rfc.section.6.3.4.1.1.p.4">All certificates provided by the server MUST be signed by a hash/signature algorithm pair that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 6.3.2.1</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
-<p id="rfc.section.6.3.4.1.1.p.5">If the server cannot produce a certificate chain that is signed only via the indicated supported pairs, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST send an &#8220;unsupported_certificate&#8221; alert message and close the connection.</p>
+<p id="rfc.section.6.3.4.1.1.p.4">All certificates provided by the server MUST be signed by a signature algorithm that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 6.3.2.1</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
+<p id="rfc.section.6.3.4.1.1.p.5">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST send an &#8220;unsupported_certificate&#8221; alert message and close the connection.</p>
 <p id="rfc.section.6.3.4.1.1.p.6">If the server has multiple certificates, it chooses one of them based on the above-mentioned criteria (in addition to other criteria, such as transport layer endpoint, local configuration and preferences).</p>
 <p id="rfc.section.6.3.4.1.1.p.7">As cipher suites that specify new key exchange methods are specified for the TLS protocol, they will imply the certificate format and the required encoded keying information.</p>
 <h4 id="rfc.section.6.3.4.1.2"><a href="#rfc.section.6.3.4.1.2">6.3.4.1.2.</a> <a href="#client-certificate-selection" id="client-certificate-selection">Client Certificate Selection</a></h4>
@@ -2098,17 +2109,17 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>If sent by a server, the signature algorithm and hash algorithm MUST be a pair offered in the client&#8217;s &#8220;signature_algorithms&#8221; extension unless no valid certificate chain can be produced without unsupported algorithms (see <a href="#signature-algorithms">Section 6.3.2.1</a>). Note that there is a possibility for inconsistencies here. For instance, the client might offer ECDHE_ECDSA key exchange but omit any ECDSA and EdDSA pairs from its &#8220;signature_algorithms&#8221; extension. In order to negotiate correctly, the server MUST check any candidate cipher suites against the &#8220;signature_algorithms&#8221; extension before selecting them. This is somewhat inelegant but is a compromise designed to minimize changes to the original cipher suite design.</li>
+  <li>If sent by a server, the signature algorithm MUST be one offered in the client&#8217;s &#8220;signature_algorithms&#8221; extension unless no valid certificate chain can be produced without unsupported algorithms (see <a href="#signature-algorithms">Section 6.3.2.1</a>). Note that there is a possibility for inconsistencies here. For instance, the client might offer ECDHE_ECDSA key exchange but omit any ECDSA and EdDSA values from its &#8220;signature_algorithms&#8221; extension. In order to negotiate correctly, the server MUST check any candidate cipher suites against the &#8220;signature_algorithms&#8221; extension before selecting them. This is somewhat inelegant but is a compromise designed to minimize changes to the original cipher suite design.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>If sent by a client, the hash and signature algorithms used in the signature MUST be one of those present in the supported_signature_algorithms field of the CertificateRequest message.</li>
+  <li>If sent by a client, the signature algorithm used in the signature MUST be one of those present in the supported_signature_algorithms field of the CertificateRequest message.</li>
 </ul>
 <p/>
 
 <ul class="empty">
-  <li>In addition, the hash and signature algorithms MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA keys MAY be used with any permitted hash algorithm, subject to restrictions in the certificate, if any.  RSA signatures MUST be based on RSASSA-PSS, regardless of whether RSASSA-PKCS-v1_5 appears in &#8220;signature_algorithms&#8221;.  SHA-1 MUST NOT be used in any signatures in CertificateVerify, regardless of whether SHA-1 appears in &#8220;signature_algorithms&#8221;.</li>
+  <li>In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. (Note that rsa_pkcs1_sha1 and dsa_sha1, the only defined SHA-1 signature algorithms, are undefined for CertificateVerify signatures.)</li>
 </ul>
 <p id="rfc.section.6.3.4.2.p.9">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
 <h4 id="rfc.section.6.3.4.3"><a href="#rfc.section.6.3.4.3">6.3.4.3.</a> <a href="#finished" id="finished">Finished</a></h4>
@@ -2424,8 +2435,7 @@ server_finished_key =
 <h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
 <p id="rfc.section.10.p.1">Security issues are discussed throughout this memo, especially in Appendices B, C, and D.</p>
 <h1 id="rfc.section.11"><a href="#rfc.section.11">11.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
-<p id="rfc.section.11.p.1">[[TODO: Rename &#8220;RSA&#8221; in TLS SignatureAlgorithm Registry to RSASSA-PKCS1-v1_5 ]]</p>
-<p id="rfc.section.11.p.2">This document uses several registries that were originally created in <a href="#RFC4346">[RFC4346]</a>. IANA has updated these to reference this document. The registries and their allocation policies are below:</p>
+<p id="rfc.section.11.p.1">This document uses several registries that were originally created in <a href="#RFC4346">[RFC4346]</a>. IANA has updated these to reference this document. The registries and their allocation policies are below:</p>
 <p/>
 
 <ul>
@@ -2434,7 +2444,7 @@ server_finished_key =
   <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
 </ul>
-<p id="rfc.section.11.p.4">This document also uses a registry originally created in <a href="#RFC4366">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
+<p id="rfc.section.11.p.3">This document also uses a registry originally created in <a href="#RFC4366">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
 <p/>
 
 <ul>
@@ -2596,17 +2606,11 @@ server_finished_key =
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.11.p.6">This document reuses two registries defined in <a href="#RFC5246">[RFC5246]</a>.</p>
+<p id="rfc.section.11.p.5">In addition, this document defines two new registries to be maintained by IANA</p>
 <p/>
 
 <ul>
-  <li>TLS SignatureAlgorithm Registry: The registry has been initially populated with the values described in <a href="#signature-algorithms">Section 6.3.2.1</a>.  Future values in the range 0-63 (decimal) inclusive are assigned via Standards Action <a href="#RFC2434">[RFC2434]</a>.  Values in the range 64-223 (decimal) inclusive are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values from 224-255 (decimal) inclusive are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>.</li>
-  <li>TLS HashAlgorithm Registry: The registry has been initially populated with the values described in <a href="#signature-algorithms">Section 6.3.2.1</a>.  Future values in the range 0-63 (decimal) inclusive are assigned via Standards Action <a href="#RFC2434">[RFC2434]</a>.  Values in the range 64-223 (decimal) inclusive are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values from 224-255 (decimal) inclusive are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>.</li>
-</ul>
-<p id="rfc.section.11.p.8">In addition, this document defines a new registry to be maintained by IANA.</p>
-<p/>
-
-<ul>
+  <li>TLS SignatureScheme Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms">Section 6.3.2.1</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li>
   <li>TLS ConfigurationExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#server-configuration">Section 6.3.3.3</a>, with all values marked with &#8220;Recommended&#8221; value &#8220;Yes&#8221;.</li>
 </ul>
 <h1 id="rfc.references"><a href="#rfc.references">12.</a> References</h1>
@@ -2630,6 +2634,12 @@ server_finished_key =
         <b id="I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</b>
       </td>
       <td class="top"><a>Langley, A.</a>, <a>Chang, W.</a>, <a>Mavrogiannopoulos, N.</a>, <a>Strombergson, J.</a> and <a>S. Josefsson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-chacha20-poly1305-04">ChaCha20-Poly1305 Cipher Suites for Transport Layer Security (TLS)</a>", Internet-Draft draft-ietf-tls-chacha20-poly1305-04, December 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</b>
+      </td>
+      <td class="top"><a>Langley, A.</a> and <a>M. Hamburg</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-curves-11">Elliptic Curves for Security</a>", Internet-Draft draft-irtf-cfrg-curves-11, October 2015.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3022,6 +3032,12 @@ server_finished_key =
     </tr>
     <tr>
       <td class="reference">
+        <b id="SLOTH">[SLOTH]</b>
+      </td>
+      <td class="top"><a>Bhargavan, K.</a> and <a>G. Leurent</a>, "<a>Transcript Collision Attacks: Breaking Authentication in TLS, IKE, and SSH</a>", Network and Distributed System Security Symposium (NDSS 2016) , 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="SSL2">[SSL2]</b>
       </td>
       <td class="top"><a title="Netscape Communications Corp.">Hickman, K.</a>, "<a>The SSL Protocol</a>", February 1995.</td>
@@ -3254,46 +3270,54 @@ server_finished_key =
 <h4 id="rfc.appendix.A.3.1.1"><a href="#rfc.appendix.A.3.1.1">A.3.1.1.</a> <a href="#signature-algorithm-extension" id="signature-algorithm-extension">Signature Algorithm Extension</a></h4>
 <pre>
    enum {
-       none(0),
-       md5_RESERVED(1),
-       sha1(2),
-       sha224_RESERVED(3),
-       sha256(4), sha384(5), sha512(6),
-       (255)
-   } HashAlgorithm;
+       // RSASSA-PKCS-v1_5 algorithms.
+       rsa_pkcs1_sha1 (0x0201),
+       rsa_pkcs1_sha256 (0x0401),
+       rsa_pkcs1_sha384 (0x0501),
+       rsa_pkcs1_sha512 (0x0601),
 
-   enum {
-       anonymous_RESERVED(0),
-       rsa(1),
-       dsa(2),
-       ecdsa(3),
-       rsapss(4),
-       eddsa(5),
-       (255)
-   } SignatureAlgorithm;
+       // DSA algorithms (deprecated).
+       dsa_sha1 (0x0202),
+       dsa_sha256 (0x0402),
+       dsa_sha384 (0x0502),
+       dsa_sha512 (0x0602),
 
-   struct {
-       HashAlgorithm hash;
-       SignatureAlgorithm signature;
-   } SignatureAndHashAlgorithm;
+       // ECDSA algorithms.
+       ecdsa_secp256r1_sha256 (0x0403),
+       ecdsa_secp384r1_sha384 (0x0503),
+       ecdsa_secp521r1_sha512 (0x0603),
 
-   SignatureAndHashAlgorithm
-     supported_signature_algorithms&lt;2..2^16-2&gt;;
+       // RSASSA-PSS algorithms.
+       rsa_pss_sha256 (0x0700),
+       rsa_pss_sha384 (0x0701),
+       rsa_pss_sha512 (0x0702),
+
+       // EdDSA algorithms.
+       ed25519 (0x0703),
+       ed448 (0x0704),
+
+       // Reserved Code Points.
+       obsolete_RESERVED (0x0000..0x0200),
+       obsolete_RESERVED (0x0203..0x0400),
+       obsolete_RESERVED (0x0404..0x0500),
+       obsolete_RESERVED (0x0504..0x0600),
+       obsolete_RESERVED (0x0604..0x06FF),
+       private_use (0xFE00..0xFFFF),
+       (0xFFFF)
+   } SignatureScheme;
+
+   SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
 </pre>
 <h4 id="rfc.appendix.A.3.1.2"><a href="#rfc.appendix.A.3.1.2">A.3.1.2.</a> <a href="#named-group-extension" id="named-group-extension">Named Group Extension</a></h4>
 <pre>
    enum {
-       // Elliptic Curve Groups.
+       // Elliptic Curve Groups (ECDHE).
        obsolete_RESERVED (1..22),
        secp256r1 (23), secp384r1 (24), secp521r1 (25),
+       obsolete_RESERVED (26..28),
+       x25519 (29), x448 (30),
 
-       // ECDH functions.
-       ecdh_x25519 (29), ecdh_x448 (30),
-
-       // Signature-only curves.
-       eddsa_ed25519 (31), eddsa_ed448 (32),
-
-       // Finite Field Groups.
+       // Finite Field Groups (DHE).
        ffdhe2048 (256), ffdhe3072 (257), ffdhe4096 (258),
        ffdhe6144 (259), ffdhe8192 (260),
 
@@ -3326,7 +3350,7 @@ server_finished_key =
 
    struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       SignatureAndHashAlgorithm
+       SignatureScheme
          supported_signature_algorithms&lt;2..2^16-2&gt;;
        DistinguishedName certificate_authorities&lt;0..2^16-1&gt;;
        CertificateExtension certificate_extensions&lt;0..2^16-1&gt;;
