@@ -6525,6 +6525,10 @@ Internet-Draft                     TLS                        March 2016
       Independent Consultant
       david.hopwood@blueyonder.co.uk
 
+   -  Subodh Iyengar
+      Facebook
+      subodh@fb.com
+
    -  Daniel Kahn Gillmor
       ACLU
       dkg@fifthhorseman.net
@@ -6543,16 +6547,16 @@ Internet-Draft                     TLS                        March 2016
       Google
       agl@google.com
 
-   -  Ilari Liusvaara
-      Independent
-      ilariliusvaara@welho.com
-
 
 
 Rescorla               Expires September 22, 2016             [Page 117]
 
 Internet-Draft                     TLS                        March 2016
 
+
+   -  Ilari Liusvaara
+      Independent
+      ilariliusvaara@welho.com
 
    -  Jan Mikkelsen
       Transactionware
@@ -6598,10 +6602,6 @@ Internet-Draft                     TLS                        March 2016
 
    -  Nick Sullivan
       CloudFlare Inc.
-      nick@cloudflare.com
-
-   -  Bjoern Tackmann
-      University of California, San Diego
 
 
 
@@ -6610,6 +6610,10 @@ Rescorla               Expires September 22, 2016             [Page 118]
 Internet-Draft                     TLS                        March 2016
 
 
+      nick@cloudflare.com
+
+   -  Bjoern Tackmann
+      University of California, San Diego
       btackmann@eng.ucsd.edu
 
    -  Martin Thomson
@@ -6632,10 +6636,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
