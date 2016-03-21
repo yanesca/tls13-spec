@@ -3993,12 +3993,14 @@ Internet-Draft                     TLS                        March 2016
 
 6.3.5.1.  New Session Ticket Message
 
-   After the server has received the client Finished message, it MAY
-   send a NewSessionTicket message.  This message creates a pre-shared
-   key (PSK) binding between the resumption master secret and the ticket
-   label.  The client MAY use this PSK for future handshakes by
-   including it in the "pre_shared_key" extension in its ClientHello
-   (Section 6.3.2.4) and supplying a suitable PSK cipher suite.
+   At any time after the server has received the client Finished
+   message, it MAY send a NewSessionTicket message.  This message
+   creates a pre-shared key (PSK) binding between the resumption master
+   secret and the ticket label.  The client MAY use this PSK for future
+   handshakes by including it in the "pre_shared_key" extension in its
+   ClientHello (Section 6.3.2.4) and supplying a suitable PSK cipher
+   suite.  Servers may send multiple tickets on a single connection, for
+   instance after post-handshake authentication.
 
      struct {
          uint32 ticket_lifetime;
@@ -4023,8 +4025,6 @@ Internet-Draft                     TLS                        March 2016
    lookup key or a self-encrypted and self-authenticated value.
    Section 4 of [RFC5077] describes a recommended ticket construction
    mechanism.
-
-
 
 
 
