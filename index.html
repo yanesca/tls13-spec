@@ -312,7 +312,7 @@ li, p {
 <link href="#rfc.section.7.3.1" rel="Chapter" title="7.3.1 The Handshake Hash"/>
 <link href="#rfc.section.7.3.2" rel="Chapter" title="7.3.2 Diffie-Hellman"/>
 <link href="#rfc.section.7.3.3" rel="Chapter" title="7.3.3 Elliptic Curve Diffie-Hellman"/>
-<link href="#rfc.section.7.3.4" rel="Chapter" title="7.3.4 Exporter Definition"/>
+<link href="#rfc.section.7.3.4" rel="Chapter" title="7.3.4 Exporters"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 Mandatory Algorithms"/>
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 MTI Cipher Suites"/>
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 MTI Extensions"/>
@@ -475,7 +475,7 @@ li, p {
 <ul><li>7.3.1.   <a href="#rfc.section.7.3.1">The Handshake Hash</a></li>
 <li>7.3.2.   <a href="#rfc.section.7.3.2">Diffie-Hellman</a></li>
 <li>7.3.3.   <a href="#rfc.section.7.3.3">Elliptic Curve Diffie-Hellman</a></li>
-<li>7.3.4.   <a href="#rfc.section.7.3.4">Exporter Definition</a></li>
+<li>7.3.4.   <a href="#rfc.section.7.3.4">Exporters</a></li>
 </ul></ul><li>8.   <a href="#rfc.section.8">Mandatory Algorithms</a></li>
 <ul><li>8.1.   <a href="#rfc.section.8.1">MTI Cipher Suites</a></li>
 <li>8.2.   <a href="#rfc.section.8.2">MTI Extensions</a></li>
@@ -564,6 +564,7 @@ li, p {
   <li>Revise signature algorithm negotiation to group hash, signature algorithm, and curve together. This is backwards compatible.</li>
   <li>Make ticket lifetime mandatory and limit it to a week.</li>
   <li>Make the purpose strings lower-case. This matches how people are implementing for interop.</li>
+  <li>Define exporters.</li>
   <li>Editorial cleanup</li>
 </ul>
 <p id="rfc.section.1.2.p.3">draft-11</p>
@@ -1611,10 +1612,6 @@ Subsequent Handshake:
 <dl>
   <dt>rsa_pkcs1_sha1, etc.</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
-  <dt>dsa_sha1, etc.</dt>
-  <dd style="margin-left: 8"><br/> Indicates a signature algorithm using DSA {{DSS} with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
-  <dt></dt>
-  <dd style="margin-left: 8">DSA is deprecated as of TLS 1.3. These values SHOULD NOT be offered or negotiated by any implementation. It is believed that the vast majority of implementations will not need to offer these values in order to interoperate with lesser TLS versions.</dd>
   <dt>ecdsa_secp256r1_sha256, etc.</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
   <dt>rsa_pss_sha256, etc.</dt>
@@ -1634,7 +1631,7 @@ Subsequent Handshake:
   <li>ecdsa_secp256r1_sha256, etc., align with TLS 1.2&#8217;s ECDSA hash/signature pairs.  However, the old semantics did not constrain the signing curve.</li>
 </ul>
 <h4 id="rfc.section.6.3.2.2"><a href="#rfc.section.6.3.2.2">6.3.2.2.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a></h4>
-<p id="rfc.section.6.3.2.2.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the (EC)DHE groups which the client supports, ordered from most preferred to least preferred.</p>
+<p id="rfc.section.6.3.2.2.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the named groups which the client supports, ordered from most preferred to least preferred.</p>
 <p id="rfc.section.6.3.2.2.p.2">Note: In versions of TLS prior to TLS 1.3, this extension was named &#8220;elliptic_curves&#8221; and only contained elliptic curve groups. See <a href="#RFC4492">[RFC4492]</a> and <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>. This extension was also used to negotiate ECDSA curves. Signature algorithms are now negotiated independently (see <a href="#signature-algorithms">Section 6.3.2.1</a>).</p>
 <p id="rfc.section.6.3.2.2.p.3">Clients which offer one or more (EC)DHE cipher suites MUST send at least one supported NamedGroup value and servers MUST NOT negotiate any of these cipher suites unless a supported value was provided.  If this extension is not provided and no alternative cipher suite is available, the server MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>) If the extension is provided, but no compatible group is offered, the server MUST NOT negotiate a cipher suite of the relevant type. For instance, if a client supplies only ECDHE groups, the server MUST NOT negotiate finite field Diffie-Hellman. If no acceptable group can be selected across all cipher suites, then the server MUST generate a fatal &#8220;handshake_failure&#8221; alert.</p>
 <p id="rfc.section.6.3.2.2.p.4">The &#8220;extension_data&#8221; field of this extension contains a &#8220;NamedGroupList&#8221; value:</p>
@@ -2115,7 +2112,9 @@ Subsequent Handshake:
 <ul class="empty">
   <li>Where hashed_data is the hash output described in <a href="#authentication-messages">Section 6.3.4</a>, namely Hash(Handshake Context + Certificate). For concreteness, this means that the value that is signed is:</li>
 </ul>
-<p id="rfc.section.6.3.4.2.p.5">padding + context_string + 00 + hashed_data</p>
+<pre>
+       padding + context_string + 00 + hashed_data
+</pre>
 <p/>
 
 <ul class="empty">
@@ -2136,7 +2135,7 @@ Subsequent Handshake:
 <ul class="empty">
   <li>In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. (Note that rsa_pkcs1_sha1 and dsa_sha1, the only defined SHA-1 signature algorithms, are undefined for CertificateVerify signatures.)</li>
 </ul>
-<p id="rfc.section.6.3.4.2.p.10">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
+<p id="rfc.section.6.3.4.2.p.9">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
 <h4 id="rfc.section.6.3.4.3"><a href="#rfc.section.6.3.4.3">6.3.4.3.</a> <a href="#finished" id="finished">Finished</a></h4>
 <p id="rfc.section.6.3.4.3.p.1">When this message will be sent:</p>
 <p/>
@@ -2409,7 +2408,7 @@ server_finished_key =
   <li>The ECDH shared secret is the result of applying ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
 </ul>
 <p id="rfc.section.7.3.3.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
-<h3 id="rfc.section.7.3.4"><a href="#rfc.section.7.3.4">7.3.4.</a> <a href="#exporter-definition" id="exporter-definition">Exporter Definition</a></h3>
+<h3 id="rfc.section.7.3.4"><a href="#rfc.section.7.3.4">7.3.4.</a> <a href="#exporters" id="exporters">Exporters</a></h3>
 <p><a href="#RFC5705">[RFC5705]</a> defines keying material exporters for TLS in terms of the TLS PRF. This document replaces the PRF with HKDF, thus requiring a new construction. The exporter interface remains the same, however the value is computed as:</p>
 <pre>
 HKDF-Expand-Label(HKDF-Extract(0, exporter_secret), 
