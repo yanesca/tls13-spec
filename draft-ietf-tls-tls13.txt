@@ -2697,11 +2697,6 @@ Internet-Draft                     TLS                        March 2016
           rsa_pkcs1_sha384 (0x0501),
           rsa_pkcs1_sha512 (0x0601),
 
-          // DSA algorithms (deprecated).
-          dsa_sha1 (0x0202),
-          dsa_sha256 (0x0402),
-          dsa_sha384 (0x0502),
-          dsa_sha512 (0x0602),
 
           // ECDSA algorithms.
           ecdsa_secp256r1_sha256 (0x0403),
@@ -2737,6 +2732,11 @@ Internet-Draft                     TLS                        March 2016
    proceed as usual.
 
    rsa_pkcs1_sha1, etc.
+      Indicates a signature algorithm using RSASSA-PKCS1-v1_5 [RFC3447]
+      with the corresponding hash algorithm as defined in [SHS].  These
+      values refer solely to signatures which appear in certificates
+      (see Section 6.3.4.1.1) and are not defined for use in signed TLS
+      handshake messages (see Section 4.8.1).
 
 
 
@@ -2745,12 +2745,6 @@ Rescorla               Expires September 23, 2016              [Page 49]
 
 Internet-Draft                     TLS                        March 2016
 
-
-      Indicates a signature algorithm using RSASSA-PKCS1-v1_5 [RFC3447]
-      with the corresponding hash algorithm as defined in [SHS].  These
-      values refer solely to signatures which appear in certificates
-      (see Section 6.3.4.1.1) and are not defined for use in signed TLS
-      handshake messages (see Section 4.8.1).
 
    ecdsa_secp256r1_sha256, etc.
       Indicates a signature algorithm using ECDSA [ECDSA], the
@@ -2793,7 +2787,13 @@ Internet-Draft                     TLS                        March 2016
 
    Note that TLS 1.2 defines this extension differently.  TLS 1.3
    implementations willing to negotiate TLS 1.2 MUST behave in
+   accordance with the requirements of [RFC5246] when negotiating that
+   version.  In particular:
 
+   -  TLS 1.2 ClientHellos may omit this extension.
+
+   -  In TLS 1.2, the extension contained hash/signature pairs.  The
+      pairs are encoded in two octets, so SignatureScheme values have
 
 
 
@@ -2802,13 +2802,6 @@ Rescorla               Expires September 23, 2016              [Page 50]
 Internet-Draft                     TLS                        March 2016
 
 
-   accordance with the requirements of [RFC5246] when negotiating that
-   version.  In particular:
-
-   -  TLS 1.2 ClientHellos may omit this extension.
-
-   -  In TLS 1.2, the extension contained hash/signature pairs.  The
-      pairs are encoded in two octets, so SignatureScheme values have
       been allocated to align with TLS 1.2's encoding.  Some legacy
       pairs are left unallocated.  These algorithms are deprecated as of
       TLS 1.3.  They MUST NOT be offered or negotiated by any
@@ -2846,6 +2839,13 @@ Internet-Draft                     TLS                        March 2016
 
    The "extension_data" field of this extension contains a
    "NamedGroupList" value:
+
+
+
+
+
+
+
 
 
 
@@ -5385,11 +5385,10 @@ Internet-Draft                     TLS                        March 2016
           rsa_pkcs1_sha384 (0x0501),
           rsa_pkcs1_sha512 (0x0601),
 
-          // DSA algorithms (deprecated).
-          dsa_sha1 (0x0202),
-          dsa_sha256 (0x0402),
-          dsa_sha384 (0x0502),
-          dsa_sha512 (0x0602),
+          dsa_sha1_RESERVED (0x0202),
+          dsa_sha256_RESERVED (0x0402),
+          dsa_sha384_RESERVED (0x0502),
+          dsa_sha512_RESERVED (0x0602),
 
           // ECDSA algorithms.
           ecdsa_secp256r1_sha256 (0x0403),
@@ -5418,6 +5417,7 @@ Internet-Draft                     TLS                        March 2016
       SignatureScheme supported_signature_algorithms<2..2^16-2>;
 
 A.3.1.2.  Named Group Extension
+
 
 
 
