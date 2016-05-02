@@ -361,7 +361,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-4-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-5-02" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -382,7 +382,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">April 26, 2016</td>
+  <td class="right">May 02, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -397,7 +397,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: October 28, 2016</td>
+  <td class="left">Expires: November 3, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -418,7 +418,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 28, 2016.</p>
+<p>This Internet-Draft will expire on November 3, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1662,7 +1662,8 @@ Subsequent Handshake:
 <pre>
    00 0A 00 06 00 04 00 17 00 18
 </pre>
-<p id="rfc.section.6.3.2.2.p.8">[[TODO: IANA Considerations.]]</p>
+<p id="rfc.section.6.3.2.2.p.8">As of TLS 1.3, servers are permitted to send the &#8220;supported_groups&#8221; extension to the client.  If the server has a group it prefers to the ones in the &#8220;key_share&#8221; extension but is still willing to accept the ClientHello, it SHOULD send &#8220;supported_groups&#8221; to update the client&#8217;s view of its preferences.  Clients MUST NOT act upon any information found in &#8220;supported_groups&#8221; prior to successful completion of the handshake, but MAY use the information learned from a successfully completed handshake to change what groups they offer to a server in subsequent connections.</p>
+<p id="rfc.section.6.3.2.2.p.9">[[TODO: IANA Considerations.]]</p>
 <h4 id="rfc.section.6.3.2.3"><a href="#rfc.section.6.3.2.3">6.3.2.3.</a> <a href="#key-share" id="key-share">Key Share</a></h4>
 <p id="rfc.section.6.3.2.3.p.1">The &#8220;key_share&#8221; extension contains the endpoint&#8217;s cryptographic parameters for non-PSK key establishment methods (currently DHE or ECDHE).</p>
 <p id="rfc.section.6.3.2.3.p.2">Clients which offer one or more (EC)DHE cipher suites MUST send this extension and SHOULD send at least one supported KeyShareEntry value.  Servers MUST NOT negotiate any of these cipher suites unless a supported value was provided.  If this extension is not provided in a ServerHello or ClientHello, and the peer is offering (EC)DHE cipher suites, then the endpoint MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>) Clients MAY send an empty client_shares vector in order to request group selection from the server at the cost of an additional round trip.  (see <a href="#hello-retry-request">Section 6.3.1.3</a>)</p>
@@ -2445,7 +2446,7 @@ HKDF-Expand-Label(HKDF-Extract(0, exporter_secret),
 </ul>
 <p id="rfc.section.8.2.p.5">When negotiating use of applicable cipher suites, endpoints MUST abort the connection with a &#8220;missing_extension&#8221; alert if the required extension was not provided. Any endpoint that receives any invalid combination of cipher suites and extensions MAY abort the connection with a &#8220;missing_extension&#8221; alert, regardless of negotiated parameters.</p>
 <p id="rfc.section.8.2.p.6">Additionally, all implementations MUST support use of the &#8220;server_name&#8221; extension with applications capable of using it.  Servers MAY require clients to send a valid &#8220;server_name&#8221; extension.  Servers requiring this extension SHOULD respond to a ClientHello lacking a &#8220;server_name&#8221; extension with a fatal &#8220;missing_extension&#8221; alert.</p>
-<p id="rfc.section.8.2.p.7">Some of these extensions exist only for the client to provide additional data to the server in a backwards-compatible way and thus have no meaning when sent from a server. The client-only extensions defined in this document are: &#8220;signature_algorithms&#8221; &amp; &#8220;supported_groups&#8221;.  Servers MUST NOT send these extensions. Clients receiving any of these extensions MUST respond with a fatal &#8220;unsupported_extension&#8221; alert and close the connection.</p>
+<p id="rfc.section.8.2.p.7">Servers MUST NOT send the &#8220;signature_algorithms&#8221; extension; if a client receives this extension it MUST respond with a fatal &#8220;unsupported_extension&#8221; alert and close the connection.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#application-data-protocol" id="application-data-protocol">Application Data Protocol</a></h1>
 <p id="rfc.section.9.p.1">Application data messages are carried by the record layer and are fragmented and encrypted based on the current connection state. The messages are treated as transparent data to the record layer.</p>
 <h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
