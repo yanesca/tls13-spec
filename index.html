@@ -361,7 +361,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-5-07" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-5-11" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -382,14 +382,14 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">May 07, 2016</td>
+  <td class="right">May 11, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Updates: 4492 (if approved)</td>
+  <td class="left">Updates: 4492, 6066, 6961 (if approved)</td>
   <td class="right"></td>
 </tr>
 <tr>
@@ -397,7 +397,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 8, 2016</td>
+  <td class="left">Expires: November 12, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -418,7 +418,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 8, 2016.</p>
+<p>This Internet-Draft will expire on November 12, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -563,6 +563,7 @@ li, p {
   <li>Remove (EC)DHE 0-RTT.</li>
   <li>Flesh out 0-RTT PSK mode and shrink EarlyDataIndiation</li>
   <li>Turn PSK-resumption response into an index to save room.</li>
+  <li>Move CertificateStatus to an extension.</li>
 </ul>
 <p id="rfc.section.1.2.p.3">draft-12</p>
 <p/>
@@ -1369,7 +1370,7 @@ Subsequent Handshake:
 
 <ol>
   <li>This data is not forward secret, because it is encrypted solely with the PSK.</li>
-  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS (See <a href="#replay-properties">Section 6.3.2.5.1</a>), the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections.  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
+  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS (See <a href="#replay-properties">Section 6.3.2.6.1</a>), the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections.  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
 <p id="rfc.section.6.2.3.p.5">The contents and significance of each message will be presented in detail in the following sections.</p>
 <h2 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#handshake-protocol" id="handshake-protocol">Handshake Protocol</a></h2>
@@ -1756,9 +1757,12 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.6.3.2.4.p.5">If no suitable identity is provided, the server MUST NOT negotiate a PSK cipher suite and MAY respond with an &#8220;unknown_psk_identity&#8221; alert message. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity or instead negotiate use of a non-PSK cipher suite, if available.</p>
 <p id="rfc.section.6.3.2.4.p.6">If the server selects a PSK cipher suite, it MUST send a &#8220;pre_shared_key&#8221; extension with the identity that it selected.  The client MUST verify that the server&#8217;s selected_identity is within the range supplied by the client. If any other value is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
-<h4 id="rfc.section.6.3.2.5"><a href="#rfc.section.6.3.2.5">6.3.2.5.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h4>
-<p id="rfc.section.6.3.2.5.p.1">When PSK resumption is used the the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.6.3.2.5.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
+<h4 id="rfc.section.6.3.2.5"><a href="#rfc.section.6.3.2.5">6.3.2.5.</a> <a href="#ocsp-status-extensions" id="ocsp-status-extensions">OCSP Status Extensions</a></h4>
+<p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in EncryptedExtensions. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
+<p id="rfc.section.6.3.2.5.p.2">Note: this means that the certificate status appears prior to the certificates it applies to. This is slightly anomalous but matches the existing behavior for SignedCertificateTimestamps <a href="#RFC6962">[RFC6962]</a>, and is more easily extensible in the handshake state machine.</p>
+<h4 id="rfc.section.6.3.2.6"><a href="#rfc.section.6.3.2.6">6.3.2.6.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h4>
+<p id="rfc.section.6.3.2.6.p.1">When PSK resumption is used the the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.6.3.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
        select (Role) {
@@ -1776,16 +1780,16 @@ Subsequent Handshake:
   <dt>context</dt>
   <dd style="margin-left: 8"><br/> An optional context value that can be used for anti-replay (see below).</dd>
 </dl>
-<p id="rfc.section.6.3.2.5.p.4">All of the parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) MUST be those which were negotiated in the connection which established the PSK.  The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.6.3.2.5.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, a &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert.</p>
-<p id="rfc.section.6.3.2.5.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
+<p id="rfc.section.6.3.2.6.p.4">All of the parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) MUST be those which were negotiated in the connection which established the PSK.  The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.6.3.2.6.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, a &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert.</p>
+<p id="rfc.section.6.3.2.6.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
 
 <ul>
   <li>Ignore the extension and return no response. This indicates that the server has ignored any early data and an ordinary 1-RTT handshake is required.</li>
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
 </ul>
-<p id="rfc.section.6.3.2.5.p.8">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] Prior to accepting the &#8220;early_data&#8221; extension, the server MUST validate that the session ticket parameters are consistent with its current configuration. It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
+<p id="rfc.section.6.3.2.6.p.8">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] Prior to accepting the &#8220;early_data&#8221; extension, the server MUST validate that the session ticket parameters are consistent with its current configuration. It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
 <p/>
 
 <ul>
@@ -1793,11 +1797,11 @@ Subsequent Handshake:
   <li>The &#8220;padding&#8221; extension <a href="#RFC7685">[RFC7685]</a> MUST be ignored for this purpose.</li>
   <li>The values of &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221;, which MUST be as defined in this document.</li>
 </ul>
-<p id="rfc.section.6.3.2.5.p.10">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and will instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
-<p id="rfc.section.6.3.2.5.p.11">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2.2</a>.</p>
-<p id="rfc.section.6.3.2.5.p.12">[[TODO: How does the client behave if the indication is rejected.]]</p>
-<h4 id="rfc.section.6.3.2.5.1"><a href="#rfc.section.6.3.2.5.1">6.3.2.5.1.</a> <a href="#replay-properties" id="replay-properties">Replay Properties</a></h4>
-<p id="rfc.section.6.3.2.5.1.p.1">As noted in <a href="#zero-rtt-data">Section 6.2.3</a>, TLS does not provide any inter-connection mechanism for replay protection for data sent by the client in the first flight.  As a special case, implementations where the server configuration, is delivered out of band (as has been proposed for DTLS-SRTP <a href="#RFC5763">[RFC5763]</a>), MAY use a unique server configuration identifier for each connection, thus preventing replay. Implementations are responsible for ensuring uniqueness of the identifier in this case.</p>
+<p id="rfc.section.6.3.2.6.p.10">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and will instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
+<p id="rfc.section.6.3.2.6.p.11">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2.2</a>.</p>
+<p id="rfc.section.6.3.2.6.p.12">[[TODO: How does the client behave if the indication is rejected.]]</p>
+<h4 id="rfc.section.6.3.2.6.1"><a href="#rfc.section.6.3.2.6.1">6.3.2.6.1.</a> <a href="#replay-properties" id="replay-properties">Replay Properties</a></h4>
+<p id="rfc.section.6.3.2.6.1.p.1">As noted in <a href="#zero-rtt-data">Section 6.2.3</a>, TLS does not provide any inter-connection mechanism for replay protection for data sent by the client in the first flight.  As a special case, implementations where the server configuration, is delivered out of band (as has been proposed for DTLS-SRTP <a href="#RFC5763">[RFC5763]</a>), MAY use a unique server configuration identifier for each connection, thus preventing replay. Implementations are responsible for ensuring uniqueness of the identifier in this case.</p>
 <h3 id="rfc.section.6.3.3"><a href="#rfc.section.6.3.3">6.3.3.</a> <a href="#server-parameters" id="server-parameters">Server Parameters</a></h3>
 <h4 id="rfc.section.6.3.3.1"><a href="#rfc.section.6.3.3.1">6.3.3.1.</a> <a href="#encrypted-extensions" id="encrypted-extensions">Encrypted Extensions</a></h4>
 <p id="rfc.section.6.3.3.1.p.1">When this message will be sent:</p>
@@ -2681,6 +2685,12 @@ HKDF-Expand-Label(HKDF-Extract(0, exporter_secret),
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC6961">[RFC6961]</b>
+      </td>
+      <td class="top"><a>Pettersen, Y.</a>, "<a href="http://tools.ietf.org/html/rfc6961">The Transport Layer Security (TLS) Multiple Certificate Status Request Extension</a>", RFC 6961, DOI 10.17487/RFC6961, June 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC6962">[RFC6962]</b>
       </td>
       <td class="top"><a>Laurie, B.</a>, <a>Langley, A.</a> and <a>E. Kasper</a>, "<a href="http://tools.ietf.org/html/rfc6962">Certificate Transparency</a>", RFC 6962, DOI 10.17487/RFC6962, June 2013.</td>
@@ -2929,12 +2939,6 @@ HKDF-Expand-Label(HKDF-Extract(0, exporter_secret),
         <b id="RFC6520">[RFC6520]</b>
       </td>
       <td class="top"><a>Seggelmann, R.</a>, <a>Tuexen, M.</a> and <a>M. Williams</a>, "<a href="http://tools.ietf.org/html/rfc6520">Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS) Heartbeat Extension</a>", RFC 6520, DOI 10.17487/RFC6520, February 2012.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC6961">[RFC6961]</b>
-      </td>
-      <td class="top"><a>Pettersen, Y.</a>, "<a href="http://tools.ietf.org/html/rfc6961">The Transport Layer Security (TLS) Multiple Certificate Status Request Extension</a>", RFC 6961, DOI 10.17487/RFC6961, June 2013.</td>
     </tr>
     <tr>
       <td class="reference">
