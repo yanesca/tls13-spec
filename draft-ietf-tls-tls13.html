@@ -361,7 +361,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-5-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-5-13" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -382,7 +382,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">May 11, 2016</td>
+  <td class="right">May 13, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -397,7 +397,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 12, 2016</td>
+  <td class="left">Expires: November 14, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -418,7 +418,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 12, 2016.</p>
+<p>This Internet-Draft will expire on November 14, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1229,7 +1229,7 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.6.2.p.13">Server Parameters: establish other handshake parameters (whether the client is authenticated, application layer protocol support, etc.)</p>
 <p id="rfc.section.6.2.p.14">Authentication: authenticate the server (and optionally the client) and provide key confirmation and handshake integrity.</p>
 <p id="rfc.section.6.2.p.15">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 6.3.1.1</a>) message, which contains a random nonce (ClientHello.random), its offered protocol version, cipher suite, and extensions, and in general either one or more Diffie-Hellman key shares (in the &#8220;key_share&#8221; extension <a href="#key-share">Section 6.3.2.3</a>), one or more pre-shared key labels (in the &#8220;pre_shared_key&#8221; extension <a href="#pre-shared-key-extension">Section 6.3.2.4</a>), or both.</p>
-<p id="rfc.section.6.2.p.16">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>].  The combination of the ClientHello and the ServerHello determines the values of ES and SS, as described above. If either a pure (EC)DHE or (EC)DHE-PSK cipher suite is in use, then the ServerHello will will contain a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group.  If a pure PSK or an (EC)DHE-PSK cipher suite is negotiated, then the ServerHello will contain a &#8220;pre_shared_key&#8221; extension indicating which if the client&#8217;s offered PSKs was selected.</p>
+<p id="rfc.section.6.2.p.16">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello which indicates the negotiated connection parameters. [<a href="#server-hello">Section 6.3.1.2</a>].  The combination of the ClientHello and the ServerHello determines the values of ES and SS, as described above. If either a pure (EC)DHE or (EC)DHE-PSK cipher suite is in use, then the ServerHello will contain a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group.  If a pure PSK or an (EC)DHE-PSK cipher suite is negotiated, then the ServerHello will contain a &#8220;pre_shared_key&#8221; extension indicating which if the client&#8217;s offered PSKs was selected.</p>
 <p id="rfc.section.6.2.p.17">The server then sends two messages to establish the Server Parameters:</p>
 <p/>
 
@@ -1244,7 +1244,7 @@ Auth | {CertificateVerify*}
 
 <dl>
   <dt>Certificate</dt>
-  <dd style="margin-left: 8"><br/> the certificate of the endpoint. This message is omitted if the server is not authenticating with a certificate (i.e., with PSK or (EC)DHE-PSK cipher suites). Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or or the cached information extension <a href="#I-D.ietf-tls-cached-info">[I-D.ietf-tls-cached-info]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 6.3.4.1</a>]</dd>
+  <dd style="margin-left: 8"><br/> the certificate of the endpoint. This message is omitted if the server is not authenticating with a certificate (i.e., with PSK or (EC)DHE-PSK cipher suites). Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or the cached information extension <a href="#I-D.ietf-tls-cached-info">[I-D.ietf-tls-cached-info]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 6.3.4.1</a>]</dd>
   <dt>CertificateVerify</dt>
   <dd style="margin-left: 8"><br/> a signature over the entire handshake using the public key in the Certificate message. This message is omitted if the server is not authenticating via a certificate (i.e., with PSK or (EC)DHE-PSK cipher suites). [<a href="#certificate-verify">Section 6.3.4.2</a>]</dd>
   <dt>Finished</dt>
@@ -1443,7 +1443,7 @@ Subsequent Handshake:
 <pre>
   44 4F 57 4E 47 52 44 00
 </pre>
-<p id="rfc.section.6.3.1.1.p.8">TLS 1.3 clients receiving a TLS 1.2 or below ServerHello MUST check that the top eight octets are not equal to either of these values. TLS 1.2 clients SHOULD also perform this check if the ServerHello indicates TLS 1.1 or below. If a match is found the client MUST abort the handshake with a fatal &#8220;illegal_parameter&#8221; alert. This mechanism provides limited protection against downgrade attacks over and above that provided by the Finished exchange: because the ServerKeyExchange includes a signature over both random values, it is not possible for an active attacker to modify the randoms without detection as long as ephemeral ciphers are used. It does not provide downgrade protection when static RSA is used.</p>
+<p id="rfc.section.6.3.1.1.p.8">TLS 1.3 clients receiving a TLS 1.2 or below ServerHello MUST check that the top eight octets are not equal to either of these values. TLS 1.2 clients SHOULD also perform this check if the ServerHello indicates TLS 1.1 or below. If a match is found, the client MUST abort the handshake with a fatal &#8220;illegal_parameter&#8221; alert. This mechanism provides limited protection against downgrade attacks over and above that provided by the Finished exchange: because the ServerKeyExchange includes a signature over both random values, it is not possible for an active attacker to modify the randoms without detection as long as ephemeral ciphers are used. It does not provide downgrade protection when static RSA is used.</p>
 <p id="rfc.section.6.3.1.1.p.9">Note: This is an update to TLS 1.2 so in practice many TLS 1.2 clients and servers will not behave as specified above.</p>
 <p id="rfc.section.6.3.1.1.p.10">Note: Versions of TLS prior to TLS 1.3 used the top 32 bits of the Random value to encode the time since the UNIX epoch. The sentinel value above was selected to avoid conflicting with any valid TLS 1.2 Random value and to have a low (2^{-64}) probability of colliding with randomly selected Random values.</p>
 <p id="rfc.section.6.3.1.1.p.11">The cipher suite list, passed from the client to the server in the ClientHello message, contains the combinations of cryptographic algorithms supported by the client in order of the client&#8217;s preference (favorite choice first). Each cipher suite defines a key exchange algorithm, a record protection algorithm (including secret key length) and a hash to be used with HKDF. The server will select a cipher suite or, if no acceptable choices are presented, return a &#8220;handshake_failure&#8221; alert and close the connection. If the list contains cipher suites the server does not recognize, support, or wish to use, the server MUST ignore those cipher suites, and process the remaining ones as usual.</p>
@@ -1761,7 +1761,7 @@ Subsequent Handshake:
 <p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in EncryptedExtensions. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
 <p id="rfc.section.6.3.2.5.p.2">Note: this means that the certificate status appears prior to the certificates it applies to. This is slightly anomalous but matches the existing behavior for SignedCertificateTimestamps <a href="#RFC6962">[RFC6962]</a>, and is more easily extensible in the handshake state machine.</p>
 <h4 id="rfc.section.6.3.2.6"><a href="#rfc.section.6.3.2.6">6.3.2.6.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h4>
-<p id="rfc.section.6.3.2.6.p.1">When PSK resumption is used the the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.6.3.2.6.p.1">When PSK resumption is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.6.3.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
