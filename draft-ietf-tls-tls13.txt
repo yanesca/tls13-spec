@@ -157,11 +157,11 @@ Internet-Draft                     TLS                          May 2016
    Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 107
      C.1.  Negotiating with an older server  . . . . . . . . . . . . 107
      C.2.  Negotiating with an older client  . . . . . . . . . . . . 108
-     C.3.  Backwards Compatibility Security Restrictions . . . . . . 108
-   Appendix D.  Security Analysis  . . . . . . . . . . . . . . . . . 109
+     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 108
+     C.4.  Backwards Compatibility Security Restrictions . . . . . . 109
+   Appendix D.  Security Analysis  . . . . . . . . . . . . . . . . . 110
      D.1.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 110
        D.1.1.  Authentication and Key Exchange . . . . . . . . . . . 110
-       D.1.2.  Version Rollback Attacks  . . . . . . . . . . . . . . 111
 
 
 
@@ -170,12 +170,13 @@ Rescorla                Expires November 16, 2016               [Page 3]
 Internet-Draft                     TLS                          May 2016
 
 
+       D.1.2.  Version Rollback Attacks  . . . . . . . . . . . . . . 111
        D.1.3.  Detecting Attacks Against the Handshake Protocol  . . 111
-     D.2.  Protecting Application Data . . . . . . . . . . . . . . . 111
+     D.2.  Protecting Application Data . . . . . . . . . . . . . . . 112
      D.3.  Denial of Service . . . . . . . . . . . . . . . . . . . . 112
      D.4.  Final Notes . . . . . . . . . . . . . . . . . . . . . . . 112
-   Appendix E.  Working Group Information  . . . . . . . . . . . . . 112
-   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 112
+   Appendix E.  Working Group Information  . . . . . . . . . . . . . 113
+   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 113
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 116
 
 1.  Introduction
@@ -217,7 +218,6 @@ Internet-Draft                     TLS                          May 2016
    Protocol, allows the server and client to authenticate each other and
    to negotiate an encryption algorithm and cryptographic keys before
    the application protocol transmits or receives its first byte of
-
 
 
 
@@ -5865,7 +5865,7 @@ B.3.  Cipher Suite Support
    enforce minimum and maximum key sizes.  For example, certification
    paths containing keys or signatures weaker than 2048-bit RSA or
    224-bit ECDSA are not appropriate for secure applications.  See also
-   Appendix C.3.
+   Appendix C.4.
 
 B.4.  Implementation Pitfalls
 
@@ -5997,6 +5997,9 @@ Internet-Draft                     TLS                          May 2016
    A client resuming a session SHOULD initiate the connection using the
    version that was previously negotiated.
 
+   Note that 0-RTT data is not compatible with older servers.  See
+   Appendix C.3.
+
    If the version chosen by the server is not supported by the client
    (or not acceptable), the client MUST send a "protocol_version" alert
    message and close the connection.
@@ -6030,17 +6033,14 @@ C.2.  Negotiating with an older client
    (TLSPlaintext.record_version).  Servers will receive various TLS 1.x
    versions in this field, however its value MUST always be ignored.
 
-C.3.  Backwards Compatibility Security Restrictions
+C.3.  Zero-RTT backwards compatibility
 
-   If an implementation negotiates use of TLS 1.2, then negotiation of
-   cipher suites also supported by TLS 1.3 SHOULD be preferred, if
-   available.
-
-   The security of RC4 cipher suites is considered insufficient for the
-   reasons cited in [RFC7465].  Implementations MUST NOT offer or
-   negotiate RC4 cipher suites for any version of TLS for any reason.
-
-
+   0-RTT data is not compatible with older servers.  An older server
+   will respond to the ClientHello with an older ServerHello, but it
+   will not correctly skip the 0-RTT data and fail to complete the
+   handshake.  This can cause issues when a client offers 0-RTT,
+   particularly against multi-server deployments.  For example, a
+   deployment may deploy TLS 1.3 gradually with some servers
 
 
 
@@ -6049,6 +6049,28 @@ Rescorla                Expires November 16, 2016             [Page 108]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   implementing TLS 1.3 and some implementing TLS 1.2, or a TLS 1.3
+   deployment may be downgraded to TLS 1.2.
+
+   If a client accepts older versions of TLS and receives an older
+   ServerHello after sending a ClientHello with 0-RTT data, it MAY retry
+   the connection without 0-RTT.  It is NOT RECOMMENDED to retry the
+   connection in response to a more generic error or advertise lower
+   versions of TLS.
+
+   Multi-server deployments are RECOMMENDED to ensure a stable
+   deployment of TLS 1.3 without 0-RTT prior to enabling 0-RTT.
+
+C.4.  Backwards Compatibility Security Restrictions
+
+   If an implementation negotiates use of TLS 1.2, then negotiation of
+   cipher suites also supported by TLS 1.3 SHOULD be preferred, if
+   available.
+
+   The security of RC4 cipher suites is considered insufficient for the
+   reasons cited in [RFC7465].  Implementations MUST NOT offer or
+   negotiate RC4 cipher suites for any version of TLS for any reason.
 
    Old versions of TLS permitted the use of very low strength ciphers.
    Ciphers with a strength less than 112 bits MUST NOT be offered or
@@ -6077,6 +6099,13 @@ Internet-Draft                     TLS                          May 2016
    ServerHello.server_version set to { 3, 0 } MUST respond with a
    "protocol_version" alert message and close the connection.
 
+
+
+Rescorla                Expires November 16, 2016             [Page 109]
+
+Internet-Draft                     TLS                          May 2016
+
+
    Implementations MUST NOT use the Truncated HMAC extension, defined in
    Section 7 of [RFC6066], as it is not applicable to AEAD ciphers and
    has been shown to be insecure in some scenarios.
@@ -6094,17 +6123,6 @@ Appendix D.  Security Analysis
    otherwise tamper with messages sent over the communication channel.
    This appendix outlines how TLS has been designed to resist a variety
    of attacks.
-
-
-
-
-
-
-
-Rescorla                Expires November 16, 2016             [Page 109]
-
-Internet-Draft                     TLS                          May 2016
-
 
 D.1.  Handshake Protocol
 
@@ -6136,6 +6154,14 @@ D.1.1.  Authentication and Key Exchange
    (see Section 6.3.4.3 and Section 7.3).  By sending a correct Finished
    message, parties thus prove that they know the correct master_secret.
 
+
+
+
+Rescorla                Expires November 16, 2016             [Page 110]
+
+Internet-Draft                     TLS                          May 2016
+
+
 D.1.1.1.  Diffie-Hellman Key Exchange with Authentication
 
    When Diffie-Hellman key exchange is used, the client and server use
@@ -6154,20 +6180,12 @@ D.1.1.1.  Diffie-Hellman Key Exchange with Authentication
    Forward Secrecy.  Implementations SHOULD generate a new X for each
    handshake when using DHE cipher suites.
 
-
-
-
-Rescorla                Expires November 16, 2016             [Page 110]
-
-Internet-Draft                     TLS                          May 2016
-
-
 D.1.2.  Version Rollback Attacks
 
    Because TLS includes substantial improvements over SSL Version 2.0,
    attackers may try to make TLS-capable clients and servers fall back
    to Version 2.0.  This attack can occur if (and only if) two TLS-
-   capable parties use an SSL 2.0 handshake.  (See also Appendix C.3.)
+   capable parties use an SSL 2.0 handshake.  (See also Appendix C.4.)
 
    Although the solution using non-random PKCS #1 block type 2 message
    padding is inelegant, it provides a reasonably secure way for Version
@@ -6193,6 +6211,13 @@ D.1.3.  Detecting Attacks Against the Handshake Protocol
    Without the static secret, the attacker cannot repair the Finished
    messages, so the attack will be discovered.
 
+
+
+Rescorla                Expires November 16, 2016             [Page 111]
+
+Internet-Draft                     TLS                          May 2016
+
+
 D.2.  Protecting Application Data
 
    The shared secrets are hashed with the handshake transcript to
@@ -6207,16 +6232,6 @@ D.2.  Protecting Application Data
    detected.  Since sequence numbers are 64 bits long, they should never
    overflow.  Messages from one party cannot be inserted into the
    other's output, since they use independent keys.
-
-
-
-
-
-
-Rescorla                Expires November 16, 2016             [Page 111]
-
-Internet-Draft                     TLS                          May 2016
-
 
 D.3.  Denial of Service
 
@@ -6250,6 +6265,15 @@ D.4.  Final Notes
    certificate authorities are acceptable; a dishonest certificate
    authority can do tremendous damage.
 
+
+
+
+
+Rescorla                Expires November 16, 2016             [Page 112]
+
+Internet-Draft                     TLS                          May 2016
+
+
 Appendix E.  Working Group Information
 
    The discussion list for the IETF TLS working group is located at the
@@ -6265,14 +6289,6 @@ Appendix F.  Contributors
    -  Martin Abadi
       University of California, Santa Cruz
       abadi@cs.ucsc.edu
-
-
-
-
-Rescorla                Expires November 16, 2016             [Page 112]
-
-Internet-Draft                     TLS                          May 2016
-
 
    -  Christopher Allen (co-editor of TLS 1.0)
       Alacrity Ventures
@@ -6306,6 +6322,14 @@ Internet-Draft                     TLS                          May 2016
 
    -  Pete Chown
       Skygate Technology Ltd
+
+
+
+Rescorla                Expires November 16, 2016             [Page 113]
+
+Internet-Draft                     TLS                          May 2016
+
+
       pc@skygate.co.uk
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
@@ -6322,14 +6346,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  Pasi Eronen
       Nokia
-
-
-
-Rescorla                Expires November 16, 2016             [Page 113]
-
-Internet-Draft                     TLS                          May 2016
-
-
       pasi.eronen@nokia.com
 
    -  Cedric Fournet
@@ -6362,6 +6378,14 @@ Internet-Draft                     TLS                          May 2016
       subodh@fb.com
 
    -  Daniel Kahn Gillmor
+
+
+
+Rescorla                Expires November 16, 2016             [Page 114]
+
+Internet-Draft                     TLS                          May 2016
+
+
       ACLU
       dkg@fifthhorseman.net
 
@@ -6378,13 +6402,6 @@ Internet-Draft                     TLS                          May 2016
    -  Adam Langley (co-author of [RFC7627])
       Google
       agl@google.com
-
-
-
-Rescorla                Expires November 16, 2016             [Page 114]
-
-Internet-Draft                     TLS                          May 2016
-
 
    -  Ilari Liusvaara
       Independent
@@ -6418,6 +6435,13 @@ Internet-Draft                     TLS                          May 2016
       Microsoft
       maray@microsoft.com
 
+
+
+Rescorla                Expires November 16, 2016             [Page 115]
+
+Internet-Draft                     TLS                          May 2016
+
+
    -  Robert Relyea
       Netscape Communications
       relyea@netscape.com
@@ -6434,14 +6458,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  Nick Sullivan
       CloudFlare Inc.
-
-
-
-Rescorla                Expires November 16, 2016             [Page 115]
-
-Internet-Draft                     TLS                          May 2016
-
-
       nick@cloudflare.com
 
    -  Bjoern Tackmann
@@ -6468,22 +6484,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
