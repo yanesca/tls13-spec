@@ -362,7 +362,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-5-15" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-5-18" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -383,7 +383,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">May 15, 2016</td>
+  <td class="right">May 18, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -398,7 +398,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 16, 2016</td>
+  <td class="left">Expires: November 19, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -419,7 +419,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 16, 2016.</p>
+<p>This Internet-Draft will expire on November 19, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -3677,9 +3677,11 @@ HKDF-Expand-Label(HKDF-Extract(0, exporter_secret),
   <li>Do you correctly handle handshake messages that are fragmented to multiple TLS records (see <a href="#fragmentation">Section 5.2.1</a>)? Including corner cases like a ClientHello that is split to several small fragments? Do you fragment handshake messages that exceed the maximum fragment size? In particular, the certificate and certificate request handshake messages can be large enough to require fragmentation.</li>
   <li>Do you ignore the TLS record layer version number in all TLS records? (see <a href="#backward-compatibility">Appendix C</a>)</li>
   <li>Have you ensured that all support for SSL, RC4, EXPORT ciphers, and MD5 (via the &#8220;signature_algorithm&#8221; extension) is completely removed from all possible configurations that support TLS 1.3 or later, and that attempts to use these obsolete capabilities fail correctly? (see <a href="#backward-compatibility">Appendix C</a>)</li>
-  <li>Do you handle TLS extensions in ClientHello correctly, including omitting the extensions field completely?</li>
+  <li>Do you handle TLS extensions in ClientHello correctly, including unknown extensions?</li>
   <li>When the server has requested a client certificate, but no suitable certificate is available, do you correctly send an empty Certificate message, instead of omitting the whole message (see <a href="#client-certificate-selection">Section 6.3.4.1.2</a>)?</li>
   <li>When processing the plaintext fragment produced by AEAD-Decrypt and scanning from the end for the ContentType, do you avoid scanning past the start of the cleartext in the event that the peer has sent a malformed plaintext of all-zeros?</li>
+  <li>When processing a ClientHello containing a version of { 3, 5 } or higher, do you respond with the highest common version of TLS rather than requiring an exact match?</li>
+  <li>Do you ignore unrecognized cipher suites (see <a href="#client-hello">Section 6.3.1.1</a>), named groups (see <a href="#negotiated-groups">Section 6.3.2.2</a>), and signature algorithms (see <a href="#signature-algorithms">Section 6.3.2.1</a>)?</li>
 </ul>
 <p id="rfc.section.B.4.p.4">Cryptographic details:</p>
 <p/>
