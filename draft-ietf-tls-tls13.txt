@@ -3031,7 +3031,11 @@ Internet-Draft                     TLS                          May 2016
    Diffie-Hellman [DH] parameters for both clients and servers are
    encoded in the opaque key_exchange field of a KeyShareEntry in a
    KeyShare structure.  The opaque value contains the Diffie-Hellman
-   public value (dh_Y = g^X mod p), encoded as a big-endian integer.
+   public value (dh_Y = g^X mod p), encoded as a big-endian integer,
+   padded with zeros to the size of p.
+
+   Note: For a given Diffie-Hellman group, the padding results in all
+   public keys having the same length.
 
       opaque dh_Y<1..2^16-1>;
 
@@ -3070,10 +3074,6 @@ Internet-Draft                     TLS                          May 2016
 
    Clients which offer one or more PSK cipher suites MUST send at least
    one supported psk_identity value and servers MUST NOT negotiate any
-   of these cipher suites unless a supported value was provided.  If
-   this extension is not provided and no alternative cipher suite is
-   available, the server MUST close the connection with a fatal
-   "missing_extension" alert.  (see Section 8.2)
 
 
 
@@ -3081,6 +3081,11 @@ Rescorla                Expires November 19, 2016              [Page 55]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   of these cipher suites unless a supported value was provided.  If
+   this extension is not provided and no alternative cipher suite is
+   available, the server MUST close the connection with a fatal
+   "missing_extension" alert.  (see Section 8.2)
 
    The "extension_data" field of this extension contains a
    "PreSharedKeyExtension" value:
@@ -3125,11 +3130,6 @@ Internet-Draft                     TLS                          May 2016
    sending OCSP responses to the client.  In TLS 1.2 and below, the
    server sends an empty extension to indicate negotiation of this
    extension and the OCSP information is carried in a CertificateStatus
-   message.  In TLS 1.3, the server's OCSP information is carried in an
-   extension in EncryptedExtensions.  Specifically: The body of the
-   "status_request" or "status_request_v2" extension from the server
-   MUST be a CertificateStatus structure as defined in [RFC6066] and
-   [RFC6961] respectively.
 
 
 
@@ -3137,6 +3137,12 @@ Rescorla                Expires November 19, 2016              [Page 56]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   message.  In TLS 1.3, the server's OCSP information is carried in an
+   extension in EncryptedExtensions.  Specifically: The body of the
+   "status_request" or "status_request_v2" extension from the server
+   MUST be a CertificateStatus structure as defined in [RFC6066] and
+   [RFC6961] respectively.
 
    Note: this means that the certificate status appears prior to the
    certificates it applies to.  This is slightly anomalous but matches
@@ -3181,18 +3187,15 @@ Internet-Draft                     TLS                          May 2016
    sent to indicate the end of the flight.  0-RTT MUST always be
    followed by an "end_of_early_data" alert.
 
-   A server which receives an "early_data" extension can behave in one
-   of two ways:
-
-
-
-
 
 
 Rescorla                Expires November 19, 2016              [Page 57]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   A server which receives an "early_data" extension can behave in one
+   of two ways:
 
    -  Ignore the extension and return no response.  This indicates that
       the server has ignored any early data and an ordinary 1-RTT
@@ -3238,10 +3241,7 @@ Internet-Draft                     TLS                          May 2016
    "early_data" extension MUST produce a fatal "bad_record_mac" alert as
    per Section 5.2.2.  Implementations SHOULD determine the security
    parameters for the 1-RTT phase of the connection entirely before
-   processing the EncryptedExtensions and Finished, using those values
-   solely to determine whether to accept or reject 0-RTT data.
 
-   [[TODO: How does the client behave if the indication is rejected.]]
 
 
 
@@ -3249,6 +3249,11 @@ Rescorla                Expires November 19, 2016              [Page 58]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   processing the EncryptedExtensions and Finished, using those values
+   solely to determine whether to accept or reject 0-RTT data.
+
+   [[TODO: How does the client behave if the indication is rejected.]]
 
 6.3.2.6.1.  Processing Order
 
@@ -3293,11 +3298,6 @@ Internet-Draft                     TLS                          May 2016
    for replay.  In this case, it is better to reject early data than to
    risk greater exposure to replay attacks.
 
-6.3.2.7.  Ticket Age
-
-      struct {
-          uint32 ticket_age;
-      } TicketAge;
 
 
 
@@ -3305,6 +3305,12 @@ Rescorla                Expires November 19, 2016              [Page 59]
 
 Internet-Draft                     TLS                          May 2016
 
+
+6.3.2.7.  Ticket Age
+
+      struct {
+          uint32 ticket_age;
+      } TicketAge;
 
    When the client sends the "early_data" extension, it MUST also send a
    "ticket_age" extension in its EncryptedExtensions block.  This value
@@ -3348,12 +3354,6 @@ Internet-Draft                     TLS                          May 2016
    The client's EncryptedExtensions apply only to the early data with
    which they appear.  Servers MUST NOT use them to negotiate the rest
    of the handshake.  Only those extensions explicitly designated as
-   being included in 0-RTT Encrypted Extensions in the IANA registry can
-   be sent in the client's EncryptedExtensions.
-
-   Structure of this message:
-
-
 
 
 
@@ -3361,6 +3361,11 @@ Rescorla                Expires November 19, 2016              [Page 60]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   being included in 0-RTT Encrypted Extensions in the IANA registry can
+   be sent in the client's EncryptedExtensions.
+
+   Structure of this message:
 
       struct {
           Extension extensions<0..2^16-1>;
@@ -3404,12 +3409,7 @@ Internet-Draft                     TLS                          May 2016
    supported_signature_algorithms
       A list of the signature algorithms that the server is able to
       verify, listed in descending order of preference.  Any
-      certificates provided by the client MUST be signed using a
-      signature algorithm found in supported_signature_algorithms.
 
-   certificate_authorities
-      A list of the distinguished names [X501] of acceptable
-      certificate_authorities, represented in DER-encoded [X690] format.
 
 
 
@@ -3418,6 +3418,12 @@ Rescorla                Expires November 19, 2016              [Page 61]
 Internet-Draft                     TLS                          May 2016
 
 
+      certificates provided by the client MUST be signed using a
+      signature algorithm found in supported_signature_algorithms.
+
+   certificate_authorities
+      A list of the distinguished names [X501] of acceptable
+      certificate_authorities, represented in DER-encoded [X690] format.
       These distinguished names may specify a desired distinguished name
       for a root CA or for a subordinate CA; thus, this message can be
       used to describe known roots as well as a desired authorization
@@ -3460,12 +3466,6 @@ Internet-Draft                     TLS                          May 2016
          The special anyExtendedKeyUsage OID MUST NOT be used in the
          request.
 
-      Separate specifications may define matching rules for other
-      certificate extensions.
-
-   Note: It is a fatal "handshake_failure" alert for an anonymous server
-   to request client authentication.
-
 
 
 
@@ -3473,6 +3473,12 @@ Rescorla                Expires November 19, 2016              [Page 62]
 
 Internet-Draft                     TLS                          May 2016
 
+
+      Separate specifications may define matching rules for other
+      certificate extensions.
+
+   Note: It is a fatal "handshake_failure" alert for an anonymous server
+   to request client authentication.
 
 6.3.4.  Authentication Messages
 
@@ -3516,12 +3522,6 @@ Internet-Draft                     TLS                          May 2016
    include each other, just the messages through the end of the main
    handshake.
 
-   The following table defines the Handshake Context and MAC Key for
-   each scenario:
-
-
-
-
 
 
 
@@ -3529,6 +3529,9 @@ Rescorla                Expires November 19, 2016              [Page 63]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   The following table defines the Handshake Context and MAC Key for
+   each scenario:
 
    +----------------+----------------------------------------+---------+
    | Mode           | Handshake Context                      | Base    |
@@ -3573,9 +3576,6 @@ Internet-Draft                     TLS                          May 2016
       suite's key exchange algorithm and any negotiated extensions.
 
    Structure of this message:
-
-
-
 
 
 
@@ -5952,6 +5952,9 @@ Internet-Draft                     TLS                          May 2016
       number generator (see Appendix B.1) Diffie-Hellman private values,
       the ECDSA "k" parameter, and other security-critical values?
 
+   -  Do you zero-pad Diffie-Hellman public key values to the group size
+      (see Section 6.3.2.3.1)?
+
 Appendix C.  Backward Compatibility
 
    The TLS protocol provides a built-in mechanism for version
@@ -5983,9 +5986,6 @@ Appendix C.  Backward Compatibility
    TLS 1.2 and prior supported an "Extended Master Secret" [RFC7627]
    extension which digested large parts of the handshake transcript into
    the master secret.  Because TLS 1.3 always hashes in the transcript
-   up to the server CertificateVerify, implementations which support
-   both TLS 1.3 and earlier versions SHOULD indicate the use of the
-
 
 
 
@@ -5994,6 +5994,8 @@ Rescorla                Expires November 19, 2016             [Page 107]
 Internet-Draft                     TLS                          May 2016
 
 
+   up to the server CertificateVerify, implementations which support
+   both TLS 1.3 and earlier versions SHOULD indicate the use of the
    Extended Master Secret extension in their APIs whenever TLS 1.3 is
    used.
 
@@ -6039,8 +6041,6 @@ C.2.  Negotiating with an older client
    versions greater than client_version, it MUST send a
    "protocol_version" alert message and close the connection.
 
-   Note that earlier versions of TLS did not clearly specify the record
-   layer version number value in all cases
 
 
 
@@ -6050,6 +6050,8 @@ Rescorla                Expires November 19, 2016             [Page 108]
 Internet-Draft                     TLS                          May 2016
 
 
+   Note that earlier versions of TLS did not clearly specify the record
+   layer version number value in all cases
    (TLSPlaintext.record_version).  Servers will receive various TLS 1.x
    versions in this field, however its value MUST always be ignored.
 
@@ -6096,8 +6098,6 @@ C.4.  Backwards Compatibility Security Restrictions
    SSL version 2.0 compatible CLIENT-HELLO.  Implementations are NOT
    RECOMMENDED to accept an SSL version 2.0 compatible CLIENT-HELLO in
    order to negotiate older versions of TLS.
-
-
 
 
 
