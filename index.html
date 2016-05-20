@@ -1651,7 +1651,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>secp256r1, etc.</dt>
-  <dd style="margin-left: 8"><br/> Indicates support of the corresponding named curve.  Note that some curves are also recommended in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>. Others are recommended in <a href="#I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</a>.  Values 0xFE00 through 0xFEFF are reserved for private use.</dd>
+  <dd style="margin-left: 8"><br/> Indicates support of the corresponding named curve.  Note that some curves are also recommended in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>. Others are recommended in <a href="#RFC7748">[RFC7748]</a>.  Values 0xFE00 through 0xFEFF are reserved for private use.</dd>
   <dt>ffdhe2048, etc.</dt>
   <dd style="margin-left: 8"><br/> Indicates support of the corresponding finite field group, defined in <a href="#I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</a>.  Values 0x01FC through 0x01FF are reserved for private use.</dd>
 </dl>
@@ -1704,24 +1704,14 @@ Subsequent Handshake:
 <p id="rfc.section.6.3.2.3.p.8">If the server selects an (EC)DHE cipher suite and no mutually supported group is available between the two endpoints&#8217; KeyShare offers, yet there is a mutually supported group that can be found via the &#8220;supported_groups&#8221; extension, then the server MUST reply with a HelloRetryRequest.  If there is no mutually supported group at all, the server MUST NOT negotiate an (EC)DHE cipher suite.</p>
 <p id="rfc.section.6.3.2.3.p.9">[[TODO: Recommendation about what the client offers.  Presumably which integer DH groups and which curves.]]</p>
 <h4 id="rfc.section.6.3.2.3.1"><a href="#rfc.section.6.3.2.3.1">6.3.2.3.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
-<p id="rfc.section.6.3.2.3.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (dh_Y = g^X mod p), encoded as a big-endian integer, padded with zeros to the size of p.</p>
+<p id="rfc.section.6.3.2.3.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (Y = g^X mod p), encoded as a big-endian integer, padded with zeros to the size of p.</p>
 <p id="rfc.section.6.3.2.3.1.p.2">Note: For a given Diffie-Hellman group, the padding results in all public keys having the same length.</p>
-<pre>
-   opaque dh_Y&lt;1..2^16-1&gt;;
-</pre>
 <h4 id="rfc.section.6.3.2.3.2"><a href="#rfc.section.6.3.2.3.2">6.3.2.3.2.</a> <a href="#ecdhe-param" id="ecdhe-param">ECDHE Parameters</a></h4>
-<p id="rfc.section.6.3.2.3.2.p.1">ECDHE parameters for both clients and servers are encoded in the the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value conveys the Elliptic Curve Diffie-Hellman public value (ecdh_Y) represented as a byte string ECPoint.point.</p>
-<pre>
-   opaque point &lt;1..2^8-1&gt;;
-</pre>
-<p/>
-
-<dl>
-  <dt>point</dt>
-  <dd style="margin-left: 8"><br/> For secp256r1, secp384r1 and secp521r1, this is the byte string representation of an elliptic curve point following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.  For x25519 and x448, this is raw opaque octet-string representation of point (in the format those functions use), 32 octets for x25519 and 56 octets for x448.</dd>
-</dl>
+<p id="rfc.section.6.3.2.3.2.p.1">ECDHE parameters for both clients and servers are encoded in the the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.</p>
+<p id="rfc.section.6.3.2.3.2.p.2">For secp256r1, secp384r1 and secp521r1, the contents are the byte string representation of an elliptic curve public value following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.</p>
 <p id="rfc.section.6.3.2.3.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed).</p>
-<p id="rfc.section.6.3.2.3.2.p.4">Note: Versions of TLS prior to 1.3 permitted point negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
+<p id="rfc.section.6.3.2.3.2.p.4">For x25519 and x448, the contents are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748">[RFC7748]</a>, 32 bytes for x25519 and 56 bytes for x448.</p>
+<p id="rfc.section.6.3.2.3.2.p.5">Note: Versions of TLS prior to 1.3 permitted point negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
 <h4 id="rfc.section.6.3.2.4"><a href="#rfc.section.6.3.2.4">6.3.2.4.</a> <a href="#pre-shared-key-extension" id="pre-shared-key-extension">Pre-Shared Key Extension</a></h4>
 <p id="rfc.section.6.3.2.4.p.1">The &#8220;pre_shared_key&#8221; extension is used to indicate the identity of the pre-shared key to be used with a given handshake in association with a PSK or (EC)DHE-PSK cipher suite (see <a href="#RFC4279">[RFC4279]</a> for background).</p>
 <p id="rfc.section.6.3.2.4.p.2">Clients which offer one or more PSK cipher suites MUST send at least one supported psk_identity value and servers MUST NOT negotiate any of these cipher suites unless a supported value was provided.  If this extension is not provided and no alternative cipher suite is available, the server MUST close the connection with a fatal &#8220;missing_extension&#8221; alert.  (see <a href="#mti-extensions">Section 8.2</a>)</p>
@@ -2315,7 +2305,7 @@ server_finished_key =
 <p/>
 
 <ul>
-  <li>The public key to put into ECPoint.point structure is the result of applying the ECDH function to the secret key of appropriate length (into scalar input) and the standard public basepoint (into u-coordinate point input).</li>
+  <li>The public key to put into the KeyShareEntry.key_exchange structure is the result of applying the ECDH function to the secret key of appropriate length (into scalar input) and the standard public basepoint (into u-coordinate point input).</li>
   <li>The ECDH shared secret is the result of applying ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
 </ul>
 <p id="rfc.section.7.3.2.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
@@ -2570,12 +2560,6 @@ HKDF-Expand-Label(exporter_secret,
         <b id="I-D.ietf-tls-chacha20-poly1305">[I-D.ietf-tls-chacha20-poly1305]</b>
       </td>
       <td class="top"><a>Langley, A.</a>, <a>Chang, W.</a>, <a>Mavrogiannopoulos, N.</a>, <a>Strombergson, J.</a> and <a>S. Josefsson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-chacha20-poly1305-04">ChaCha20-Poly1305 Cipher Suites for Transport Layer Security (TLS)</a>", Internet-Draft draft-ietf-tls-chacha20-poly1305-04, December 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="I-D.irtf-cfrg-curves">[I-D.irtf-cfrg-curves]</b>
-      </td>
-      <td class="top"><a>Langley, A.</a> and <a>M. Hamburg</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-curves-11">Elliptic Curves for Security</a>", Internet-Draft draft-irtf-cfrg-curves-11, October 2015.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3185,10 +3169,6 @@ HKDF-Expand-Label(exporter_secret,
        }
    } KeyShare;
 
-   opaque dh_Y&lt;1..2^16-1&gt;;
-
-   opaque point &lt;1..2^8-1&gt;;
-
    opaque psk_identity&lt;0..2^16-1&gt;;
 
    struct {
@@ -3698,7 +3678,7 @@ HKDF-Expand-Label(exporter_secret,
 <p id="rfc.section.D.1.1.p.2">[[TODO: Rewrite this because the master_secret is not used this way any more after Hugo&#8217;s changes.]] The general goal of the key exchange process is to create a master_secret known to the communicating parties and not to attackers (see <a href="#key-schedule">Section 7.1</a>). The master_secret is required to generate the Finished messages and record protection keys (see <a href="#finished">Section 6.3.4.3</a> and <a href="#traffic-key-calculation">Section 7.3</a>). By sending a correct Finished message, parties thus prove that they know the correct master_secret.</p>
 <h4 id="rfc.appendix.D.1.1.1"><a href="#rfc.appendix.D.1.1.1">D.1.1.1.</a> <a href="#diffie-hellman-key-exchange-with-authentication" id="diffie-hellman-key-exchange-with-authentication">Diffie-Hellman Key Exchange with Authentication</a></h4>
 <p id="rfc.section.D.1.1.1.p.1">When Diffie-Hellman key exchange is used, the client and server use the &#8220;key_share&#8221; extension to send temporary Diffie-Hellman parameters. The signature in the certificate verify message (if present) covers the entire handshake up to that point and thus attests the certificate holder&#8217;s desire to use the ephemeral DHE keys.</p>
-<p id="rfc.section.D.1.1.1.p.2">Peers SHOULD validate each other&#8217;s public key Y (dh_Ys offered by the server or DH_Yc offered by the client) by ensuring that 1 &lt; Y &lt; p-1.  This simple check ensures that the remote peer is properly behaved and isn&#8217;t forcing the local system into a small subgroup.</p>
+<p id="rfc.section.D.1.1.1.p.2">Peers SHOULD validate each other&#8217;s public key Y by ensuring that 1 &lt; Y &lt; p-1.  This simple check ensures that the remote peer is properly behaved and isn&#8217;t forcing the local system into a small subgroup.</p>
 <p id="rfc.section.D.1.1.1.p.3">Additionally, using a fresh key for each handshake provides Perfect Forward Secrecy. Implementations SHOULD generate a new X for each handshake when using DHE cipher suites.</p>
 <h3 id="rfc.appendix.D.1.2"><a href="#rfc.appendix.D.1.2">D.1.2.</a> <a href="#version-rollback-attacks" id="version-rollback-attacks">Version Rollback Attacks</a></h3>
 <p id="rfc.section.D.1.2.p.1">Because TLS includes substantial improvements over SSL Version 2.0, attackers may try to make TLS-capable clients and servers fall back to Version 2.0. This attack can occur if (and only if) two TLS-capable parties use an SSL 2.0 handshake. (See also <a href="#backwards-compatibility-security-restrictions">Appendix C.4</a>.)</p>
