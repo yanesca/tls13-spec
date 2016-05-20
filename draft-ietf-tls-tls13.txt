@@ -125,10 +125,10 @@ Internet-Draft                     TLS                          May 2016
      7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  75
      7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  75
        7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  76
-       7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  76
+       7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  77
        7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  77
    8.  Mandatory Algorithms  . . . . . . . . . . . . . . . . . . . .  77
-     8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  77
+     8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  78
      8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  78
    9.  Application Data Protocol . . . . . . . . . . . . . . . . . .  79
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  79
@@ -4240,16 +4240,16 @@ Internet-Draft                     TLS                          May 2016
 7.3.1.  Diffie-Hellman
 
    A conventional Diffie-Hellman computation is performed.  The
-   negotiated key (Z) is used as the shared secret, and is used in the
-   key schedule as specified above.  Leading bytes of Z that contain all
-   zero bits are stripped before it is used as the input to HKDF.
+   negotiated key (Z) is converted to byte string by encoding in big-
+   endian, padded with zeros up to the size of the prime.  This byte
+   string is used as the shared secret, and is used in the key schedule
+   as specified above.
 
-7.3.2.  Elliptic Curve Diffie-Hellman
+   Note that this construction differs from previous versions of TLS
+   which remove leading zeros.
 
-   For secp256r1, secp384r1 and secp521r1, ECDH calculations (including
-   parameter and key generation as well as the shared secret
-   calculation) are performed according to [IEEE1363] using the ECKAS-
-   DH1 scheme with the identity map as key derivation function (KDF), so
+
+
 
 
 
@@ -4258,6 +4258,12 @@ Rescorla                Expires November 21, 2016              [Page 76]
 Internet-Draft                     TLS                          May 2016
 
 
+7.3.2.  Elliptic Curve Diffie-Hellman
+
+   For secp256r1, secp384r1 and secp521r1, ECDH calculations (including
+   parameter and key generation as well as the shared secret
+   calculation) are performed according to [IEEE1363] using the ECKAS-
+   DH1 scheme with the identity map as key derivation function (KDF), so
    that the shared secret is the x-coordinate of the ECDH shared secret
    elliptic curve point represented as an octet string.  Note that this
    octet string (Z in IEEE 1363 terminology) as output by FE2OSP, the
@@ -4296,14 +4302,8 @@ Internet-Draft                     TLS                          May 2016
 
 8.  Mandatory Algorithms
 
-8.1.  MTI Cipher Suites
 
-   In the absence of an application profile standard specifying
-   otherwise, a TLS-compliant application MUST implement the following
-   cipher suites:
 
-       TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 
 
 
@@ -4313,6 +4313,15 @@ Rescorla                Expires November 21, 2016              [Page 77]
 
 Internet-Draft                     TLS                          May 2016
 
+
+8.1.  MTI Cipher Suites
+
+   In the absence of an application profile standard specifying
+   otherwise, a TLS-compliant application MUST implement the following
+   cipher suites:
+
+       TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 
    These cipher suites MUST support both digital signatures and key
    exchange with secp256r1 (NIST P-256) and SHOULD support key exchange
@@ -4353,6 +4362,14 @@ Internet-Draft                     TLS                          May 2016
 
    -  "pre_shared_key" is REQUIRED for PSK cipher suites
 
+
+
+
+Rescorla                Expires November 21, 2016              [Page 78]
+
+Internet-Draft                     TLS                          May 2016
+
+
    When negotiating use of applicable cipher suites, endpoints MUST
    abort the connection with a "missing_extension" alert if the required
    extension was not provided.  Any endpoint that receives any invalid
@@ -4362,14 +4379,6 @@ Internet-Draft                     TLS                          May 2016
 
    Additionally, all implementations MUST support use of the
    "server_name" extension with applications capable of using it.
-
-
-
-Rescorla                Expires November 21, 2016              [Page 78]
-
-Internet-Draft                     TLS                          May 2016
-
-
    Servers MAY require clients to send a valid "server_name" extension.
    Servers requiring this extension SHOULD respond to a ClientHello
    lacking a "server_name" extension with a fatal "missing_extension"
@@ -4410,6 +4419,13 @@ Internet-Draft                     TLS                          May 2016
          suites marked "No" range from "good" to "bad" from a
          cryptographic standpoint.
 
+
+
+Rescorla                Expires November 21, 2016              [Page 79]
+
+Internet-Draft                     TLS                          May 2016
+
+
    -  TLS ContentType Registry: Future values are allocated via
       Standards Action [RFC2434].
 
@@ -4418,13 +4434,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  TLS HandshakeType Registry: Future values are allocated via
       Standards Action [RFC2434].
-
-
-
-Rescorla                Expires November 21, 2016              [Page 79]
-
-Internet-Draft                     TLS                          May 2016
-
 
    This document also uses a registry originally created in [RFC4366].
    IANA has updated it to reference this document.  The registry and its
@@ -4465,6 +4474,14 @@ Internet-Draft                     TLS                          May 2016
    | truncated_hmac [RFC6066]                |         Yes |        No |
    |                                         |             |           |
    | status_request [RFC6066]                |         Yes |        No |
+
+
+
+Rescorla                Expires November 21, 2016              [Page 80]
+
+Internet-Draft                     TLS                          May 2016
+
+
    |                                         |             |           |
    | user_mapping [RFC4681]                  |         Yes | Encrypted |
    |                                         |             |           |
@@ -4474,14 +4491,6 @@ Internet-Draft                     TLS                          May 2016
    |                                         |             |           |
    | cert_type [RFC6091]                     |         Yes | Encrypted |
    |                                         |             |           |
-
-
-
-Rescorla                Expires November 21, 2016              [Page 80]
-
-Internet-Draft                     TLS                          May 2016
-
-
    | supported_groups [RFC-ietf-tls-         |         Yes | Encrypted |
    | negotiated-ff-dhe]                      |             |           |
    |                                         |             |           |
@@ -4521,6 +4530,14 @@ Internet-Draft                     TLS                          May 2016
    | pre_shared_key [[this document]]        |         Yes |     Clear |
    |                                         |             |           |
    | early_data [[this document]]            |         Yes |     Clear |
+
+
+
+Rescorla                Expires November 21, 2016              [Page 81]
+
+Internet-Draft                     TLS                          May 2016
+
+
    |                                         |             |           |
    | ticket_age [[this document]]            |         Yes |     Early |
    +-----------------------------------------+-------------+-----------+
@@ -4530,14 +4547,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  TLS SignatureScheme Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
-
-
-
-Rescorla                Expires November 21, 2016              [Page 81]
-
-Internet-Draft                     TLS                          May 2016
-
-
       [RFC2434].  Values with the first byte 255 (decimal) are reserved
       for Private Use [RFC2434].  This registry SHALL have a
       "Recommended" column.  The registry [shall be/ has been] initially
@@ -4576,6 +4585,15 @@ Internet-Draft                     TLS                          May 2016
               draft-mattsson-tls-ecdhe-psk-aead-05 (work in progress),
               April 2016.
 
+
+
+
+
+Rescorla                Expires November 21, 2016              [Page 82]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
@@ -4585,14 +4603,6 @@ Internet-Draft                     TLS                          May 2016
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-Rescorla                Expires November 21, 2016              [Page 82]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [RFC2434]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", RFC 2434,
@@ -4629,16 +4639,6 @@ Internet-Draft                     TLS                          May 2016
               Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
               March 2010, <http://www.rfc-editor.org/info/rfc5705>.
 
-   [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
-              Key Derivation Function (HKDF)", RFC 5869,
-              DOI 10.17487/RFC5869, May 2010,
-              <http://www.rfc-editor.org/info/rfc5869>.
-
-   [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
-              Extensions: Extension Definitions", RFC 6066,
-              DOI 10.17487/RFC6066, January 2011,
-              <http://www.rfc-editor.org/info/rfc6066>.
-
 
 
 
@@ -4649,6 +4649,16 @@ Rescorla                Expires November 21, 2016              [Page 83]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
+              Key Derivation Function (HKDF)", RFC 5869,
+              DOI 10.17487/RFC5869, May 2010,
+              <http://www.rfc-editor.org/info/rfc5869>.
+
+   [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
+              Extensions: Extension Definitions", RFC 6066,
+              DOI 10.17487/RFC6066, January 2011,
+              <http://www.rfc-editor.org/info/rfc6066>.
 
    [RFC6209]  Kim, W., Lee, J., Park, J., and D. Kwon, "Addition of the
               ARIA Cipher Suites to Transport Layer Security (TLS)",
@@ -4687,16 +4697,6 @@ Internet-Draft                     TLS                          May 2016
               Department of Commerce, "Secure Hash Standard", NIST FIPS
               PUB 180-4, March 2012.
 
-   [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
-              Specification of Basic Encoding Rules (BER), Canonical
-              Encoding Rules (CER) and Distinguished Encoding Rules
-              (DER)", ISO/IEC 8825-1:2002, 2002.
-
-   [X962]     ANSI, "Public Key Cryptography For The Financial Services
-              Industry: The Elliptic Curve Digital Signature Algorithm
-              (ECDSA)", ANSI X9.62, 1998.
-
-
 
 
 
@@ -4705,6 +4705,15 @@ Rescorla                Expires November 21, 2016              [Page 84]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
+              Specification of Basic Encoding Rules (BER), Canonical
+              Encoding Rules (CER) and Distinguished Encoding Rules
+              (DER)", ISO/IEC 8825-1:2002, 2002.
+
+   [X962]     ANSI, "Public Key Cryptography For The Financial Services
+              Industry: The Elliptic Curve Digital Signature Algorithm
+              (ECDSA)", ANSI X9.62, 1998.
 
 12.2.  Informative References
 
@@ -4746,21 +4755,18 @@ Internet-Draft                     TLS                          May 2016
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
 
-   [PSK-FINISHED]
-              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
-              "Revision 10: possible attack if client authentication is
-              allowed during PSK", 2015, <https://www.ietf.org/mail-
-              archive/web/tls/current/msg18215.html>.
-
-
-
-
 
 
 Rescorla                Expires November 21, 2016              [Page 85]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [PSK-FINISHED]
+              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
+              "Revision 10: possible attack if client authentication is
+              allowed during PSK", 2015, <https://www.ietf.org/mail-
+              archive/web/tls/current/msg18215.html>.
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -4804,12 +4810,6 @@ Internet-Draft                     TLS                          May 2016
               DOI 10.17487/RFC4492, May 2006,
               <http://www.rfc-editor.org/info/rfc4492>.
 
-   [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
-              Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
-              2006, <http://www.rfc-editor.org/info/rfc4506>.
-
-
-
 
 
 
@@ -4817,6 +4817,10 @@ Rescorla                Expires November 21, 2016              [Page 86]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
+              Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
+              2006, <http://www.rfc-editor.org/info/rfc4506>.
 
    [RFC4507]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
@@ -4861,10 +4865,6 @@ Internet-Draft                     TLS                          May 2016
               (SRTP) Security Context Using Datagram Transport Layer
               Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
               2010, <http://www.rfc-editor.org/info/rfc5763>.
-
-
-
-
 
 
 
@@ -5886,8 +5886,8 @@ Internet-Draft                     TLS                          May 2016
       parameters (see Section 4.8)?  Do you verify that the RSA padding
       doesn't have additional data after the hash value?  [FI06]
 
-   -  When using Diffie-Hellman key exchange, do you correctly strip
-      leading zero bytes from the negotiated key (see Section 7.3.1)?
+   -  When using Diffie-Hellman key exchange, do you correctly preserve
+      leading zero bytes in the negotiated key (see Section 7.3.1)?
 
    -  Does your TLS client check that the Diffie-Hellman parameters sent
       by the server are acceptable (see Appendix D.1.1.1)?
