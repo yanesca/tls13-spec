@@ -566,6 +566,7 @@ li, p {
   <li>Flesh out 0-RTT PSK mode and shrink EarlyDataIndiation</li>
   <li>Turn PSK-resumption response into an index to save room.</li>
   <li>Move CertificateStatus to an extension.</li>
+  <li>Extra fields in NewSessionTicket.</li>
 </ul>
 <p id="rfc.section.1.2.p.3">draft-12</p>
 <p/>
@@ -1317,7 +1318,7 @@ Subsequent Handshake:
 <p class="figure">Figure 3: Message flow for resumption and PSK</p>
 <p id="rfc.section.6.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify. When a client offers resumption via PSK it SHOULD also supply a &#8220;key_share&#8221; extension to the server as well; this allows server to decline resumption and fall back to a full handshake.  A &#8220;key_share&#8221; extension MUST also be sent if the client is attempting to negotiate an (EC)DHE-PSK cipher suite.</p>
 <h3 id="rfc.section.6.2.3"><a href="#rfc.section.6.2.3">6.2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a></h3>
-<p id="rfc.section.6.2.3.p.1">When resuming via a PSK, clients can also send data on their first flight (&#8220;early data&#8221;). This data is encrypted solely under keys derived using the PSK as the static secret.  As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight, the rest of the handshake uses the same messages.</p>
+<p id="rfc.section.6.2.3.p.1">When resuming via a PSK with an appropriate ticket (i.e., one with the &#8220;allow_early_data&#8221; flag), clients can also send data on their first flight (&#8220;early data&#8221;). This data is encrypted solely under keys derived using the PSK as the static secret.  As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight, the rest of the handshake uses the same messages.</p>
 <div id="rfc.figure.4"/>
 <div id="tls-0-rtt"/>
 <pre>
@@ -2114,21 +2115,50 @@ server_finished_key =
 </pre>
 <p id="rfc.section.6.3.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 6.3.2.4</a>) and supplying a suitable PSK cipher suite. Servers may send multiple tickets on a single connection, for instance after post-handshake authentication.</p>
 <pre>
-  struct {
-      uint32 ticket_lifetime;
-      opaque ticket&lt;0..2^16-1&gt;;
-  } NewSessionTicket;
+ enum { (65535) } TicketExtensionType;
+
+ struct {
+     TicketExtensionType extension_type;
+     opaque extension_data&lt;0..2^16-1&gt;;
+ } TicketExtension;
+
+ enum {
+   allow_early_data(1)
+   allow_dhe_resumption(2),
+   allow_psk_resumption(4)
+ } TicketFlags;
+ 
+ struct {
+     uint32 ticket_lifetime;
+     uint32 flags;
+     TicketExtension extensions&lt;2..2^16-2&gt;;
+     opaque ticket&lt;0..2^16-1&gt;;
+ } NewSessionTicket;
 </pre>
 <p/>
 
 <dl>
+  <dt>flags</dt>
+  <dd style="margin-left: 8"><br/> A 32-bit value indicating the ways in which this ticket may be used (as an OR of the flags values).</dd>
   <dt>ticket_lifetime</dt>
   <dd style="margin-left: 8"><br/> Indicates the lifetime in seconds as a 32-bit unsigned integer in network byte order from the time of ticket issuance.  Servers MUST NOT use any value more than 604800 seconds (7 days).  The value of zero indicates that the ticket should be discarded immediately. Clients MUST NOT cache session tickets for longer than 7 days, regardless of the ticket_lifetime. It MAY delete the ticket earlier based on local policy. A server MAY treat a ticket as valid for a shorter period of time than what is stated in the ticket_lifetime.</dd>
+  <dt>ticket_extensions</dt>
+  <dd style="margin-left: 8"><br/> A placeholder for extensions in the ticket. Clients MUST ignore unrecognized extensions.</dd>
   <dt>ticket</dt>
-  <dd style="margin-left: 8"><br/> The value of the ticket to be used as the PSK identifier.</dd>
+  <dd style="margin-left: 8"><br/> The value of the ticket to be used as the PSK identifier.  The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
 </dl>
-<p id="rfc.section.6.3.5.1.p.4">The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</p>
-<p id="rfc.section.6.3.5.1.p.5">[[TODO: Should we require that tickets be bound to the existing symmetric cipher suite. See the TODO above about early_data and PSK.??]</p>
+<p id="rfc.section.6.3.5.1.p.4">The meanings of the flags are as follows:</p>
+<p/>
+
+<dl>
+  <dt>allow_early_data</dt>
+  <dd style="margin-left: 8"><br/> When resuming with this ticket, the client MAY send data in its first flight (early data) encrypted under a key derived from this PSK.</dd>
+  <dt>allow_dhe_resumption</dt>
+  <dd style="margin-left: 8"><br/> This ticket MAY be used with (EC)DHE-PSK cipher suite</dd>
+  <dt>allow_psk_resumption</dt>
+  <dd style="margin-left: 8"><br/> This ticket MAY be used with a pure PSK cipher suite.</dd>
+</dl>
+<p id="rfc.section.6.3.5.1.p.6">In all cases, the PSK or (EC)DHE-PSK cipher suites that the client offers/uses MUST have the same symmetric parameters (cipher/hash) as the cipher suite negotiated for this connection. If no flags are set that the client recognizes, it MUST ignore the ticket.</p>
 <h4 id="rfc.section.6.3.5.2"><a href="#rfc.section.6.3.5.2">6.3.5.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h4>
 <p id="rfc.section.6.3.5.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.</p>
 <p id="rfc.section.6.3.5.2.p.2">Note: Because client authentication may require prompting the user, servers MUST be prepared for some delay, including receiving an arbitrary number of other messages between sending the CertificateRequest and receiving a response. In addition, clients which receive multiple CertificateRequests in close succession MAY respond to them in a different order than they were received (the certificate_request_context value allows the server to disambiguate the responses).</p>
@@ -3312,10 +3342,25 @@ HKDF-Expand-Label(exporter_secret,
 </pre>
 <h3 id="rfc.appendix.A.3.4"><a href="#rfc.appendix.A.3.4">A.3.4.</a> <a href="#ticket-establishment" id="ticket-establishment">Ticket Establishment</a></h3>
 <pre>
-  struct {
-      uint32 ticket_lifetime;
-      opaque ticket&lt;0..2^16-1&gt;;
-  } NewSessionTicket;
+ enum { (65535) } TicketExtensionType;
+
+ struct {
+     TicketExtensionType extension_type;
+     opaque extension_data&lt;0..2^16-1&gt;;
+ } TicketExtension;
+
+ enum {
+   allow_early_data(1)
+   allow_dhe_resumption(2),
+   allow_psk_resumption(4)
+ } TicketFlags;
+ 
+ struct {
+     uint32 ticket_lifetime;
+     uint32 flags;
+     TicketExtension extensions&lt;2..2^16-2&gt;;
+     opaque ticket&lt;0..2^16-1&gt;;
+ } NewSessionTicket;
 </pre>
 <h2 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
 <p id="rfc.section.A.4.p.1">A cipher suite defines a cipher specification supported in TLS and negotiated via hello messages in the TLS handshake.  Cipher suite names follow a general naming convention composed of a series of component algorithm names separated by underscores:</p>
