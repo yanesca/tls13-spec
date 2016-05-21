@@ -564,9 +564,12 @@ li, p {
   <li>Remove 0-RTT client authentication</li>
   <li>Remove (EC)DHE 0-RTT.</li>
   <li>Flesh out 0-RTT PSK mode and shrink EarlyDataIndiation</li>
-  <li>Turn PSK-resumption response into an index to save room.</li>
-  <li>Move CertificateStatus to an extension.</li>
+  <li>Turn PSK-resumption response into an index to save room</li>
+  <li>Move CertificateStatus to an extension</li>
   <li>Extra fields in NewSessionTicket.</li>
+  <li>Restructure key schedule and add a resumption_context value.</li>
+  <li>Require DH public keys and secrets to be zero-padded to the size of the group.</li>
+  <li>Remove the redundant length fields in KeyShareEntry.</li>
 </ul>
 <p id="rfc.section.1.2.p.3">draft-12</p>
 <p/>

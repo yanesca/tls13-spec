@@ -301,11 +301,18 @@ Internet-Draft                     TLS                          May 2016
 
    -  Flesh out 0-RTT PSK mode and shrink EarlyDataIndiation
 
-   -  Turn PSK-resumption response into an index to save room.
+   -  Turn PSK-resumption response into an index to save room
 
-   -  Move CertificateStatus to an extension.
+   -  Move CertificateStatus to an extension
 
    -  Extra fields in NewSessionTicket.
+
+   -  Restructure key schedule and add a resumption_context value.
+
+   -  Require DH public keys and secrets to be zero-padded to the size
+      of the group.
+
+   -  Remove the redundant length fields in KeyShareEntry.
 
    draft-12
 
@@ -322,6 +329,15 @@ Internet-Draft                     TLS                          May 2016
 
    -  Make ticket lifetime mandatory and limit it to a week.
 
+
+
+
+
+Rescorla                Expires November 22, 2016               [Page 6]
+
+Internet-Draft                     TLS                          May 2016
+
+
    -  Make the purpose strings lower-case.  This matches how people are
       implementing for interop.
 
@@ -330,13 +346,6 @@ Internet-Draft                     TLS                          May 2016
    -  Editorial cleanup
 
    draft-11
-
-
-
-Rescorla                Expires November 22, 2016               [Page 6]
-
-Internet-Draft                     TLS                          May 2016
-
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
 
@@ -378,6 +387,13 @@ Internet-Draft                     TLS                          May 2016
 
    -  Switch to encrypted record ContentType.
 
+
+
+Rescorla                Expires November 22, 2016               [Page 7]
+
+Internet-Draft                     TLS                          May 2016
+
+
    -  Change HKDF labeling to include protocol version and value
       lengths.
 
@@ -385,14 +401,6 @@ Internet-Draft                     TLS                          May 2016
       certificates to the client rather than having servers abort early.
 
    -  Deprecate SHA-1 with signatures.
-
-
-
-
-Rescorla                Expires November 22, 2016               [Page 7]
-
-Internet-Draft                     TLS                          May 2016
-
 
    -  Add MTI algorithms.
 
@@ -434,14 +442,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  Prohibit RC4 negotiation for backwards compatibility.
 
-   -  Freeze & deprecate record layer version field.
-
-   -  Update format of signatures with context.
-
-   -  Remove explicit IV.
-
-   draft-05
-
 
 
 
@@ -449,6 +449,14 @@ Rescorla                Expires November 22, 2016               [Page 8]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Freeze & deprecate record layer version field.
+
+   -  Update format of signatures with context.
+
+   -  Remove explicit IV.
+
+   draft-05
 
    -  Prohibit SSL negotiation for backwards compatibility.
 
@@ -491,20 +499,16 @@ Internet-Draft                     TLS                          May 2016
 
    -  Remove support for compression.
 
-   -  Remove support for static RSA and DH key exchange.
-
-   -  Remove support for non-AEAD ciphers.
-
-
-
-
-
 
 
 Rescorla                Expires November 22, 2016               [Page 9]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Remove support for static RSA and DH key exchange.
+
+   -  Remove support for non-AEAD ciphers.
 
 2.  Goals
 
@@ -550,10 +554,6 @@ Internet-Draft                     TLS                          May 2016
    definition or of interface definition, although it does cover select
    areas of policy as they are required for the maintenance of solid
    security.
-
-
-
-
 
 
 
