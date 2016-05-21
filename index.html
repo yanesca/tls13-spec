@@ -1604,17 +1604,17 @@ Subsequent Handshake:
    SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
 </pre>
 <p id="rfc.section.6.3.2.1.p.4">Note: This production is named &#8220;SignatureScheme&#8221; because there is already a SignatureAlgorithm type in TLS 1.2. We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
-<p id="rfc.section.6.3.2.1.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash function and then proceed as usual.</p>
+<p id="rfc.section.6.3.2.1.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash function and then proceed as usual.  The code point groups listed above have the following meanings:</p>
 <p/>
 
 <dl>
-  <dt>rsa_pkcs1_sha1, etc.</dt>
+  <dt>RSASSA-PKCS-v1_5 algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
-  <dt>ecdsa_secp256r1_sha256, etc.</dt>
+  <dt>ECDSA algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
-  <dt>rsa_pss_sha256, etc.</dt>
+  <dt>RSASSA-PSS algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PSS <a href="#RFC3447">[RFC3447]</a> with MGF1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. When used in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>), the length of the salt MUST be equal to the length of the digest output.</dd>
-  <dt>ed25519, ed448</dt>
+  <dt>EdDSA algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
 <p id="rfc.section.6.3.2.1.p.7">The semantics of this extension are somewhat complicated because the cipher suite adds additional constraints on signature algorithms.  <a href="#server-certificate-selection">Section 6.3.4.1.1</a> describes the appropriate rules.</p>
