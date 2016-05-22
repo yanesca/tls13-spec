@@ -4965,10 +4965,10 @@ Internet-Draft                     TLS                          May 2016
               DOI 10.17487/RFC6520, February 2012,
               <http://www.rfc-editor.org/info/rfc6520>.
 
-   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Message Syntax and Routing",
-              RFC 7230, DOI 10.17487/RFC7230, June 2014,
-              <http://www.rfc-editor.org/info/rfc7230>.
+   [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Semantics and Content", RFC 7231,
+              DOI 10.17487/RFC7231, June 2014,
+              <http://www.rfc-editor.org/info/rfc7231>.
 
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
@@ -6074,7 +6074,7 @@ B.5.  Client Tracking Prevention
    different connections.  Servers that issue session tickets SHOULD
    offer at least as many session tickets as the number of connections
    that a client might use; for example, a web browser using HTTP/1.1
-   [RFC7230] might open six connections to a server.  Servers SHOULD
+   [RFC7231] might open six connections to a server.  Servers SHOULD
    issue new session tickets with every connection.  This ensures that
    clients are always able to use a new session ticket when creating a
    new connection.

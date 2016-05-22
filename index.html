@@ -2937,9 +2937,9 @@ HKDF-Expand-Label(exporter_secret,
     </tr>
     <tr>
       <td class="reference">
-        <b id="RFC7230">[RFC7230]</b>
+        <b id="RFC7231">[RFC7231]</b>
       </td>
-      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7231">Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</a>", RFC 7231, DOI 10.17487/RFC7231, June 2014.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3682,7 +3682,7 @@ HKDF-Expand-Label(exporter_secret,
   <li>Do you zero-pad Diffie-Hellman public key values to the group size (see <a href="#ffdhe-param">Section 6.3.2.3.1</a>)?</li>
 </ul>
 <h2 id="rfc.appendix.B.5"><a href="#rfc.appendix.B.5">B.5.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
-<p id="rfc.section.B.5.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>
+<p id="rfc.section.B.5.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7231">[RFC7231]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#backward-compatibility" id="backward-compatibility">Backward Compatibility</a></h1>
 <p id="rfc.section.C.p.1">The TLS protocol provides a built-in mechanism for version negotiation between endpoints potentially supporting different versions of TLS.</p>
 <p id="rfc.section.C.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and the client supports the highest protocol version available in the server.</p>
