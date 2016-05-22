@@ -855,7 +855,7 @@ Internet-Draft                     TLS                          May 2016
          opaque signature<0..2^16-1>;
       } DigitallySigned;
 
-   The algorithm field specifies the algorithm used (see Section 6.3.2.1
+   The algorithm field specifies the algorithm used (see Section 6.3.2.2
    for the definition of this field).  The signature is a digital
    signature using those algorithms over the contents of the element.
    The contents themselves do not appear on the wire but are simply
@@ -879,7 +879,7 @@ Internet-Draft                     TLS                          May 2016
 
    The combined input is then fed into the corresponding signature
    algorithm to produce the signature value on the wire.  See
-   Section 6.3.2.1 for algorithms defined in this specification.
+   Section 6.3.2.2 for algorithms defined in this specification.
 
    In the following example
 
@@ -1851,9 +1851,9 @@ Internet-Draft                     TLS                          May 2016
 
 
    extensions, and in general either one or more Diffie-Hellman key
-   shares (in the "key_share" extension Section 6.3.2.3), one or more
+   shares (in the "key_share" extension Section 6.3.2.4), one or more
    pre-shared key labels (in the "pre_shared_key" extension
-   Section 6.3.2.4), or both.
+   Section 6.3.2.5), or both.
 
    The server processes the ClientHello and determines the appropriate
    cryptographic parameters for the connection.  It then responds with
@@ -2139,7 +2139,7 @@ Internet-Draft                     TLS                          May 2016
 
    2.  There are no guarantees of non-replay between connections.
        Unless the server takes special measures outside those provided
-       by TLS (See Section 6.3.2.6.2), the server has no guarantee that
+       by TLS (See Section 6.3.2.7.2), the server has no guarantee that
        the same 0-RTT data was not transmitted on multiple 0-RTT
        connections.  This is especially relevant if the data is
        authenticated either with TLS client authentication or inside the
@@ -2494,8 +2494,6 @@ Internet-Draft                     TLS                          May 2016
           Extension extensions<0..2^16-1>;
       } HelloRetryRequest;
 
-   [[OPEN ISSUE: Merge in DTLS Cookies?]]
-
    selected_group
       The mutually supported group the server intends to negotiate and
       is requesting a retried ClientHello/KeyShare for.
@@ -2514,6 +2512,8 @@ Internet-Draft                     TLS                          May 2016
    not correspond to a group which was provided in the "key_share"
    extension in the original ClientHello.  If either of these checks
    fails, then the client MUST abort the handshake with a fatal
+   "handshake_failure" alert.  Clients SHOULD also abort with
+   "handshake_failure" in response to any second HelloRetryRequest which
 
 
 
@@ -2522,8 +2522,6 @@ Rescorla                Expires November 23, 2016              [Page 45]
 Internet-Draft                     TLS                          May 2016
 
 
-   "handshake_failure" alert.  Clients SHOULD also abort with
-   "handshake_failure" in response to any second HelloRetryRequest which
    was sent in the same connection (i.e., where the ClientHello was
    itself in response to a HelloRetryRequest).
 
@@ -2554,6 +2552,7 @@ Internet-Draft                     TLS                          May 2016
           pre_shared_key(41),
           early_data(42),
           ticket_age(43),
+          cookie (44),
           (65535)
       } ExtensionType;
 
@@ -2570,6 +2569,7 @@ Internet-Draft                     TLS                          May 2016
    An extension type MUST NOT appear in the ServerHello or
    HelloRetryRequest unless the same extension type appeared in the
    corresponding ClientHello.  If a client receives an extension type in
+   ServerHello or HelloRetryRequest that it did not request in the
 
 
 
@@ -2578,7 +2578,6 @@ Rescorla                Expires November 23, 2016              [Page 46]
 Internet-Draft                     TLS                          May 2016
 
 
-   ServerHello or HelloRetryRequest that it did not request in the
    associated ClientHello, it MUST abort the handshake with an
    "unsupported_extension" fatal alert.
 
@@ -2626,6 +2625,7 @@ Internet-Draft                     TLS                          May 2016
       manipulation of handshake messages.  This principle should be
       followed regardless of whether the feature is believed to cause a
       security problem.  Often the fact that the extension fields are
+      included in the inputs to the Finished message hashes will be
 
 
 
@@ -2634,7 +2634,6 @@ Rescorla                Expires November 23, 2016              [Page 47]
 Internet-Draft                     TLS                          May 2016
 
 
-      included in the inputs to the Finished message hashes will be
       sufficient, but extreme care is needed when the extension changes
       the meaning of messages sent in the handshake phase.  Designers
       and implementors should be aware of the fact that until the
@@ -2650,11 +2649,46 @@ Internet-Draft                     TLS                          May 2016
       possibility of version rollback should be a significant
       consideration in any major design change.
 
-6.3.2.1.  Signature Algorithms
+6.3.2.1.  Cookie
+
+      struct {
+          opaque cookie<0..255>;
+      } Cookie;
+
+   Cookies serve two primary purposes:
+
+   -  Allowing the server to force the client to demonstrate
+      reachability at their apparent network address (thus providing a
+      measure of DoS protection).  This is primarily useful for non-
+      connection-oriented transports (see [RFC6347] for an example of
+      this).
+
+   -  Allowing the server to offload state to the client, thus allowing
+      it to send a HelloRetryRequest without storing any state.  The
+      server does this by pickling that post-ClientHello hash state into
+      the cookie (protected with some suitable integrity algorithm).
+
+   When sending a HelloRetryRequest, the server MAY provide a "cookie"
+   extension to the client (this is an exception to the usual rule that
+   the only extensions that may be sent are those that appear in the
+   ClientHello).  When sending the new ClientHello, the client MUST echo
+   the value of the extension.  Clients MUST NOT use cookies in
+   subsequent connections.
+
+6.3.2.2.  Signature Algorithms
 
    The client uses the "signature_algorithms" extension to indicate to
    the server which signature algorithms may be used in digital
    signatures.
+
+
+
+
+
+Rescorla                Expires November 23, 2016              [Page 48]
+
+Internet-Draft                     TLS                          May 2016
+
 
    Clients which offer one or more cipher suites which use certificate
    authentication (i.e., any non-PSK cipher suite) MUST send the
@@ -2665,30 +2699,6 @@ Internet-Draft                     TLS                          May 2016
 
    The "extension_data" field of this extension contains a
    "supported_signature_algorithms" value:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 48]
-
-Internet-Draft                     TLS                          May 2016
-
 
       enum {
           /* RSASSA-PKCS-v1_5 algorithms */
@@ -2728,6 +2738,14 @@ Internet-Draft                     TLS                          May 2016
    takes as input an arbitrary-length message, rather than a digest.
    Algorithms which traditionally act on a digest should be defined in
    TLS to first hash the input with a specified hash function and then
+
+
+
+Rescorla                Expires November 23, 2016              [Page 49]
+
+Internet-Draft                     TLS                          May 2016
+
+
    proceed as usual.  The code point groups listed above have the
    following meanings:
 
@@ -2737,14 +2755,6 @@ Internet-Draft                     TLS                          May 2016
       values refer solely to signatures which appear in certificates
       (see Section 6.3.4.1.1) and are not defined for use in signed TLS
       handshake messages (see Section 4.8.1).
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 49]
-
-Internet-Draft                     TLS                          May 2016
-
 
    ECDSA algorithms
       Indicates a signature algorithm using ECDSA [ECDSA], the
@@ -2785,6 +2795,13 @@ Internet-Draft                     TLS                          May 2016
    advertised as being supported in the "signature_algorithms"
    extension.
 
+
+
+Rescorla                Expires November 23, 2016              [Page 50]
+
+Internet-Draft                     TLS                          May 2016
+
+
    Note that TLS 1.2 defines this extension differently.  TLS 1.3
    implementations willing to negotiate TLS 1.2 MUST behave in
    accordance with the requirements of [RFC5246] when negotiating that
@@ -2794,14 +2811,6 @@ Internet-Draft                     TLS                          May 2016
 
    -  In TLS 1.2, the extension contained hash/signature pairs.  The
       pairs are encoded in two octets, so SignatureScheme values have
-
-
-
-Rescorla                Expires November 23, 2016              [Page 50]
-
-Internet-Draft                     TLS                          May 2016
-
-
       been allocated to align with TLS 1.2's encoding.  Some legacy
       pairs are left unallocated.  These algorithms are deprecated as of
       TLS 1.3.  They MUST NOT be offered or negotiated by any
@@ -2812,7 +2821,7 @@ Internet-Draft                     TLS                          May 2016
       signature pairs.  However, the old semantics did not constrain the
       signing curve.
 
-6.3.2.2.  Negotiated Groups
+6.3.2.3.  Negotiated Groups
 
    When sent by the client, the "supported_groups" extension indicates
    the named groups which the client supports, ordered from most
@@ -2822,7 +2831,7 @@ Internet-Draft                     TLS                          May 2016
    "elliptic_curves" and only contained elliptic curve groups.  See
    [RFC4492] and [I-D.ietf-tls-negotiated-ff-dhe].  This extension was
    also used to negotiate ECDSA curves.  Signature algorithms are now
-   negotiated independently (see Section 6.3.2.1).
+   negotiated independently (see Section 6.3.2.2).
 
    Clients which offer one or more (EC)DHE cipher suites MUST send at
    least one supported NamedGroup value and servers MUST NOT negotiate
@@ -2839,15 +2848,6 @@ Internet-Draft                     TLS                          May 2016
 
    The "extension_data" field of this extension contains a
    "NamedGroupList" value:
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2914,7 +2914,7 @@ Rescorla                Expires November 23, 2016              [Page 52]
 Internet-Draft                     TLS                          May 2016
 
 
-6.3.2.3.  Key Share
+6.3.2.4.  Key Share
 
    The "key_share" extension contains the endpoint's cryptographic
    parameters for non-PSK key establishment methods (currently DHE or
@@ -2938,9 +2938,9 @@ Internet-Draft                     TLS                          May 2016
 
    group
       The named group for the key being exchanged.  Finite Field Diffie-
-      Hellman [DH] parameters are described in Section 6.3.2.3.1;
+      Hellman [DH] parameters are described in Section 6.3.2.4.1;
       Elliptic Curve Diffie-Hellman parameters are described in
-      Section 6.3.2.3.2.
+      Section 6.3.2.4.2.
 
    key_exchange
       Key exchange information.  The contents of this field are
@@ -3005,7 +3005,7 @@ Internet-Draft                     TLS                          May 2016
    [[TODO: Recommendation about what the client offers.  Presumably
    which integer DH groups and which curves.]]
 
-6.3.2.3.1.  Diffie-Hellman Parameters
+6.3.2.4.1.  Diffie-Hellman Parameters
 
    Diffie-Hellman [DH] parameters for both clients and servers are
    encoded in the opaque key_exchange field of a KeyShareEntry in a
@@ -3026,7 +3026,7 @@ Rescorla                Expires November 23, 2016              [Page 54]
 Internet-Draft                     TLS                          May 2016
 
 
-6.3.2.3.2.  ECDHE Parameters
+6.3.2.4.2.  ECDHE Parameters
 
    ECDHE parameters for both clients and servers are encoded in the the
    opaque key_exchange field of a KeyShareEntry in a KeyShare structure.
@@ -3048,7 +3048,7 @@ Internet-Draft                     TLS                          May 2016
    1.3 removes this feature in favor of a single point format for each
    curve.
 
-6.3.2.4.  Pre-Shared Key Extension
+6.3.2.5.  Pre-Shared Key Extension
 
    The "pre_shared_key" extension is used to indicate the identity of
    the pre-shared key to be used with a given handshake in association
@@ -3116,7 +3116,7 @@ Internet-Draft                     TLS                          May 2016
    client MUST generate a fatal "unknown_psk_identity" alert and close
    the connection.
 
-6.3.2.5.  OCSP Status Extensions
+6.3.2.6.  OCSP Status Extensions
 
    [RFC6066] and [RFC6961] provide extensions to negotiate the server
    sending OCSP responses to the client.  In TLS 1.2 and below, the
@@ -3141,7 +3141,7 @@ Internet-Draft                     TLS                          May 2016
    the existing behavior for SignedCertificateTimestamps [RFC6962], and
    is more easily extensible in the handshake state machine.
 
-6.3.2.6.  Early Data Indication
+6.3.2.7.  Early Data Indication
 
    When PSK resumption is used, the client can send application data in
    its first flight of messages.  If the client opts to do so, it MUST
@@ -3217,7 +3217,7 @@ Internet-Draft                     TLS                          May 2016
 
    In addition, it MUST validate that the ticket_age is within a small
    tolerance of the time since the ticket was issued (see
-   Section 6.3.2.6.2).
+   Section 6.3.2.7.2).
 
    If any of these checks fail, the server MUST NOT respond with the
    extension and must discard all the remaining first flight data (thus
@@ -3250,7 +3250,7 @@ Rescorla                Expires November 23, 2016              [Page 58]
 Internet-Draft                     TLS                          May 2016
 
 
-6.3.2.6.1.  Processing Order
+6.3.2.7.1.  Processing Order
 
    Clients are permitted to "stream" 0-RTT data until they receive the
    server's Finished, only then sending the "end_of_early_data" alert.
@@ -3259,7 +3259,7 @@ Internet-Draft                     TLS                          May 2016
    ServerHello, rather than waiting for the client's "end_of_early_data"
    alert.
 
-6.3.2.6.2.  Replay Properties
+6.3.2.7.2.  Replay Properties
 
    As noted in Section 6.2.3, TLS provides only a limited inter-
    connection mechanism for replay protection for data sent by the
@@ -3293,7 +3293,7 @@ Internet-Draft                     TLS                          May 2016
    for replay.  In this case, it is better to reject early data than to
    risk greater exposure to replay attacks.
 
-6.3.2.7.  Ticket Age
+6.3.2.8.  Ticket Age
 
       struct {
           uint32 ticket_age;
@@ -3663,7 +3663,7 @@ Internet-Draft                     TLS                          May 2016
    All certificates provided by the server MUST be signed by a signature
    algorithm that appears in the "signature_algorithms" extension
    provided by the client, if they are able to provide such a chain (see
-   Section 6.3.2.1).  Certificates that are self-signed or certificates
+   Section 6.3.2.2).  Certificates that are self-signed or certificates
    that are expected to be trust anchors are not validated as part of
    the chain and therefore MAY be signed with any algorithm.
 
@@ -3816,7 +3816,7 @@ Internet-Draft                     TLS                          May 2016
       If sent by a server, the signature algorithm MUST be one offered
       in the client's "signature_algorithms" extension unless no valid
       certificate chain can be produced without unsupported algorithms
-      (see Section 6.3.2.1).  Note that there is a possibility for
+      (see Section 6.3.2.2).  Note that there is a possibility for
       inconsistencies here.  For instance, the client might offer
       ECDHE_ECDSA key exchange but omit any ECDSA and EdDSA values from
       its "signature_algorithms" extension.  In order to negotiate
@@ -3943,7 +3943,7 @@ Internet-Draft                     TLS                          May 2016
 
    The client MAY use this PSK for future handshakes by including the
    ticket value in the "pre_shared_key" extension in its ClientHello
-   (Section 6.3.2.4) and supplying a suitable PSK cipher suite.  Servers
+   (Section 6.3.2.5) and supplying a suitable PSK cipher suite.  Servers
    may send multiple tickets on a single connection, for instance after
    post-handshake authentication.  For handshakes that do not use a
    resumption_psk, the resumption_context is a string of L zeroes.
@@ -4399,15 +4399,17 @@ Internet-Draft                     TLS                          May 2016
    otherwise, a TLS-compliant application MUST implement the following
    TLS extensions:
 
-   -  Signature Algorithms ("signature_algorithms"; Section 6.3.2.1)
+   -  Signature Algorithms ("signature_algorithms"; Section 6.3.2.2)
 
-   -  Negotiated Groups ("supported_groups"; Section 6.3.2.2)
+   -  Negotiated Groups ("supported_groups"; Section 6.3.2.3)
 
-   -  Key Share ("key_share"; Section 6.3.2.3)
+   -  Key Share ("key_share"; Section 6.3.2.4)
 
-   -  Pre-Shared Key ("pre_shared_key"; Section 6.3.2.4)
+   -  Pre-Shared Key ("pre_shared_key"; Section 6.3.2.5)
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
+
+   -  Cookie ("cookie"; Section 6.3.2.1)
 
    All implementations MUST send and use these extensions when offering
    applicable cipher suites:
@@ -4415,8 +4417,6 @@ Internet-Draft                     TLS                          May 2016
    -  "signature_algorithms" is REQUIRED for certificate authenticated
       cipher suites
 
-   -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
-      cipher suites
 
 
 
@@ -4426,7 +4426,12 @@ Rescorla                Expires November 23, 2016              [Page 79]
 Internet-Draft                     TLS                          May 2016
 
 
+   -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
+      cipher suites
+
    -  "pre_shared_key" is REQUIRED for PSK cipher suites
+
+   -  "cookie" is REQUIRED for all cipher suites.
 
    When negotiating use of applicable cipher suites, endpoints MUST
    abort the connection with a "missing_extension" alert if the required
@@ -4469,11 +4474,6 @@ Internet-Draft                     TLS                          May 2016
       Use [RFC2434].  IANA [SHALL add/has added] a "Recommended" column
       to the cipher suite registry.  All cipher suites listed in
       Appendix A.4 are marked as "Yes".  All other cipher suites are
-      marked as "No".  IANA [SHALL add/has added] add a note to this
-      column reading:
-
-         Cipher suites marked as "Yes" are those allocated via Standards
-         Track RFCs.  Cipher suites marked as "No" are not; cipher
 
 
 
@@ -4482,6 +4482,11 @@ Rescorla                Expires November 23, 2016              [Page 80]
 Internet-Draft                     TLS                          May 2016
 
 
+      marked as "No".  IANA [SHALL add/has added] add a note to this
+      column reading:
+
+         Cipher suites marked as "Yes" are those allocated via Standards
+         Track RFCs.  Cipher suites marked as "No" are not; cipher
          suites marked "No" range from "good" to "bad" from a
          cryptographic standpoint.
 
@@ -4519,17 +4524,12 @@ Internet-Draft                     TLS                          May 2016
       table below.  This table has been generated by marking Standards
       Track RFCs as "Yes" and all others as "No".
 
-   +-----------------------------------------+-------------+-----------+
-   | Extension                               | Recommended |   TLS 1.3 |
-   +-----------------------------------------+-------------+-----------+
-   | server_name [RFC6066]                   |         Yes | Encrypted |
-   |                                         |             |           |
-   | max_fragment_length [RFC6066]           |         Yes | Encrypted |
-   |                                         |             |           |
-   | client_certificate_url [RFC6066]        |         Yes | Encrypted |
-   |                                         |             |           |
-   | trusted_ca_keys [RFC6066]               |         Yes | Encrypted |
-   |                                         |             |           |
+   +-------------------------------+-----------+-----------------------+
+   | Extension                     | Recommend |               TLS 1.3 |
+   |                               |        ed |                       |
+   +-------------------------------+-----------+-----------------------+
+   | server_name [RFC6066]         |       Yes |             Encrypted |
+   |                               |           |                       |
 
 
 
@@ -4538,54 +4538,54 @@ Rescorla                Expires November 23, 2016              [Page 81]
 Internet-Draft                     TLS                          May 2016
 
 
-   | truncated_hmac [RFC6066]                |         Yes |        No |
-   |                                         |             |           |
-   | status_request [RFC6066]                |         Yes |        No |
-   |                                         |             |           |
-   | user_mapping [RFC4681]                  |         Yes | Encrypted |
-   |                                         |             |           |
-   | client_authz [RFC5878]                  |          No | Encrypted |
-   |                                         |             |           |
-   | server_authz [RFC5878]                  |          No | Encrypted |
-   |                                         |             |           |
-   | cert_type [RFC6091]                     |         Yes | Encrypted |
-   |                                         |             |           |
-   | supported_groups [RFC-ietf-tls-         |         Yes | Encrypted |
-   | negotiated-ff-dhe]                      |             |           |
-   |                                         |             |           |
-   | ec_point_formats [RFC4492]              |         Yes |        No |
-   |                                         |             |           |
-   | srp [RFC5054]                           |          No |        No |
-   |                                         |             |           |
-   | signature_algorithms [RFC5246]          |         Yes |    Client |
-   |                                         |             |           |
-   | use_srtp [RFC5764]                      |         Yes | Encrypted |
-   |                                         |             |           |
-   | heartbeat [RFC6520]                     |         Yes | Encrypted |
-   |                                         |             |           |
-   | application_layer_protocol_negotiation  |         Yes | Encrypted |
-   | [RFC7301]                               |             |           |
-   |                                         |             |           |
-   | status_request_v2 [RFC6961]             |         Yes | Encrypted |
-   |                                         |             |           |
-   | signed_certificate_timestamp [RFC6962]  |          No | Encrypted |
-   |                                         |             |           |
-   | client_certificate_type [RFC7250]       |         Yes | Encrypted |
-   |                                         |             |           |
-   | server_certificate_type [RFC7250]       |         Yes | Encrypted |
-   |                                         |             |           |
-   | padding [RFC7685]                       |         Yes |    Client |
-   |                                         |             |           |
-   | encrypt_then_mac [RFC7366]              |         Yes |        No |
-   |                                         |             |           |
-   | extended_master_secret [RFC7627]        |         Yes |        No |
-   |                                         |             |           |
-   | SessionTicket TLS [RFC4507]             |         Yes |        No |
-   |                                         |             |           |
-   | renegotiation_info [RFC5746]            |         Yes |        No |
-   |                                         |             |           |
-   | key_share [[this document]]             |         Yes |     Clear |
-   |                                         |             |           |
+   | max_fragment_length [RFC6066] |       Yes |             Encrypted |
+   |                               |           |                       |
+   | client_certificate_url        |       Yes |             Encrypted |
+   | [RFC6066]                     |           |                       |
+   |                               |           |                       |
+   | trusted_ca_keys [RFC6066]     |       Yes |             Encrypted |
+   |                               |           |                       |
+   | truncated_hmac [RFC6066]      |       Yes |                    No |
+   |                               |           |                       |
+   | status_request [RFC6066]      |       Yes |                    No |
+   |                               |           |                       |
+   | user_mapping [RFC4681]        |       Yes |             Encrypted |
+   |                               |           |                       |
+   | client_authz [RFC5878]        |        No |             Encrypted |
+   |                               |           |                       |
+   | server_authz [RFC5878]        |        No |             Encrypted |
+   |                               |           |                       |
+   | cert_type [RFC6091]           |       Yes |             Encrypted |
+   |                               |           |                       |
+   | supported_groups [RFC-ietf-   |       Yes |             Encrypted |
+   | tls-negotiated-ff-dhe]        |           |                       |
+   |                               |           |                       |
+   | ec_point_formats [RFC4492]    |       Yes |                    No |
+   |                               |           |                       |
+   | srp [RFC5054]                 |        No |                    No |
+   |                               |           |                       |
+   | signature_algorithms          |       Yes |                Client |
+   | [RFC5246]                     |           |                       |
+   |                               |           |                       |
+   | use_srtp [RFC5764]            |       Yes |             Encrypted |
+   |                               |           |                       |
+   | heartbeat [RFC6520]           |       Yes |             Encrypted |
+   |                               |           |                       |
+   | application_layer_protocol_ne |       Yes |             Encrypted |
+   | gotiation [RFC7301]           |           |                       |
+   |                               |           |                       |
+   | status_request_v2 [RFC6961]   |       Yes |             Encrypted |
+   |                               |           |                       |
+   | signed_certificate_timestamp  |        No |             Encrypted |
+   | [RFC6962]                     |           |                       |
+   |                               |           |                       |
+   | client_certificate_type       |       Yes |             Encrypted |
+   | [RFC7250]                     |           |                       |
+   |                               |           |                       |
+   | server_certificate_type       |       Yes |             Encrypted |
+   | [RFC7250]                     |           |                       |
+   |                               |           |                       |
+   | padding [RFC7685]             |       Yes |                Client |
 
 
 
@@ -4594,12 +4594,28 @@ Rescorla                Expires November 23, 2016              [Page 82]
 Internet-Draft                     TLS                          May 2016
 
 
-   | pre_shared_key [[this document]]        |         Yes |     Clear |
-   |                                         |             |           |
-   | early_data [[this document]]            |         Yes |     Clear |
-   |                                         |             |           |
-   | ticket_age [[this document]]            |         Yes |     Early |
-   +-----------------------------------------+-------------+-----------+
+   |                               |           |                       |
+   | encrypt_then_mac [RFC7366]    |       Yes |                    No |
+   |                               |           |                       |
+   | extended_master_secret        |       Yes |                    No |
+   | [RFC7627]                     |           |                       |
+   |                               |           |                       |
+   | SessionTicket TLS [RFC4507]   |       Yes |                    No |
+   |                               |           |                       |
+   | renegotiation_info [RFC5746]  |       Yes |                    No |
+   |                               |           |                       |
+   | key_share [[this document]]   |       Yes |                 Clear |
+   |                               |           |                       |
+   | pre_shared_key [[this         |       Yes |                 Clear |
+   | document]]                    |           |                       |
+   |                               |           |                       |
+   | early_data [[this document]]  |       Yes |                 Clear |
+   |                               |           |                       |
+   | ticket_age [[this document]]  |       Yes |                 Early |
+   |                               |           |                       |
+   | cookie [[this document]]      |       Yes | Encrypted/HelloRetryR |
+   |                               |           |                equest |
+   +-------------------------------+-----------+-----------------------+
 
    In addition, this document defines two new registries to be
    maintained by IANA
@@ -4609,7 +4625,7 @@ Internet-Draft                     TLS                          May 2016
       [RFC2434].  Values with the first byte 255 (decimal) are reserved
       for Private Use [RFC2434].  This registry SHALL have a
       "Recommended" column.  The registry [shall be/ has been] initially
-      populated with the values described in Section 6.3.2.1.  The
+      populated with the values described in Section 6.3.2.2.  The
       following values SHALL be marked as "Recommended":
       ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256,
       rsa_pss_sha384, rsa_pss_sha512, ed25519.
@@ -4626,6 +4642,14 @@ Internet-Draft                     TLS                          May 2016
               Cryptography", IEEE Transactions on Information Theory,
               V.IT-22 n.6 , June 1977.
 
+
+
+
+Rescorla                Expires November 23, 2016              [Page 83]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [I-D.ietf-tls-chacha20-poly1305]
               Langley, A., Chang, W., Mavrogiannopoulos, N.,
               Strombergson, J., and S. Josefsson, "ChaCha20-Poly1305
@@ -4637,18 +4661,6 @@ Internet-Draft                     TLS                          May 2016
               Josefsson, S. and I. Liusvaara, "Edwards-curve Digital
               Signature Algorithm (EdDSA)", draft-irtf-cfrg-eddsa-05
               (work in progress), March 2016.
-
-
-
-
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 83]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [I-D.mattsson-tls-ecdhe-psk-aead]
               Mattsson, J. and D. Migault, "ECDHE_PSK with AES-GCM and
@@ -4687,6 +4699,13 @@ Internet-Draft                     TLS                          May 2016
               DOI 10.17487/RFC5288, August 2008,
               <http://www.rfc-editor.org/info/rfc5288>.
 
+
+
+Rescorla                Expires November 23, 2016              [Page 84]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [RFC5289]  Rescorla, E., "TLS Elliptic Curve Cipher Suites with SHA-
               256/384 and AES Galois Counter Mode (GCM)", RFC 5289,
               DOI 10.17487/RFC5289, August 2008,
@@ -4696,15 +4715,6 @@ Internet-Draft                     TLS                          May 2016
               256/384 and AES Galois Counter Mode", RFC 5487,
               DOI 10.17487/RFC5487, March 2009,
               <http://www.rfc-editor.org/info/rfc5487>.
-
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 84]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [RFC5705]  Rescorla, E., "Keying Material Exporters for Transport
               Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
@@ -4744,6 +4754,14 @@ Internet-Draft                     TLS                          May 2016
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
+
+
+
+Rescorla                Expires November 23, 2016              [Page 85]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
               CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
               TLS", RFC 7251, DOI 10.17487/RFC7251, June 2014,
@@ -4752,15 +4770,6 @@ Internet-Draft                     TLS                          May 2016
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
               2016, <http://www.rfc-editor.org/info/rfc7748>.
-
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 85]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [SHS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Secure Hash Standard", NIST FIPS
@@ -4800,15 +4809,6 @@ Internet-Draft                     TLS                          May 2016
               (TLS) Cached Information Extension", draft-ietf-tls-
               cached-info-23 (work in progress), May 2016.
 
-   [I-D.ietf-tls-negotiated-ff-dhe]
-              Gillmor, D., "Negotiated Finite Field Diffie-Hellman
-              Ephemeral Parameters for TLS", draft-ietf-tls-negotiated-
-              ff-dhe-10 (work in progress), June 2015.
-
-   [IEEE1363]
-              IEEE, "Standard Specifications for Public Key
-              Cryptography", IEEE 1363 , 2000.
-
 
 
 
@@ -4817,6 +4817,15 @@ Rescorla                Expires November 23, 2016              [Page 86]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [I-D.ietf-tls-negotiated-ff-dhe]
+              Gillmor, D., "Negotiated Finite Field Diffie-Hellman
+              Ephemeral Parameters for TLS", draft-ietf-tls-negotiated-
+              ff-dhe-10 (work in progress), June 2015.
+
+   [IEEE1363]
+              IEEE, "Standard Specifications for Public Key
+              Cryptography", IEEE 1363 , 2000.
 
    [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
               Syntax Standard, version 1.5", November 1993.
@@ -4856,6 +4865,15 @@ Internet-Draft                     TLS                          May 2016
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <http://www.rfc-editor.org/info/rfc4303>.
 
+
+
+
+
+Rescorla                Expires November 23, 2016              [Page 87]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.1", RFC 4346,
               DOI 10.17487/RFC4346, April 2006,
@@ -4865,14 +4883,6 @@ Internet-Draft                     TLS                          May 2016
               and T. Wright, "Transport Layer Security (TLS)
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 87]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
               Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
@@ -4912,6 +4922,14 @@ Internet-Draft                     TLS                          May 2016
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <http://www.rfc-editor.org/info/rfc5116>.
 
+
+
+
+Rescorla                Expires November 23, 2016              [Page 88]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
               DOI 10.17487/RFC5246, August 2008,
@@ -4921,14 +4939,6 @@ Internet-Draft                     TLS                          May 2016
               "Transport Layer Security (TLS) Renegotiation Indication
               Extension", RFC 5746, DOI 10.17487/RFC5746, February 2010,
               <http://www.rfc-editor.org/info/rfc5746>.
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 88]
-
-Internet-Draft                     TLS                          May 2016
-
 
    [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
               for Establishing a Secure Real-time Transport Protocol
@@ -4959,25 +4969,15 @@ Internet-Draft                     TLS                          May 2016
               (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
               2011, <http://www.rfc-editor.org/info/rfc6176>.
 
+   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
+              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
+              January 2012, <http://www.rfc-editor.org/info/rfc6347>.
+
    [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
               Layer Security (TLS) and Datagram Transport Layer Security
               (DTLS) Heartbeat Extension", RFC 6520,
               DOI 10.17487/RFC6520, February 2012,
               <http://www.rfc-editor.org/info/rfc6520>.
-
-   [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Semantics and Content", RFC 7231,
-              DOI 10.17487/RFC7231, June 2014,
-              <http://www.rfc-editor.org/info/rfc7231>.
-
-   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
-              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
-              Transport Layer Security (TLS) and Datagram Transport
-              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
-              June 2014, <http://www.rfc-editor.org/info/rfc7250>.
-
-
-
 
 
 
@@ -4985,6 +4985,17 @@ Rescorla                Expires November 23, 2016              [Page 89]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              RFC 7230, DOI 10.17487/RFC7230, June 2014,
+              <http://www.rfc-editor.org/info/rfc7230>.
+
+   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
+              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
+              Transport Layer Security (TLS) and Datagram Transport
+              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
+              June 2014, <http://www.rfc-editor.org/info/rfc7250>.
 
    [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
               "Transport Layer Security (TLS) Application-Layer Protocol
@@ -5020,6 +5031,17 @@ Internet-Draft                     TLS                          May 2016
               Cryptosystems", Communications of the ACM v. 21, n. 2, pp.
               120-126., February 1978.
 
+
+
+
+
+
+
+Rescorla                Expires November 23, 2016              [Page 90]
+
+Internet-Draft                     TLS                          May 2016
+
+
    [SLOTH]    Bhargavan, K. and G. Leurent, "Transcript Collision
               Attacks: Breaking Authentication in TLS, IKE, and SSH",
               Network and Distributed System Security Symposium (NDSS
@@ -5033,34 +5055,12 @@ Internet-Draft                     TLS                          May 2016
    [TIMING]   Boneh, D. and D. Brumley, "Remote timing attacks are
               practical", USENIX Security Symposium, 2003.
 
-
-
-
-
-Rescorla                Expires November 23, 2016              [Page 90]
-
-Internet-Draft                     TLS                          May 2016
-
-
    [X501]     "Information Technology - Open Systems Interconnection -
               The Directory: Models", ITU-T X.501, 1993.
 
 12.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -5298,6 +5298,7 @@ Internet-Draft                     TLS                          May 2016
           pre_shared_key(41),
           early_data(42),
           ticket_age(43),
+          cookie (44),
           (65535)
       } ExtensionType;
 
@@ -5313,7 +5314,6 @@ Internet-Draft                     TLS                          May 2016
 
               case server:
                   KeyShareEntry server_share;
-          }
 
 
 
@@ -5322,6 +5322,7 @@ Rescorla                Expires November 23, 2016              [Page 95]
 Internet-Draft                     TLS                          May 2016
 
 
+          }
       } KeyShare;
 
       opaque psk_identity<0..2^16-1>;
@@ -5350,14 +5351,13 @@ Internet-Draft                     TLS                          May 2016
           uint32 ticket_age;
       } TicketAge;
 
-A.3.1.1.  Signature Algorithm Extension
+A.3.1.1.  Cookie Extension
 
+      struct {
+          opaque cookie<0..255>;
+      } Cookie;
 
-
-
-
-
-
+A.3.1.2.  Signature Algorithm Extension
 
 
 
@@ -5415,7 +5415,7 @@ Internet-Draft                     TLS                          May 2016
 
       SignatureScheme supported_signature_algorithms<2..2^16-2>;
 
-A.3.1.2.  Named Group Extension
+A.3.1.3.  Named Group Extension
 
 
 
@@ -5466,7 +5466,7 @@ Internet-Draft                     TLS                          May 2016
    for interoperability with all currently deployed and properly
    configured TLS implementations.
 
-A.3.1.3.  Deprecated Extensions
+A.3.1.4.  Deprecated Extensions
 
    The following extensions are no longer applicable to TLS 1.3,
    although TLS 1.3 clients MAY send them if they are willing to
@@ -6033,8 +6033,8 @@ Internet-Draft                     TLS                          May 2016
       rather than requiring an exact match?
 
    -  Do you ignore unrecognized cipher suites (see Section 6.3.1.1),
-      named groups (see Section 6.3.2.2), and signature algorithms (see
-      Section 6.3.2.1)?
+      named groups (see Section 6.3.2.3), and signature algorithms (see
+      Section 6.3.2.2)?
 
    Cryptographic details:
 
@@ -6065,7 +6065,7 @@ Internet-Draft                     TLS                          May 2016
       the ECDSA "k" parameter, and other security-critical values?
 
    -  Do you zero-pad Diffie-Hellman public key values to the group size
-      (see Section 6.3.2.3.1)?
+      (see Section 6.3.2.4.1)?
 
 B.5.  Client Tracking Prevention
 
@@ -6074,7 +6074,7 @@ B.5.  Client Tracking Prevention
    different connections.  Servers that issue session tickets SHOULD
    offer at least as many session tickets as the number of connections
    that a client might use; for example, a web browser using HTTP/1.1
-   [RFC7231] might open six connections to a server.  Servers SHOULD
+   [RFC7230] might open six connections to a server.  Servers SHOULD
    issue new session tickets with every connection.  This ensures that
    clients are always able to use a new session ticket when creating a
    new connection.
