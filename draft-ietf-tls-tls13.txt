@@ -314,6 +314,8 @@ Internet-Draft                     TLS                          May 2016
 
    -  Remove the redundant length fields in KeyShareEntry.
 
+   -  Define a cookie field for HRR.
+
    draft-12
 
    -  Provide a list of the PSK cipher suites.
@@ -328,8 +330,6 @@ Internet-Draft                     TLS                          May 2016
       algorithm, and curve together.  This is backwards compatible.
 
    -  Make ticket lifetime mandatory and limit it to a week.
-
-
 
 
 
