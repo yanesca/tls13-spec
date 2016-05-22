@@ -291,6 +291,8 @@ Internet-Draft                     TLS                          May 2016
 
 1.2.  Major Differences from TLS 1.2
 
+   draft-14 - Allow cookies to be longer.
+
    draft-13
 
    -  Allow server to send SupportedGroups.
@@ -329,14 +331,14 @@ Internet-Draft                     TLS                          May 2016
    -  Revise signature algorithm negotiation to group hash, signature
       algorithm, and curve together.  This is backwards compatible.
 
-   -  Make ticket lifetime mandatory and limit it to a week.
-
 
 
 Rescorla                Expires November 23, 2016               [Page 6]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Make ticket lifetime mandatory and limit it to a week.
 
    -  Make the purpose strings lower-case.  This matches how people are
       implementing for interop.
@@ -385,14 +387,14 @@ Internet-Draft                     TLS                          May 2016
 
    -  Add support for per-record padding.
 
-   -  Switch to encrypted record ContentType.
-
 
 
 Rescorla                Expires November 23, 2016               [Page 7]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Switch to encrypted record ContentType.
 
    -  Change HKDF labeling to include protocol version and value
       lengths.
@@ -440,8 +442,6 @@ Internet-Draft                     TLS                          May 2016
 
    draft-06
 
-   -  Prohibit RC4 negotiation for backwards compatibility.
-
 
 
 
@@ -449,6 +449,8 @@ Rescorla                Expires November 23, 2016               [Page 8]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Prohibit RC4 negotiation for backwards compatibility.
 
    -  Freeze & deprecate record layer version field.
 
@@ -497,14 +499,14 @@ Internet-Draft                     TLS                          May 2016
 
    -  Remove custom DHE groups.
 
-   -  Remove support for compression.
-
 
 
 Rescorla                Expires November 23, 2016               [Page 9]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   -  Remove support for compression.
 
    -  Remove support for static RSA and DH key exchange.
 
@@ -552,8 +554,6 @@ Internet-Draft                     TLS                          May 2016
 
    This document is not intended to supply any details of service
    definition or of interface definition, although it does cover select
-   areas of policy as they are required for the maintenance of solid
-   security.
 
 
 
@@ -561,6 +561,9 @@ Rescorla                Expires November 23, 2016              [Page 10]
 
 Internet-Draft                     TLS                          May 2016
 
+
+   areas of policy as they are required for the maintenance of solid
+   security.
 
 4.  Presentation Language
 
@@ -607,9 +610,6 @@ Internet-Draft                     TLS                          May 2016
    length vector of type T is
 
       T T'[n];
-
-
-
 
 
 
@@ -2652,7 +2652,7 @@ Internet-Draft                     TLS                          May 2016
 6.3.2.1.  Cookie
 
       struct {
-          opaque cookie<0..255>;
+          opaque cookie<0..2^16-1>;
       } Cookie;
 
    Cookies serve two primary purposes:
@@ -5354,7 +5354,7 @@ Internet-Draft                     TLS                          May 2016
 A.3.1.1.  Cookie Extension
 
       struct {
-          opaque cookie<0..255>;
+          opaque cookie<0..2^16-1>;
       } Cookie;
 
 A.3.1.2.  Signature Algorithm Extension
