@@ -2128,7 +2128,7 @@ server_finished_key =
  } TicketExtension;
 
  enum {
-   allow_early_data(1)
+   allow_early_data(1),
    allow_dhe_resumption(2),
    allow_psk_resumption(4)
  } TicketFlags;
@@ -3374,7 +3374,7 @@ HKDF-Expand-Label(exporter_secret,
  } TicketExtension;
 
  enum {
-   allow_early_data(1)
+   allow_early_data(1),
    allow_dhe_resumption(2),
    allow_psk_resumption(4)
  } TicketFlags;
