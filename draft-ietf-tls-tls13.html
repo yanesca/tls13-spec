@@ -2098,7 +2098,7 @@ server_finished_key =
 <pre>
    verify_data =
        HMAC(finished_key, Hash(
-              Handshake Context + Certificate* + CertificateVerify* 
+              Handshake Context + Certificate* + CertificateVerify*
            ) + Hash(resumption_context)
            )
 
@@ -2132,7 +2132,7 @@ server_finished_key =
    allow_dhe_resumption(2),
    allow_psk_resumption(4)
  } TicketFlags;
- 
+
  struct {
      uint32 ticket_lifetime;
      uint32 flags;
@@ -2179,7 +2179,7 @@ server_finished_key =
 <p id="rfc.section.7.1.p.1">The TLS handshake establishes one or more input secrets which are combined to create the actual working keying material, as detailed below. The key derivation process makes use of the following functions, based on HKDF <a href="#RFC5869">[RFC5869]</a>:</p>
 <pre>
   HKDF-Extract(Salt, IKM) as defined in {{RFC5869}}.
-  
+
   HKDF-Expand-Label(Secret, Label, Messages, Length) =
        HKDF-Expand(Secret, HkdfLabel, Length)
 
@@ -2222,7 +2222,7 @@ server_finished_key =
                  v
            Early Secret  --&gt; Derive-Secret(., "early traffic secret",
                  |                         ClientHello)
-                 |                         = early_traffic_secret 
+                 |                         = early_traffic_secret
                  v
 (EC)DHE -&gt; HKDF-Extract
                  |
@@ -2240,10 +2240,10 @@ server_finished_key =
                  +---------&gt; Derive-Secret(., "application traffic secret",
                  |                         ClientHello...Server Finished)
                  |                         = traffic_secret_0
-                 |                        
+                 |
                  +---------&gt; Derive-Secret(., "exporter master secret",
                  |                         ClientHello...Client Finished)
-                 |                         = exporter_secret       
+                 |                         = exporter_secret
                  |
                  +---------&gt; Derive-Secret(., "resumption master secret",
                                            ClientHello...Client Finished)
@@ -3378,7 +3378,7 @@ HKDF-Expand-Label(exporter_secret,
    allow_dhe_resumption(2),
    allow_psk_resumption(4)
  } TicketFlags;
- 
+
  struct {
      uint32 ticket_lifetime;
      uint32 flags;
