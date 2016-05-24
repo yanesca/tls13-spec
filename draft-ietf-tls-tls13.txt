@@ -4287,13 +4287,13 @@ Internet-Draft                     TLS                          May 2016
                  +------------------+--------------------+
                  | Key Type         | Purpose            |
                  +------------------+--------------------+
-                 | Client Write Key | "client write key" |
+                 | client_write_key | "client write key" |
                  |                  |                    |
-                 | Server Write Key | "server write key" |
+                 | server_write_key | "server write key" |
                  |                  |                    |
-                 | Client Write IV  | "client write iv"  |
+                 | client_write_iv  | "client write iv"  |
                  |                  |                    |
-                 | Server Write IV  | "server write iv"  |
+                 | server_write_iv  | "server write iv"  |
                  +------------------+--------------------+
 
    All the traffic keying material is recomputed whenever the underlying
