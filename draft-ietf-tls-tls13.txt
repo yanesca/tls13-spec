@@ -4650,13 +4650,6 @@ Rescorla                 Expires January 4, 2017               [Page 83]
 Internet-Draft                     TLS                         July 2016
 
 
-   [I-D.ietf-tls-chacha20-poly1305]
-              Langley, A., Chang, W., Mavrogiannopoulos, N.,
-              Strombergson, J., and S. Josefsson, "ChaCha20-Poly1305
-              Cipher Suites for Transport Layer Security (TLS)", draft-
-              ietf-tls-chacha20-poly1305-04 (work in progress), December
-              2015.
-
    [I-D.irtf-cfrg-eddsa]
               Josefsson, S. and I. Liusvaara, "Edwards-curve Digital
               Signature Algorithm (EdDSA)", draft-irtf-cfrg-eddsa-05
@@ -4699,17 +4692,19 @@ Internet-Draft                     TLS                         July 2016
               DOI 10.17487/RFC5288, August 2008,
               <http://www.rfc-editor.org/info/rfc5288>.
 
+   [RFC5289]  Rescorla, E., "TLS Elliptic Curve Cipher Suites with SHA-
+              256/384 and AES Galois Counter Mode (GCM)", RFC 5289,
+              DOI 10.17487/RFC5289, August 2008,
+              <http://www.rfc-editor.org/info/rfc5289>.
+
+
+
 
 
 Rescorla                 Expires January 4, 2017               [Page 84]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   [RFC5289]  Rescorla, E., "TLS Elliptic Curve Cipher Suites with SHA-
-              256/384 and AES Galois Counter Mode (GCM)", RFC 5289,
-              DOI 10.17487/RFC5289, August 2008,
-              <http://www.rfc-editor.org/info/rfc5289>.
 
    [RFC5487]  Badra, M., "Pre-Shared Key Cipher Suites for TLS with SHA-
               256/384 and AES Galois Counter Mode", RFC 5487,
@@ -4754,6 +4749,11 @@ Internet-Draft                     TLS                         July 2016
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
+   [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
+              CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
+              TLS", RFC 7251, DOI 10.17487/RFC7251, June 2014,
+              <http://www.rfc-editor.org/info/rfc7251>.
+
 
 
 
@@ -4762,14 +4762,15 @@ Rescorla                 Expires January 4, 2017               [Page 85]
 Internet-Draft                     TLS                         July 2016
 
 
-   [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
-              CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
-              TLS", RFC 7251, DOI 10.17487/RFC7251, June 2014,
-              <http://www.rfc-editor.org/info/rfc7251>.
-
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
               2016, <http://www.rfc-editor.org/info/rfc7748>.
+
+   [RFC7905]  Langley, A., Chang, W., Mavrogiannopoulos, N.,
+              Strombergson, J., and S. Josefsson, "ChaCha20-Poly1305
+              Cipher Suites for Transport Layer Security (TLS)",
+              RFC 7905, DOI 10.17487/RFC7905, June 2016,
+              <http://www.rfc-editor.org/info/rfc7905>.
 
    [SHS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Secure Hash Standard", NIST FIPS
@@ -4808,7 +4809,6 @@ Internet-Draft                     TLS                         July 2016
               Santesson, S. and H. Tschofenig, "Transport Layer Security
               (TLS) Cached Information Extension", draft-ietf-tls-
               cached-info-23 (work in progress), May 2016.
-
 
 
 
@@ -5658,53 +5658,53 @@ Rescorla                 Expires January 4, 2017              [Page 101]
 Internet-Draft                     TLS                         July 2016
 
 
-   +-------------------------------+----------+------------------------+
-   | Cipher Suite Name             | Value    | Specification          |
-   +-------------------------------+----------+------------------------+
-   | TLS_DHE_RSA_WITH_AES_128_GCM_ | {0x00,0x | [RFC5288]              |
-   | SHA256                        | 9E}      |                        |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_AES_256_GCM_ | {0x00,0x | [RFC5288]              |
-   | SHA384                        | 9F}      |                        |
-   |                               |          |                        |
-   | TLS_ECDHE_ECDSA_WITH_AES_128_ | {0xC0,0x | [RFC5289]              |
-   | GCM_SHA256                    | 2B}      |                        |
-   |                               |          |                        |
-   | TLS_ECDHE_ECDSA_WITH_AES_256_ | {0xC0,0x | [RFC5289]              |
-   | GCM_SHA384                    | 2C}      |                        |
-   |                               |          |                        |
-   | TLS_ECDHE_RSA_WITH_AES_128_GC | {0xC0,0x | [RFC5289]              |
-   | M_SHA256                      | 2F}      |                        |
-   |                               |          |                        |
-   | TLS_ECDHE_RSA_WITH_AES_256_GC | {0xC0,0x | [RFC5289]              |
-   | M_SHA384                      | 30}      |                        |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_AES_128_CCM  | {0xC0,0x | [RFC6655]              |
-   |                               | 9E}      |                        |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_AES_256_CCM  | {0xC0,0x | [RFC6655]              |
-   |                               | 9F}      |                        |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_AES_128_CCM_ | {0xC0,0x | [RFC6655]              |
-   | 8                             | A2}      |                        |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_AES_256_CCM_ | {0xC0,0x | [RFC6655]              |
-   | 8                             | A3}      |                        |
-   |                               |          |                        |
-   | TLS_ECDHE_RSA_WITH_CHACHA20_P | {0xCC,0x | [I-D.ietf-tls-chacha20 |
-   | OLY1305_SHA256                | A8}      | -poly1305]             |
-   |                               |          |                        |
-   | TLS_ECDHE_ECDSA_WITH_CHACHA20 | {0xCC,0x | [I-D.ietf-tls-chacha20 |
-   | _POLY1305_SHA256              | A9}      | -poly1305]             |
-   |                               |          |                        |
-   | TLS_DHE_RSA_WITH_CHACHA20_POL | {0xCC,0x | [I-D.ietf-tls-chacha20 |
-   | Y1305_SHA256                  | AA}      | -poly1305]             |
-   +-------------------------------+----------+------------------------+
+   +----------------------------------------+-----------+--------------+
+   | Cipher Suite Name                      | Value     | Specificatio |
+   |                                        |           | n            |
+   +----------------------------------------+-----------+--------------+
+   | TLS_DHE_RSA_WITH_AES_128_GCM_SHA256    | {0x00,0x9 | [RFC5288]    |
+   |                                        | E}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_AES_256_GCM_SHA384    | {0x00,0x9 | [RFC5288]    |
+   |                                        | F}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA25 | {0xC0,0x2 | [RFC5289]    |
+   | 6                                      | B}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA38 | {0xC0,0x2 | [RFC5289]    |
+   | 4                                      | C}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256  | {0xC0,0x2 | [RFC5289]    |
+   |                                        | F}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384  | {0xC0,0x3 | [RFC5289]    |
+   |                                        | 0}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_AES_128_CCM           | {0xC0,0x9 | [RFC6655]    |
+   |                                        | E}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_AES_256_CCM           | {0xC0,0x9 | [RFC6655]    |
+   |                                        | F}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_AES_128_CCM_8         | {0xC0,0xA | [RFC6655]    |
+   |                                        | 2}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_AES_256_CCM_8         | {0xC0,0xA | [RFC6655]    |
+   |                                        | 3}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_S | {0xCC,0xA | [RFC7905]    |
+   | HA256                                  | 8}        |              |
+   |                                        |           |              |
+   | TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305 | {0xCC,0xA | [RFC7905]    |
+   | _SHA256                                | 9}        |              |
+   |                                        |           |              |
+   | TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA | {0xCC,0xA | [RFC7905]    |
+   | 256                                    | A}        |              |
+   +----------------------------------------+-----------+--------------+
 
    Note: The values listed for ChaCha/Poly are preliminary but are being
    or will be used for interop testing and therefore are likely to be
    assigned.
-
 
 
 
@@ -5806,11 +5806,11 @@ Internet-Draft                     TLS                         July 2016
    | TLS_ECDHE_PSK_WITH_AES_256_C | {0xD0,0x | [I-D.mattsson-tls-ecdhe |
    | CM_SHA384                    | 05}      | -psk-aead]              |
    |                              |          |                         |
-   | TLS_ECDHE_PSK_WITH_CHACHA20_ | {0xCC,0x | [I-D.ietf-tls-chacha20- |
-   | POLY1305_SHA256              | AC}      | poly1305]               |
+   | TLS_ECDHE_PSK_WITH_CHACHA20_ | {0xCC,0x | [RFC7905]               |
+   | POLY1305_SHA256              | AC}      |                         |
    |                              |          |                         |
-   | TLS_DHE_PSK_WITH_CHACHA20_PO | {0xCC,0x | [I-D.ietf-tls-chacha20- |
-   | LY1305_SHA256                | AD}      | poly1305]               |
+   | TLS_DHE_PSK_WITH_CHACHA20_PO | {0xCC,0x | [RFC7905]               |
+   | LY1305_SHA256                | AD}      |                         |
    +------------------------------+----------+-------------------------+
 
    Note: The values listed for ECDHE and ChaCha/Poly are preliminary but
