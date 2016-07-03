@@ -362,7 +362,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-01" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-03" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -383,7 +383,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 01, 2016</td>
+  <td class="right">July 03, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -398,7 +398,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 2, 2017</td>
+  <td class="left">Expires: January 4, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -419,7 +419,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 2, 2017.</p>
+<p>This Internet-Draft will expire on January 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1584,7 +1584,7 @@ Subsequent Handshake:
 <p id="rfc.section.6.3.2.2.p.3">The &#8220;extension_data&#8221; field of this extension contains a &#8220;supported_signature_algorithms&#8221; value:</p>
 <pre>
    enum {
-       /* RSASSA-PKCS-v1_5 algorithms */
+       /* RSASSA-PKCS1-v1_5 algorithms */
        rsa_pkcs1_sha1 (0x0201),
        rsa_pkcs1_sha256 (0x0401),
        rsa_pkcs1_sha384 (0x0501),
@@ -1616,7 +1616,7 @@ Subsequent Handshake:
 <p/>
 
 <dl>
-  <dt>RSASSA-PKCS-v1_5 algorithms</dt>
+  <dt>RSASSA-PKCS1-v1_5 algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 6.3.4.1.1</a>) and are not defined for use in signed TLS handshake messages (see <a href="#digital-signing">Section 4.8.1</a>).</dd>
   <dt>ECDSA algorithms</dt>
   <dd style="margin-left: 8"><br/> Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
@@ -2066,7 +2066,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. (Note that rsa_pkcs1_sha1 and dsa_sha1, the only defined SHA-1 signature algorithms, are undefined for CertificateVerify signatures.)</li>
+  <li>In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS1-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. (Note that rsa_pkcs1_sha1 and dsa_sha1, the only defined SHA-1 signature algorithms, are undefined for CertificateVerify signatures.)</li>
 </ul>
 <p id="rfc.section.6.3.4.2.p.9">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly, although it does cover the server&#8217;s Finished message, which transitively includes the server&#8217;s certificate when the PSK derives from a certificate-authenticated handshake.  <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on this mode if the Finished is omitted from the signature. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. In order to ensure this, implementations MUST NOT mix certificate-based client authentication with pure PSK modes (i.e., those where the PSK was not derived from a previous non-PSK handshake).</p>
 <h4 id="rfc.section.6.3.4.3"><a href="#rfc.section.6.3.4.3">6.3.4.3.</a> <a href="#finished" id="finished">Finished</a></h4>
@@ -3263,7 +3263,7 @@ HKDF-Expand-Label(exporter_secret,
 <h4 id="rfc.appendix.A.3.1.2"><a href="#rfc.appendix.A.3.1.2">A.3.1.2.</a> <a href="#signature-algorithm-extension" id="signature-algorithm-extension">Signature Algorithm Extension</a></h4>
 <pre>
    enum {
-       /* RSASSA-PKCS-v1_5 algorithms */
+       /* RSASSA-PKCS1-v1_5 algorithms */
        rsa_pkcs1_sha1 (0x0201),
        rsa_pkcs1_sha256 (0x0401),
        rsa_pkcs1_sha384 (0x0501),
