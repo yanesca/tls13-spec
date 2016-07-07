@@ -1698,7 +1698,6 @@ Subsequent Handshake:
        select (Role) {
            case client:
                uint32 obfuscated_ticket_age;
-               opaque context&lt;0..255&gt;;
 
            case server:
               struct {};
@@ -1710,8 +1709,6 @@ Subsequent Handshake:
 <dl>
   <dt>obfuscated_ticket_age</dt>
   <dd style="margin-left: 8">The time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 6.3.4.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds.</dd>
-  <dt>context</dt>
-  <dd style="margin-left: 8">An optional context value that can be used for anti-replay (see below).</dd>
 </dl>
 <p id="rfc.section.6.3.2.7.p.4">A server MUST validate that the ticket_age is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 6.3.2.7.2</a>).</p>
 <p id="rfc.section.6.3.2.7.p.5">All of the parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) MUST be those which were negotiated in the connection which established the PSK.  The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
@@ -3172,7 +3169,6 @@ HKDF-Expand-Label(exporter_secret,
        select (Role) {
            case client:
                uint32 obfuscated_ticket_age;
-               opaque context&lt;0..255&gt;;
 
            case server:
               struct {};
