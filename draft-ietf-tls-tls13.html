@@ -2059,7 +2059,7 @@ server_finished_key =
 
  struct {
      TicketExtensionType extension_type;
-     opaque extension_data&lt;0..2^16-1&gt;;
+     opaque extension_data&lt;1..2^16-1&gt;;
  } TicketExtension;
 
  enum {
@@ -3298,7 +3298,7 @@ HKDF-Expand-Label(exporter_secret,
 
  struct {
      TicketExtensionType extension_type;
-     opaque extension_data&lt;0..2^16-1&gt;;
+     opaque extension_data&lt;1..2^16-1&gt;;
  } TicketExtension;
 
  enum {
