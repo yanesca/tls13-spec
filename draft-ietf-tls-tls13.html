@@ -563,7 +563,7 @@ li, p {
   <li>Allow server to send SupportedGroups.</li>
   <li>Remove 0-RTT client authentication</li>
   <li>Remove (EC)DHE 0-RTT.</li>
-  <li>Flesh out 0-RTT PSK mode and shrink EarlyDataIndiation</li>
+  <li>Flesh out 0-RTT PSK mode and shrink EarlyDataIndication</li>
   <li>Turn PSK-resumption response into an index to save room</li>
   <li>Move CertificateStatus to an extension</li>
   <li>Extra fields in NewSessionTicket.</li>
@@ -1648,7 +1648,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8">A single KeyShareEntry value for the negotiated cipher suite.</dd>
 </dl>
 <p id="rfc.section.6.3.2.4.p.6">Servers offer exactly one KeyShareEntry value, which corresponds to the key exchange used for the negotiated cipher suite.</p>
-<p id="rfc.section.6.3.2.4.p.7">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST by generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group and servers receiving multiple KeyShareEntry values for the same group MUST abort the connection with a fatal &#8220;illegal_parameter&#8221; alert.  Clients and servers MUST NOT offer or accept any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MUST NOT offer a KeyShareEntry value for a group not offered by the client in its corresponding KeyShare.</p>
+<p id="rfc.section.6.3.2.4.p.7">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST by generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group and servers receiving multiple KeyShareEntry values for the same group.  Clients and servers MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension Servers MUST NOT offer a KeyShareEntry value for a group not offered by the client in its corresponding KeyShare.  Implementations MAY check for violations of these rules and and MAY abort the connection with a fatal &#8220;illegal_parameter&#8221; alert if one is violated.</p>
 <p id="rfc.section.6.3.2.4.p.8">If the server selects an (EC)DHE cipher suite and no mutually supported group is available between the two endpoints&#8217; KeyShare offers, yet there is a mutually supported group that can be found via the &#8220;supported_groups&#8221; extension, then the server MUST reply with a HelloRetryRequest.  If there is no mutually supported group at all, the server MUST NOT negotiate an (EC)DHE cipher suite.</p>
 <p id="rfc.section.6.3.2.4.p.9">[[TODO: Recommendation about what the client offers.  Presumably which integer DH groups and which curves.]]</p>
 <h4 id="rfc.section.6.3.2.4.1"><a href="#rfc.section.6.3.2.4.1">6.3.2.4.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
