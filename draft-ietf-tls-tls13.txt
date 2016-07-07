@@ -3848,7 +3848,7 @@ Internet-Draft                     TLS                         July 2016
 
 6.3.4.3.  Key and IV Update
 
-   struct {} KeyUpdate;
+    struct {} KeyUpdate;
 
    The KeyUpdate handshake message is used to indicate that the sender
    is updating its sending cryptographic keys.  This message can be sent
