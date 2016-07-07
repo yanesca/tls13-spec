@@ -362,7 +362,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-06" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-07" />
   <meta name="dct.abstract" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies Version 1.3 of the Transport Layer Security (TLS) protocol.  The TLS protocol allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -383,7 +383,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 06, 2016</td>
+  <td class="right">July 07, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -398,7 +398,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 7, 2017</td>
+  <td class="left">Expires: January 8, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -419,7 +419,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 7, 2017.</p>
+<p>This Internet-Draft will expire on January 8, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2089,10 +2089,10 @@ Subsequent Handshake:
 <p id="rfc.section.6.3.4.3.p.5">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages">Section 6.3.4</a> using HKDF (see <a href="#key-schedule">Section 7.1</a>). Specifically:</p>
 <pre>
 client_finished_key =
-    HKDF-Expand-Label(BaseKey, "client finished", "", L)
+    HKDF-Expand-Label(BaseKey, "client finished", "", Hash.Length)
 
 server_finished_key =
-    HKDF-Expand-Label(BaseKey, "server finished", "", L)
+    HKDF-Expand-Label(BaseKey, "server finished", "", Hash.Length)
 </pre>
 <p id="rfc.section.6.3.4.3.p.6">Structure of this message:</p>
 <pre>
@@ -2119,12 +2119,12 @@ server_finished_key =
 <p id="rfc.section.6.3.5.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the following two values derived from the resumption master secret:</p>
 <pre>
    resumption_psk = HKDF-Expand-Label(resumption_secret,
-                                      "resumption psk", "", L)
+                                      "resumption psk", "", Hash.Length)
 
    resumption_context = HKDF-Expand-Label(resumption_secret,
-                                          "resumption context", "", L)
+                                          "resumption context", "", Hash.Length)
 </pre>
-<p id="rfc.section.6.3.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 6.3.2.5</a>) and supplying a suitable PSK cipher suite. Servers may send multiple tickets on a single connection, for instance after post-handshake authentication. For handshakes that do not use a resumption_psk, the resumption_context is a string of L zeroes.</p>
+<p id="rfc.section.6.3.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 6.3.2.5</a>) and supplying a suitable PSK cipher suite. Servers may send multiple tickets on a single connection, for instance after post-handshake authentication. For handshakes that do not use a resumption_psk, the resumption_context is a string of Hash.Length zeroes.</p>
 <pre>
  enum { (65535) } TicketExtensionType;
 
@@ -2198,16 +2198,17 @@ server_finished_key =
 
   Derive-Secret(Secret, Label, Messages) =
        HKDF-Expand-Label(Secret, Label,
-                         Hash(Messages) + Hash(resumption_context), L)
+                         Hash(Messages) + Hash(resumption_context), Hash.Length)
 </pre>
-<p id="rfc.section.7.1.p.2">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of zeroes as long as the size of the Hash that is the basis for the HKDF. Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
+<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash function.  Hash.Length is its output length.</p>
+<p id="rfc.section.7.1.p.3">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of zeroes as long as the size of the Hash that is the basis for the HKDF. Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p/>
 
 <ul>
   <li>PSK</li>
   <li>(EC)DHE shared secret</li>
 </ul>
-<p id="rfc.section.7.1.p.4">This produces a full key derivation schedule shown in the diagram below.  In this diagram, the following formatting conventions apply:</p>
+<p id="rfc.section.7.1.p.5">This produces a full key derivation schedule shown in the diagram below.  In this diagram, the following formatting conventions apply:</p>
 <p/>
 
 <ul>
@@ -2250,12 +2251,12 @@ server_finished_key =
                                            ClientHello...Client Finished)
                                            = resumption_secret
 </pre>
-<p id="rfc.section.7.1.p.6">The general pattern here is that the secrets shown down the left side of the diagram are just raw entropy without context, whereas the secrets down the right side include handshake context and therefore can be used to derive working keys without additional context.  Note that the different calls to Derive-Secret may take different Messages arguments, even with the same secret. In a 0-RTT exchange, Derive-Secret is called with four distinct transcripts; in a 1-RTT only exchange with three distinct transcripts.</p>
-<p id="rfc.section.7.1.p.7">If a given secret is not available, then the 0-value consisting of a string of L zeroes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0).</p>
+<p id="rfc.section.7.1.p.7">The general pattern here is that the secrets shown down the left side of the diagram are just raw entropy without context, whereas the secrets down the right side include handshake context and therefore can be used to derive working keys without additional context.  Note that the different calls to Derive-Secret may take different Messages arguments, even with the same secret. In a 0-RTT exchange, Derive-Secret is called with four distinct transcripts; in a 1-RTT only exchange with three distinct transcripts.</p>
+<p id="rfc.section.7.1.p.8">If a given secret is not available, then the 0-value consisting of a string of L zeroes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0).</p>
 <h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
 <p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message <a href="#key-update">Section 6.3.5.3</a>.  The next generation of traffic keys is computed by generating traffic_secret_N+1 from traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
 <p id="rfc.section.7.2.p.2">The next-generation traffic_secret is computed as:</p>
-<p id="rfc.section.7.2.p.3">traffic_secret_N+1 = HKDF-Expand-Label(traffic_secret_N, &#8220;application traffic secret&#8221;, &#8220;&#8221;, L)</p>
+<p id="rfc.section.7.2.p.3">traffic_secret_N+1 = HKDF-Expand-Label(traffic_secret_N, &#8220;application traffic secret&#8221;, &#8220;&#8221;, Hash.Length)</p>
 <p id="rfc.section.7.2.p.4">Once traffic_secret_N+1 and its associated traffic keys have been computed, implementations SHOULD delete traffic_secret_N. Once the directional keys are no longer needed, they SHOULD be deleted as well.</p>
 <h2 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#traffic-key-calculation" id="traffic-key-calculation">Traffic Key Calculation</a></h2>
 <p id="rfc.section.7.3.p.1">The traffic keying material is generated from the following input values:</p>
