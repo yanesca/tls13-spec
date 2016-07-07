@@ -2936,7 +2936,7 @@ Internet-Draft                     TLS                         July 2016
    generate a fatal "unknown_psk_identity" alert and close the
    connection.
 
-   Note that, although 0-RTT data is encrypted with the first PSK
+   Note that although 0-RTT data is encrypted with the first PSK
    identity, the server may fall back to 1-RTT and select a different
    PSK identity if multiple are offered.
 
@@ -3035,13 +3035,10 @@ Internet-Draft                     TLS                         July 2016
       a subset of the early data messages.
 
    [[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/
-   tls13-spec/issues/451]] Prior to accepting the "early_data"
-   extension, the server MUST check the first PSK identity (see
-   Section 6.3.2.5) corresponds to a valid ticket and validate that the
-   session parameters are consistent with its current configuration.  It
-   MUST also validate that the extensions negotiated in the previous
-   connection are identical to those being negotiated in the
-   ServerHello, with the exception of the following extensions:
+   tls13-spec/issues/451]] It MUST also validate that the extensions
+   negotiated in the previous connection are identical to those being
+   negotiated in the ServerHello, with the exception of the following
+   extensions:
 
    -  The use of "signed_certificate_timestamp" [RFC6962] MUST be
       identical but the server's SCT extension value may differ.
@@ -3049,8 +3046,11 @@ Internet-Draft                     TLS                         July 2016
    -  The "padding" extension [RFC7685] MUST be ignored for this
       purpose.
 
-   -  The values of "key_share", "pre_shared_key", and "early_data",
-      which MUST be as defined in this document.
+   -  The server MUST have accepted a PSK cipher suite and selected the
+      first key offered in the client's "pre_shared_key" extension.
+
+   -  The values of "key_share", and "early_data", which MUST be as
+      defined in this document.
 
    If any of these checks fail, the server MUST NOT respond with the
    extension and must discard all the remaining first flight data (thus
@@ -4576,15 +4576,15 @@ Internet-Draft                     TLS                         July 2016
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <http://www.rfc-editor.org/info/rfc6979>.
+
    [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
               CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
               TLS", RFC 7251, DOI 10.17487/RFC7251, June 2014,
               <http://www.rfc-editor.org/info/rfc7251>.
-
-   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
-              for Security", RFC 7748, DOI 10.17487/RFC7748, January
-              2016, <http://www.rfc-editor.org/info/rfc7748>.
-
 
 
 
@@ -4593,6 +4593,10 @@ Rescorla                 Expires January 8, 2017               [Page 82]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
+              for Security", RFC 7748, DOI 10.17487/RFC7748, January
+              2016, <http://www.rfc-editor.org/info/rfc7748>.
 
    [RFC7905]  Langley, A., Chang, W., Mavrogiannopoulos, N.,
               Strombergson, J., and S. Josefsson, "ChaCha20-Poly1305
@@ -4638,10 +4642,6 @@ Internet-Draft                     TLS                         July 2016
               (TLS) Cached Information Extension", draft-ietf-tls-
               cached-info-23 (work in progress), May 2016.
 
-   [I-D.ietf-tls-negotiated-ff-dhe]
-              Gillmor, D., "Negotiated Finite Field Diffie-Hellman
-              Ephemeral Parameters for TLS", draft-ietf-tls-negotiated-
-              ff-dhe-10 (work in progress), June 2015.
 
 
 
@@ -4649,6 +4649,11 @@ Rescorla                 Expires January 8, 2017               [Page 83]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [I-D.ietf-tls-negotiated-ff-dhe]
+              Gillmor, D., "Negotiated Finite Field Diffie-Hellman
+              Ephemeral Parameters for TLS", draft-ietf-tls-negotiated-
+              ff-dhe-10 (work in progress), June 2015.
 
    [IEEE1363]
               IEEE, "Standard Specifications for Public Key
@@ -4692,11 +4697,6 @@ Internet-Draft                     TLS                         July 2016
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <http://www.rfc-editor.org/info/rfc4303>.
 
-   [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.1", RFC 4346,
-              DOI 10.17487/RFC4346, April 2006,
-              <http://www.rfc-editor.org/info/rfc4346>.
-
 
 
 
@@ -4705,6 +4705,11 @@ Rescorla                 Expires January 8, 2017               [Page 84]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.1", RFC 4346,
+              DOI 10.17487/RFC4346, April 2006,
+              <http://www.rfc-editor.org/info/rfc4346>.
 
    [RFC4366]  Blake-Wilson, S., Nystrom, M., Hopwood, D., Mikkelsen, J.,
               and T. Wright, "Transport Layer Security (TLS)
@@ -4749,11 +4754,6 @@ Internet-Draft                     TLS                         July 2016
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <http://www.rfc-editor.org/info/rfc5116>.
 
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008,
-              <http://www.rfc-editor.org/info/rfc5246>.
-
 
 
 
@@ -4761,6 +4761,11 @@ Rescorla                 Expires January 8, 2017               [Page 85]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <http://www.rfc-editor.org/info/rfc5246>.
 
    [RFC5746]  Rescorla, E., Ray, M., Dispensa, S., and N. Oskov,
               "Transport Layer Security (TLS) Renegotiation Indication
@@ -4806,17 +4811,17 @@ Internet-Draft                     TLS                         July 2016
               DOI 10.17487/RFC6520, February 2012,
               <http://www.rfc-editor.org/info/rfc6520>.
 
-   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Message Syntax and Routing",
-              RFC 7230, DOI 10.17487/RFC7230, June 2014,
-              <http://www.rfc-editor.org/info/rfc7230>.
-
 
 
 Rescorla                 Expires January 8, 2017               [Page 86]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              RFC 7230, DOI 10.17487/RFC7230, June 2014,
+              <http://www.rfc-editor.org/info/rfc7230>.
 
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
@@ -4858,12 +4863,7 @@ Internet-Draft                     TLS                         July 2016
               Cryptosystems", Communications of the ACM v. 21, n. 2, pp.
               120-126., February 1978.
 
-   [SLOTH]    Bhargavan, K. and G. Leurent, "Transcript Collision
-              Attacks: Breaking Authentication in TLS, IKE, and SSH",
-              Network and Distributed System Security Symposium (NDSS
-              2016) , 2016.
 
-   [SSL2]     Hickman, K., "The SSL Protocol", February 1995.
 
 
 
@@ -4873,6 +4873,13 @@ Rescorla                 Expires January 8, 2017               [Page 87]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [SLOTH]    Bhargavan, K. and G. Leurent, "Transcript Collision
+              Attacks: Breaking Authentication in TLS, IKE, and SSH",
+              Network and Distributed System Security Symposium (NDSS
+              2016) , 2016.
+
+   [SSL2]     Hickman, K., "The SSL Protocol", February 1995.
 
    [SSL3]     Freier, A., Karlton, P., and P. Kocher, "The SSL 3.0
               Protocol", November 1996.
@@ -4886,13 +4893,6 @@ Internet-Draft                     TLS                         July 2016
 12.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
-
 
 
 
@@ -5847,7 +5847,9 @@ Internet-Draft                     TLS                         July 2016
 
    -  Do you use a strong and, most importantly, properly seeded random
       number generator (see Appendix B.1) Diffie-Hellman private values,
-      the ECDSA "k" parameter, and other security-critical values?
+      the ECDSA "k" parameter, and other security-critical values?  It
+      is RECOMMENDED that implementations implement "deterministic
+      ECDSA" as specified in [RFC6979].
 
    -  Do you zero-pad Diffie-Hellman public key values to the group size
       (see Section 6.3.2.4.1)?
@@ -5872,8 +5874,6 @@ Appendix C.  Backward Compatibility
 
    TLS 1.x and SSL 3.0 use compatible ClientHello messages.  Servers can
    also handle clients trying to use future versions of TLS as long as
-   the ClientHello format remains compatible and the client supports the
-   highest protocol version available in the server.
 
 
 
@@ -5881,6 +5881,9 @@ Rescorla                 Expires January 8, 2017              [Page 105]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   the ClientHello format remains compatible and the client supports the
+   highest protocol version available in the server.
 
    Prior versions of TLS used the record layer version number for
    various purposes.  (TLSPlaintext.record_version &
@@ -5925,9 +5928,6 @@ C.1.  Negotiating with an older server
    (or not acceptable), the client MUST send a "protocol_version" alert
    message and close the connection.
 
-   If a TLS server receives a ClientHello containing a version number
-   greater than the highest version supported by the server, it MUST
-   reply according to the highest version supported by the server.
 
 
 
@@ -5937,6 +5937,10 @@ Rescorla                 Expires January 8, 2017              [Page 106]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   If a TLS server receives a ClientHello containing a version number
+   greater than the highest version supported by the server, it MUST
+   reply according to the highest version supported by the server.
 
    Some legacy server implementations are known to not implement the TLS
    specification properly and might abort connections upon encountering
@@ -5982,10 +5986,6 @@ C.3.  Zero-RTT backwards compatibility
    To avoid this error condition, multi-server deployments SHOULD ensure
    a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
    enabling 0-RTT.
-
-
-
-
 
 
 

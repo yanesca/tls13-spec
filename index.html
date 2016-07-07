@@ -1687,7 +1687,7 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.6.3.2.5.p.5">If no suitable identity is provided, the server MUST NOT negotiate a PSK cipher suite and MAY respond with an &#8220;unknown_psk_identity&#8221; alert message. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity or instead negotiate use of a non-PSK cipher suite, if available.</p>
 <p id="rfc.section.6.3.2.5.p.6">If the server selects a PSK cipher suite, it MUST send a &#8220;pre_shared_key&#8221; extension with the identity that it selected.  The client MUST verify that the server&#8217;s selected_identity is within the range supplied by the client. If the server supplies an &#8220;early_data&#8221; extension, the client MUST verify that the server selected the first offered identity. If any other value is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
-<p id="rfc.section.6.3.2.5.p.7">Note that, although 0-RTT data is encrypted with the first PSK identity, the server may fall back to 1-RTT and select a different PSK identity if multiple are offered.</p>
+<p id="rfc.section.6.3.2.5.p.7">Note that although 0-RTT data is encrypted with the first PSK identity, the server may fall back to 1-RTT and select a different PSK identity if multiple are offered.</p>
 <h4 id="rfc.section.6.3.2.6"><a href="#rfc.section.6.3.2.6">6.3.2.6.</a> <a href="#ocsp-status-extensions" id="ocsp-status-extensions">OCSP Status Extensions</a></h4>
 <p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in EncryptedExtensions. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
 <p id="rfc.section.6.3.2.6.p.2">Note: this means that the certificate status appears prior to the certificates it applies to. This is slightly anomalous but matches the existing behavior for SignedCertificateTimestamps <a href="#RFC6962">[RFC6962]</a>, and is more easily extensible in the handshake state machine.</p>
@@ -1721,13 +1721,14 @@ Subsequent Handshake:
   <li>Ignore the extension and return no response. This indicates that the server has ignored any early data and an ordinary 1-RTT handshake is required.</li>
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
 </ul>
-<p id="rfc.section.6.3.2.7.p.9">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] Prior to accepting the &#8220;early_data&#8221; extension, the server MUST check the first PSK identity (see <a href="#pre-shared-key-extension">Section 6.3.2.5</a>) corresponds to a valid ticket and validate that the session parameters are consistent with its current configuration.  It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
+<p id="rfc.section.6.3.2.7.p.9">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
 <p/>
 
 <ul>
   <li>The use of &#8220;signed_certificate_timestamp&#8221; <a href="#RFC6962">[RFC6962]</a> MUST be identical but the server&#8217;s SCT extension value may differ.</li>
   <li>The &#8220;padding&#8221; extension <a href="#RFC7685">[RFC7685]</a> MUST be ignored for this purpose.</li>
-  <li>The values of &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221;, which MUST be as defined in this document.</li>
+  <li>The server MUST have accepted a PSK cipher suite and selected the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</li>
+  <li>The values of &#8220;key_share&#8221;, and &#8220;early_data&#8221;, which MUST be as defined in this document.</li>
 </ul>
 <p id="rfc.section.6.3.2.7.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
 <p id="rfc.section.6.3.2.7.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, decryption failure of any 0-RTT record following an accepted &#8220;early_data&#8221; extension MUST produce a fatal &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
@@ -2635,6 +2636,12 @@ HKDF-Expand-Label(exporter_secret,
         <b id="RFC6962">[RFC6962]</b>
       </td>
       <td class="top"><a>Laurie, B.</a>, <a>Langley, A.</a> and <a>E. Kasper</a>, "<a href="http://tools.ietf.org/html/rfc6962">Certificate Transparency</a>", RFC 6962, DOI 10.17487/RFC6962, June 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6979">[RFC6979]</b>
+      </td>
+      <td class="top"><a>Pornin, T.</a>, "<a href="http://tools.ietf.org/html/rfc6979">Deterministic Usage of the Digital Signature Algorithm (DSA) and Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", RFC 6979, DOI 10.17487/RFC6979, August 2013.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3616,7 +3623,7 @@ HKDF-Expand-Label(exporter_secret,
   <li>When verifying RSA signatures, do you accept both NULL and missing parameters (see <a href="#cryptographic-attributes">Section 4.8</a>)? Do you verify that the RSA padding doesn&#8217;t have additional data after the hash value? <a href="#FI06">[FI06]</a></li>
   <li>When using Diffie-Hellman key exchange, do you correctly preserve leading zero bytes in the negotiated key (see <a href="#diffie-hellman">Section 7.3.1</a>)?</li>
   <li>Does your TLS client check that the Diffie-Hellman parameters sent by the server are acceptable (see <a href="#diffie-hellman-key-exchange-with-authentication">Appendix D.1.1.1</a>)?</li>
-  <li>Do you use a strong and, most importantly, properly seeded random number generator (see <a href="#random-number-generation-and-seeding">Appendix B.1</a>) Diffie-Hellman private values, the ECDSA &#8220;k&#8221; parameter, and other security-critical values?</li>
+  <li>Do you use a strong and, most importantly, properly seeded random number generator (see <a href="#random-number-generation-and-seeding">Appendix B.1</a>) Diffie-Hellman private values, the ECDSA &#8220;k&#8221; parameter, and other security-critical values? It is RECOMMENDED that implementations implement &#8220;deterministic ECDSA&#8221; as specified in <a href="#RFC6979">[RFC6979]</a>.</li>
   <li>Do you zero-pad Diffie-Hellman public key values to the group size (see <a href="#ffdhe-param">Section 6.3.2.4.1</a>)?</li>
 </ul>
 <h2 id="rfc.appendix.B.5"><a href="#rfc.appendix.B.5">B.5.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
