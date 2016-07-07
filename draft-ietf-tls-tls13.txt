@@ -6624,6 +6624,10 @@ Internet-Draft                     TLS                         July 2016
       Mozilla
       mt@mozilla.com
 
+   -  Filippo Valsorda
+      CloudFlare Inc.
+      filippo@cloudflare.com
+
    -  Tom Weinstein
 
    -  Hoeteck Wee
@@ -6640,10 +6644,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
