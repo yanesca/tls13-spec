@@ -1023,7 +1023,7 @@ li, p {
 </ol>
 <p id="rfc.section.5.2.2.p.6">The resulting quantity (of length iv_length) is used as the per-record nonce.</p>
 <p id="rfc.section.5.2.2.p.7">Note: This is a different construction from that in TLS 1.2, which specified a partially explicit nonce.</p>
-<p id="rfc.section.5.2.2.p.8">The plaintext is the concatenation of TLSPlaintext.fragment and TLSPlaintext.type.</p>
+<p id="rfc.section.5.2.2.p.8">The plaintext is the concatenation of TLSPlaintext.fragment, TLSPlaintext.type, and any padding bytes (zeros).</p>
 <p id="rfc.section.5.2.2.p.9">The AEAD output consists of the ciphertext output by the AEAD encryption operation. The length of the plaintext is greater than TLSPlaintext.length due to the inclusion of TLSPlaintext.type and however much padding is supplied by the sender.  The length of aead_output will generally be larger than the plaintext, but by an amount that varies with the AEAD cipher. Since the ciphers might incorporate padding, the amount of overhead could vary with different lengths of plaintext. Symbolically,</p>
 <pre>
    AEADEncrypted =
