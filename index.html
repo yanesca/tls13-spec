@@ -1262,7 +1262,7 @@ Subsequent Handshake:
 <p class="figure">Figure 3: Message flow for resumption and PSK</p>
 <p id="rfc.section.6.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify. When a client offers resumption via PSK it SHOULD also supply a &#8220;key_share&#8221; extension to the server as well; this allows server to decline resumption and fall back to a full handshake.  A &#8220;key_share&#8221; extension MUST also be sent if the client is attempting to negotiate an (EC)DHE-PSK cipher suite.</p>
 <h3 id="rfc.section.6.2.3"><a href="#rfc.section.6.2.3">6.2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a></h3>
-<p id="rfc.section.6.2.3.p.1">When resuming via a PSK with an appropriate ticket (i.e., one with the &#8220;allow_early_data&#8221; flag), clients can also send data on their first flight (&#8220;early data&#8221;). This data is encrypted solely under keys derived using the PSK as the static secret.  As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight, the rest of the handshake uses the same messages.</p>
+<p id="rfc.section.6.2.3.p.1">When resuming via a PSK with an appropriate ticket (i.e., one with the &#8220;allow_early_data&#8221; flag), clients can also send data on their first flight (&#8220;early data&#8221;). This data is encrypted solely under keys derived using the first offered PSK as the static secret.  As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight, the rest of the handshake uses the same messages.</p>
 <div id="rfc.figure.4"/>
 <div id="tls-0-rtt"/>
 <pre>
@@ -1681,12 +1681,13 @@ Subsequent Handshake:
 
 <dl>
   <dt>identities</dt>
-  <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server.</dd>
+  <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 6.3.2.7</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>selected_identity</dt>
   <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identies in the client&#8217;s list.</dd>
 </dl>
 <p id="rfc.section.6.3.2.5.p.5">If no suitable identity is provided, the server MUST NOT negotiate a PSK cipher suite and MAY respond with an &#8220;unknown_psk_identity&#8221; alert message. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity or instead negotiate use of a non-PSK cipher suite, if available.</p>
-<p id="rfc.section.6.3.2.5.p.6">If the server selects a PSK cipher suite, it MUST send a &#8220;pre_shared_key&#8221; extension with the identity that it selected.  The client MUST verify that the server&#8217;s selected_identity is within the range supplied by the client. If any other value is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
+<p id="rfc.section.6.3.2.5.p.6">If the server selects a PSK cipher suite, it MUST send a &#8220;pre_shared_key&#8221; extension with the identity that it selected.  The client MUST verify that the server&#8217;s selected_identity is within the range supplied by the client. If the server supplies an &#8220;early_data&#8221; extension, the client MUST verify that the server selected the first offered identity. If any other value is returned, the client MUST generate a fatal &#8220;unknown_psk_identity&#8221; alert and close the connection.</p>
+<p id="rfc.section.6.3.2.5.p.7">Note that, although 0-RTT data is encrypted with the first PSK identity, the server may fall back to 1-RTT and select a different PSK identity if multiple are offered.</p>
 <h4 id="rfc.section.6.3.2.6"><a href="#rfc.section.6.3.2.6">6.3.2.6.</a> <a href="#ocsp-status-extensions" id="ocsp-status-extensions">OCSP Status Extensions</a></h4>
 <p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in EncryptedExtensions. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
 <p id="rfc.section.6.3.2.6.p.2">Note: this means that the certificate status appears prior to the certificates it applies to. This is slightly anomalous but matches the existing behavior for SignedCertificateTimestamps <a href="#RFC6962">[RFC6962]</a>, and is more easily extensible in the handshake state machine.</p>
@@ -1720,7 +1721,7 @@ Subsequent Handshake:
   <li>Ignore the extension and return no response. This indicates that the server has ignored any early data and an ordinary 1-RTT handshake is required.</li>
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
 </ul>
-<p id="rfc.section.6.3.2.7.p.9">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] Prior to accepting the &#8220;early_data&#8221; extension, the server MUST validate that the session ticket parameters are consistent with its current configuration. It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
+<p id="rfc.section.6.3.2.7.p.9">[[OPEN ISSUE: are the rules below correct? https://github.com/tlswg/tls13-spec/issues/451]] Prior to accepting the &#8220;early_data&#8221; extension, the server MUST check the first PSK identity (see <a href="#pre-shared-key-extension">Section 6.3.2.5</a>) corresponds to a valid ticket and validate that the session parameters are consistent with its current configuration.  It MUST also validate that the extensions negotiated in the previous connection are identical to those being negotiated in the ServerHello, with the exception of the following extensions:</p>
 <p/>
 
 <ul>
