@@ -80,11 +80,11 @@ Table of Contents
      1.2.  Major Differences from TLS 1.2  . . . . . . . . . . . . .   6
    2.  Goals . . . . . . . . . . . . . . . . . . . . . . . . . . . .  10
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  10
-     3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  11
+     3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  10
      3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  11
      3.3.  Vectors . . . . . . . . . . . . . . . . . . . . . . . . .  11
      3.4.  Numbers . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  13
+     3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  12
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  13
        3.6.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  14
      3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  15
@@ -204,11 +204,6 @@ Internet-Draft                     TLS                         July 2016
    -  The connection is reliable.  Messages include an authentication
       tag which protects them against modification.
 
-   Note: The TLS Record Protocol can operate in an insecure mode but is
-   generally only used in this mode while another protocol is using the
-   TLS Record Protocol as a transport for negotiating security
-   parameters.
-
    The TLS Record Protocol is used for encapsulation of various higher-
    level protocols.  One such encapsulated protocol, the TLS Handshake
    Protocol, allows the server and client to authenticate each other and
@@ -216,6 +211,11 @@ Internet-Draft                     TLS                         July 2016
    the application protocol transmits or receives its first byte of
    data.  The TLS Handshake Protocol provides connection security that
    has three basic properties:
+
+   -  The peer's identity can be authenticated using asymmetric (public
+      key) cryptography (e.g., RSA [RSA], ECDSA [ECDSA]) or a pre-shared
+      symmetric key.  The TLS server is always authenticated; client
+      authentication is optional.
 
 
 
@@ -225,11 +225,6 @@ Rescorla                 Expires January 9, 2017                [Page 4]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   -  The peer's identity can be authenticated using asymmetric (public
-      key) cryptography (e.g., RSA [RSA], ECDSA [ECDSA]) or a pre-shared
-      symmetric key.  The TLS server is always authenticated; client
-      authentication is optional.
 
    -  The negotiation of a shared secret is secure: the negotiated
       secret is unavailable to eavesdroppers, and for any authenticated
@@ -274,6 +269,11 @@ Internet-Draft                     TLS                         July 2016
 
    sender: An endpoint that is transmitting records.
 
+   session: An association between a client and a server resulting from
+   a handshake.
+
+   server: The endpoint which did not initiate the TLS connection.
+
 
 
 
@@ -281,11 +281,6 @@ Rescorla                 Expires January 9, 2017                [Page 5]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   session: An association between a client and a server resulting from
-   a handshake.
-
-   server: The endpoint which did not initiate the TLS connection.
 
 1.2.  Major Differences from TLS 1.2
 
@@ -331,17 +326,17 @@ Internet-Draft                     TLS                         July 2016
    -  Revise signature algorithm negotiation to group hash, signature
       algorithm, and curve together.  This is backwards compatible.
 
+   -  Make ticket lifetime mandatory and limit it to a week.
+
+   -  Make the purpose strings lower-case.  This matches how people are
+      implementing for interop.
+
 
 
 Rescorla                 Expires January 9, 2017                [Page 6]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   -  Make ticket lifetime mandatory and limit it to a week.
-
-   -  Make the purpose strings lower-case.  This matches how people are
-      implementing for interop.
 
    -  Define exporters.
 
@@ -387,17 +382,17 @@ Internet-Draft                     TLS                         July 2016
 
    -  Add support for per-record padding.
 
+   -  Switch to encrypted record ContentType.
+
+   -  Change HKDF labeling to include protocol version and value
+      lengths.
+
 
 
 Rescorla                 Expires January 9, 2017                [Page 7]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   -  Switch to encrypted record ContentType.
-
-   -  Change HKDF labeling to include protocol version and value
-      lengths.
 
    -  Shift the final decision to abort a handshake due to incompatible
       certificates to the client rather than having servers abort early.
@@ -442,6 +437,11 @@ Internet-Draft                     TLS                         July 2016
 
    draft-06
 
+   -  Prohibit RC4 negotiation for backwards compatibility.
+
+   -  Freeze & deprecate record layer version field.
+
+   -  Update format of signatures with context.
 
 
 
@@ -449,12 +449,6 @@ Rescorla                 Expires January 9, 2017                [Page 8]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   -  Prohibit RC4 negotiation for backwards compatibility.
-
-   -  Freeze & deprecate record layer version field.
-
-   -  Update format of signatures with context.
 
    -  Remove explicit IV.
 
@@ -499,18 +493,18 @@ Internet-Draft                     TLS                         July 2016
 
    -  Remove custom DHE groups.
 
+   -  Remove support for compression.
+
+   -  Remove support for static RSA and DH key exchange.
+
+   -  Remove support for non-AEAD ciphers.
+
 
 
 Rescorla                 Expires January 9, 2017                [Page 9]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   -  Remove support for compression.
-
-   -  Remove support for static RSA and DH key exchange.
-
-   -  Remove support for non-AEAD ciphers.
 
 2.  Goals
 
@@ -553,15 +547,6 @@ Internet-Draft                     TLS                         July 2016
    purpose of this presentation language is to document TLS only; it has
    no general application beyond that particular goal.
 
-
-
-
-
-Rescorla                 Expires January 9, 2017               [Page 10]
-
-Internet-Draft                     TLS                         July 2016
-
-
 3.1.  Basic Block Size
 
    The representation of all data items is explicitly specified.  The
@@ -569,6 +554,13 @@ Internet-Draft                     TLS                         July 2016
    items are concatenations of bytes, from left to right, from top to
    bottom.  From the byte stream, a multi-byte item (a numeric in the
    example) is formed (using C notation) by:
+
+
+
+Rescorla                 Expires January 9, 2017               [Page 10]
+
+Internet-Draft                     TLS                         July 2016
+
 
       value = (byte[0] << 8*(n-1)) | (byte[1] << 8*(n-2)) |
               ... | byte[n-1];
@@ -610,14 +602,6 @@ Internet-Draft                     TLS                         July 2016
 
    Variable-length vectors are defined by specifying a subrange of legal
    lengths, inclusively, using the notation <floor..ceiling>.  When
-
-
-
-Rescorla                 Expires January 9, 2017               [Page 11]
-
-Internet-Draft                     TLS                         July 2016
-
-
    these are encoded, the actual length precedes the vector's contents
    in the byte stream.  The length will be in the form of a number
    consuming as many bytes as required to hold the vector's specified
@@ -625,6 +609,14 @@ Internet-Draft                     TLS                         July 2016
    length field of zero is referred to as an empty vector.
 
       T T'<floor..ceiling>;
+
+
+
+
+Rescorla                 Expires January 9, 2017               [Page 11]
+
+Internet-Draft                     TLS                         July 2016
+
 
    In the following example, mandatory is a vector that must contain
    between 300 and 400 bytes of type opaque.  It can never be empty.
@@ -662,18 +654,6 @@ Internet-Draft                     TLS                         July 2016
    represented as unsigned integers (i.e., additional leading zero
    octets are not used even if the most significant bit is set).
 
-
-
-
-
-
-
-
-Rescorla                 Expires January 9, 2017               [Page 12]
-
-Internet-Draft                     TLS                         July 2016
-
-
 3.5.  Enumerateds
 
    An additional sparse data type is available called enum.  A field of
@@ -685,6 +665,14 @@ Internet-Draft                     TLS                         July 2016
    assigned any unique value, in any order.
 
       enum { e1(v1), e2(v2), ... , en(vn) [[, (n)]] } Te;
+
+
+
+
+Rescorla                 Expires January 9, 2017               [Page 12]
+
+Internet-Draft                     TLS                         July 2016
+
 
    An enumerated occupies as much space in the byte stream as would its
    maximal defined ordinal value.  The following definition would cause
@@ -720,16 +708,6 @@ Internet-Draft                     TLS                         July 2016
    convenience.  Each specification declares a new, unique type.  The
    syntax for definition is much like that of C.
 
-
-
-
-
-
-Rescorla                 Expires January 9, 2017               [Page 13]
-
-Internet-Draft                     TLS                         July 2016
-
-
       struct {
           T1 f1;
           T2 f2;
@@ -741,6 +719,16 @@ Internet-Draft                     TLS                         July 2016
    with a syntax much like that available for enumerateds.  For example,
    T.f2 refers to the second field of the previous declaration.
    Structure definitions may be embedded.
+
+
+
+
+
+
+Rescorla                 Expires January 9, 2017               [Page 13]
+
+Internet-Draft                     TLS                         July 2016
+
 
 3.6.1.  Variants
 
@@ -773,6 +761,18 @@ Internet-Draft                     TLS                         July 2016
       } [[Tv]];
 
    For example:
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
