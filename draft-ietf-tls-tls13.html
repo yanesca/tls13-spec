@@ -563,9 +563,21 @@ li, p {
 <p/>
 
 <ul>
-  <li>Allow cookies to be longer.</li>
+  <li>Allow cookies to be longer (*)</li>
+  <li>Remove the &#8220;context&#8221; from EarlyDataIndication as it was undefined and nobody used it (*)</li>
+  <li>Remove 0-RTT EncryptedExtensions and replace the ticket_age extension with an obfuscated version. Also necessitates a change to NewSessionTicket (*).</li>
+  <li>Move the downgrade sentinel to the end of ServerHello.Random to accomodate tlsdate (*).</li>
+  <li>Define ecdsa_sha1 (*).</li>
+  <li>Allow resumption even after fatal alerts. This matches current practice.</li>
+  <li>Make the rules for accepting 0-RTT less restrictive.</li>
+  <li>Clarify 0-RTT backward-compatibility rules.</li>
+  <li>Clarify how 0-RTT and PSK identities interact.</li>
+  <li>Add a section describing the data limits for each cipher.</li>
+  <li>Major editorial restructuring.</li>
+  <li>Remove the Security Analysis section. It will be replaced with something more modern.</li>
 </ul>
-<p id="rfc.section.1.2.p.3">draft-13</p>
+<p id="rfc.section.1.2.p.3">(*) indicates changes to the wire protocol which may require implementations to update.</p>
+<p id="rfc.section.1.2.p.4">draft-13</p>
 <p/>
 
 <ul>
@@ -581,7 +593,7 @@ li, p {
   <li>Remove the redundant length fields in KeyShareEntry.</li>
   <li>Define a cookie field for HRR.</li>
 </ul>
-<p id="rfc.section.1.2.p.5">draft-12</p>
+<p id="rfc.section.1.2.p.6">draft-12</p>
 <p/>
 
 <ul>
@@ -594,7 +606,7 @@ li, p {
   <li>Define exporters.</li>
   <li>Editorial cleanup</li>
 </ul>
-<p id="rfc.section.1.2.p.7">draft-11</p>
+<p id="rfc.section.1.2.p.8">draft-11</p>
 <p/>
 
 <ul>
@@ -607,14 +619,14 @@ li, p {
   <li>Remove early_handshake content type. Terminate 0-RTT data with an alert.</li>
   <li>Reset sequence number upon key change (as proposed by Fournet et al.)</li>
 </ul>
-<p id="rfc.section.1.2.p.9">draft-10</p>
+<p id="rfc.section.1.2.p.10">draft-10</p>
 <p/>
 
 <ul>
   <li>Remove ClientCertificateTypes field from CertificateRequest and add extensions.</li>
   <li>Merge client and server key shares into a single extension.</li>
 </ul>
-<p id="rfc.section.1.2.p.11">draft-09</p>
+<p id="rfc.section.1.2.p.12">draft-09</p>
 <p/>
 
 <ul>
@@ -628,7 +640,7 @@ li, p {
   <li>Deprecate SHA-1 with signatures.</li>
   <li>Add MTI algorithms.</li>
 </ul>
-<p id="rfc.section.1.2.p.13">draft-08</p>
+<p id="rfc.section.1.2.p.14">draft-08</p>
 <p/>
 
 <ul>
@@ -641,7 +653,7 @@ li, p {
   <li>Change code point for server_configuration to avoid collision with server_hello_done.</li>
   <li>Relax certificate_list ordering requirement to match current practice.</li>
 </ul>
-<p id="rfc.section.1.2.p.15">draft-07</p>
+<p id="rfc.section.1.2.p.16">draft-07</p>
 <p/>
 
 <ul>
@@ -651,7 +663,7 @@ li, p {
   <li>Move ClientKeyShare into an extension.</li>
   <li>Move to HKDF.</li>
 </ul>
-<p id="rfc.section.1.2.p.17">draft-06</p>
+<p id="rfc.section.1.2.p.18">draft-06</p>
 <p/>
 
 <ul>
@@ -660,14 +672,14 @@ li, p {
   <li>Update format of signatures with context.</li>
   <li>Remove explicit IV.</li>
 </ul>
-<p id="rfc.section.1.2.p.19">draft-05</p>
+<p id="rfc.section.1.2.p.20">draft-05</p>
 <p/>
 
 <ul>
   <li>Prohibit SSL negotiation for backwards compatibility.</li>
   <li>Fix which MS is used for exporters.</li>
 </ul>
-<p id="rfc.section.1.2.p.21">draft-04</p>
+<p id="rfc.section.1.2.p.22">draft-04</p>
 <p/>
 
 <ul>
@@ -677,7 +689,7 @@ li, p {
   <li>Remove renegotiation.</li>
   <li>Remove point format negotiation.</li>
 </ul>
-<p id="rfc.section.1.2.p.23">draft-03</p>
+<p id="rfc.section.1.2.p.24">draft-03</p>
 <p/>
 
 <ul>
@@ -687,7 +699,7 @@ li, p {
   <li>Rename {Client,Server}KeyExchange to {Client,Server}KeyShare.</li>
   <li>Add an explicit HelloRetryRequest to reject the client&#8217;s.</li>
 </ul>
-<p id="rfc.section.1.2.p.25">draft-02</p>
+<p id="rfc.section.1.2.p.26">draft-02</p>
 <p/>
 
 <ul>

@@ -81,7 +81,7 @@ Table of Contents
    2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  10
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  13
      2.2.  Resumption and Pre-Shared Key (PSK) . . . . . . . . . . .  14
-     2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  15
+     2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  16
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  17
      3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  17
      3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  18
@@ -291,13 +291,52 @@ Internet-Draft                     TLS                         July 2016
 
    draft-14
 
-   -  Allow cookies to be longer.
+   -  Allow cookies to be longer (*)
+
+   -  Remove the "context" from EarlyDataIndication as it was undefined
+      and nobody used it (*)
+
+   -  Remove 0-RTT EncryptedExtensions and replace the ticket_age
+      extension with an obfuscated version.  Also necessitates a change
+      to NewSessionTicket (*).
+
+   -  Move the downgrade sentinel to the end of ServerHello.Random to
+      accomodate tlsdate (*).
+
+   -  Define ecdsa_sha1 (*).
+
+   -  Allow resumption even after fatal alerts.  This matches current
+      practice.
+
+   -  Make the rules for accepting 0-RTT less restrictive.
+
+   -  Clarify 0-RTT backward-compatibility rules.
+
+   -  Clarify how 0-RTT and PSK identities interact.
+
+   -  Add a section describing the data limits for each cipher.
+
+   -  Major editorial restructuring.
+
+   -  Remove the Security Analysis section.  It will be replaced with
+      something more modern.
+
+   (*) indicates changes to the wire protocol which may require
+   implementations to update.
 
    draft-13
 
    -  Allow server to send SupportedGroups.
 
    -  Remove 0-RTT client authentication
+
+
+
+
+Rescorla                Expires January 11, 2017                [Page 6]
+
+Internet-Draft                     TLS                         July 2016
+
 
    -  Remove (EC)DHE 0-RTT.
 
@@ -331,13 +370,6 @@ Internet-Draft                     TLS                         July 2016
    -  Revise signature algorithm negotiation to group hash, signature
       algorithm, and curve together.  This is backwards compatible.
 
-
-
-Rescorla                Expires January 11, 2017                [Page 6]
-
-Internet-Draft                     TLS                         July 2016
-
-
    -  Make ticket lifetime mandatory and limit it to a week.
 
    -  Make the purpose strings lower-case.  This matches how people are
@@ -353,6 +385,14 @@ Internet-Draft                     TLS                         July 2016
 
    -  Remove sequence number and version from additional_data, which is
       now empty.
+
+
+
+
+Rescorla                Expires January 11, 2017                [Page 7]
+
+Internet-Draft                     TLS                         July 2016
+
 
    -  Reorder values in HkdfLabel.
 
@@ -387,13 +427,6 @@ Internet-Draft                     TLS                         July 2016
 
    -  Add support for per-record padding.
 
-
-
-Rescorla                Expires January 11, 2017                [Page 7]
-
-Internet-Draft                     TLS                         July 2016
-
-
    -  Switch to encrypted record ContentType.
 
    -  Change HKDF labeling to include protocol version and value
@@ -409,6 +442,13 @@ Internet-Draft                     TLS                         July 2016
    draft-08
 
    -  Remove support for weak and lesser used named curves.
+
+
+
+Rescorla                Expires January 11, 2017                [Page 8]
+
+Internet-Draft                     TLS                         July 2016
+
 
    -  Remove support for MD5 and SHA-224 hashes with signatures.
 
@@ -442,14 +482,6 @@ Internet-Draft                     TLS                         July 2016
 
    draft-06
 
-
-
-
-Rescorla                Expires January 11, 2017                [Page 8]
-
-Internet-Draft                     TLS                         July 2016
-
-
    -  Prohibit RC4 negotiation for backwards compatibility.
 
    -  Freeze & deprecate record layer version field.
@@ -465,6 +497,14 @@ Internet-Draft                     TLS                         July 2016
    -  Fix which MS is used for exporters.
 
    draft-04
+
+
+
+
+Rescorla                Expires January 11, 2017                [Page 9]
+
+Internet-Draft                     TLS                         July 2016
+
 
    -  Modify key computations to include session hash.
 
@@ -499,13 +539,6 @@ Internet-Draft                     TLS                         July 2016
 
    -  Remove custom DHE groups.
 
-
-
-Rescorla                Expires January 11, 2017                [Page 9]
-
-Internet-Draft                     TLS                         July 2016
-
-
    -  Remove support for compression.
 
    -  Remove support for static RSA and DH key exchange.
@@ -521,6 +554,14 @@ Internet-Draft                     TLS                         July 2016
    secret keying material.  Once the handshake is complete, the peers
    may use the established keys to protect application layer traffic.
 
+
+
+
+Rescorla                Expires January 11, 2017               [Page 10]
+
+Internet-Draft                     TLS                         July 2016
+
+
    TLS supports three basic key exchange modes:
 
    -  Diffie-Hellman (of both the finite field and elliptic curve
@@ -535,32 +576,6 @@ Internet-Draft                     TLS                         July 2016
    to derive all the keys.
 
    Figure 1 below shows the basic full TLS handshake.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                Expires January 11, 2017               [Page 10]
-
-Internet-Draft                     TLS                         July 2016
-
 
        Client                                               Server
 
@@ -595,6 +610,14 @@ Auth | {CertificateVerify*}
 
                Figure 1: Message flow for full TLS Handshake
 
+
+
+
+Rescorla                Expires January 11, 2017               [Page 11]
+
+Internet-Draft                     TLS                         July 2016
+
+
    The handshake can be thought of as having three phases, indicated in
    the diagram above.
 
@@ -610,14 +633,6 @@ Auth | {CertificateVerify*}
    In the Key Exchange phase, the client sends the ClientHello
    (Section 4.1.1) message, which contains a random nonce
    (ClientHello.random), its offered protocol version, cipher suite, and
-
-
-
-Rescorla                Expires January 11, 2017               [Page 11]
-
-Internet-Draft                     TLS                         July 2016
-
-
    extensions, and in general either one or more Diffie-Hellman key
    shares (in the "key_share" extension Section 4.2.4), one or more pre-
    shared key labels (in the "pre_shared_key" extension Section 4.2.5),
@@ -650,6 +665,15 @@ Internet-Draft                     TLS                         July 2016
    uses the same set of messages every time that authentication is
    needed.  Specifically:
 
+
+
+
+
+Rescorla                Expires January 11, 2017               [Page 12]
+
+Internet-Draft                     TLS                         July 2016
+
+
    Certificate.  the certificate of the endpoint.  This message is
       omitted if the server is not authenticating with a certificate
       (i.e., with PSK or (EC)DHE-PSK cipher suites).  Note that if raw
@@ -665,15 +689,6 @@ Internet-Draft                     TLS                         July 2016
 
    Finished.  a MAC over the entire handshake.  This message provides
       key confirmation, binds the endpoint's identity to the exchanged
-
-
-
-
-Rescorla                Expires January 11, 2017               [Page 12]
-
-Internet-Draft                     TLS                         July 2016
-
-
       keys, and in PSK mode also authenticates the handshake.
       [Section 4.3.3]
 
@@ -699,6 +714,22 @@ Internet-Draft                     TLS                         July 2016
    send a "handshake_failure" or "insufficient_security" fatal alert
    (see Section 6).
 
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                Expires January 11, 2017               [Page 13]
+
+Internet-Draft                     TLS                         July 2016
+
+
             Client                                               Server
 
             ClientHello
@@ -722,13 +753,6 @@ Internet-Draft                     TLS                         July 2016
 
         Figure 2: Message flow for a full handshake with mismatched
                                 parameters
-
-
-
-Rescorla                Expires January 11, 2017               [Page 13]
-
-Internet-Draft                     TLS                         July 2016
-
 
    Note: the handshake transcript includes the initial ClientHello/
    HelloRetryRequest exchange; it is not reset with the new ClientHello.
@@ -754,30 +778,6 @@ Internet-Draft                     TLS                         July 2016
    shared keys, or can use PSKs alone, at the cost of losing forward
    secrecy.
 
-   Figure 3 shows a pair of handshakes in which the first establishes a
-   PSK and the second uses it:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -785,6 +785,9 @@ Rescorla                Expires January 11, 2017               [Page 14]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   Figure 3 shows a pair of handshakes in which the first establishes a
+   PSK and the second uses it:
 
           Client                                               Server
 
@@ -828,12 +831,9 @@ Internet-Draft                     TLS                         July 2016
    full handshake.  A "key_share" extension MUST also be sent if the
    client is attempting to negotiate an (EC)DHE-PSK cipher suite.
 
-2.3.  Zero-RTT Data
 
-   When resuming via a PSK with an appropriate ticket (i.e., one with
-   the "allow_early_data" flag), clients can also send data on their
-   first flight ("early data").  This data is encrypted solely under
-   keys derived using the first offered PSK as the static secret.  As
+
+
 
 
 
@@ -842,6 +842,12 @@ Rescorla                Expires January 11, 2017               [Page 15]
 Internet-Draft                     TLS                         July 2016
 
 
+2.3.  Zero-RTT Data
+
+   When resuming via a PSK with an appropriate ticket (i.e., one with
+   the "allow_early_data" flag), clients can also send data on their
+   first flight ("early data").  This data is encrypted solely under
+   keys derived using the first offered PSK as the static secret.  As
    shown in Figure 4, the Zero-RTT data is just added to the 1-RTT
    handshake in the first flight, the rest of the handshake uses the
    same messages.
@@ -883,13 +889,7 @@ Internet-Draft                     TLS                         July 2016
 
           Figure 4: Message flow for a zero round trip handshake
 
-   [[OPEN ISSUE: Should it be possible to combine 0-RTT with the server
-   authenticating via a signature https://github.com/tlswg/tls13-spec/
-   issues/443]]
 
-   IMPORTANT NOTE: The security properties for 0-RTT data (regardless of
-   the cipher suite) are weaker than those for other kinds of TLS data.
-   Specifically:
 
 
 
@@ -897,6 +897,14 @@ Rescorla                Expires January 11, 2017               [Page 16]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [[OPEN ISSUE: Should it be possible to combine 0-RTT with the server
+   authenticating via a signature https://github.com/tlswg/tls13-spec/
+   issues/443]]
+
+   IMPORTANT NOTE: The security properties for 0-RTT data (regardless of
+   the cipher suite) are weaker than those for other kinds of TLS data.
+   Specifically:
 
    1.  This data is not forward secret, because it is encrypted solely
        with the PSK.
@@ -939,20 +947,15 @@ Internet-Draft                     TLS                         July 2016
       value = (byte[0] << 8*(n-1)) | (byte[1] << 8*(n-2)) |
               ... | byte[n-1];
 
-   This byte ordering for multi-byte values is the commonplace network
-   byte order or big-endian format.
-
-
-
-
-
-
 
 
 Rescorla                Expires January 11, 2017               [Page 17]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   This byte ordering for multi-byte values is the commonplace network
+   byte order or big-endian format.
 
 3.2.  Miscellaneous
 
@@ -999,9 +1002,6 @@ Internet-Draft                     TLS                         July 2016
    In the following example, mandatory is a vector that must contain
    between 300 and 400 bytes of type opaque.  It can never be empty.
    The actual length field consumes two bytes, a uint16, which is
-   sufficient to represent the value 400 (see Section 3.4).  On the
-   other hand, longer can represent up to 800 bytes of data, or 400
-   uint16 elements, and it may be empty.  Its encoding will include a
 
 
 
@@ -1010,6 +1010,9 @@ Rescorla                Expires January 11, 2017               [Page 18]
 Internet-Draft                     TLS                         July 2016
 
 
+   sufficient to represent the value 400 (see Section 3.4).  On the
+   other hand, longer can represent up to 800 bytes of data, or 400
+   uint16 elements, and it may be empty.  Its encoding will include a
    two-byte actual length field prepended to the vector.  The length of
    an encoded vector must be an even multiple of the length of a single
    element (for example, a 17-byte vector of uint16 would be illegal).
@@ -1056,15 +1059,14 @@ Internet-Draft                     TLS                         July 2016
    maximal defined ordinal value.  The following definition would cause
    one byte to be used to carry fields of type Color.
 
-      enum { red(3), blue(5), white(7) } Color;
-
-
 
 
 Rescorla                Expires January 11, 2017               [Page 19]
 
 Internet-Draft                     TLS                         July 2016
 
+
+      enum { red(3), blue(5), white(7) } Color;
 
    One may optionally specify a value without its associated tag to
    force the width definition without defining a superfluous element.
@@ -1112,8 +1114,6 @@ Internet-Draft                     TLS                         July 2016
    available within the environment.  The selector must be an enumerated
    type that defines the possible variants the structure defines.  There
    must be a case arm for every element of the enumeration declared in
-   the select.  Case arms have limited fall-through: if two case arms
-   follow in immediate succession with no fields in between, then they
 
 
 
@@ -1122,6 +1122,8 @@ Rescorla                Expires January 11, 2017               [Page 20]
 Internet-Draft                     TLS                         July 2016
 
 
+   the select.  Case arms have limited fall-through: if two case arms
+   follow in immediate succession with no fields in between, then they
    both contain the same fields.  Thus, in the example below, "orange"
    and "banana" both contain V2.  Note that this is a new piece of
    syntax in TLS 1.2.
@@ -1167,8 +1169,6 @@ Internet-Draft                     TLS                         July 2016
                 V2;   /* VariantBody, tag = orange or banana */
           } variant_body;       /* optional label on variant */
       } VariantRecord;
-
-
 
 
 
