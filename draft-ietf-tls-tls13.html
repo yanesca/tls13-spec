@@ -312,6 +312,7 @@ li, p {
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Record Payload Protection"/>
 <link href="#rfc.section.5.3" rel="Chapter" title="5.3 Per-Record Nonce"/>
 <link href="#rfc.section.5.4" rel="Chapter" title="5.4 Record Padding"/>
+<link href="#rfc.section.5.5" rel="Chapter" title="5.5 Limits on Key Usage"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Alert Protocol"/>
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 Closure Alerts"/>
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Error Alerts"/>
@@ -476,6 +477,7 @@ li, p {
 <li>5.2.   <a href="#rfc.section.5.2">Record Payload Protection</a></li>
 <li>5.3.   <a href="#rfc.section.5.3">Per-Record Nonce</a></li>
 <li>5.4.   <a href="#rfc.section.5.4">Record Padding</a></li>
+<li>5.5.   <a href="#rfc.section.5.5">Limits on Key Usage</a></li>
 </ul><li>6.   <a href="#rfc.section.6">Alert Protocol</a></li>
 <ul><li>6.1.   <a href="#rfc.section.6.1">Closure Alerts</a></li>
 <li>6.2.   <a href="#rfc.section.6.2">Error Alerts</a></li>
@@ -1937,6 +1939,9 @@ server_finished_key =
 <p id="rfc.section.5.4.p.5">Implementations MUST limit their scanning to the cleartext returned from the AEAD decryption.  If a receiving implementation does not find a non-zero octet in the cleartext, it should treat the record as having an unexpected ContentType, sending an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic, and is beyond the scope of this specification. If the application layer protocol atop TLS permits padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms, or define a padding policy request mechanism through TLS extensions or some other means.</p>
+<h2 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a></h2>
+<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a>; implementations SHOULD do a key update <a href="#key-update">Section 4.4.3</a> prior to reaching these limits.</p>
+<p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number will wrap before the safety limit is reached.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
 <p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Alert messages convey the severity of the message (warning or fatal) and a description of the alert. Alert messages with a level of fatal result in the immediate termination of the connection. In this case, other connections corresponding to the session may continue, but the session identifier MUST be invalidated, preventing the failed session from being used to establish new connections. Like other messages, alert messages are encrypted as specified by the current connection state.</p>
 <pre>
@@ -2626,6 +2631,12 @@ HKDF-Expand-Label(exporter_secret,
 <h2 id="rfc.references.2"><a href="#rfc.references.2">11.2.</a> Informative References</h2>
 <table>
   <tbody>
+    <tr>
+      <td class="reference">
+        <b id="AEAD-LIMITS">[AEAD-LIMITS]</b>
+      </td>
+      <td class="top"><a>Luytx, A.</a> and <a>K. Paterson</a>, "<a href="http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf">Limits on Authenticated Encryption Use in TLS</a>", 2016.</td>
+    </tr>
     <tr>
       <td class="reference">
         <b id="DSS">[DSS]</b>

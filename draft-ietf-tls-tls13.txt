@@ -127,6 +127,7 @@ Internet-Draft                     TLS                         July 2016
      5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  58
      5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  60
      5.4.  Record Padding  . . . . . . . . . . . . . . . . . . . . .  61
+     5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  62
    6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  62
      6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  63
      6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  64
@@ -161,7 +162,6 @@ Internet-Draft                     TLS                         July 2016
      B.3.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 100
      B.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 100
      B.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 102
-   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 102
 
 
 
@@ -170,6 +170,7 @@ Rescorla                Expires January 11, 2017                [Page 3]
 Internet-Draft                     TLS                         July 2016
 
 
+   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 102
      C.1.  Negotiating with an older server  . . . . . . . . . . . . 103
      C.2.  Negotiating with an older client  . . . . . . . . . . . . 103
      C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 104
@@ -216,8 +217,7 @@ Internet-Draft                     TLS                         July 2016
       parties, negotiates cryptographic modes and parameters, and
       establishes shared keying material.  The handshake protocol is
       designed to resist tampering; an active attacker should not be
-      able to force the peers to negotiate different parameters than
-      they would if the connection were not under attack.
+
 
 
 
@@ -225,6 +225,9 @@ Rescorla                Expires January 11, 2017                [Page 4]
 
 Internet-Draft                     TLS                         July 2016
 
+
+      able to force the peers to negotiate different parameters than
+      they would if the connection were not under attack.
 
    -  A record protocol which uses the parameters established by the
       handshake protocol to protect traffic between the communicating
@@ -271,9 +274,6 @@ Internet-Draft                     TLS                         July 2016
 
    sender: An endpoint that is transmitting records.
 
-   session: An association between a client and a server resulting from
-   a handshake.
-
 
 
 
@@ -281,6 +281,9 @@ Rescorla                Expires January 11, 2017                [Page 5]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   session: An association between a client and a server resulting from
+   a handshake.
 
    server: The endpoint which did not initiate the TLS connection.
 
@@ -328,15 +331,14 @@ Internet-Draft                     TLS                         July 2016
    -  Revise signature algorithm negotiation to group hash, signature
       algorithm, and curve together.  This is backwards compatible.
 
-   -  Make ticket lifetime mandatory and limit it to a week.
-
-
 
 
 Rescorla                Expires January 11, 2017                [Page 6]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   -  Make ticket lifetime mandatory and limit it to a week.
 
    -  Make the purpose strings lower-case.  This matches how people are
       implementing for interop.
@@ -385,14 +387,14 @@ Internet-Draft                     TLS                         July 2016
 
    -  Add support for per-record padding.
 
-   -  Switch to encrypted record ContentType.
-
 
 
 Rescorla                Expires January 11, 2017                [Page 7]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   -  Switch to encrypted record ContentType.
 
    -  Change HKDF labeling to include protocol version and value
       lengths.
@@ -440,8 +442,6 @@ Internet-Draft                     TLS                         July 2016
 
    draft-06
 
-   -  Prohibit RC4 negotiation for backwards compatibility.
-
 
 
 
@@ -449,6 +449,8 @@ Rescorla                Expires January 11, 2017                [Page 8]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   -  Prohibit RC4 negotiation for backwards compatibility.
 
    -  Freeze & deprecate record layer version field.
 
@@ -497,14 +499,14 @@ Internet-Draft                     TLS                         July 2016
 
    -  Remove custom DHE groups.
 
-   -  Remove support for compression.
-
 
 
 Rescorla                Expires January 11, 2017                [Page 9]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   -  Remove support for compression.
 
    -  Remove support for static RSA and DH key exchange.
 
@@ -533,8 +535,6 @@ Internet-Draft                     TLS                         July 2016
    to derive all the keys.
 
    Figure 1 below shows the basic full TLS handshake.
-
-
 
 
 
@@ -3436,6 +3436,19 @@ Internet-Draft                     TLS                         July 2016
    define padding selection algorithms, or define a padding policy
    request mechanism through TLS extensions or some other means.
 
+5.5.  Limits on Key Usage
+
+   There are cryptographic limits on the amount of plaintext which can
+   be safely encrypted under a given set of keys [AEAD-LIMITS];
+   implementations SHOULD do a key update Section 4.4.3 prior to
+   reaching these limits.
+
+   For AES-GCM, up to 2^24.5 full-size records may be encrypted on a
+   given connection while keeping a safety margin of approximately 2^-57
+   for Authenticated Encryption (AE) security.  For ChaCha20/Poly1305,
+   the record sequence number will wrap before the safety limit is
+   reached.
+
 6.  Alert Protocol
 
    One of the content types supported by the TLS record layer is the
@@ -3447,19 +3460,6 @@ Internet-Draft                     TLS                         July 2016
    preventing the failed session from being used to establish new
    connections.  Like other messages, alert messages are encrypted as
    specified by the current connection state.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4451,6 +4451,11 @@ Internet-Draft                     TLS                         July 2016
 
 11.2.  Informative References
 
+   [AEAD-LIMITS]
+              Luytx, A. and K. Paterson, "Limits on Authenticated
+              Encryption Use in TLS", 2016,
+              <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
+
    [DSS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Digital Signature Standard,
               version 4", NIST FIPS PUB 186-4, 2013.
@@ -4469,11 +4474,6 @@ Internet-Draft                     TLS                         July 2016
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
 
-   [I-D.ietf-tls-cached-info]
-              Santesson, S. and H. Tschofenig, "Transport Layer Security
-              (TLS) Cached Information Extension", draft-ietf-tls-
-              cached-info-23 (work in progress), May 2016.
-
 
 
 
@@ -4481,6 +4481,11 @@ Rescorla                Expires January 11, 2017               [Page 80]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [I-D.ietf-tls-cached-info]
+              Santesson, S. and H. Tschofenig, "Transport Layer Security
+              (TLS) Cached Information Extension", draft-ietf-tls-
+              cached-info-23 (work in progress), May 2016.
 
    [I-D.ietf-tls-negotiated-ff-dhe]
               Gillmor, D., "Negotiated Finite Field Diffie-Hellman
@@ -4526,17 +4531,16 @@ Internet-Draft                     TLS                         July 2016
               RFC 4279, DOI 10.17487/RFC4279, December 2005,
               <http://www.rfc-editor.org/info/rfc4279>.
 
-   [RFC4302]  Kent, S., "IP Authentication Header", RFC 4302,
-              DOI 10.17487/RFC4302, December 2005,
-              <http://www.rfc-editor.org/info/rfc4302>.
-
-
 
 
 Rescorla                Expires January 11, 2017               [Page 81]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC4302]  Kent, S., "IP Authentication Header", RFC 4302,
+              DOI 10.17487/RFC4302, December 2005,
+              <http://www.rfc-editor.org/info/rfc4302>.
 
    [RFC4303]  Kent, S., "IP Encapsulating Security Payload (ESP)",
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
@@ -4581,10 +4585,6 @@ Internet-Draft                     TLS                         July 2016
               Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
               January 2008, <http://www.rfc-editor.org/info/rfc5077>.
 
-   [RFC5081]  Mavrogiannopoulos, N., "Using OpenPGP Keys for Transport
-              Layer Security (TLS) Authentication", RFC 5081,
-              DOI 10.17487/RFC5081, November 2007,
-              <http://www.rfc-editor.org/info/rfc5081>.
 
 
 
@@ -4593,6 +4593,11 @@ Rescorla                Expires January 11, 2017               [Page 82]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC5081]  Mavrogiannopoulos, N., "Using OpenPGP Keys for Transport
+              Layer Security (TLS) Authentication", RFC 5081,
+              DOI 10.17487/RFC5081, November 2007,
+              <http://www.rfc-editor.org/info/rfc5081>.
 
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
@@ -4637,11 +4642,6 @@ Internet-Draft                     TLS                         July 2016
               (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
               2011, <http://www.rfc-editor.org/info/rfc6176>.
 
-   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
-              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
-              January 2012, <http://www.rfc-editor.org/info/rfc6347>.
-
-
 
 
 
@@ -4649,6 +4649,10 @@ Rescorla                Expires January 11, 2017               [Page 83]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
+              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
+              January 2012, <http://www.rfc-editor.org/info/rfc6347>.
 
    [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
               Layer Security (TLS) and Datagram Transport Layer Security
@@ -4692,10 +4696,6 @@ Internet-Draft                     TLS                         July 2016
               RFC 7627, DOI 10.17487/RFC7627, September 2015,
               <http://www.rfc-editor.org/info/rfc7627>.
 
-   [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
-              Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
-              October 2015, <http://www.rfc-editor.org/info/rfc7685>.
-
 
 
 
@@ -4705,6 +4705,10 @@ Rescorla                Expires January 11, 2017               [Page 84]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
+              Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
+              October 2015, <http://www.rfc-editor.org/info/rfc7685>.
 
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
@@ -4730,10 +4734,6 @@ Internet-Draft                     TLS                         July 2016
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
 
 
 
