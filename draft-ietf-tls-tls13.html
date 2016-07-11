@@ -2017,19 +2017,19 @@ server_finished_key =
 <p id="rfc.section.6.1.p.5">If the application protocol using TLS provides that any data may be carried over the underlying transport after the TLS connection is closed, the TLS implementation must receive the responding &#8220;close_notify&#8221; alert before indicating to the application layer that the TLS connection has ended. If the application protocol will not transfer any additional data, but will only close the underlying transport connection, then the implementation MAY choose to close the transport without waiting for the responding &#8220;close_notify&#8221;. No part of this standard should be taken to dictate the manner in which a usage profile for TLS manages its data transport, including when connections are opened or closed.</p>
 <p id="rfc.section.6.1.p.6">Note: It is assumed that closing a connection reliably delivers pending data before destroying the transport.</p>
 <h2 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#error-alerts" id="error-alerts">Error Alerts</a></h2>
-<p id="rfc.section.6.2.p.1">Error handling in the TLS Handshake Protocol is very simple. When an error is detected, the detecting party sends a message to its peer. Upon transmission or receipt of a fatal alert message, both parties immediately close the connection.  Whenever an implementation encounters a condition which is defined as a fatal alert, it MUST send the appropriate alert prior to closing the connection.</p>
+<p id="rfc.section.6.2.p.1">Error handling in the TLS Handshake Protocol is very simple. When an error is detected, the detecting party sends a message to its peer. Upon transmission or receipt of a fatal alert message, both parties immediately close the connection.  Whenever an implementation encounters a condition which is defined as a fatal alert, it MUST send the appropriate alert prior to closing the connection. All alerts defined in this section below, as well as all unknown alerts are universally considered fatal as of TLS 1.3 (see <a href="#alert-protocol">Section 6</a>).</p>
 <p id="rfc.section.6.2.p.2">The following error alerts are defined:</p>
 <p/>
 
 <dl>
   <dt>unexpected_message</dt>
-  <dd style="margin-left: 8">An inappropriate message was received.  This alert is always fatal and should never be observed in communication between proper implementations.</dd>
+  <dd style="margin-left: 8">An inappropriate message was received. This alert should never be observed in communication between proper implementations.</dd>
   <dt>bad_record_mac</dt>
-  <dd style="margin-left: 8">This alert is returned if a record is received which cannot be deprotected. Because AEAD algorithms combine decryption and verification, this alert is used for all deprotection failures.  This alert is always fatal and should never be observed in communication between proper implementations (except when messages were corrupted in the network).</dd>
+  <dd style="margin-left: 8">This alert is returned if a record is received which cannot be deprotected. Because AEAD algorithms combine decryption and verification, this alert is used for all deprotection failures.  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
   <dt>record_overflow</dt>
-  <dd style="margin-left: 8">A TLSCiphertext record was received that had a length more than 2^14 + 256 bytes, or a record decrypted to a TLSPlaintext record with more than 2^14 bytes.  This alert is always fatal and should never be observed in communication between proper implementations (except when messages were corrupted in the network).</dd>
+  <dd style="margin-left: 8">A TLSCiphertext record was received that had a length more than 2^14 + 256 bytes, or a record decrypted to a TLSPlaintext record with more than 2^14 bytes.  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
   <dt>handshake_failure</dt>
-  <dd style="margin-left: 8">Reception of a &#8220;handshake_failure&#8221; alert message indicates that the sender was unable to negotiate an acceptable set of security parameters given the options available.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">Reception of a &#8220;handshake_failure&#8221; alert message indicates that the sender was unable to negotiate an acceptable set of security parameters given the options available.</dd>
   <dt>bad_certificate</dt>
   <dd style="margin-left: 8">A certificate was corrupt, contained signatures that did not verify correctly, etc.</dd>
   <dt>unsupported_certificate</dt>
@@ -2041,27 +2041,27 @@ server_finished_key =
   <dt>certificate_unknown</dt>
   <dd style="margin-left: 8">Some other (unspecified) issue arose in processing the certificate, rendering it unacceptable.</dd>
   <dt>illegal_parameter</dt>
-  <dd style="margin-left: 8">A field in the handshake was out of range or inconsistent with other fields.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">A field in the handshake was out of range or inconsistent with other fields.</dd>
   <dt>unknown_ca</dt>
-  <dd style="margin-left: 8">A valid certificate chain or partial chain was received, but the certificate was not accepted because the CA certificate could not be located or couldn&#8217;t be matched with a known, trusted CA.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">A valid certificate chain or partial chain was received, but the certificate was not accepted because the CA certificate could not be located or couldn&#8217;t be matched with a known, trusted CA.</dd>
   <dt>access_denied</dt>
-  <dd style="margin-left: 8">A valid certificate or PSK was received, but when access control was applied, the sender decided not to proceed with negotiation.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">A valid certificate or PSK was received, but when access control was applied, the sender decided not to proceed with negotiation.</dd>
   <dt>decode_error</dt>
-  <dd style="margin-left: 8">A message could not be decoded because some field was out of the specified range or the length of the message was incorrect.  This alert is always fatal and should never be observed in communication between proper implementations (except when messages were corrupted in the network).</dd>
+  <dd style="margin-left: 8">A message could not be decoded because some field was out of the specified range or the length of the message was incorrect.  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
   <dt>decrypt_error</dt>
-  <dd style="margin-left: 8">A handshake cryptographic operation failed, including being unable to correctly verify a signature or validate a Finished message.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">A handshake cryptographic operation failed, including being unable to correctly verify a signature or validate a Finished message.</dd>
   <dt>protocol_version</dt>
-  <dd style="margin-left: 8">The protocol version the peer has attempted to negotiate is recognized but not supported.  (For example, old protocol versions might be avoided for security reasons.)  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">The protocol version the peer has attempted to negotiate is recognized but not supported. (see <a href="#backward-compatibility">Appendix C</a>)</dd>
   <dt>insufficient_security</dt>
-  <dd style="margin-left: 8">Returned instead of &#8220;handshake_failure&#8221; when a negotiation has failed specifically because the server requires ciphers more secure than those supported by the client.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">Returned instead of &#8220;handshake_failure&#8221; when a negotiation has failed specifically because the server requires ciphers more secure than those supported by the client.</dd>
   <dt>internal_error</dt>
-  <dd style="margin-left: 8">An internal error unrelated to the peer or the correctness of the protocol (such as a memory allocation failure) makes it impossible to continue.  This alert is always fatal.</dd>
+  <dd style="margin-left: 8">An internal error unrelated to the peer or the correctness of the protocol (such as a memory allocation failure) makes it impossible to continue.</dd>
   <dt>inappropriate_fallback</dt>
-  <dd style="margin-left: 8">Sent by a server in response to an invalid connection retry attempt from a client. (see [RFC7507]) This alert is always fatal.</dd>
+  <dd style="margin-left: 8">Sent by a server in response to an invalid connection retry attempt from a client. (see [RFC7507])</dd>
   <dt>missing_extension</dt>
-  <dd style="margin-left: 8">Sent by endpoints that receive a hello message not containing an extension that is mandatory to send for the offered TLS version.  This message is always fatal.  [[TODO: IANA Considerations.]]</dd>
+  <dd style="margin-left: 8">Sent by endpoints that receive a hello message not containing an extension that is mandatory to send for the offered TLS version.  [[TODO: IANA Considerations.]]</dd>
   <dt>unsupported_extension</dt>
-  <dd style="margin-left: 8">Sent by endpoints receiving any hello message containing an extension known to be prohibited for inclusion in the given hello message, including any extensions in a ServerHello not first offered in the corresponding ClientHello. This alert is always fatal.</dd>
+  <dd style="margin-left: 8">Sent by endpoints receiving any hello message containing an extension known to be prohibited for inclusion in the given hello message, including any extensions in a ServerHello not first offered in the corresponding ClientHello.</dd>
   <dt>certificate_unobtainable</dt>
   <dd style="margin-left: 8">Sent by servers when unable to obtain a certificate from a URL provided by the client via the &#8220;client_certificate_url&#8221; extension <a href="#RFC6066">[RFC6066]</a>.</dd>
   <dt>unrecognized_name</dt>
@@ -2069,7 +2069,7 @@ server_finished_key =
   <dt>bad_certificate_status_response</dt>
   <dd style="margin-left: 8">Sent by clients when an invalid or unacceptable OCSP response is provided by the server via the &#8220;status_request&#8221; extension <a href="#RFC6066">[RFC6066]</a>. This alert is always fatal.</dd>
   <dt>bad_certificate_hash_value</dt>
-  <dd style="margin-left: 8">Sent by servers when a retrieved object does not have the correct hash provided by the client via the &#8220;client_certificate_url&#8221; extension <a href="#RFC6066">[RFC6066]</a>. This alert is always fatal.</dd>
+  <dd style="margin-left: 8">Sent by servers when a retrieved object does not have the correct hash provided by the client via the &#8220;client_certificate_url&#8221; extension <a href="#RFC6066">[RFC6066]</a>.</dd>
   <dt>unknown_psk_identity</dt>
   <dd style="margin-left: 8">Sent by servers when a PSK cipher suite is selected but no acceptable PSK identity is provided by the client. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity.</dd>
 </dl>
