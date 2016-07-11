@@ -569,6 +569,7 @@ li, p {
   <li>Move the downgrade sentinel to the end of ServerHello.Random to accomodate tlsdate (*).</li>
   <li>Define ecdsa_sha1 (*).</li>
   <li>Allow resumption even after fatal alerts. This matches current practice.</li>
+  <li>Remove non-closure warning alerts. Require treating unknown alerts as fatal.</li>
   <li>Make the rules for accepting 0-RTT less restrictive.</li>
   <li>Clarify 0-RTT backward-compatibility rules.</li>
   <li>Clarify how 0-RTT and PSK identities interact.</li>
