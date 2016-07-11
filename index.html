@@ -1953,7 +1953,7 @@ server_finished_key =
 <p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic, and is beyond the scope of this specification. If the application layer protocol atop TLS has its own padding padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms, or define a padding policy request mechanism through TLS extensions or some other means.</p>
 <h2 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a></h2>
-<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a>; implementations SHOULD do a key update <a href="#key-update">Section 4.4.3</a> prior to reaching these limits.</p>
+<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys.  <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> provides an analysis of these limits under the assumption that the underlying primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD do a key update <a href="#key-update">Section 4.4.3</a> prior to reaching these limits.</p>
 <p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number will wrap before the safety limit is reached.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
 <p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Like other messages, alert messages are encrypted as specified by the current connection state.</p>
@@ -2654,7 +2654,7 @@ HKDF-Expand-Label(exporter_secret,
       <td class="reference">
         <b id="AEAD-LIMITS">[AEAD-LIMITS]</b>
       </td>
-      <td class="top"><a>Luytx, A.</a> and <a>K. Paterson</a>, "<a href="http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf">Limits on Authenticated Encryption Use in TLS</a>", 2016.</td>
+      <td class="top"><a>Luykx, A.</a> and <a>K. Paterson</a>, "<a href="http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf">Limits on Authenticated Encryption Use in TLS</a>", 2016.</td>
     </tr>
     <tr>
       <td class="reference">
