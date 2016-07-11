@@ -363,7 +363,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-10" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-11" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -384,7 +384,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 10, 2016</td>
+  <td class="right">July 11, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -399,7 +399,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 11, 2017</td>
+  <td class="left">Expires: January 12, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -420,7 +420,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 11, 2017.</p>
+<p>This Internet-Draft will expire on January 12, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1955,38 +1955,41 @@ server_finished_key =
 <p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a>; implementations SHOULD do a key update <a href="#key-update">Section 4.4.3</a> prior to reaching these limits.</p>
 <p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number will wrap before the safety limit is reached.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
-<p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Alert messages convey the severity of the message (warning or fatal) and a description of the alert. Alert messages with a level of fatal result in the immediate termination of the connection. Like other messages, alert messages are encrypted as specified by the current connection state.</p>
+<p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Like other messages, alert messages are encrypted as specified by the current connection state.</p>
+<p id="rfc.section.6.p.2">Alert messages convey the severity of the message (warning or fatal) and a description of the alert. Warning-level messages are used to indicate orderly closure of the connection (see <a href="#closure-alerts">Section 6.1</a>).  Upon receiving a warning-level alert, the TLS implementation SHOULD indicate end-of-data to the application and, if appropriate for the alert type, send a closure alert in response.</p>
+<p id="rfc.section.6.p.3">Fatal-level messages are used to indicate abortive closure of the connection (See <a href="#error-alerts">Section 6.2</a>). Upon receiving a fatal-level alert, the TLS implementation SHOULD indicate an error to the application and MUST NOT allow any further data to be sent or received on the connection.  Servers and clients MUST forget keys and secrets associated with a failed connection. Stateful implementations of session tickets (as in many clients) SHOULD discard tickets associated with failed connections.</p>
+<p id="rfc.section.6.p.4">All the alerts listed in <a href="#error-alerts">Section 6.2</a> MUST be sent as fatal and MUST be treated as fatal regardless of the AlertLevel in the message. Unknown alert types MUST be treated as fatal.</p>
 <pre>
    enum { warning(1), fatal(2), (255) } AlertLevel;
 
    enum {
        close_notify(0),
        end_of_early_data(1),
-       unexpected_message(10),               /* fatal */
-       bad_record_mac(20),                   /* fatal */
-       record_overflow(22),                  /* fatal */
-       handshake_failure(40),                /* fatal */
+       unexpected_message(10),
+       bad_record_mac(20),
+       record_overflow(22),
+       handshake_failure(40),
        bad_certificate(42),
        unsupported_certificate(43),
        certificate_revoked(44),
        certificate_expired(45),
        certificate_unknown(46),
-       illegal_parameter(47),                /* fatal */
-       unknown_ca(48),                       /* fatal */
-       access_denied(49),                    /* fatal */
-       decode_error(50),                     /* fatal */
-       decrypt_error(51),                    /* fatal */
-       protocol_version(70),                 /* fatal */
-       insufficient_security(71),            /* fatal */
-       internal_error(80),                   /* fatal */
-       inappropriate_fallback(86),           /* fatal */
+       illegal_parameter(47),
+       unknown_ca(48),
+       access_denied(49),
+       decode_error(50),
+       decrypt_error(51),
+       protocol_version(70),
+       insufficient_security(71),
+       internal_error(80),
+       inappropriate_fallback(86),
        user_canceled(90),
-       missing_extension(109),               /* fatal */
-       unsupported_extension(110),           /* fatal */
+       missing_extension(109),
+       unsupported_extension(110),
        certificate_unobtainable(111),
        unrecognized_name(112),
-       bad_certificate_status_response(113), /* fatal */
-       bad_certificate_hash_value(114),      /* fatal */
+       bad_certificate_status_response(113),
+       bad_certificate_hash_value(114),
        unknown_psk_identity(115),
        (255)
    } AlertDescription;
@@ -2013,10 +2016,8 @@ server_finished_key =
 <p id="rfc.section.6.1.p.5">If the application protocol using TLS provides that any data may be carried over the underlying transport after the TLS connection is closed, the TLS implementation must receive the responding &#8220;close_notify&#8221; alert before indicating to the application layer that the TLS connection has ended. If the application protocol will not transfer any additional data, but will only close the underlying transport connection, then the implementation MAY choose to close the transport without waiting for the responding &#8220;close_notify&#8221;. No part of this standard should be taken to dictate the manner in which a usage profile for TLS manages its data transport, including when connections are opened or closed.</p>
 <p id="rfc.section.6.1.p.6">Note: It is assumed that closing a connection reliably delivers pending data before destroying the transport.</p>
 <h2 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#error-alerts" id="error-alerts">Error Alerts</a></h2>
-<p id="rfc.section.6.2.p.1">Error handling in TLS is very simple. When an error is detected, the detecting party sends a message to its peer. Upon transmission or receipt of a fatal alert message, both parties immediately close the connection. Servers and clients MUST forget keys, and secrets associated with a failed connection. Stateful implementations of session tickets (as in many clients) SHOULD discard tickets associated with failed connections.</p>
-<p id="rfc.section.6.2.p.2">Whenever an implementation encounters a condition which is defined as a fatal alert, it MUST send the appropriate alert prior to closing the connection. For all errors where an alert level is not explicitly specified, the sending party MAY determine at its discretion whether to treat this as a fatal error or not.  If the implementation chooses to send an alert but intends to close the connection immediately afterwards, it MUST send that alert at the fatal alert level.</p>
-<p id="rfc.section.6.2.p.3">If an alert with a level of warning is sent and received, generally the connection can continue normally. If the receiving party decides not to proceed with the connection (e.g., after having received a &#8220;user_canceled&#8221; alert that it is not willing to accept), it SHOULD send a fatal alert to terminate the connection. Given this, the sending peer cannot, in general, know how the receiving party will behave. Therefore, warning alerts are not very useful when the sending party wants to continue the connection, and thus are sometimes omitted. For example, if a party decides to accept an expired certificate (perhaps after confirming this with the user) and wants to continue the connection, it would not generally send a &#8220;certificate_expired&#8221; alert.</p>
-<p id="rfc.section.6.2.p.4">The following error alerts are defined:</p>
+<p id="rfc.section.6.2.p.1">Error handling in the TLS Handshake Protocol is very simple. When an error is detected, the detecting party sends a message to its peer. Upon transmission or receipt of a fatal alert message, both parties immediately close the connection.  Whenever an implementation encounters a condition which is defined as a fatal alert, it MUST send the appropriate alert prior to closing the connection.</p>
+<p id="rfc.section.6.2.p.2">The following error alerts are defined:</p>
 <p/>
 
 <dl>
@@ -2071,7 +2072,7 @@ server_finished_key =
   <dt>unknown_psk_identity</dt>
   <dd style="margin-left: 8">Sent by servers when a PSK cipher suite is selected but no acceptable PSK identity is provided by the client. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity.</dd>
 </dl>
-<p id="rfc.section.6.2.p.6">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
+<p id="rfc.section.6.2.p.4">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#cryptographic-computations" id="cryptographic-computations">Cryptographic Computations</a></h1>
 <p id="rfc.section.7.p.1">In order to begin connection protection, the TLS Record Protocol requires specification of a suite of algorithms, a master secret, and the client and server random values. The authentication, key exchange, and record protection algorithms are determined by the cipher_suite selected by the server and revealed in the ServerHello message. The random values are exchanged in the hello messages. All that remains is to calculate the key schedule.</p>
 <h2 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#key-schedule" id="key-schedule">Key Schedule</a></h2>
@@ -3003,36 +3004,36 @@ HKDF-Expand-Label(exporter_secret,
    enum {
        close_notify(0),
        end_of_early_data(1),
-       unexpected_message(10),               /* fatal */
-       bad_record_mac(20),                   /* fatal */
-       decryption_failed_RESERVED(21),       /* fatal */
-       record_overflow(22),                  /* fatal */
-       decompression_failure_RESERVED(30),   /* fatal */
-       handshake_failure(40),                /* fatal */
-       no_certificate_RESERVED(41),          /* fatal */
+       unexpected_message(10),
+       bad_record_mac(20),
+       decryption_failed_RESERVED(21),
+       record_overflow(22),
+       decompression_failure_RESERVED(30),
+       handshake_failure(40),
+       no_certificate_RESERVED(41),
        bad_certificate(42),
        unsupported_certificate(43),
        certificate_revoked(44),
        certificate_expired(45),
        certificate_unknown(46),
-       illegal_parameter(47),                /* fatal */
-       unknown_ca(48),                       /* fatal */
-       access_denied(49),                    /* fatal */
-       decode_error(50),                     /* fatal */
-       decrypt_error(51),                    /* fatal */
-       export_restriction_RESERVED(60),      /* fatal */
-       protocol_version(70),                 /* fatal */
-       insufficient_security(71),            /* fatal */
-       internal_error(80),                   /* fatal */
-       inappropriate_fallback(86),           /* fatal */
+       illegal_parameter(47),
+       unknown_ca(48),
+       access_denied(49),
+       decode_error(50),
+       decrypt_error(51),
+       export_restriction_RESERVED(60),
+       protocol_version(70),
+       insufficient_security(71),
+       internal_error(80),
+       inappropriate_fallback(86),
        user_canceled(90),
-       no_renegotiation_RESERVED(100),       /* fatal */
-       missing_extension(109),               /* fatal */
-       unsupported_extension(110),           /* fatal */
+       no_renegotiation_RESERVED(100),
+       missing_extension(109),
+       unsupported_extension(110),
        certificate_unobtainable(111),
        unrecognized_name(112),
-       bad_certificate_status_response(113), /* fatal */
-       bad_certificate_hash_value(114),      /* fatal */
+       bad_certificate_status_response(113),
+       bad_certificate_hash_value(114),
        unknown_psk_identity(115),
        (255)
    } AlertDescription;
