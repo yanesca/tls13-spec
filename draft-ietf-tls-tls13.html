@@ -3712,7 +3712,7 @@ HKDF-Expand-Label(exporter_secret,
   <dt>Downgrade protection.</dt>
   <dd style="margin-left: 8">The cryptographic parameters should be the same on both sides and should be the same as if the peers had been communicating in the absence of an attack (See <a href="#BBFKZG16">[BBFKZG16]</a>; defns 8 and 9}).</dd>
   <dt>Forward secret</dt>
-  <dd style="margin-left: 8">If the long-term authentication keys (signature keys in certificate-based authentication modes or the PSK in PSK-(EC)DHE modes) are compromised after the handshake is complete, this does not compromise the security of the session key (See <a href="#DOW92">[DOW92]</a>).</dd>
+  <dd style="margin-left: 8">If the long-term keying material (in this case the signature keys in certificate-based authentication modes or the PSK in PSK-(EC)DHE modes) are compromised after the handshake is complete, this does not compromise the security of the session key (See <a href="#DOW92">[DOW92]</a>).</dd>
   <dt>Protection of endpoint identities.</dt>
   <dd style="margin-left: 8">The server&#8217;s identity (certificate) should be protected against passive attackers. The client&#8217;s identity should be protected against both passive and active attackers.</dd>
 </dl>
