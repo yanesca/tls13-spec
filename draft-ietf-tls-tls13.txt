@@ -6149,11 +6149,11 @@ D.2.  Record Layer
    provide the following guarantees:
 
    Confidentiality.  An attacker should not be able to determine the
-      plaintext contents of a given record.  More formally it should not
-      be able to distinguish between multiple encryptions of the same
-      versus different plaintexts.
+      plaintext contents of a given record.
 
-
+   Integrity.  An attacker should not be able to craft a new record
+      which is different from an existing record which will be accepted
+      by the receiver.
 
 
 
@@ -6161,10 +6161,6 @@ Rescorla                Expires January 12, 2017              [Page 110]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   Integrity.  An attacker should not be able to craft a new record
-      which is different from an existing record which will be accepted
-      by the receiver with more than negligible probability.
 
    Order protection/non-replayability  An attacker should not be able to
       cause the receiver to accept a record which it has already
@@ -6209,6 +6205,10 @@ Internet-Draft                     TLS                         July 2016
    must do a fresh handshake and establish a new session key with an
    (EC)DHE exchange.
 
+   The reader should refer to the following references for analysis of
+   the TLS record layer.
+
+
 
 
 
@@ -6217,9 +6217,6 @@ Rescorla                Expires January 12, 2017              [Page 111]
 
 Internet-Draft                     TLS                         July 2016
 
-
-   The reader should refer to the following references for analysis of
-   the TLS record layer.
 
 Appendix E.  Working Group Information
 
@@ -6267,6 +6264,9 @@ Appendix F.  Contributors
       IBM
       canetti@watson.ibm.com
 
+   -  Pete Chown
+      Skygate Technology Ltd
+
 
 
 Rescorla                Expires January 12, 2017              [Page 112]
@@ -6274,8 +6274,6 @@ Rescorla                Expires January 12, 2017              [Page 112]
 Internet-Draft                     TLS                         July 2016
 
 
-   -  Pete Chown
-      Skygate Technology Ltd
       pc@skygate.co.uk
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
@@ -6323,6 +6321,8 @@ Internet-Draft                     TLS                         July 2016
       Facebook
       subodh@fb.com
 
+   -  Daniel Kahn Gillmor
+
 
 
 Rescorla                Expires January 12, 2017              [Page 113]
@@ -6330,7 +6330,6 @@ Rescorla                Expires January 12, 2017              [Page 113]
 Internet-Draft                     TLS                         July 2016
 
 
-   -  Daniel Kahn Gillmor
       ACLU
       dkg@fifthhorseman.net
 
@@ -6378,6 +6377,7 @@ Internet-Draft                     TLS                         July 2016
 
    -  Marsh Ray (co-author of [RFC7627])
       Microsoft
+      maray@microsoft.com
 
 
 
@@ -6385,8 +6385,6 @@ Rescorla                Expires January 12, 2017              [Page 114]
 
 Internet-Draft                     TLS                         July 2016
 
-
-      maray@microsoft.com
 
    -  Robert Relyea
       Netscape Communications
@@ -6431,6 +6429,8 @@ Internet-Draft                     TLS                         July 2016
    -  Tim Wright
       Vodafone
       timothy.wright@vodafone.com
+
+
 
 
 

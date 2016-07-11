@@ -3728,9 +3728,9 @@ HKDF-Expand-Label(exporter_secret,
 
 <dl>
   <dt>Confidentiality.</dt>
-  <dd style="margin-left: 8">An attacker should not be able to determine the plaintext contents of a given record. More formally it should not be able to distinguish between multiple encryptions of the same versus different plaintexts.  </dd>
+  <dd style="margin-left: 8">An attacker should not be able to determine the plaintext contents of a given record.  </dd>
   <dt>Integrity.</dt>
-  <dd style="margin-left: 8">An attacker should not be able to craft a new record which is different from an existing record which will be accepted by the receiver with more than negligible probability.  </dd>
+  <dd style="margin-left: 8">An attacker should not be able to craft a new record which is different from an existing record which will be accepted by the receiver.  </dd>
   <dt>Order protection/non-replayability</dt>
   <dd style="margin-left: 8">An attacker should not be able to cause the receiver to accept a record which it has already accepted or cause the receiver to accept record N+1 without having first processed record N.  [[TODO: If we merge in DTLS to this document, we will need to update this guarantee.]]</dd>
   <dt>Length concealment.</dt>
