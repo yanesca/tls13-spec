@@ -155,13 +155,13 @@ Internet-Draft                     TLS                         July 2016
        A.3.3.  Authentication Messages . . . . . . . . . . . . . . .  96
        A.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . .  96
      A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . .  97
-       A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . . 102
-   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 102
+       A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . . 101
+   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 101
      B.1.  Random Number Generation and Seeding  . . . . . . . . . . 102
-     B.2.  Certificates and Authentication . . . . . . . . . . . . . 103
-     B.3.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 103
-     B.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 103
-     B.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 105
+     B.2.  Certificates and Authentication . . . . . . . . . . . . . 102
+     B.3.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 102
+     B.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 102
+     B.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 104
 
 
 
@@ -170,17 +170,17 @@ Rescorla                Expires January 12, 2017                [Page 3]
 Internet-Draft                     TLS                         July 2016
 
 
-   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 105
-     C.1.  Negotiating with an older server  . . . . . . . . . . . . 106
+   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 104
+     C.1.  Negotiating with an older server  . . . . . . . . . . . . 105
      C.2.  Negotiating with an older client  . . . . . . . . . . . . 106
-     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 107
-     C.4.  Backwards Compatibility Security Restrictions . . . . . . 107
-   Appendix D.  Overview of Security Properties  . . . . . . . . . . 108
-     D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 108
+     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 106
+     C.4.  Backwards Compatibility Security Restrictions . . . . . . 106
+   Appendix D.  Overview of Security Properties  . . . . . . . . . . 107
+     D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 107
      D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 110
-   Appendix E.  Working Group Information  . . . . . . . . . . . . . 112
-   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 112
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 116
+   Appendix E.  Working Group Information  . . . . . . . . . . . . . 111
+   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 111
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 115
 
 1.  Introduction
 
@@ -5534,9 +5534,9 @@ Internet-Draft                     TLS                         July 2016
    | 256                                    | A}        |              |
    +----------------------------------------+-----------+--------------+
 
-   Note: The values listed for ChaCha/Poly are preliminary but are being
-   or will be used for interop testing and therefore are likely to be
-   assigned.
+   Note: ECDHE AES GCM was not yet standards track prior to the
+   publication of this specification.  This document promotes the above-
+   listed ciphers to standards track.
 
 
 
@@ -5546,61 +5546,8 @@ Rescorla                Expires January 12, 2017               [Page 99]
 Internet-Draft                     TLS                         July 2016
 
 
-   Note: ECDHE AES GCM was not yet standards track prior to the
-   publication of this specification.  This document promotes the above-
-   listed ciphers to standards track.
-
    The following is a list of standards track ephemeral pre-shared key
    cipher suites which are currently available in TLS 1.3:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 100]
-
-Internet-Draft                     TLS                         July 2016
-
 
    +------------------------------+----------+-------------------------+
    | Cipher Suite Name            | Value    | Specification           |
@@ -5645,18 +5592,19 @@ Internet-Draft                     TLS                         July 2016
    | LY1305_SHA256                | AD}      |                         |
    +------------------------------+----------+-------------------------+
 
-   Note: The values listed for ECDHE and ChaCha/Poly are preliminary but
-   are being or will be used for interop testing and therefore are
-   likely to be assigned.
 
 
 
 
 
-Rescorla                Expires January 12, 2017              [Page 101]
+Rescorla                Expires January 12, 2017              [Page 100]
 
 Internet-Draft                     TLS                         July 2016
 
+
+   Note: The values listed for ECDHE and ChaCha/Poly are preliminary but
+   are being or will be used for interop testing and therefore are
+   likely to be assigned.
 
    Note: [RFC6655] is inconsistent with respect to the ordering of
    components within PSK AES CCM cipher suite names.  The names above
@@ -5698,6 +5646,18 @@ Appendix B.  Implementation Notes
    The TLS protocol cannot prevent many common security mistakes.  This
    section provides several recommendations to assist implementors.
 
+
+
+
+
+
+
+
+Rescorla                Expires January 12, 2017              [Page 101]
+
+Internet-Draft                     TLS                         July 2016
+
+
 B.1.  Random Number Generation and Seeding
 
    TLS requires a cryptographically secure pseudorandom number generator
@@ -5705,14 +5665,6 @@ B.1.  Random Number Generation and Seeding
    based on secure hash operations, most notably SHA-256, are
    acceptable, but cannot provide more security than the size of the
    random number generator state.
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 102]
-
-Internet-Draft                     TLS                         July 2016
-
 
    To estimate the amount of seed material being produced, add the
    number of bits of unpredictable information in each seed byte.  For
@@ -5753,6 +5705,15 @@ B.4.  Implementation Pitfalls
 
    TLS protocol issues:
 
+
+
+
+
+Rescorla                Expires January 12, 2017              [Page 102]
+
+Internet-Draft                     TLS                         July 2016
+
+
    -  Do you correctly handle handshake messages that are fragmented to
       multiple TLS records (see Section 5.1)?  Including corner cases
       like a ClientHello that is split to several small fragments?  Do
@@ -5762,13 +5723,6 @@ B.4.  Implementation Pitfalls
 
    -  Do you ignore the TLS record layer version number in all TLS
       records? (see Appendix C)
-
-
-
-Rescorla                Expires January 12, 2017              [Page 103]
-
-Internet-Draft                     TLS                         July 2016
-
 
    -  Have you ensured that all support for SSL, RC4, EXPORT ciphers,
       and MD5 (via the "signature_algorithm" extension) is completely
@@ -5808,6 +5762,14 @@ Internet-Draft                     TLS                         July 2016
       parameters?  Do you verify that the RSA padding doesn't have
       additional data after the hash value?  [FI06]
 
+
+
+
+Rescorla                Expires January 12, 2017              [Page 103]
+
+Internet-Draft                     TLS                         July 2016
+
+
    -  When using Diffie-Hellman key exchange, do you correctly preserve
       leading zero bytes in the negotiated key (see Section 7.3.1)?
 
@@ -5817,15 +5779,6 @@ Internet-Draft                     TLS                         July 2016
    -  Do you use a strong and, most importantly, properly seeded random
       number generator (see Appendix B.1) when generating Diffie-Hellman
       private values, the ECDSA "k" parameter, and other security-
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 104]
-
-Internet-Draft                     TLS                         July 2016
-
-
       critical values?  It is RECOMMENDED that implementations implement
       "deterministic ECDSA" as specified in [RFC6979].
 
@@ -5866,6 +5819,13 @@ Appendix C.  Backward Compatibility
    number to the negotiated version for the ServerHello and all records
    thereafter.
 
+
+
+Rescorla                Expires January 12, 2017              [Page 104]
+
+Internet-Draft                     TLS                         July 2016
+
+
    For maximum compatibility with previously non-standard behavior and
    misconfigured deployments, all implementations SHOULD support
    validation of certification paths based on the expectations in this
@@ -5874,14 +5834,6 @@ Appendix C.  Backward Compatibility
 
    TLS 1.2 and prior supported an "Extended Master Secret" [RFC7627]
    extension which digested large parts of the handshake transcript into
-
-
-
-Rescorla                Expires January 12, 2017              [Page 105]
-
-Internet-Draft                     TLS                         July 2016
-
-
    the master secret.  Because TLS 1.3 always hashes in the transcript
    up to the server CertificateVerify, implementations which support
    both TLS 1.3 and earlier versions SHOULD indicate the use of the
@@ -5918,6 +5870,18 @@ C.1.  Negotiating with an older server
    in order to negotiate a backwards compatible connection, however this
    practice is vulnerable to downgrade attacks and is NOT RECOMMENDED.
 
+
+
+
+
+
+
+
+Rescorla                Expires January 12, 2017              [Page 105]
+
+Internet-Draft                     TLS                         July 2016
+
+
 C.2.  Negotiating with an older client
 
    A TLS server can also receive a ClientHello containing a version
@@ -5929,14 +5893,6 @@ C.2.  Negotiating with an older client
    proceed with a TLS 1.0 ServerHello.  If the server only supports
    versions greater than client_version, it MUST send a
    "protocol_version" alert message and close the connection.
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 106]
-
-Internet-Draft                     TLS                         July 2016
-
 
    Note that earlier versions of TLS did not clearly specify the record
    layer version number value in all cases
@@ -5973,6 +5929,15 @@ C.4.  Backwards Compatibility Security Restrictions
    reasons cited in [RFC7465].  Implementations MUST NOT offer or
    negotiate RC4 cipher suites for any version of TLS for any reason.
 
+
+
+
+
+Rescorla                Expires January 12, 2017              [Page 106]
+
+Internet-Draft                     TLS                         July 2016
+
+
    Old versions of TLS permitted the use of very low strength ciphers.
    Ciphers with a strength less than 112 bits MUST NOT be offered or
    negotiated for any version of TLS for any reason.
@@ -5986,13 +5951,6 @@ C.4.  Backwards Compatibility Security Restrictions
    SSL version 2.0 compatible CLIENT-HELLO.  Implementations are NOT
    RECOMMENDED to accept an SSL version 2.0 compatible CLIENT-HELLO in
    order to negotiate older versions of TLS.
-
-
-
-Rescorla                Expires January 12, 2017              [Page 107]
-
-Internet-Draft                     TLS                         July 2016
-
 
    Implementations MUST NOT send or accept any records with a version
    less than { 3, 0 }.
@@ -6028,6 +5986,14 @@ D.1.  Handshake
    The TLS handshake is an Authenticated Key Exchange (AKE) protocol
    which is intended to provide both one-way authenticated (server-only)
    and mutually authenticated (client and server) functionality.  At the
+
+
+
+Rescorla                Expires January 12, 2017              [Page 107]
+
+Internet-Draft                     TLS                         July 2016
+
+
    completion of the handshake, each side outputs its view on the
    following values:
 
@@ -6041,15 +6007,6 @@ D.1.  Handshake
    We assume that the attacker has complete control of the network in
    between the parties [RFC3552].  Even under these conditions, the
    handshake should provide the properties listed below.  Note that
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 108]
-
-Internet-Draft                     TLS                         July 2016
-
-
    these properties are not necessarily independent, but reflect the
    protocol consumers' needs.
 
@@ -6084,6 +6041,15 @@ Internet-Draft                     TLS                         July 2016
       complete, this does not compromise the security of the session key
       (See [DOW92]).
 
+
+
+
+
+Rescorla                Expires January 12, 2017              [Page 108]
+
+Internet-Draft                     TLS                         July 2016
+
+
    Protection of endpoint identities.  The server's identity
       (certificate) should be protected against passive attackers.  The
       client's identity should be protected against both passive and
@@ -6098,13 +6064,6 @@ Internet-Draft                     TLS                         July 2016
    identities.  [SIGMA] describes the analysis of this type of key
    exchange protocol.  If fresh (EC)DHE keys are used for each
    connection, then the output keys are forward secret.
-
-
-
-Rescorla                Expires January 12, 2017              [Page 109]
-
-Internet-Draft                     TLS                         July 2016
-
 
    The PSK and resumption-PSK modes bootstrap from a long-term shared
    secret into a unique per-connection short-term session key.  This
@@ -6140,6 +6099,13 @@ Internet-Draft                     TLS                         July 2016
    The reader should refer to the following references for analysis of
    the TLS handshake [CHSV16] [FGSW16] [LXZFH16].
 
+
+
+Rescorla                Expires January 12, 2017              [Page 109]
+
+Internet-Draft                     TLS                         July 2016
+
+
 D.2.  Record Layer
 
    The record layer depends on the handshake producing a strong session
@@ -6154,13 +6120,6 @@ D.2.  Record Layer
    Integrity.  An attacker should not be able to craft a new record
       which is different from an existing record which will be accepted
       by the receiver.
-
-
-
-Rescorla                Expires January 12, 2017              [Page 110]
-
-Internet-Draft                     TLS                         July 2016
-
 
    Order protection/non-replayability  An attacker should not be able to
       cause the receiver to accept a record which it has already
@@ -6196,6 +6155,13 @@ Internet-Draft                     TLS                         July 2016
    type of channel because even a constant time padding removal function
    will then feed the content into data-dependent functions.
 
+
+
+Rescorla                Expires January 12, 2017              [Page 110]
+
+Internet-Draft                     TLS                         July 2016
+
+
    Generation N+1 keys are derived from generation N keys via a key
    derivation function Section 7.2.  As long as this function is truly
    one way, it is not possible to compute the previous keys after a key
@@ -6208,22 +6174,12 @@ Internet-Draft                     TLS                         July 2016
    The reader should refer to the following references for analysis of
    the TLS record layer.
 
-
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 111]
-
-Internet-Draft                     TLS                         July 2016
-
-
 Appendix E.  Working Group Information
 
    The discussion list for the IETF TLS working group is located at the
    e-mail address tls@ietf.org [1].  Information on the group and
    information on how to subscribe to the list is at
-   https://www1.ietf.org/mailman/listinfo/tls
+   https://www.ietf.org/mailman/listinfo/tls
 
    Archives of the list can be found at: https://www.ietf.org/mail-
    archive/web/tls/current/index.html
@@ -6254,6 +6210,14 @@ Appendix F.  Contributors
 
    -  Simon Blake-Wilson (co-author of [RFC4492])
       BCI
+
+
+
+Rescorla                Expires January 12, 2017              [Page 111]
+
+Internet-Draft                     TLS                         July 2016
+
+
       sblakewilson@bcisse.com
 
    -  Nelson Bolyard (co-author of [RFC4492])
@@ -6266,14 +6230,6 @@ Appendix F.  Contributors
 
    -  Pete Chown
       Skygate Technology Ltd
-
-
-
-Rescorla                Expires January 12, 2017              [Page 112]
-
-Internet-Draft                     TLS                         July 2016
-
-
       pc@skygate.co.uk
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
@@ -6311,6 +6267,13 @@ Internet-Draft                     TLS                         July 2016
 
    -  Kipp Hickman
 
+
+
+Rescorla                Expires January 12, 2017              [Page 112]
+
+Internet-Draft                     TLS                         July 2016
+
+
    -  Alfred Hoenes
 
    -  David Hopwood
@@ -6322,14 +6285,6 @@ Internet-Draft                     TLS                         July 2016
       subodh@fb.com
 
    -  Daniel Kahn Gillmor
-
-
-
-Rescorla                Expires January 12, 2017              [Page 113]
-
-Internet-Draft                     TLS                         July 2016
-
-
       ACLU
       dkg@fifthhorseman.net
 
@@ -6367,6 +6322,14 @@ Internet-Draft                     TLS                         July 2016
       RSA Security
       magnus@rsasecurity.com
 
+
+
+
+Rescorla                Expires January 12, 2017              [Page 113]
+
+Internet-Draft                     TLS                         July 2016
+
+
    -  Alfredo Pironti (co-author of [RFC7627])
       INRIA
       alfredo.pironti@inria.fr
@@ -6378,13 +6341,6 @@ Internet-Draft                     TLS                         July 2016
    -  Marsh Ray (co-author of [RFC7627])
       Microsoft
       maray@microsoft.com
-
-
-
-Rescorla                Expires January 12, 2017              [Page 114]
-
-Internet-Draft                     TLS                         July 2016
-
 
    -  Robert Relyea
       Netscape Communications
@@ -6422,6 +6378,14 @@ Internet-Draft                     TLS                         July 2016
 
    -  Tom Weinstein
 
+
+
+
+Rescorla                Expires January 12, 2017              [Page 114]
+
+Internet-Draft                     TLS                         July 2016
+
+
    -  Hoeteck Wee
       Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
@@ -6429,18 +6393,6 @@ Internet-Draft                     TLS                         July 2016
    -  Tim Wright
       Vodafone
       timothy.wright@vodafone.com
-
-
-
-
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 115]
-
-Internet-Draft                     TLS                         July 2016
-
 
 Author's Address
 
@@ -6485,12 +6437,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-Rescorla                Expires January 12, 2017              [Page 116]
+Rescorla                Expires January 12, 2017              [Page 115]
