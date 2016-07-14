@@ -365,7 +365,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-12" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-14" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -386,7 +386,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 12, 2016</td>
+  <td class="right">July 14, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -401,7 +401,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 13, 2017</td>
+  <td class="left">Expires: January 15, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -422,7 +422,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 13, 2017.</p>
+<p>This Internet-Draft will expire on January 15, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1777,6 +1777,7 @@ server_finished_key =
 <p id="rfc.section.4.3.3.p.8">Where HMAC <a href="#RFC2104">[RFC2104]</a> uses the Hash algorithm for the handshake.  As noted above, the HMAC input can generally be implemented by a running hash, i.e., just the handshake hash at this point.</p>
 <p id="rfc.section.4.3.3.p.9">In previous versions of TLS, the verify_data was always 12 octets long. In the current version of TLS, it is the size of the HMAC output for the Hash used for the handshake.</p>
 <p id="rfc.section.4.3.3.p.10">Note: Alerts and any other record types are not handshake messages and are not included in the hash computations.</p>
+<p id="rfc.section.4.3.3.p.11">Any records following a 1-RTT Finished message MUST be encrypted under the application traffic key. In particular, this includes any alerts sent by the server in response to client Certificate and CertificateVerify messages.</p>
 <h2 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#post-handshake-messages" id="post-handshake-messages">Post-Handshake Messages</a></h2>
 <p id="rfc.section.4.4.p.1">TLS also allows other messages to be sent after the main handshake.  These messages use a handshake content type and are encrypted under the application traffic key.</p>
 <h3 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
