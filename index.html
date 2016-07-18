@@ -365,7 +365,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-16" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-18" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -386,7 +386,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 16, 2016</td>
+  <td class="right">July 18, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -401,7 +401,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 17, 2017</td>
+  <td class="left">Expires: January 19, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -422,7 +422,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 17, 2017.</p>
+<p>This Internet-Draft will expire on January 19, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1810,8 +1810,8 @@ server_finished_key =
      uint32 ticket_lifetime;
      uint32 flags;
      uint32 ticket_age_add;
-     TicketExtension extensions&lt;2..2^16-2&gt;;
-     opaque ticket&lt;0..2^16-1&gt;;
+     TicketExtension extensions&lt;0..2^16-2&gt;;
+     opaque ticket&lt;1..2^16-1&gt;;
  } NewSessionTicket;
 </pre>
 <p/>
@@ -3347,8 +3347,8 @@ HKDF-Expand-Label(exporter_secret,
      uint32 ticket_lifetime;
      uint32 flags;
      uint32 ticket_age_add;
-     TicketExtension extensions&lt;2..2^16-2&gt;;
-     opaque ticket&lt;0..2^16-1&gt;;
+     TicketExtension extensions&lt;0..2^16-2&gt;;
+     opaque ticket&lt;1..2^16-1&gt;;
  } NewSessionTicket;
 </pre>
 <h2 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
