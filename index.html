@@ -365,7 +365,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-19" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -386,7 +386,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">July 18, 2016</td>
+  <td class="right">July 19, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -401,7 +401,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: January 19, 2017</td>
+  <td class="left">Expires: January 20, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -422,7 +422,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 19, 2017.</p>
+<p>This Internet-Draft will expire on January 20, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1387,7 +1387,7 @@ Subsequent Handshake:
   <dt>server_share</dt>
   <dd style="margin-left: 8">A single KeyShareEntry value for the negotiated cipher suite.</dd>
 </dl>
-<p id="rfc.section.4.2.4.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST by generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients and MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.</p>
+<p id="rfc.section.4.2.4.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST by generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.</p>
 <p id="rfc.section.4.2.4.p.7">Servers offer exactly one KeyShareEntry value, which corresponds to the key exchange used for the negotiated cipher suite.  Servers MUST NOT offer a KeyShareEntry value for a group not offered by the client in its corresponding KeyShare or &#8220;supported_groups&#8221; extension.</p>
 <p id="rfc.section.4.2.4.p.8">Implementations MAY check for violations of these rules and and MAY abort the connection with a fatal &#8220;illegal_parameter&#8221; alert if one is violated.</p>
 <p id="rfc.section.4.2.4.p.9">If the server selects an (EC)DHE cipher suite and no mutually supported group is available between the two endpoints&#8217; KeyShare offers, yet there is a mutually supported group that can be found via the &#8220;supported_groups&#8221; extension, then the server MUST reply with a HelloRetryRequest.  If there is no mutually supported group at all, the server MUST NOT negotiate an (EC)DHE cipher suite.</p>
