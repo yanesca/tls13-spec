@@ -6064,7 +6064,7 @@ Internet-Draft                     TLS                         July 2016
       attacker should not be able to determine the amount of the record
       that is content versus padding.
 
-      Forward security after key change.  If the traffic key update
+   Forward security after key change.  If the traffic key update
       mechanism described in Section 4.4.3 has been used and the
       previous generation key is deleted, an attacker who compromises
       the endpoint should not be able to decrypt traffic encrypted with
