@@ -116,14 +116,14 @@ Internet-Draft                     TLS                       August 2016
 
        4.2.9.  Certificate Request . . . . . . . . . . . . . . . . .  45
      4.3.  Authentication Messages . . . . . . . . . . . . . . . . .  47
-       4.3.1.  Certificate . . . . . . . . . . . . . . . . . . . . .  48
+       4.3.1.  Certificate . . . . . . . . . . . . . . . . . . . . .  49
        4.3.2.  Certificate Verify  . . . . . . . . . . . . . . . . .  52
        4.3.3.  Finished  . . . . . . . . . . . . . . . . . . . . . .  54
      4.4.  Post-Handshake Messages . . . . . . . . . . . . . . . . .  55
-       4.4.1.  New Session Ticket Message  . . . . . . . . . . . . .  55
+       4.4.1.  New Session Ticket Message  . . . . . . . . . . . . .  56
        4.4.2.  Post-Handshake Authentication . . . . . . . . . . . .  57
        4.4.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  58
-   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  58
+   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  59
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  59
      5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  60
      5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  62
@@ -2541,7 +2541,8 @@ Internet-Draft                     TLS                       August 2016
       certificate request and which will be echoed in the client's
       Certificate message.  The certificate_request_context MUST be
       unique within the scope of this connection (thus preventing replay
-      of client CertificateVerify messages).
+      of client CertificateVerify messages).  Within the handshake, this
+      field MUST be empty.
 
    supported_signature_algorithms  A list of the signature algorithms
       that the server is able to verify, listed in descending order of
@@ -2569,7 +2570,6 @@ Internet-Draft                     TLS                       August 2016
       of the specified values MUST be present in the client certificate
       (but the certificate MAY have other values as well).  However, the
       client MUST ignore and skip any unrecognized certificate extension
-      OIDs.  If the client has ignored some of the required certificate
 
 
 
@@ -2578,6 +2578,7 @@ Rescorla                Expires February 14, 2017              [Page 46]
 Internet-Draft                     TLS                       August 2016
 
 
+      OIDs.  If the client has ignored some of the required certificate
       extension OIDs, and supplied a certificate that does not satisfy
       the request, the server MAY at its discretion either continue the
       session without client authentication, or terminate the session
@@ -2625,7 +2626,6 @@ Internet-Draft                     TLS                       August 2016
 
    -  A base key to be used to compute a MAC key.
 
-   Based on these inputs, the messages then contain:
 
 
 
@@ -2633,6 +2633,8 @@ Rescorla                Expires February 14, 2017              [Page 47]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   Based on these inputs, the messages then contain:
 
    Certificate  The certificate to be used for authentication and any
       supporting certificates in the chain.  Note that certificate-based
@@ -2677,9 +2679,7 @@ Internet-Draft                     TLS                       August 2016
    Note: The Handshake Context for the last three rows does not include
    any 0-RTT handshake messages, regardless of whether 0-RTT is used.
 
-4.3.1.  Certificate
 
-   When this message will be sent:
 
 
 
@@ -2689,6 +2689,10 @@ Rescorla                Expires February 14, 2017              [Page 48]
 
 Internet-Draft                     TLS                       August 2016
 
+
+4.3.1.  Certificate
+
+   When this message will be sent:
 
       The server MUST send a Certificate message whenever the agreed-
       upon key exchange method uses certificates for authentication
@@ -2734,10 +2738,6 @@ Internet-Draft                     TLS                       August 2016
    both a current and deprecated intermediate for transitional purposes,
    and others are simply configured incorrectly, but these cases can
    nonetheless be validated properly.  For maximum compatibility, all
-   implementations SHOULD be prepared to handle potentially extraneous
-   certificates and arbitrary orderings from any TLS version, with the
-   exception of the end-entity certificate which MUST be first.
-
 
 
 
@@ -2745,6 +2745,10 @@ Rescorla                Expires February 14, 2017              [Page 49]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   implementations SHOULD be prepared to handle potentially extraneous
+   certificates and arbitrary orderings from any TLS version, with the
+   exception of the end-entity certificate which MUST be first.
 
    The server's certificate list MUST always be non-empty.  A client
    will send an empty certificate list if it does not have an
@@ -2790,10 +2794,6 @@ Internet-Draft                     TLS                       August 2016
    handshake, then it MUST send an "unsupported_certificate" alert
    message and close the connection.
 
-   If the server has multiple certificates, it chooses one of them based
-   on the above-mentioned criteria (in addition to other criteria, such
-   as transport layer endpoint, local configuration and preferences).
-
 
 
 
@@ -2801,6 +2801,10 @@ Rescorla                Expires February 14, 2017              [Page 50]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   If the server has multiple certificates, it chooses one of them based
+   on the above-mentioned criteria (in addition to other criteria, such
+   as transport layer endpoint, local configuration and preferences).
 
 4.3.1.2.  Client Certificate Selection
 
@@ -2846,10 +2850,6 @@ Internet-Draft                     TLS                       August 2016
    discretion either continue the handshake (considering the client
    unauthenticated) or send a fatal alert.
 
-   Any endpoint receiving any certificate signed using any signature
-   algorithm using an MD5 hash MUST send a "bad_certificate" alert
-   message and close the connection.  SHA-1 is deprecated and therefore
-   NOT RECOMMENDED.  All endpoints are RECOMMENDED to transition to
 
 
 
@@ -2858,6 +2858,10 @@ Rescorla                Expires February 14, 2017              [Page 51]
 Internet-Draft                     TLS                       August 2016
 
 
+   Any endpoint receiving any certificate signed using any signature
+   algorithm using an MD5 hash MUST send a "bad_certificate" alert
+   message and close the connection.  SHA-1 is deprecated and therefore
+   NOT RECOMMENDED.  All endpoints are RECOMMENDED to transition to
    SHA-256 or better as soon as possible to maintain interoperability
    with implementations currently in the process of phasing out SHA-1
    support.
@@ -2902,10 +2906,6 @@ Internet-Draft                     TLS                       August 2016
 
    -  A signing key
 
-   -  A context string
-
-   -  The actual content to be signed
-
 
 
 
@@ -2913,6 +2913,10 @@ Rescorla                Expires February 14, 2017              [Page 52]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   -  A context string
+
+   -  The actual content to be signed
 
    The digital signature is then computed using the signing key over the
    concatenation of:
@@ -2958,10 +2962,6 @@ Internet-Draft                     TLS                       August 2016
 
    In addition, the signature algorithm MUST be compatible with the key
    in the sender's end-entity certificate.  RSA signatures MUST use an
-   RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS1-v1_5
-   algorithms appear in "signature_algorithms".  SHA-1 MUST NOT be used
-   in any signatures in CertificateVerify.  All SHA-1 signature
-
 
 
 
@@ -2970,6 +2970,9 @@ Rescorla                Expires February 14, 2017              [Page 53]
 Internet-Draft                     TLS                       August 2016
 
 
+   RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS1-v1_5
+   algorithms appear in "signature_algorithms".  SHA-1 MUST NOT be used
+   in any signatures in CertificateVerify.  All SHA-1 signature
    algorithms in this specification are defined solely for use in legacy
    certificates, and are not valid for CertificateVerify signatures.
 
@@ -3013,11 +3016,8 @@ Internet-Draft                     TLS                       August 2016
 
    Structure of this message:
 
-      struct {
-          opaque verify_data[Hash.length];
-      } Finished;
 
-   The verify_data value is computed as follows:
+
 
 
 
@@ -3025,6 +3025,12 @@ Rescorla                Expires February 14, 2017              [Page 54]
 
 Internet-Draft                     TLS                       August 2016
 
+
+      struct {
+          opaque verify_data[Hash.length];
+      } Finished;
+
+   The verify_data value is computed as follows:
 
       verify_data =
           HMAC(finished_key, Hash(
@@ -3064,12 +3070,6 @@ Internet-Draft                     TLS                       August 2016
    more handshake records, there MUST NOT be any other records between
    them.
 
-4.4.1.  New Session Ticket Message
-
-   At any time after the server has received the client Finished
-   message, it MAY send a NewSessionTicket message.  This message
-   creates a pre-shared key (PSK) binding between the ticket value and
-   the following two values derived from the resumption master secret:
 
 
 
@@ -3081,6 +3081,13 @@ Rescorla                Expires February 14, 2017              [Page 55]
 
 Internet-Draft                     TLS                       August 2016
 
+
+4.4.1.  New Session Ticket Message
+
+   At any time after the server has received the client Finished
+   message, it MAY send a NewSessionTicket message.  This message
+   creates a pre-shared key (PSK) binding between the ticket value and
+   the following two values derived from the resumption master secret:
 
       resumption_psk = HKDF-Expand-Label(
                            resumption_secret,
@@ -3124,13 +3131,6 @@ Internet-Draft                     TLS                       August 2016
    ke_modes  The key exchange modes with which this ticket can be used
       in descending order of server preference.
 
-   auth_modes  The authentication modes with which this ticket can be
-      used in descending order of server preference.
-
-   ticket_lifetime  Indicates the lifetime in seconds as a 32-bit
-      unsigned integer in network byte order from the time of ticket
-      issuance.  Servers MUST NOT use any value more than 604800 seconds
-
 
 
 Rescorla                Expires February 14, 2017              [Page 56]
@@ -3138,6 +3138,12 @@ Rescorla                Expires February 14, 2017              [Page 56]
 Internet-Draft                     TLS                       August 2016
 
 
+   auth_modes  The authentication modes with which this ticket can be
+      used in descending order of server preference.
+
+   ticket_lifetime  Indicates the lifetime in seconds as a 32-bit
+      unsigned integer in network byte order from the time of ticket
+      issuance.  Servers MUST NOT use any value more than 604800 seconds
       (7 days).  The value of zero indicates that the ticket should be
       discarded immediately.  Clients MUST NOT cache session tickets for
       longer than 7 days, regardless of the ticket_lifetime.  It MAY
@@ -3179,12 +3185,6 @@ Internet-Draft                     TLS                       August 2016
    declines, it MUST send a Certificate message containing no
    certificates followed by Finished.
 
-   Note: Because client authentication may require prompting the user,
-   servers MUST be prepared for some delay, including receiving an
-   arbitrary number of other messages between sending the
-   CertificateRequest and receiving a response.  In addition, clients
-   which receive multiple CertificateRequests in close succession MAY
-   respond to them in a different order than they were received (the
 
 
 
@@ -3194,6 +3194,12 @@ Rescorla                Expires February 14, 2017              [Page 57]
 Internet-Draft                     TLS                       August 2016
 
 
+   Note: Because client authentication may require prompting the user,
+   servers MUST be prepared for some delay, including receiving an
+   arbitrary number of other messages between sending the
+   CertificateRequest and receiving a response.  In addition, clients
+   which receive multiple CertificateRequests in close succession MAY
+   respond to them in a different order than they were received (the
    certificate_request_context value allows the server to disambiguate
    the responses).
 
@@ -3235,12 +3241,6 @@ Internet-Draft                     TLS                       August 2016
    with the new key.  Failure to do so may allow message truncation
    attacks.
 
-5.  Record Protocol
-
-   The TLS record protocol takes messages to be transmitted, fragments
-   the data into manageable blocks, protects the records, and transmits
-   the result.  Received data is decrypted and verified, reassembled,
-   and then delivered to higher-level clients.
 
 
 
@@ -3249,6 +3249,13 @@ Rescorla                Expires February 14, 2017              [Page 58]
 
 Internet-Draft                     TLS                       August 2016
 
+
+5.  Record Protocol
+
+   The TLS record protocol takes messages to be transmitted, fragments
+   the data into manageable blocks, protects the records, and transmits
+   the result.  Received data is decrypted and verified, reassembled,
+   and then delivered to higher-level clients.
 
    TLS records are typed, which allows multiple higher level protocols
    to be multiplexed over the same record layer.  This document
@@ -3291,13 +3298,6 @@ Internet-Draft                     TLS                       August 2016
        opaque fragment[TLSPlaintext.length];
    } TLSPlaintext;
 
-   type  The higher-level protocol used to process the enclosed
-      fragment.
-
-   legacy_record_version  This value MUST be set to { 3, 1 } for all
-      records.  This field is deprecated and MUST be ignored for all
-      purposes.
-
 
 
 
@@ -3305,6 +3305,13 @@ Rescorla                Expires February 14, 2017              [Page 59]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   type  The higher-level protocol used to process the enclosed
+      fragment.
+
+   legacy_record_version  This value MUST be set to { 3, 1 } for all
+      records.  This field is deprecated and MUST be ignored for all
+      purposes.
 
    length  The length (in bytes) of the following TLSPlaintext.fragment.
       The length MUST NOT exceed 2^14.
@@ -3342,13 +3349,6 @@ Internet-Draft                     TLS                       August 2016
    ciphertext and back again.  Each encrypted record consists of a
    plaintext header followed by an encrypted body, which itself contains
    a type and optional padding.
-
-
-
-
-
-
-
 
 
 

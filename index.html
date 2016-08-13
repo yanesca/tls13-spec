@@ -1581,7 +1581,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>certificate_request_context</dt>
-  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages).</dd>
+  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). Within the handshake, this field MUST be empty.</dd>
   <dt>supported_signature_algorithms</dt>
   <dd style="margin-left: 8">A list of the signature algorithms that the server is able to verify, listed in descending order of preference. Any certificates provided by the client MUST be signed using a signature algorithm found in supported_signature_algorithms.</dd>
   <dt>certificate_authorities</dt>
