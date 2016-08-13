@@ -1657,10 +1657,10 @@ Internet-Draft                     TLS                       August 2016
    not correspond to a group which was provided in the "key_share"
    extension in the original ClientHello.  If either of these checks
    fails, then the client MUST abort the handshake with a fatal
-   "handshake_failure" alert.  Clients SHOULD also abort with
-   "handshake_failure" in response to any second HelloRetryRequest which
-   was sent in the same connection (i.e., where the ClientHello was
-   itself in response to a HelloRetryRequest).
+   "illegal_parameter" alert.  Clients SHOULD also abort with
+   "unexpected_message" in response to any second HelloRetryRequest
+   which was sent in the same connection (i.e., where the ClientHello
+   was itself in response to a HelloRetryRequest).
 
    Otherwise, the client MUST send a ClientHello with an updated
    KeyShare extension to the server.  The client MUST append a new
@@ -1670,7 +1670,7 @@ Internet-Draft                     TLS                       August 2016
    Upon re-sending the ClientHello and receiving the server's
    ServerHello/KeyShare, the client MUST verify that the selected
    NamedGroup matches that supplied in the HelloRetryRequest and MUST
-   abort the connection with a fatal "handshake_failure" alert if it
+   abort the connection with a fatal "illegal_parameter" alert if it
    does not.
 
 
@@ -2603,8 +2603,8 @@ Internet-Draft                     TLS                       August 2016
       Separate specifications may define matching rules for other
       certificate extensions.
 
-   Note: It is a fatal "handshake_failure" alert for an anonymous server
-   to request client authentication.
+   Note: It is a fatal "unexpected_message" alert for an anonymous
+   server to request client authentication.
 
 4.3.  Authentication Messages
 
