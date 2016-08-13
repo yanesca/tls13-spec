@@ -1809,6 +1809,7 @@ server_finished_key =
 <p id="rfc.section.4.3.3.p.11">Any records following a 1-RTT Finished message MUST be encrypted under the application traffic key. In particular, this includes any alerts sent by the server in response to client Certificate and CertificateVerify messages.</p>
 <h2 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#post-handshake-messages" id="post-handshake-messages">Post-Handshake Messages</a></h2>
 <p id="rfc.section.4.4.p.1">TLS also allows other messages to be sent after the main handshake.  These messages use a handshake content type and are encrypted under the application traffic key.</p>
+<p id="rfc.section.4.4.p.2">Handshake messages sent after the handshake MUST NOT be interleaved with other record types. That is, if a message is split over two or more handshake records, there MUST NOT be any other records between them.</p>
 <h3 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
 <p id="rfc.section.4.4.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the following two values derived from the resumption master secret:</p>
 <pre>
