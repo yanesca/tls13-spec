@@ -177,7 +177,7 @@ Internet-Draft                     TLS                       August 2016
      C.2.  Negotiating with an older client  . . . . . . . . . . . . 104
      C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 104
      C.4.  Backwards Compatibility Security Restrictions . . . . . . 105
-   Appendix D.  Overview of Security Properties  . . . . . . . . . . 105
+   Appendix D.  Overview of Security Properties  . . . . . . . . . . 106
      D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 106
      D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 108
    Appendix E.  Working Group Information  . . . . . . . . . . . . . 109
@@ -1428,25 +1428,25 @@ Internet-Draft                     TLS                       August 2016
 
    Structure of this message:
 
-      struct {
-          uint8 major;
-          uint8 minor;
-      } ProtocolVersion;
+   struct {
+       uint8 major;
+       uint8 minor;
+   } ProtocolVersion;
 
-      struct {
-          opaque random_bytes[32];
-      } Random;
+   struct {
+       opaque random_bytes[32];
+   } Random;
 
-      uint8 CipherSuite[2];    /* Cryptographic suite selector */
+   uint8 CipherSuite[2];    /* Cryptographic suite selector */
 
-      struct {
-          ProtocolVersion client_version = { 3, 4 };    /* TLS v1.3 */
-          Random random;
-          opaque legacy_session_id<0..32>;
-          CipherSuite cipher_suites<2..2^16-2>;
-          opaque legacy_compression_methods<1..2^8-1>;
-          Extension extensions<0..2^16-1>;
-      } ClientHello;
+   struct {
+       ProtocolVersion max_supported_version = { 3, 4 };    /* TLS v1.3 */
+       Random random;
+       opaque legacy_session_id<0..32>;
+       CipherSuite cipher_suites<2..2^16-2>;
+       opaque legacy_compression_methods<1..2^8-1>;
+       Extension extensions<0..2^16-1>;
+   } ClientHello;
 
    TLS allows extensions to follow the compression_methods field in an
    extensions block.  The presence of extensions can be detected by
@@ -1466,7 +1466,7 @@ Internet-Draft                     TLS                       August 2016
    servers will send at least one extension (at least "key_share" or
    "pre_shared_key").
 
-   client_version  The latest (highest valued) version of the TLS
+   max_supported_version  The latest (highest valued) version of the TLS
       protocol offered by the client.  This SHOULD be the same as the
       latest version supported.  For this version of the specification,
       the version will be { 3, 4 }. (See Appendix C for details about
@@ -1541,16 +1541,16 @@ Internet-Draft                     TLS                       August 2016
    Structure of this message:
 
       struct {
-          ProtocolVersion server_version;
+          ProtocolVersion version;
           Random random;
           CipherSuite cipher_suite;
           Extension extensions<0..2^16-1>;
       } ServerHello;
 
-   server_version  This field contains the version of TLS negotiated for
-      this session.  Servers MUST select the lower of the highest
-      supported server version and the version offered by the client in
-      the ClientHello.  In particular, servers MUST accept ClientHello
+   version  This field contains the version of TLS negotiated for this
+      session.  Servers MUST select the lower of the highest supported
+      server version and the version offered by the client in the
+      ClientHello.  In particular, servers MUST accept ClientHello
       messages with versions higher than those supported and negotiate
       the highest mutually supported version.  For this version of the
       specification, the version is { 3, 4 }.  (See Appendix C for
@@ -1587,14 +1587,14 @@ Internet-Draft                     TLS                       August 2016
 
    TLS 1.3 has a downgrade protection mechanism embedded in the server's
    random value.  TLS 1.3 server implementations which respond to a
-   ClientHello with a client_version indicating TLS 1.2 or below MUST
-   set the last eight bytes of their Random value to the bytes:
+   ClientHello with a max_supported_version indicating TLS 1.2 or below
+   MUST set the last eight bytes of their Random value to the bytes:
 
      44 4F 57 4E 47 52 44 01
 
    TLS 1.2 server implementations which respond to a ClientHello with a
-   client_version indicating TLS 1.1 or below SHOULD set the last eight
-   bytes of their Random value to the bytes:
+   max_supported_version indicating TLS 1.1 or below SHOULD set the last
+   eight bytes of their Random value to the bytes:
 
      44 4F 57 4E 47 52 44 00
 
@@ -1643,12 +1643,12 @@ Internet-Draft                     TLS                       August 2016
    selected_group  The mutually supported group the server intends to
       negotiate and is requesting a retried ClientHello/KeyShare for.
 
-   The server_version and extensions fields have the same meanings as
-   their corresponding values in the ServerHello.  The server SHOULD
-   send only the extensions necessary for the client to generate a
-   correct ClientHello pair (currently no such extensions exist).  As
-   with ServerHello, a HelloRetryRequest MUST NOT contain any extensions
-   that were not first offered by the client in its ClientHello.
+   The version and extensions fields have the same meanings as their
+   corresponding values in the ServerHello.  The server SHOULD send only
+   the extensions necessary for the client to generate a correct
+   ClientHello pair (currently no such extensions exist).  As with
+   ServerHello, a HelloRetryRequest MUST NOT contain any extensions that
+   were not first offered by the client in its ClientHello.
 
    Upon receipt of a HelloRetryRequest, the client MUST first verify
    that the selected_group field corresponds to a group which was
@@ -3277,26 +3277,26 @@ Internet-Draft                     TLS                       August 2016
    several records).  Alert messages (Section 6) MUST NOT be fragmented
    across records.
 
-      enum {
-          alert(21),
-          handshake(22),
-          application_data(23)
-          (255)
-      } ContentType;
+   enum {
+       alert(21),
+       handshake(22),
+       application_data(23)
+       (255)
+   } ContentType;
 
-      struct {
-          ContentType type;
-          ProtocolVersion record_version = { 3, 1 };    /* TLS v1.x */
-          uint16 length;
-          opaque fragment[TLSPlaintext.length];
-      } TLSPlaintext;
+   struct {
+       ContentType type;
+       ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
+       uint16 length;
+       opaque fragment[TLSPlaintext.length];
+   } TLSPlaintext;
 
    type  The higher-level protocol used to process the enclosed
       fragment.
 
-   record_version  The protocol version the current record is compatible
-      with.  This value MUST be set to { 3, 1 } for all records.  This
-      field is deprecated and MUST be ignored for all purposes.
+   legacy_record_version  This value MUST be set to { 3, 1 } for all
+      records.  This field is deprecated and MUST be ignored for all
+      purposes.
 
 
 
@@ -3370,7 +3370,7 @@ Internet-Draft                     TLS                       August 2016
 
    struct {
        ContentType opaque_type = application_data(23); /* see fragment.type */
-       ProtocolVersion record_version = { 3, 1 };    /* TLS v1.x */
+       ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
    } TLSCiphertext;
@@ -3391,11 +3391,11 @@ Internet-Draft                     TLS                       August 2016
       versions of TLS.  The actual content type of the record is found
       in fragment.type after decryption.
 
-   record_version  The record_version field is identical to
-      TLSPlaintext.record_version and is always { 3, 1 }.  Note that the
-      handshake protocol including the ClientHello and ServerHello
-      messages authenticates the protocol version, so this value is
-      redundant.
+   legacy_record_version  The legacy_record_version field is identical
+      to TLSPlaintext.legacy_record_version and is always { 3, 1 }.
+      Note that the handshake protocol including the ClientHello and
+      ServerHello messages authenticates the protocol version, so this
+      value is redundant.
 
    length  The length (in bytes) of the following
       TLSCiphertext.fragment, which is the sum of the lengths of the
@@ -5006,7 +5006,7 @@ A.1.  Record Layer
 
    struct {
        ContentType type;
-       ProtocolVersion record_version = { 3, 1 };    /* TLS v1.x */
+       ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque fragment[TLSPlaintext.length];
    } TLSPlaintext;
@@ -5019,7 +5019,7 @@ A.1.  Record Layer
 
    struct {
        ContentType opaque_type = application_data(23); /* see fragment.type */
-       ProtocolVersion record_version = { 3, 1 };    /* TLS v1.x */
+       ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
    } TLSCiphertext;
@@ -5157,7 +5157,7 @@ Internet-Draft                     TLS                       August 2016
    uint8 CipherSuite[2];    /* Cryptographic suite selector */
 
    struct {
-       ProtocolVersion client_version = { 3, 4 };    /* TLS v1.3 */
+       ProtocolVersion max_supported_version = { 3, 4 };    /* TLS v1.3 */
        Random random;
        opaque legacy_session_id<0..32>;
        CipherSuite cipher_suites<2..2^16-2>;
@@ -5166,7 +5166,7 @@ Internet-Draft                     TLS                       August 2016
    } ClientHello;
 
    struct {
-       ProtocolVersion server_version;
+       ProtocolVersion version;
        Random random;
        CipherSuite cipher_suite;
        Extension extensions<0..2^16-1>;
@@ -5718,11 +5718,11 @@ Internet-Draft                     TLS                       August 2016
    highest protocol version available in the server.
 
    Prior versions of TLS used the record layer version number for
-   various purposes.  (TLSPlaintext.record_version &
-   TLSCiphertext.record_version) As of TLS 1.3, this field is deprecated
-   and its value MUST be ignored by all implementations.  Version
-   negotiation is performed using only the handshake versions.
-   (ClientHello.client_version & ServerHello.server_version) In order to
+   various purposes.  (TLSPlaintext.legacy_record_version &
+   TLSCiphertext.legacy_record_version) As of TLS 1.3, this field is
+   deprecated and its value MUST be ignored by all implementations.
+   Version negotiation is performed using only the handshake versions.
+   (ClientHello.max_supported_version & ServerHello.version) In order to
    maximize interoperability with older endpoints, implementations that
    negotiate the use of TLS 1.0-1.2 SHOULD set the record layer version
    number to the negotiated version for the ServerHello and all records
@@ -5746,8 +5746,8 @@ C.1.  Negotiating with an older server
 
    A TLS 1.3 client who wishes to negotiate with such older servers will
    send a normal TLS 1.3 ClientHello containing { 3, 4 } (TLS 1.3) in
-   ClientHello.client_version.  If the server does not support this
-   version it will respond with a ServerHello containing an older
+   ClientHello.max_supported_version.  If the server does not support
+   this version it will respond with a ServerHello containing an older
    version number.  If the client agrees to use this version, the
    negotiation will proceed as appropriate for the negotiated protocol.
    A client resuming a session SHOULD initiate the connection using the
@@ -5788,16 +5788,17 @@ C.2.  Negotiating with an older client
    number smaller than the highest supported version.  If the server
    wishes to negotiate with old clients, it will proceed as appropriate
    for the highest version supported by the server that is not greater
-   than ClientHello.client_version.  For example, if the server supports
-   TLS 1.0, 1.1, and 1.2, and client_version is TLS 1.0, the server will
-   proceed with a TLS 1.0 ServerHello.  If the server only supports
-   versions greater than client_version, it MUST send a
-   "protocol_version" alert message and close the connection.
+   than ClientHello.max_supported_version.  For example, if the server
+   supports TLS 1.0, 1.1, and 1.2, and max_supported_version is TLS 1.0,
+   the server will proceed with a TLS 1.0 ServerHello.  If the server
+   only supports versions greater than max_supported_version, it MUST
+   send a "protocol_version" alert message and close the connection.
 
    Note that earlier versions of TLS did not clearly specify the record
    layer version number value in all cases
-   (TLSPlaintext.record_version).  Servers will receive various TLS 1.x
-   versions in this field, however its value MUST always be ignored.
+   (TLSPlaintext.legacy_record_version).  Servers will receive various
+   TLS 1.x versions in this field, however its value MUST always be
+   ignored.
 
 C.3.  Zero-RTT backwards compatibility
 
@@ -5815,9 +5816,8 @@ C.3.  Zero-RTT backwards compatibility
    attempts to repair this error SHOULD NOT send a TLS 1.2 ClientHello,
    but instead send a TLS 1.3 ClientHello without 0-RTT data.
 
-   To avoid this error condition, multi-server deployments SHOULD ensure
-   a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
-   enabling 0-RTT.
+
+
 
 
 
@@ -5825,6 +5825,10 @@ Rescorla                Expires February 14, 2017             [Page 104]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   To avoid this error condition, multi-server deployments SHOULD ensure
+   a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
+   enabling 0-RTT.
 
 C.4.  Backwards Compatibility Security Restrictions
 
@@ -5857,22 +5861,18 @@ C.4.  Backwards Compatibility Security Restrictions
    reasons enumerated in [RFC7568], and MUST NOT be negotiated for any
    reason.
 
-   Implementations MUST NOT send a ClientHello.client_version or
-   ServerHello.server_version set to { 3, 0 } or less.  Any endpoint
-   receiving a Hello message with ClientHello.client_version or
-   ServerHello.server_version set to { 3, 0 } MUST respond with a
+   Implementations MUST NOT send a ClientHello.max_supported_version or
+   ServerHello.version set to { 3, 0 } or less.  Any endpoint receiving
+   a Hello message with ClientHello.max_supported_version or
+   ServerHello.version set to { 3, 0 } MUST respond with a
    "protocol_version" alert message and close the connection.
 
    Implementations MUST NOT use the Truncated HMAC extension, defined in
    Section 7 of [RFC6066], as it is not applicable to AEAD ciphers and
    has been shown to be insecure in some scenarios.
 
-Appendix D.  Overview of Security Properties
 
-   [[TODO: This section is still a WIP and needs a bunch more work.]]
 
-   A complete security analysis of TLS is outside the scope of this
-   document.  In this section, we provide an informal description the
 
 
 
@@ -5882,6 +5882,12 @@ Rescorla                Expires February 14, 2017             [Page 105]
 Internet-Draft                     TLS                       August 2016
 
 
+Appendix D.  Overview of Security Properties
+
+   [[TODO: This section is still a WIP and needs a bunch more work.]]
+
+   A complete security analysis of TLS is outside the scope of this
+   document.  In this section, we provide an informal description the
    desired properties as well as references to more detailed work in the
    research literature which provides more formal definitions.
 
@@ -5923,12 +5929,6 @@ D.1.  Handshake
 
    Peer Authentication.  The client's view of the peer identity should
       reflect the server's identity.  If the client is authenticated,
-      the server's view of the peer identity should match the client's
-      identity.
-
-   Uniqueness of the session key:  Any two distinct handshakes should
-      produce distinct, unrelated session keys
-
 
 
 
@@ -5937,6 +5937,12 @@ Rescorla                Expires February 14, 2017             [Page 106]
 
 Internet-Draft                     TLS                       August 2016
 
+
+      the server's view of the peer identity should match the client's
+      identity.
+
+   Uniqueness of the session key:  Any two distinct handshakes should
+      produce distinct, unrelated session keys
 
    Downgrade protection.  The cryptographic parameters should be the
       same on both sides and should be the same as if the peers had been
@@ -5980,12 +5986,6 @@ Internet-Draft                     TLS                       August 2016
 
    As soon as the client and the server have exchanged enough
    information to establish shared keys, the remainder of the handshake
-   is encrypted, thus providing protection against passive attackers.
-   Because the server authenticates before the client, the client can
-   ensure that it only reveals its identity to an authenticated server.
-   Note that implementations must use the provided record padding
-   mechanism during the handshake to avoid leaking information about the
-   identities due to length.
 
 
 
@@ -5993,6 +5993,13 @@ Rescorla                Expires February 14, 2017             [Page 107]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   is encrypted, thus providing protection against passive attackers.
+   Because the server authenticates before the client, the client can
+   ensure that it only reveals its identity to an authenticated server.
+   Note that implementations must use the provided record padding
+   mechanism during the handshake to avoid leaking information about the
+   identities due to length.
 
    The 0-RTT mode of operation generally provides the same security
    properties as 1-RTT data, with the two exceptions that the 0-RTT
@@ -6036,13 +6043,6 @@ D.2.  Record Layer
       the endpoint should not be able to decrypt traffic encrypted with
       the old key.
 
-   Informally, TLS 1.3 provides these properties by AEAD-protecting the
-   plaintext with a strong key.  AEAD encryption [RFC5116] provides
-   confidentiality and integrity for the data.  Non-replayability is
-   provided by using a separate nonce for each record, with the nonce
-   being derived from the record sequence number (Section 5.3), with the
-   sequence number being maintained independently at both sides thus
-
 
 
 Rescorla                Expires February 14, 2017             [Page 108]
@@ -6050,6 +6050,12 @@ Rescorla                Expires February 14, 2017             [Page 108]
 Internet-Draft                     TLS                       August 2016
 
 
+   Informally, TLS 1.3 provides these properties by AEAD-protecting the
+   plaintext with a strong key.  AEAD encryption [RFC5116] provides
+   confidentiality and integrity for the data.  Non-replayability is
+   provided by using a separate nonce for each record, with the nonce
+   being derived from the record sequence number (Section 5.3), with the
+   sequence number being maintained independently at both sides thus
    records which are delivered out of order result in AEAD deprotection
    failures.
 
@@ -6092,12 +6098,6 @@ Appendix F.  Contributors
 
    -  Christopher Allen (co-editor of TLS 1.0)
       Alacrity Ventures
-      ChristopherA@AlacrityManagement.com
-
-   -  Steven M.  Bellovin
-      Columbia University
-      smb@cs.columbia.edu
-
 
 
 
@@ -6105,6 +6105,12 @@ Rescorla                Expires February 14, 2017             [Page 109]
 
 Internet-Draft                     TLS                       August 2016
 
+
+      ChristopherA@AlacrityManagement.com
+
+   -  Steven M.  Bellovin
+      Columbia University
+      smb@cs.columbia.edu
 
    -  David Benjamin
       Google
@@ -6148,12 +6154,6 @@ Internet-Draft                     TLS                       August 2016
       Nokia
       pasi.eronen@nokia.com
 
-   -  Cedric Fournet
-      Microsoft
-      fournet@microsoft.com
-
-   -  Anil Gangolli
-      anil@busybuddha.org
 
 
 
@@ -6161,6 +6161,13 @@ Rescorla                Expires February 14, 2017             [Page 110]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   -  Cedric Fournet
+      Microsoft
+      fournet@microsoft.com
+
+   -  Anil Gangolli
+      anil@busybuddha.org
 
    -  David M.  Garrett
 
@@ -6203,13 +6210,6 @@ Internet-Draft                     TLS                       August 2016
       agl@google.com
 
    -  Ilari Liusvaara
-      Independent
-      ilariliusvaara@welho.com
-
-   -  Jan Mikkelsen
-      Transactionware
-      janm@transactionware.com
-
 
 
 
@@ -6217,6 +6217,13 @@ Rescorla                Expires February 14, 2017             [Page 111]
 
 Internet-Draft                     TLS                       August 2016
 
+
+      Independent
+      ilariliusvaara@welho.com
+
+   -  Jan Mikkelsen
+      Transactionware
+      janm@transactionware.com
 
    -  Bodo Moeller (co-author of [RFC4492])
       Google
@@ -6260,13 +6267,6 @@ Internet-Draft                     TLS                       August 2016
       Microsoft, Inc.
       dansimon@microsoft.com
 
-   -  Nick Sullivan
-      CloudFlare Inc.
-      nick@cloudflare.com
-
-   -  Bjoern Tackmann
-      University of California, San Diego
-
 
 
 Rescorla                Expires February 14, 2017             [Page 112]
@@ -6274,6 +6274,12 @@ Rescorla                Expires February 14, 2017             [Page 112]
 Internet-Draft                     TLS                       August 2016
 
 
+   -  Nick Sullivan
+      CloudFlare Inc.
+      nick@cloudflare.com
+
+   -  Bjoern Tackmann
+      University of California, San Diego
       btackmann@eng.ucsd.edu
 
    -  Martin Thomson
@@ -6300,12 +6306,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
-
-
 
 
 
