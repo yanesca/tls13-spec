@@ -5304,7 +5304,7 @@ Internet-Draft                     TLS                       August 2016
 
       SignatureScheme supported_signature_algorithms<2..2^16-2>;
 
-A.3.1.3.  Named Group Extension
+A.3.1.3.  Supported Groups Extension
 
 
 
