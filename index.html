@@ -2139,9 +2139,45 @@ server_finished_key =
 
 <ul>
   <li>HKDF-Extract is drawn as taking the Salt argument from the top and the IKM argument from the left.</li>
-  <li>Derive-Secret&#8217;s Secret argument is indicated by the arrow coming in from the left. For instance, the Early Secret is the Secret for generating the early_traffic-secret.</li>
+  <li>Derive-Secret&#8217;s Secret argument is indicated by the arrow coming in from the left. For instance, the Early Secret is the Secret for generating the early_traffic_secret.</li>
 </ul>
-<p id="rfc.section.7.1.p.7">Note that the 0-RTT Finished message is not included in the Derive-Secret operation.  ~~~~ 0 | v PSK -&gt;  HKDF-Extract | v Early Secret &#8212;&gt; Derive-Secret(., &#8220;early traffic secret&#8221;, |                         ClientHello) |                         = early_traffic_secret v (EC)DHE -&gt; HKDF-Extract | v Handshake Secret &#8212;&#8211;&gt; Derive-Secret(., &#8220;handshake traffic secret&#8221;, |                         ClientHello&#8230;ServerHello) |                         = handshake_traffic_secret v 0 -&gt; HKDF-Extract | v Master Secret | +&#8212;&#8212;&#8212;&gt; Derive-Secret(., &#8220;application traffic secret&#8221;, |                         ClientHello&#8230;Server Finished) |                         = traffic_secret_0 | +&#8212;&#8212;&#8212;&gt; Derive-Secret(., &#8220;exporter master secret&#8221;, |                         ClientHello&#8230;Client Finished) |                         = exporter_secret | +&#8212;&#8212;&#8212;&gt; Derive-Secret(., &#8220;resumption master secret&#8221;, ClientHello&#8230;Client Finished) = resumption_secret ~~~~</p>
+<p id="rfc.section.7.1.p.7">Note that the 0-RTT Finished message is not included in the Derive-Secret operation.</p>
+<pre>
+                 0
+                 |
+                 v
+   PSK -&gt;  HKDF-Extract
+                 |
+                 v
+           Early Secret ---&gt; Derive-Secret(., "early traffic secret",
+                 |                         ClientHello)
+                 |                         = early_traffic_secret
+                 v
+(EC)DHE -&gt; HKDF-Extract
+                 |
+                 v
+              Handshake
+               Secret -----&gt; Derive-Secret(., "handshake traffic secret",
+                 |                         ClientHello...ServerHello)
+                 |                         = handshake_traffic_secret
+                 v
+      0 -&gt; HKDF-Extract
+                 |
+                 v
+            Master Secret
+                 |
+                 +---------&gt; Derive-Secret(., "application traffic secret",
+                 |                         ClientHello...Server Finished)
+                 |                         = traffic_secret_0
+                 |
+                 +---------&gt; Derive-Secret(., "exporter master secret",
+                 |                         ClientHello...Client Finished)
+                 |                         = exporter_secret
+                 |
+                 +---------&gt; Derive-Secret(., "resumption master secret",
+                                           ClientHello...Client Finished)
+                                           = resumption_secret
+</pre>
 <p id="rfc.section.7.1.p.8">The general pattern here is that the secrets shown down the left side of the diagram are just raw entropy without context, whereas the secrets down the right side include handshake context and therefore can be used to derive working keys without additional context.  Note that the different calls to Derive-Secret may take different Messages arguments, even with the same secret. In a 0-RTT exchange, Derive-Secret is called with four distinct transcripts; in a 1-RTT only exchange with three distinct transcripts.</p>
 <p id="rfc.section.7.1.p.9">If a given secret is not available, then the 0-value consisting of a string of Hash.length zeroes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0).</p>
 <h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
