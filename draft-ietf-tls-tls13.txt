@@ -713,9 +713,9 @@ Internet-Draft                     TLS                       August 2016
    Certificate.  the certificate of the endpoint.  This message is
       omitted if the server is not authenticating with a certificate.
       Note that if raw public keys [RFC7250] or the cached information
-      extension [I-D.ietf-tls-cached-info] are in use, then this message
-      will not contain a certificate but rather some other value
-      corresponding to the server's long-term key.  [Section 4.3.1]
+      extension [RFC7924] are in use, then this message will not contain
+      a certificate but rather some other value corresponding to the
+      server's long-term key.  [Section 4.3.1]
 
    CertificateVerify.  a signature over the entire handshake using the
       public key in the Certificate message.  This message is omitted if
@@ -4673,11 +4673,6 @@ Internet-Draft                     TLS                       August 2016
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
 
-   [I-D.ietf-tls-cached-info]
-              Santesson, S. and H. Tschofenig, "Transport Layer Security
-              (TLS) Cached Information Extension", draft-ietf-tls-
-              cached-info-23 (work in progress), May 2016.
-
    [I-D.ietf-tls-negotiated-ff-dhe]
               Gillmor, D., "Negotiated Finite Field Diffie-Hellman
               Ephemeral Parameters for TLS", draft-ietf-tls-negotiated-
@@ -4698,6 +4693,11 @@ Internet-Draft                     TLS                       August 2016
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
 
+   [PSK-FINISHED]
+              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
+              "Revision 10: possible attack if client authentication is
+              allowed during PSK", 2015, <https://www.ietf.org/mail-
+              archive/web/tls/current/msg18215.html>.
 
 
 
@@ -4705,12 +4705,6 @@ Rescorla                Expires February 15, 2017              [Page 84]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   [PSK-FINISHED]
-              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
-              "Revision 10: possible attack if client authentication is
-              allowed during PSK", 2015, <https://www.ietf.org/mail-
-              archive/web/tls/current/msg18215.html>.
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -4753,6 +4747,12 @@ Internet-Draft                     TLS                       August 2016
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
 
+   [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
+              Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
+              for Transport Layer Security (TLS)", RFC 4492,
+              DOI 10.17487/RFC4492, May 2006,
+              <http://www.rfc-editor.org/info/rfc4492>.
+
 
 
 
@@ -4761,12 +4761,6 @@ Rescorla                Expires February 15, 2017              [Page 85]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
-              Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
-              for Transport Layer Security (TLS)", RFC 4492,
-              DOI 10.17487/RFC4492, May 2006,
-              <http://www.rfc-editor.org/info/rfc4492>.
 
    [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
               Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
@@ -4810,6 +4804,12 @@ Internet-Draft                     TLS                       August 2016
               Extension", RFC 5746, DOI 10.17487/RFC5746, February 2010,
               <http://www.rfc-editor.org/info/rfc5746>.
 
+   [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
+              for Establishing a Secure Real-time Transport Protocol
+              (SRTP) Security Context Using Datagram Transport Layer
+              Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
+              2010, <http://www.rfc-editor.org/info/rfc5763>.
+
 
 
 
@@ -4817,12 +4817,6 @@ Rescorla                Expires February 15, 2017              [Page 86]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
-              for Establishing a Secure Real-time Transport Protocol
-              (SRTP) Security Context Using Datagram Transport Layer
-              Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
-              2010, <http://www.rfc-editor.org/info/rfc5763>.
 
    [RFC5764]  McGrew, D. and E. Rescorla, "Datagram Transport Layer
               Security (DTLS) Extension to Establish Keys for the Secure
@@ -4866,6 +4860,12 @@ Internet-Draft                     TLS                       August 2016
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <http://www.rfc-editor.org/info/rfc7230>.
 
+   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
+              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
+              Transport Layer Security (TLS) and Datagram Transport
+              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
+              June 2014, <http://www.rfc-editor.org/info/rfc7250>.
+
 
 
 
@@ -4873,12 +4873,6 @@ Rescorla                Expires February 15, 2017              [Page 87]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
-              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
-              Transport Layer Security (TLS) and Datagram Transport
-              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
-              June 2014, <http://www.rfc-editor.org/info/rfc7250>.
 
    [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
               "Transport Layer Security (TLS) Application-Layer Protocol
@@ -4909,6 +4903,11 @@ Internet-Draft                     TLS                       August 2016
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
               October 2015, <http://www.rfc-editor.org/info/rfc7685>.
 
+   [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
+              (TLS) Cached Information Extension", RFC 7924,
+              DOI 10.17487/RFC7924, July 2016,
+              <http://www.rfc-editor.org/info/rfc7924>.
+
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
               Cryptosystems", Communications of the ACM v. 21, n. 2, pp.
@@ -4922,6 +4921,7 @@ Internet-Draft                     TLS                       August 2016
               Attacks: Breaking Authentication in TLS, IKE, and SSH",
               Network and Distributed System Security Symposium (NDSS
               2016) , 2016.
+
 
 
 

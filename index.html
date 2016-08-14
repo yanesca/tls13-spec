@@ -800,7 +800,7 @@ Auth | {CertificateVerify*}
 
 <dl>
   <dt>Certificate.</dt>
-  <dd style="margin-left: 8">the certificate of the endpoint. This message is omitted if the server is not authenticating with a certificate. Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or the cached information extension <a href="#I-D.ietf-tls-cached-info">[I-D.ietf-tls-cached-info]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 4.3.1</a>]</dd>
+  <dd style="margin-left: 8">the certificate of the endpoint. This message is omitted if the server is not authenticating with a certificate. Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or the cached information extension <a href="#RFC7924">[RFC7924]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 4.3.1</a>]</dd>
   <dt>CertificateVerify.</dt>
   <dd style="margin-left: 8">a signature over the entire handshake using the public key in the Certificate message. This message is omitted if the server is not authenticating via a certificate. [<a href="#certificate-verify">Section 4.3.2</a>]</dd>
   <dt>Finished.</dt>
@@ -2747,12 +2747,6 @@ HKDF-Expand-Label(exporter_secret,
     </tr>
     <tr>
       <td class="reference">
-        <b id="I-D.ietf-tls-cached-info">[I-D.ietf-tls-cached-info]</b>
-      </td>
-      <td class="top"><a>Santesson, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-cached-info-23">Transport Layer Security (TLS) Cached Information Extension</a>", Internet-Draft draft-ietf-tls-cached-info-23, May 2016.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="I-D.ietf-tls-negotiated-ff-dhe">[I-D.ietf-tls-negotiated-ff-dhe]</b>
       </td>
       <td class="top"><a>Gillmor, D.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-negotiated-ff-dhe-10">Negotiated Finite Field Diffie-Hellman Ephemeral Parameters for TLS</a>", Internet-Draft draft-ietf-tls-negotiated-ff-dhe-10, June 2015.</td>
@@ -3002,6 +2996,12 @@ HKDF-Expand-Label(exporter_secret,
         <b id="RFC7685">[RFC7685]</b>
       </td>
       <td class="top"><a>Langley, A.</a>, "<a href="http://tools.ietf.org/html/rfc7685">A Transport Layer Security (TLS) ClientHello Padding Extension</a>", RFC 7685, DOI 10.17487/RFC7685, October 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7924">[RFC7924]</b>
+      </td>
+      <td class="top"><a>Santesson, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/rfc7924">Transport Layer Security (TLS) Cached Information Extension</a>", RFC 7924, DOI 10.17487/RFC7924, July 2016.</td>
     </tr>
     <tr>
       <td class="reference">
