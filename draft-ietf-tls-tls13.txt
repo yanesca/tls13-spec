@@ -4459,8 +4459,8 @@ Internet-Draft                     TLS                       August 2016
 
    [I-D.irtf-cfrg-eddsa]
               Josefsson, S. and I. Liusvaara, "Edwards-curve Digital
-              Signature Algorithm (EdDSA)", draft-irtf-cfrg-eddsa-05
-              (work in progress), March 2016.
+              Signature Algorithm (EdDSA)", draft-irtf-cfrg-eddsa-06
+              (work in progress), August 2016.
 
    [I-D.mattsson-tls-ecdhe-psk-aead]
               Mattsson, J. and D. Migault, "ECDHE_PSK with AES-GCM and
