@@ -2672,7 +2672,7 @@ Internet-Draft                     TLS                       August 2016
    | 1-RTT      | ClientHello ... ServerFinished | handshake_traffic_s |
    | (Client)   |                                | ecret               |
    |            |                                |                     |
-   | Post-      | ClientHello ... ClientFinished | traffic_secret_0    |
+   | Post-      | ClientHello ... ClientFinished | traffic_secret_N    |
    | Handshake  | + CertificateRequest           |                     |
    +------------+--------------------------------+---------------------+
 
