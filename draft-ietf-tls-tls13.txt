@@ -124,13 +124,14 @@ Internet-Draft                     TLS                       August 2016
        4.4.1.  New Session Ticket Message  . . . . . . . . . . . . .  56
        4.4.2.  Post-Handshake Authentication . . . . . . . . . . . .  57
        4.4.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  58
+     4.5.  Handshake Layer and Key Changes . . . . . . . . . . . . .  59
    5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  59
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  59
-     5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  60
-     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  62
+     5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  61
+     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  63
      5.4.  Record Padding  . . . . . . . . . . . . . . . . . . . . .  63
      5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  64
-   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  64
+   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  65
      6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  66
      6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  67
    7.  Cryptographic Computations  . . . . . . . . . . . . . . . . .  70
@@ -161,7 +162,6 @@ Internet-Draft                     TLS                       August 2016
    Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 100
      B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 100
      B.2.  Random Number Generation and Seeding  . . . . . . . . . . 100
-     B.3.  Certificates and Authentication . . . . . . . . . . . . . 100
 
 
 
@@ -170,6 +170,7 @@ Rescorla                Expires February 18, 2017               [Page 3]
 Internet-Draft                     TLS                       August 2016
 
 
+     B.3.  Certificates and Authentication . . . . . . . . . . . . . 100
      B.4.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 100
      B.5.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 101
      B.6.  Client Tracking Prevention  . . . . . . . . . . . . . . . 102
@@ -217,7 +218,6 @@ Internet-Draft                     TLS                       August 2016
    Appendix D for a more complete statement of the relevant security
    properties.
 
-   TLS consists of two primary components:
 
 
 
@@ -225,6 +225,8 @@ Rescorla                Expires February 18, 2017               [Page 4]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   TLS consists of two primary components:
 
    -  A handshake protocol (Section 4) which authenticates the
       communicating parties, negotiates cryptographic modes and
@@ -270,9 +272,7 @@ Internet-Draft                     TLS                       August 2016
    handshake: An initial negotiation between client and server that
    establishes the parameters of their transactions.
 
-   peer: An endpoint.  When discussing a particular endpoint, "peer"
-   refers to the endpoint that is remote to the primary subject of
-   discussion.
+
 
 
 
@@ -281,6 +281,10 @@ Rescorla                Expires February 18, 2017               [Page 5]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   peer: An endpoint.  When discussing a particular endpoint, "peer"
+   refers to the endpoint that is remote to the primary subject of
+   discussion.
 
    receiver: An endpoint that is receiving records.
 
@@ -327,16 +331,15 @@ Internet-Draft                     TLS                       August 2016
 
    -  Replace the Security Analysis section with a WIP draft.
 
-   (*) indicates changes to the wire protocol which may require
-   implementations to update.
-
-
 
 
 Rescorla                Expires February 18, 2017               [Page 6]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   (*) indicates changes to the wire protocol which may require
+   implementations to update.
 
    draft-13
 
@@ -383,9 +386,6 @@ Internet-Draft                     TLS                       August 2016
 
    -  Define exporters.
 
-   -  Editorial cleanup
-
-   draft-11
 
 
 
@@ -393,6 +393,10 @@ Rescorla                Expires February 18, 2017               [Page 7]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   -  Editorial cleanup
+
+   draft-11
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
 
@@ -437,10 +441,6 @@ Internet-Draft                     TLS                       August 2016
    -  Change HKDF labeling to include protocol version and value
       lengths.
 
-   -  Shift the final decision to abort a handshake due to incompatible
-      certificates to the client rather than having servers abort early.
-
-   -  Deprecate SHA-1 with signatures.
 
 
 
@@ -449,6 +449,11 @@ Rescorla                Expires February 18, 2017               [Page 8]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   -  Shift the final decision to abort a handshake due to incompatible
+      certificates to the client rather than having servers abort early.
+
+   -  Deprecate SHA-1 with signatures.
 
    -  Add MTI algorithms.
 
@@ -494,17 +499,16 @@ Internet-Draft                     TLS                       August 2016
 
    -  Update format of signatures with context.
 
-   -  Remove explicit IV.
-
-   draft-05
-
-
 
 
 Rescorla                Expires February 18, 2017               [Page 9]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   -  Remove explicit IV.
+
+   draft-05
 
    -  Prohibit SSL negotiation for backwards compatibility.
 
@@ -550,10 +554,6 @@ Internet-Draft                     TLS                       August 2016
    -  Remove support for static RSA and DH key exchange.
 
    -  Remove support for non-AEAD ciphers.
-
-
-
-
 
 
 
@@ -3250,6 +3250,14 @@ Rescorla                Expires February 18, 2017              [Page 58]
 Internet-Draft                     TLS                       August 2016
 
 
+4.5.  Handshake Layer and Key Changes
+
+   Handshake messages MUST NOT span key changes.  Because the
+   ServerHello, Finished, and KeyUpdate messages signal a key change,
+   upon receiving these messages a receiver MUST verify that the end of
+   these messages aligns with a record boundary; if not, then it MUST
+   send a fatal "unexpected_message" alert.
+
 5.  Record Protocol
 
    The TLS record protocol takes messages to be transmitted, fragments
@@ -3284,6 +3292,20 @@ Internet-Draft                     TLS                       August 2016
    several records).  Alert messages (Section 6) MUST NOT be fragmented
    across records.
 
+
+
+
+
+
+
+
+
+
+Rescorla                Expires February 18, 2017              [Page 59]
+
+Internet-Draft                     TLS                       August 2016
+
+
    enum {
        alert(21),
        handshake(22),
@@ -3297,14 +3319,6 @@ Internet-Draft                     TLS                       August 2016
        uint16 length;
        opaque fragment[TLSPlaintext.length];
    } TLSPlaintext;
-
-
-
-
-Rescorla                Expires February 18, 2017              [Page 59]
-
-Internet-Draft                     TLS                       August 2016
-
 
    type  The higher-level protocol used to process the enclosed
       fragment.
@@ -3338,6 +3352,16 @@ Internet-Draft                     TLS                       August 2016
    protection has started, TLSPlaintext records are protected and sent
    as described in the following section.
 
+
+
+
+
+
+Rescorla                Expires February 18, 2017              [Page 60]
+
+Internet-Draft                     TLS                       August 2016
+
+
 5.2.  Record Payload Protection
 
    The record protection functions translate a TLSPlaintext structure
@@ -3349,18 +3373,6 @@ Internet-Draft                     TLS                       August 2016
    ciphertext and back again.  Each encrypted record consists of a
    plaintext header followed by an encrypted body, which itself contains
    a type and optional padding.
-
-
-
-
-
-
-
-
-Rescorla                Expires February 18, 2017              [Page 60]
-
-Internet-Draft                     TLS                       August 2016
-
 
    struct {
       opaque content[TLSPlaintext.length];
@@ -3397,6 +3409,15 @@ Internet-Draft                     TLS                       August 2016
       ServerHello messages authenticates the protocol version, so this
       value is redundant.
 
+
+
+
+
+Rescorla                Expires February 18, 2017              [Page 61]
+
+Internet-Draft                     TLS                       August 2016
+
+
    length  The length (in bytes) of the following
       TLSCiphertext.fragment, which is the sum of the lengths of the
       content and the padding, plus one for the inner content type.  The
@@ -3410,14 +3431,6 @@ Internet-Draft                     TLS                       August 2016
    AEAD ciphers take as input a single key, a nonce, a plaintext, and
    "additional data" to be included in the authentication check, as
    described in Section 2.1 of [RFC5116].  The key is either the
-
-
-
-Rescorla                Expires February 18, 2017              [Page 61]
-
-Internet-Draft                     TLS                       August 2016
-
-
    client_write_key or the server_write_key, the nonce is derived from
    the sequence number (see Section 5.3) and the client_write_iv or
    server_write_iv, and the additional data input is empty (zero
@@ -3453,6 +3466,14 @@ Internet-Draft                     TLS                       August 2016
    bytes.  An endpoint that receives a record from its peer with
    TLSCipherText.length larger than 2^14 + 256 octets MUST generate a
    fatal "record_overflow" alert.  This limit is derived from the
+
+
+
+Rescorla                Expires February 18, 2017              [Page 62]
+
+Internet-Draft                     TLS                       August 2016
+
+
    maximum TLSPlaintext length of 2^14 octets + 1 octet for ContentType
    + the maximum AEAD expansion of 255 octets.
 
@@ -3465,14 +3486,6 @@ Internet-Draft                     TLS                       August 2016
    The sequence number is incremented after reading or writing each
    record.  The first record transmitted under a particular set of
    traffic keys record key MUST use sequence number 0.
-
-
-
-
-Rescorla                Expires February 18, 2017              [Page 62]
-
-Internet-Draft                     TLS                       August 2016
-
 
    Sequence numbers do not wrap.  If a TLS implementation would need to
    wrap a sequence number, it MUST either rekey (Section 4.4.3) or
@@ -3509,6 +3522,14 @@ Internet-Draft                     TLS                       August 2016
 
    Application Data records may contain a zero-length fragment.content
    if the sender desires.  This permits generation of plausibly-sized
+
+
+
+Rescorla                Expires February 18, 2017              [Page 63]
+
+Internet-Draft                     TLS                       August 2016
+
+
    cover traffic in contexts where the presence or absence of activity
    may be sensitive.  Implementations MUST NOT send Handshake or Alert
    records that have a zero-length fragment.content.
@@ -3522,13 +3543,6 @@ Internet-Draft                     TLS                       August 2016
    size (from zero up to TLS record size limits) without introducing new
    content types.  The design also enforces all-zero padding octets,
    which allows for quick detection of padding errors.
-
-
-
-Rescorla                Expires February 18, 2017              [Page 63]
-
-Internet-Draft                     TLS                       August 2016
-
 
    Implementations MUST limit their scanning to the cleartext returned
    from the AEAD decryption.  If a receiving implementation does not
@@ -3564,6 +3578,14 @@ Internet-Draft                     TLS                       August 2016
    the record sequence number will wrap before the safety limit is
    reached.
 
+
+
+
+Rescorla                Expires February 18, 2017              [Page 64]
+
+Internet-Draft                     TLS                       August 2016
+
+
 6.  Alert Protocol
 
    One of the content types supported by the TLS record layer is the
@@ -3577,15 +3599,6 @@ Internet-Draft                     TLS                       August 2016
    indicate end-of-data to the application and, if appropriate for the
    alert type, send a closure alert in response.
 
-
-
-
-
-Rescorla                Expires February 18, 2017              [Page 64]
-
-Internet-Draft                     TLS                       August 2016
-
-
    Fatal-level messages are used to indicate abortive closure of the
    connection (See Section 6.2).  Upon receiving a fatal-level alert,
    the TLS implementation SHOULD indicate an error to the application
@@ -3598,19 +3611,6 @@ Internet-Draft                     TLS                       August 2016
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
