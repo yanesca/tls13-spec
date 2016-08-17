@@ -114,7 +114,7 @@ Rescorla                Expires February 18, 2017               [Page 2]
 Internet-Draft                     TLS                       August 2016
 
 
-       4.2.8.  Encrypted Extensions  . . . . . . . . . . . . . . . .  44
+       4.2.8.  Encrypted Extensions  . . . . . . . . . . . . . . . .  45
        4.2.9.  Certificate Request . . . . . . . . . . . . . . . . .  45
      4.3.  Authentication Messages . . . . . . . . . . . . . . . . .  47
        4.3.1.  Certificate . . . . . . . . . . . . . . . . . . . . .  49
@@ -2431,8 +2431,12 @@ Internet-Draft                     TLS                       August 2016
 
    A small allowance for errors in clocks and variations in measurements
    is advisable.  However, any allowance also increases the opportunity
-   for replay.  In this case, it is better to reject early data than to
-   risk greater exposure to replay attacks.
+   for replay.  In this case, it is better to reject early data and fall
+   back to a full 1-RTT handshake than to risk greater exposure to
+   replay attacks.  In common network topologies for browser clients,
+   small allowances on the order of ten seconds are reasonable.  Clock
+   skew distributions are not symmetric, so the optimal tradeoff may
+   involve an asymmetric replay window.
 
 4.2.7.  OCSP Status Extensions
 
@@ -2451,12 +2455,8 @@ Internet-Draft                     TLS                       August 2016
    the existing behavior for SignedCertificateTimestamps [RFC6962], and
    is more easily extensible in the handshake state machine.
 
-4.2.8.  Encrypted Extensions
 
-   When this message will be sent:
 
-      In all handshakes, the server MUST send the EncryptedExtensions
-      message immediately after the ServerHello message.  This is the
 
 
 
@@ -2466,6 +2466,12 @@ Rescorla                Expires February 18, 2017              [Page 44]
 Internet-Draft                     TLS                       August 2016
 
 
+4.2.8.  Encrypted Extensions
+
+   When this message will be sent:
+
+      In all handshakes, the server MUST send the EncryptedExtensions
+      message immediately after the ServerHello message.  This is the
       first message that is encrypted under keys derived from
       handshake_traffic_secret.
 
@@ -2503,12 +2509,6 @@ Internet-Draft                     TLS                       August 2016
       will follow EncryptedExtensions.
 
    Structure of this message:
-
-
-
-
-
-
 
 
 
