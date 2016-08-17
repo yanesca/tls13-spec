@@ -906,7 +906,7 @@ Internet-Draft                     TLS                       August 2016
    keys derived using the first offered PSK as the static secret.  As
    shown in Figure 4, the Zero-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
-   same messages.
+   same messages as with a 1-RTT handshake with PSK resumption.
 
             Client                                               Server
 
@@ -922,11 +922,8 @@ Internet-Draft                     TLS                       August 2016
                                                        + pre_shared_key
                                                            + key_share*
                                                   {EncryptedExtensions}
-                                                  {CertificateRequest*}
                                                              {Finished}
                                       <--------     [Application Data*]
-            {Certificate*}
-            {CertificateVerify*}
             {Finished}                -------->
 
             [Application Data]        <------->      [Application Data]
@@ -945,6 +942,9 @@ Internet-Draft                     TLS                       August 2016
 
           Figure 4: Message flow for a zero round trip handshake
 
+   [[OPEN ISSUE: Should it be possible to combine 0-RTT with the server
+   authenticating via a signature https://github.com/tlswg/tls13-spec/
+   issues/443]]
 
 
 
@@ -953,10 +953,6 @@ Rescorla                Expires February 18, 2017              [Page 17]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   [[OPEN ISSUE: Should it be possible to combine 0-RTT with the server
-   authenticating via a signature https://github.com/tlswg/tls13-spec/
-   issues/443]]
 
    IMPORTANT NOTE: The security properties for 0-RTT data are weaker
    than those for other kinds of TLS data.  Specifically:
@@ -1002,6 +998,10 @@ Internet-Draft                     TLS                       August 2016
       value = (byte[0] << 8*(n-1)) | (byte[1] << 8*(n-2)) |
               ... | byte[n-1];
 
+   This byte ordering for multi-byte values is the commonplace network
+   byte order or big-endian format.
+
+
 
 
 
@@ -1009,9 +1009,6 @@ Rescorla                Expires February 18, 2017              [Page 18]
 
 Internet-Draft                     TLS                       August 2016
 
-
-   This byte ordering for multi-byte values is the commonplace network
-   byte order or big-endian format.
 
 3.2.  Miscellaneous
 
@@ -1058,6 +1055,9 @@ Internet-Draft                     TLS                       August 2016
    In the following example, mandatory is a vector that must contain
    between 300 and 400 bytes of type opaque.  It can never be empty.
    The actual length field consumes two bytes, a uint16, which is
+   sufficient to represent the value 400 (see Section 3.4).  On the
+   other hand, longer can represent up to 800 bytes of data, or 400
+   uint16 elements, and it may be empty.  Its encoding will include a
 
 
 
@@ -1066,9 +1066,6 @@ Rescorla                Expires February 18, 2017              [Page 19]
 Internet-Draft                     TLS                       August 2016
 
 
-   sufficient to represent the value 400 (see Section 3.4).  On the
-   other hand, longer can represent up to 800 bytes of data, or 400
-   uint16 elements, and it may be empty.  Its encoding will include a
    two-byte actual length field prepended to the vector.  The length of
    an encoded vector must be an even multiple of the length of a single
    element (for example, a 17-byte vector of uint16 would be illegal).
@@ -1115,14 +1112,15 @@ Internet-Draft                     TLS                       August 2016
    maximal defined ordinal value.  The following definition would cause
    one byte to be used to carry fields of type Color.
 
+      enum { red(3), blue(5), white(7) } Color;
+
+
 
 
 Rescorla                Expires February 18, 2017              [Page 20]
 
 Internet-Draft                     TLS                       August 2016
 
-
-      enum { red(3), blue(5), white(7) } Color;
 
    One may optionally specify a value without its associated tag to
    force the width definition without defining a superfluous element.
@@ -1170,6 +1168,8 @@ Internet-Draft                     TLS                       August 2016
    available within the environment.  The selector must be an enumerated
    type that defines the possible variants the structure defines.  There
    must be a case arm for every element of the enumeration declared in
+   the select.  Case arms have limited fall-through: if two case arms
+   follow in immediate succession with no fields in between, then they
 
 
 
@@ -1178,8 +1178,6 @@ Rescorla                Expires February 18, 2017              [Page 21]
 Internet-Draft                     TLS                       August 2016
 
 
-   the select.  Case arms have limited fall-through: if two case arms
-   follow in immediate succession with no fields in between, then they
    both contain the same fields.  Thus, in the example below, "orange"
    and "banana" both contain V2.  Note that this is a new piece of
    syntax in TLS 1.2.
@@ -1225,6 +1223,8 @@ Internet-Draft                     TLS                       August 2016
                 V2;   /* VariantBody, tag = orange or banana */
           } variant_body;       /* optional label on variant */
       } VariantRecord;
+
+
 
 
 
