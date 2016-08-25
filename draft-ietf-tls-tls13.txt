@@ -1068,7 +1068,7 @@ Internet-Draft                     TLS                       August 2016
 
    two-byte actual length field prepended to the vector.  The length of
    an encoded vector must be an even multiple of the length of a single
-   element (for example, a 17-byte vector of uint16 would be illegal).
+   element (e.g., a 17-byte vector of uint16 would be illegal).
 
       opaque mandatory<300..400>;
             /* length field is 2 bytes, cannot be empty */

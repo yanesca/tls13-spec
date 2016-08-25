@@ -973,7 +973,7 @@ Subsequent Handshake:
 <pre>
    T T'&lt;floor..ceiling&gt;;
 </pre>
-<p id="rfc.section.3.3.p.5">In the following example, mandatory is a vector that must contain between 300 and 400 bytes of type opaque. It can never be empty. The actual length field consumes two bytes, a uint16, which is sufficient to represent the value 400 (see <a href="#numbers">Section 3.4</a>). On the other hand, longer can represent up to 800 bytes of data, or 400 uint16 elements, and it may be empty. Its encoding will include a two-byte actual length field prepended to the vector. The length of an encoded vector must be an even multiple of the length of a single element (for example, a 17-byte vector of uint16 would be illegal).</p>
+<p id="rfc.section.3.3.p.5">In the following example, mandatory is a vector that must contain between 300 and 400 bytes of type opaque. It can never be empty. The actual length field consumes two bytes, a uint16, which is sufficient to represent the value 400 (see <a href="#numbers">Section 3.4</a>). On the other hand, longer can represent up to 800 bytes of data, or 400 uint16 elements, and it may be empty. Its encoding will include a two-byte actual length field prepended to the vector. The length of an encoded vector must be an even multiple of the length of a single element (e.g., a 17-byte vector of uint16 would be illegal).</p>
 <pre>
    opaque mandatory&lt;300..400&gt;;
          /* length field is 2 bytes, cannot be empty */
