@@ -6234,8 +6234,8 @@ Internet-Draft                     TLS                       August 2016
       erik+ietf@nygren.org
 
    -  Magnus Nystrom
-      RSA Security
-      magnus@rsasecurity.com
+      Microsoft
+      mnystrom@microsoft.com
 
    -  Alfredo Pironti (co-author of [RFC7627])
       INRIA
