@@ -370,7 +370,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-8-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-8-26" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -391,7 +391,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">August 25, 2016</td>
+  <td class="right">August 26, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -406,7 +406,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: February 26, 2017</td>
+  <td class="left">Expires: February 27, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -427,7 +427,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 26, 2017.</p>
+<p>This Internet-Draft will expire on February 27, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -750,7 +750,7 @@ li, p {
 </ul>
 <p id="rfc.section.1.3.p.3">An implementation of TLS 1.3 that also supports TLS 1.2 might need to include changes to support these changes even when TLS 1.3 is not in use.  See the referenced sections for more details.</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#protocol-overview" id="protocol-overview">Protocol Overview</a></h1>
-<p id="rfc.section.2.p.1">The cryptographic parameters of the session state are produced by the TLS handshake protocol. When a TLS client and server first start communicating, they agree on a protocol version, select cryptographic algorithms, optionally authenticate each other, and establish shared secret keying material. Once the handshake is complete, the peers use the established keys to protect application layer traffic.</p>
+<p id="rfc.section.2.p.1">The cryptographic parameters of the session state are produced by the TLS handshake protocol, which a TLS client and server use when first communicating to agree on a protocol version, select cryptographic algorithms, optionally authenticate each other, and establish shared secret keying material. Once the handshake is complete, the peers use the established keys to protect application layer traffic.</p>
 <p id="rfc.section.2.p.2">TLS supports three basic key exchange modes:</p>
 <p/>
 
@@ -828,7 +828,7 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.2.p.13">Upon receiving the server&#8217;s messages, the client responds with its Authentication messages, namely Certificate and CertificateVerify (if requested), and Finished.</p>
 <p id="rfc.section.2.p.14">At this point, the handshake is complete, and the client and server may exchange application layer data. Application data MUST NOT be sent prior to sending the Finished message. Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is, of course, being sent to an unauthenticated peer.</p>
 <h2 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#incorrect-dhe-share" id="incorrect-dhe-share">Incorrect DHE Share</a></h2>
-<p id="rfc.section.2.1.p.1">If the client has not provided a sufficient &#8220;key_share&#8221; extension (e.g. it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client will need to restart the handshake with an appropriate &#8220;key_share&#8221; extension, as shown in Figure 2.  If no common cryptographic parameters can be negotiated, the server will send a &#8220;handshake_failure&#8221; or &#8220;insufficient_security&#8221; fatal alert (see <a href="#alert-protocol">Section 6</a>).</p>
+<p id="rfc.section.2.1.p.1">If the client has not provided a sufficient &#8220;key_share&#8221; extension (e.g., it includes only DHE or ECDHE groups unacceptable or unsupported by the server), the server corrects the mismatch with a HelloRetryRequest and the client needs to restart the handshake with an appropriate &#8220;key_share&#8221; extension, as shown in Figure 2.  If no common cryptographic parameters can be negotiated, the server sends a &#8220;handshake_failure&#8221; or &#8220;insufficient_security&#8221; fatal alert (see <a href="#alert-protocol">Section 6</a>).</p>
 <div id="rfc.figure.2"/>
 <div id="tls-restart"/>
 <pre>
@@ -1025,7 +1025,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.3.6.p.2">The fields within a structure may be qualified using the type&#8217;s name, with a syntax much like that available for enumerateds. For example, T.f2 refers to the second field of the previous declaration. Structure definitions may be embedded.</p>
 <h3 id="rfc.section.3.6.1"><a href="#rfc.section.3.6.1">3.6.1.</a> <a href="#variants" id="variants">Variants</a></h3>
-<p id="rfc.section.3.6.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this is a new piece of syntax in TLS 1.2.</p>
+<p id="rfc.section.3.6.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>.</p>
 <p id="rfc.section.3.6.1.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
@@ -1446,21 +1446,19 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.5.p.1">The &#8220;pre_shared_key&#8221; extension is used to indicate the identity of the pre-shared key to be used with a given handshake in association with PSK key establishment (see <a href="#RFC4279">[RFC4279]</a> for background).</p>
 <p id="rfc.section.4.2.5.p.2">The &#8220;extension_data&#8221; field of this extension contains a &#8220;PreSharedKeyExtension&#8221; value:</p>
 <pre>
-   enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeModes;
-   enum { psk_auth(0), psk_sign_auth(1), (255) } PskAuthenticationModes;
-
-   opaque psk_identity&lt;0..2^16-1&gt;;
+   enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
+   enum { psk_auth(0), psk_sign_auth(1), (255) } PskAuthenticationMode;
 
    struct {
-       PskKeMode ke_modes&lt;1..255&gt;;
-       PskAuthMode auth_modes&lt;1..255&gt;;
+       PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+       PskAuthenticationMode auth_modes&lt;1..255&gt;;
        opaque identity&lt;0..2^16-1&gt;;
    } PskIdentity;
 
    struct {
        select (Role) {
            case client:
-               psk_identity identities&lt;2..2^16-1&gt;;
+               PskIdentity identities&lt;6..2^16-1&gt;;
 
            case server:
                uint16 selected_identity;
@@ -1476,7 +1474,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identies in the client&#8217;s list.</dd>
 </dl>
 <p id="rfc.section.4.2.5.p.4">Each PSK offered by the client also indicates the authentication and key exchange modes with which the server can use it, with each list being in the order of the client&#8217;s preference, with most preferred first.</p>
-<p id="rfc.section.4.2.5.p.5">PskKeyExchangeModes have the following meanings:</p>
+<p id="rfc.section.4.2.5.p.5">PskKeyExchangeMode values have the following meanings:</p>
 <p/>
 
 <dl>
@@ -1485,7 +1483,7 @@ Subsequent Handshake:
   <dt>psk_dhe_ke</dt>
   <dd style="margin-left: 8">PSK key establishment with (EC)DHE key establishment. In this mode, the client and servers MUST supply &#8220;key_share&#8221; values as described in <a href="#key-share">Section 4.2.4</a>.</dd>
 </dl>
-<p id="rfc.section.4.2.5.p.7">PskAuthenticationModes have the following meanings:</p>
+<p id="rfc.section.4.2.5.p.7">PskAuthenticationMode values have the following meanings:</p>
 <p/>
 
 <dl>
@@ -1865,8 +1863,8 @@ server_finished_key =
 
  struct {
      uint32 ticket_lifetime;
-     PskKeMode ke_modes&lt;1..255&gt;;
-     PskAuthMode auth_modes&lt;1..255&gt;;
+     PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+     PskAuthenticationMode auth_modes&lt;1..255&gt;;
      opaque ticket&lt;1..2^16-1&gt;;
      TicketExtension extensions&lt;0..2^16-2&gt;;
  } NewSessionTicket;
@@ -3237,21 +3235,19 @@ HKDF-Expand-Label(exporter_secret,
        }
    } KeyShare;
 
-   enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeModes;
-   enum { psk_auth(0), psk_sign_auth(1), (255) } PskAuthenticationModes;
-
-   opaque psk_identity&lt;0..2^16-1&gt;;
+   enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
+   enum { psk_auth(0), psk_sign_auth(1), (255) } PskAuthenticationMode;
 
    struct {
-       PskKeMode ke_modes&lt;1..255&gt;;
-       PskAuthMode auth_modes&lt;1..255&gt;;
+       PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+       PskAuthenticationMode auth_modes&lt;1..255&gt;;
        opaque identity&lt;0..2^16-1&gt;;
    } PskIdentity;
 
    struct {
        select (Role) {
            case client:
-               psk_identity identities&lt;2..2^16-1&gt;;
+               PskIdentity identities&lt;6..2^16-1&gt;;
 
            case server:
                uint16 selected_identity;
@@ -3391,8 +3387,8 @@ HKDF-Expand-Label(exporter_secret,
 
  struct {
      uint32 ticket_lifetime;
-     PskKeMode ke_modes&lt;1..255&gt;;
-     PskAuthMode auth_modes&lt;1..255&gt;;
+     PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+     PskAuthenticationMode auth_modes&lt;1..255&gt;;
      opaque ticket&lt;1..2^16-1&gt;;
      TicketExtension extensions&lt;0..2^16-2&gt;;
  } NewSessionTicket;
