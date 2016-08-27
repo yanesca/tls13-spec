@@ -1228,26 +1228,25 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>Servers send this message in response to a ClientHello message if they were able to find an acceptable set of algorithms and groups that are mutually supported, but the client&#8217;s KeyShare did not contain an acceptable offer. If it cannot find such a match, it will respond with a fatal &#8220;handshake_failure&#8221; alert.</li>
+  <li>Servers send this message in response to a ClientHello message if they were able to find an acceptable set of algorithms and groups that are mutually supported, but the client&#8217;s ClientHello did not contain sufficient information to proceed with the handshake.  If a server cannot successfully select algorithms, it will respond with a fatal &#8220;handshake_failure&#8221; alert instead.</li>
 </ul>
 <p id="rfc.section.4.1.4.p.3">Structure of this message:</p>
 <pre>
    struct {
        ProtocolVersion server_version;
-       NamedGroup selected_group;
-       Extension extensions&lt;0..2^16-1&gt;;
+       Extension extensions&lt;2..2^16-1&gt;;
    } HelloRetryRequest;
 </pre>
+<p id="rfc.section.4.1.4.p.4">The version and extensions fields have the same meanings as their corresponding values in the ServerHello.  The server SHOULD send only the extensions necessary for the client to generate a correct ClientHello pair (currently no such extensions exist). As with ServerHello, a HelloRetryRequest MUST NOT contain any extensions that were not first offered by the client in its ClientHello, with the exception of optionally the &#8220;cookie&#8221; (see <a href="#cookie">Section 4.2.1</a>) extension.</p>
+<p id="rfc.section.4.1.4.p.5">Upon receipt of a HelloRetryRequest, the client MUST verify that the extensions block is not empty and otherwise abort the handshake with a fatal &#8220;decode_error&#8221; alert.  Clients SHOULD also abort with &#8220;unexpected_message&#8221; in response to any second HelloRetryRequest which was sent in the same connection (i.e., where the ClientHello was itself in response to a HelloRetryRequest).</p>
+<p id="rfc.section.4.1.4.p.6">Otherwise, the client MUST process all extensions in the HelloRetryRequest and send a second updated ClientHello. The HelloRetryRequest extensions defined in this specification are:</p>
 <p/>
 
-<dl>
-  <dt>selected_group</dt>
-  <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
-</dl>
-<p id="rfc.section.4.1.4.p.5">The version and extensions fields have the same meanings as their corresponding values in the ServerHello.  The server SHOULD send only the extensions necessary for the client to generate a correct ClientHello pair (currently no such extensions exist). As with ServerHello, a HelloRetryRequest MUST NOT contain any extensions that were not first offered by the client in its ClientHello.</p>
-<p id="rfc.section.4.1.4.p.6">Upon receipt of a HelloRetryRequest, the client MUST first verify that the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello.  It MUST then verify that the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with a fatal &#8220;illegal_parameter&#8221; alert. Clients SHOULD also abort with &#8220;unexpected_message&#8221; in response to any second HelloRetryRequest which was sent in the same connection (i.e., where the ClientHello was itself in response to a HelloRetryRequest).</p>
-<p id="rfc.section.4.1.4.p.7">Otherwise, the client MUST send a ClientHello with an updated KeyShare extension to the server. The client MUST append a new KeyShareEntry for the group indicated in the selected_group field to the groups in its original KeyShare.</p>
-<p id="rfc.section.4.1.4.p.8">Upon re-sending the ClientHello and receiving the server&#8217;s ServerHello/KeyShare, the client MUST verify that the selected NamedGroup matches that supplied in the HelloRetryRequest and MUST abort the connection with a fatal &#8220;illegal_parameter&#8221; alert if it does not.</p>
+<ul>
+  <li>cookie (see <a href="#cookie">Section 4.2.1</a>)</li>
+  <li>key_share (see <a href="#key-share">Section 4.2.4</a>)</li>
+</ul>
+<p id="rfc.section.4.1.4.p.8">Note that HelloRetryRequest extensions are defined such that the original ClientHello may be computed from the new one, given minimal state about which HelloRetryRequest extensions were sent. For example, the key_share extension causes the new KeyShareEntry to be appended to the client_shares field, rather than replacing it.</p>
 <h2 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#hello-extensions" id="hello-extensions">Hello Extensions</a></h2>
 <p id="rfc.section.4.2.p.1">The extension format is:</p>
 <pre>
@@ -1412,11 +1411,14 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.4.p.4">The &#8220;extension_data&#8221; field of this extension contains a &#8220;KeyShare&#8221; value:</p>
 <pre>
    struct {
-       select (role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                KeyShareEntry client_shares&lt;0..2^16-1&gt;;
 
-           case server:
+           case hello_retry_request:
+               NamedGroup selected_group;
+
+           case server_hello:
                KeyShareEntry server_share;
        }
    } KeyShare;
@@ -1426,12 +1428,16 @@ Subsequent Handshake:
 <dl>
   <dt>client_shares</dt>
   <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  The ordering of values here SHOULD match that of the ordering of offered support in the &#8220;supported_groups&#8221; extension.</dd>
+  <dt>selected_group</dt>
+  <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
   <dt>server_share</dt>
   <dd style="margin-left: 8">A single KeyShareEntry value that is in the same group as one of the client&#8217;s shares.</dd>
 </dl>
 <p id="rfc.section.4.2.4.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST by generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and and MAY abort the connection with a fatal &#8220;illegal_parameter&#8221; alert if one is violated.</p>
-<p id="rfc.section.4.2.4.p.7">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension.</p>
-<p id="rfc.section.4.2.4.p.8">[[TODO: Recommendation about what the client offers.  Presumably which integer DH groups and which curves.]]</p>
+<p id="rfc.section.4.2.4.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST first verify that the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello. It MUST then verify that the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with a fatal &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST append a new KeyShareEntry for the group indicated in the selected_group field to the groups in its original KeyShare. The remaining KeyShareEntry values MUST be preserved.</p>
+<p id="rfc.section.4.2.4.p.8">Note that a HelloRetryRequest might not include the &#8220;key_share&#8221; extension if other extensions are sent, such as if the server is only sending a cookie.</p>
+<p id="rfc.section.4.2.4.p.9">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension.  If a HelloRetryRequest was received, the client MUST verify that the selected NamedGroup matches that supplied in the selected_group field and MUST abort the connection with a fatal &#8220;illegal_parameter&#8221; alert if it does not.</p>
+<p id="rfc.section.4.2.4.p.10">[[TODO: Recommendation about what the client offers.  Presumably which integer DH groups and which curves.]]</p>
 <h4 id="rfc.section.4.2.4.1"><a href="#rfc.section.4.2.4.1">4.2.4.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
 <p id="rfc.section.4.2.4.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (Y = g^X mod p), encoded as a big-endian integer, padded with zeros to the size of p in bytes.</p>
 <p id="rfc.section.4.2.4.1.p.2">Note: For a given Diffie-Hellman group, the padding results in all public keys having the same length.</p>
@@ -1456,11 +1462,11 @@ Subsequent Handshake:
    } PskIdentity;
 
    struct {
-       select (Role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                PskIdentity identities&lt;6..2^16-1&gt;;
 
-           case server:
+           case server_hello:
                uint16 selected_identity;
        }
    } PreSharedKeyExtension;
@@ -1498,11 +1504,11 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
-       select (Role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                uint32 obfuscated_ticket_age;
 
-           case server:
+           case server_hello:
               struct {};
        }
    } EarlyDataIndication;
@@ -2364,7 +2370,7 @@ HKDF-Expand-Label(exporter_secret,
 <p/>
 
 <ul>
-  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.</li>
+  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;HelloRetryRequest&#8221; column with the following two values: &#8220;Yes&#8221;, indicating it may be sent in HelloRetryRequest, and &#8220;No&#8221;, indicating it may not be sent in HelloRetryRequest. This column [shall be/has been] initially populated with the values in this document.</li>
 </ul>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -2372,6 +2378,7 @@ HKDF-Expand-Label(exporter_secret,
       <th class="left">Extension</th>
       <th class="right">Recommended</th>
       <th class="right">TLS 1.3</th>
+      <th class="right">HelloRetryRequest</th>
     </tr>
   </thead>
   <tbody>
@@ -2379,64 +2386,77 @@ HKDF-Expand-Label(exporter_secret,
       <td class="left">server_name <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">max_fragment_length <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">client_certificate_url <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">trusted_ca_keys <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">truncated_hmac <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
+      <td class="right">No</td>
       <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">status_request <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">user_mapping <a href="#RFC4681">[RFC4681]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">client_authz <a href="#RFC5878">[RFC5878]</a></td>
       <td class="right">No</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">server_authz <a href="#RFC5878">[RFC5878]</a></td>
       <td class="right">No</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">cert_type <a href="#RFC6091">[RFC6091]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">supported_groups <a href="#RFC7919">[RFC7919]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">ec_point_formats <a href="#RFC4492">[RFC4492]</a></td>
       <td class="right">Yes</td>
       <td class="right">No</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">srp <a href="#RFC5054">[RFC5054]</a></td>
+      <td class="right">No</td>
       <td class="right">No</td>
       <td class="right">No</td>
     </tr>
@@ -2444,86 +2464,103 @@ HKDF-Expand-Label(exporter_secret,
       <td class="left">signature_algorithms <a href="#RFC5246">[RFC5246]</a></td>
       <td class="right">Yes</td>
       <td class="right">Client</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">use_srtp <a href="#RFC5764">[RFC5764]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">heartbeat <a href="#RFC6520">[RFC6520]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">application_layer_protocol_negotiation <a href="#RFC7301">[RFC7301]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">status_request_v2 <a href="#RFC6961">[RFC6961]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
       <td class="right">No</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">client_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">server_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">padding <a href="#RFC7685">[RFC7685]</a></td>
       <td class="right">Yes</td>
       <td class="right">Client</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">encrypt_then_mac <a href="#RFC7366">[RFC7366]</a></td>
       <td class="right">Yes</td>
+      <td class="right">No</td>
       <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">extended_master_secret <a href="#RFC7627">[RFC7627]</a></td>
       <td class="right">Yes</td>
       <td class="right">No</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">SessionTicket TLS <a href="#RFC4507">[RFC4507]</a></td>
       <td class="right">Yes</td>
+      <td class="right">No</td>
       <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">renegotiation_info <a href="#RFC5746">[RFC5746]</a></td>
       <td class="right">Yes</td>
       <td class="right">No</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">key_share [[this document]]</td>
       <td class="right">Yes</td>
       <td class="right">Clear</td>
+      <td class="right">Yes</td>
     </tr>
     <tr>
       <td class="left">pre_shared_key [[this document]]</td>
       <td class="right">Yes</td>
       <td class="right">Clear</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">early_data [[this document]]</td>
       <td class="right">Yes</td>
       <td class="right">Encrypted</td>
+      <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">cookie [[this document]]</td>
       <td class="right">Yes</td>
-      <td class="right">Encrypted/HelloRetryRequest</td>
+      <td class="right">Client</td>
+      <td class="right">Yes</td>
     </tr>
   </tbody>
 </table>
@@ -3202,8 +3239,7 @@ HKDF-Expand-Label(exporter_secret,
 
    struct {
        ProtocolVersion server_version;
-       NamedGroup selected_group;
-       Extension extensions&lt;0..2^16-1&gt;;
+       Extension extensions&lt;2..2^16-1&gt;;
    } HelloRetryRequest;
 
    struct {
@@ -3227,11 +3263,14 @@ HKDF-Expand-Label(exporter_secret,
    } KeyShareEntry;
 
    struct {
-       select (role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                KeyShareEntry client_shares&lt;0..2^16-1&gt;;
 
-           case server:
+           case hello_retry_request:
+               NamedGroup selected_group;
+
+           case server_hello:
                KeyShareEntry server_share;
        }
    } KeyShare;
@@ -3246,21 +3285,21 @@ HKDF-Expand-Label(exporter_secret,
    } PskIdentity;
 
    struct {
-       select (Role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                PskIdentity identities&lt;6..2^16-1&gt;;
 
-           case server:
+           case server_hello:
                uint16 selected_identity;
        }
    } PreSharedKeyExtension;
 
    struct {
-       select (Role) {
-           case client:
+       select (Handshake.msg_type) {
+           case client_hello:
                uint32 obfuscated_ticket_age;
 
-           case server:
+           case server_hello:
               struct {};
        }
    } EarlyDataIndication;
