@@ -97,9 +97,9 @@ Table of Contents
        4.1.1.  Cryptographic Negotiation . . . . . . . . . . . . . .  25
        4.1.2.  Client Hello  . . . . . . . . . . . . . . . . . . . .  26
        4.1.3.  Server Hello  . . . . . . . . . . . . . . . . . . . .  28
-       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  29
-     4.2.  Hello Extensions  . . . . . . . . . . . . . . . . . . . .  30
-       4.2.1.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  32
+       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  30
+     4.2.  Hello Extensions  . . . . . . . . . . . . . . . . . . . .  31
+       4.2.1.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  33
        4.2.2.  Signature Algorithms  . . . . . . . . . . . . . . . .  33
        4.2.3.  Negotiated Groups . . . . . . . . . . . . . . . . . .  36
        4.2.4.  Key Share . . . . . . . . . . . . . . . . . . . . . .  37
@@ -1349,15 +1349,15 @@ Internet-Draft                     TLS                       August 2016
 4.1.1.  Cryptographic Negotiation
 
    TLS cryptographic negotiation proceeds by the client offering the
-   following four sets of options in its ClientHello.
+   following four sets of options in its ClientHello:
 
    -  A list of cipher suites which indicates the AEAD cipher/HKDF hash
-      pairs which the client supports
+      pairs which the client supports.
 
    -  A "supported_group" (Section 4.2.3) extension which indicates the
       (EC)DHE groups which the client supports and a "key_share"
       (Section 4.2.4) extension which contains (EC)DHE shares for some
-      or all of these groups
+      or all of these groups.
 
    -  A "signature_algorithms" (Section 4.2.2) extension which indicates
       the signature algorithms which the client can accept.
@@ -1370,11 +1370,10 @@ Internet-Draft                     TLS                       August 2016
    options are entirely orthogonal: the server independently selects a
    cipher suite, an (EC)DHE group and key share for key establishment,
    and a signature algorithm/certificate pair to authenticate itself to
-   the client.  If any of these parameters has no overlap between the
-   client and server parameters, then the handshake will fail.  If there
-   is overlap in the "supported_group" extension but the client did not
-   offer a compatible "key_share" extension, then the server will
-   respond with a HelloRetryRequest (Section 4.1.4) message.
+   the client.  If there is overlap in the "supported_group" extension
+   but the client did not offer a compatible "key_share" extension, then
+   the server will respond with a HelloRetryRequest (Section 4.1.4)
+   message.
 
    If the server selects a PSK, then the PSK will indicate which key
    establishment modes it can be used with (PSK alone or with (EC)DHE)
@@ -1386,14 +1385,15 @@ Internet-Draft                     TLS                       August 2016
    in either of these parameters need not be fatal.
 
    The server indicates its selected parameters in the ServerHello as
-   follows: If PSK is being used then the server will send a
-   "pre_shared_key" extension indicating the selected key.  If PSK is
-   not being used, then (EC)DHE and certificate-based authentication are
-   always used.  When (EC)DHE is in use, the server will also provide a
-   "key_share" extension.  When authenticating via a certificate, the
-   server will send an empty "signature_algorithnms" extension in the
-   ServerHello and will subsequently send Certificate (Section 4.4.1)
-   and CertificateVerify (Section 4.4.2) messages.
+   follows:
+
+   -  If PSK is being used then the server will send a "pre_shared_key"
+      extension indicating the selected key.
+
+   -  If PSK is not being used, then (EC)DHE and certificate-based
+      authentication are always used.
+
+
 
 
 
@@ -1402,7 +1402,16 @@ Rescorla                Expires February 28, 2017              [Page 25]
 Internet-Draft                     TLS                       August 2016
 
 
-   If the server is unable to negotiate a supported set of parameters,
+   -  When (EC)DHE is in use, the server will also provide a "key_share"
+      extension.
+
+   -  When authenticating via a certificate, the server will send an
+      empty "signature_algorithnms" extension in the ServerHello and
+      will subsequently send Certificate (Section 4.4.1) and
+      CertificateVerify (Section 4.4.2) messages.
+
+   If the server is unable to negotiate a supported set of parameters
+   (i.e., there is no overlap between the client and server parameters),
    it MUST return a "handshake_failure" alert and close the connection.
 
 4.1.2.  Client Hello
@@ -1428,6 +1437,27 @@ Internet-Draft                     TLS                       August 2016
 
    Structure of this message:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                Expires February 28, 2017              [Page 26]
+
+Internet-Draft                     TLS                       August 2016
+
+
    struct {
        uint8 major;
        uint8 minor;
@@ -1450,14 +1480,6 @@ Internet-Draft                     TLS                       August 2016
 
    TLS allows extensions to follow the compression_methods field in an
    extensions block.  The presence of extensions can be detected by
-
-
-
-Rescorla                Expires February 28, 2017              [Page 26]
-
-Internet-Draft                     TLS                       August 2016
-
-
    determining whether there are bytes following the compression_methods
    at the end of the ClientHello.  Note that this method of detecting
    optional data differs from the normal TLS method of having a
@@ -1484,6 +1506,14 @@ Internet-Draft                     TLS                       August 2016
 
    cipher_suites  This is a list of the symmetric cipher options
       supported by the client, specifically the record protection
+
+
+
+Rescorla                Expires February 28, 2017              [Page 27]
+
+Internet-Draft                     TLS                       August 2016
+
+
       algorithm (including secret key length) and a hash to be used with
       HKDF, in descending order of client preference.  If the list
       contains cipher suites the server does not recognize, support, or
@@ -1505,14 +1535,6 @@ Internet-Draft                     TLS                       August 2016
    extensions  Clients request extended functionality from servers by
       sending data in the extensions field.  The actual "Extension"
       format is defined in Section 4.2.
-
-
-
-
-Rescorla                Expires February 28, 2017              [Page 27]
-
-Internet-Draft                     TLS                       August 2016
-
 
    In the event that a client requests additional functionality using
    extensions, and this functionality is not supplied by the server, the
@@ -1540,6 +1562,14 @@ Internet-Draft                     TLS                       August 2016
 
    Structure of this message:
 
+
+
+
+Rescorla                Expires February 28, 2017              [Page 28]
+
+Internet-Draft                     TLS                       August 2016
+
+
       struct {
           ProtocolVersion version;
           Random random;
@@ -1561,14 +1591,6 @@ Internet-Draft                     TLS                       August 2016
 
    cipher_suite  The single cipher suite selected by the server from the
       list in ClientHello.cipher_suites.
-
-
-
-
-Rescorla                Expires February 28, 2017              [Page 28]
-
-Internet-Draft                     TLS                       August 2016
-
 
    extensions  A list of extensions.  Note that only extensions offered
       by the client can appear in the server's list.  In TLS 1.3, as
@@ -1596,6 +1618,14 @@ Internet-Draft                     TLS                       August 2016
    max_supported_version indicating TLS 1.1 or below SHOULD set the last
    eight bytes of their Random value to the bytes:
 
+
+
+
+Rescorla                Expires February 28, 2017              [Page 29]
+
+Internet-Draft                     TLS                       August 2016
+
+
      44 4F 57 4E 47 52 44 00
 
    TLS 1.3 clients receiving a TLS 1.2 or below ServerHello MUST check
@@ -1616,15 +1646,6 @@ Internet-Draft                     TLS                       August 2016
 4.1.4.  Hello Retry Request
 
    When this message will be sent:
-
-
-
-
-
-Rescorla                Expires February 28, 2017              [Page 29]
-
-Internet-Draft                     TLS                       August 2016
-
 
       Servers send this message in response to a ClientHello message if
       they were able to find an acceptable set of algorithms and groups
@@ -1652,6 +1673,15 @@ Internet-Draft                     TLS                       August 2016
    extensions block is not empty and otherwise abort the handshake with
    a fatal "decode_error" alert.  Clients SHOULD also abort with
    "unexpected_message" in response to any second HelloRetryRequest
+
+
+
+
+Rescorla                Expires February 28, 2017              [Page 30]
+
+Internet-Draft                     TLS                       August 2016
+
+
    which was sent in the same connection (i.e., where the ClientHello
    was itself in response to a HelloRetryRequest).
 
@@ -1672,15 +1702,6 @@ Internet-Draft                     TLS                       August 2016
 4.2.  Hello Extensions
 
    The extension format is:
-
-
-
-
-
-Rescorla                Expires February 28, 2017              [Page 30]
-
-Internet-Draft                     TLS                       August 2016
-
 
       struct {
           ExtensionType extension_type;
@@ -1709,6 +1730,14 @@ Internet-Draft                     TLS                       August 2016
 
    An extension type MUST NOT appear in the ServerHello or
    HelloRetryRequest unless the same extension type appeared in the
+
+
+
+Rescorla                Expires February 28, 2017              [Page 31]
+
+Internet-Draft                     TLS                       August 2016
+
+
    corresponding ClientHello.  If a client receives an extension type in
    ServerHello or HelloRetryRequest that it did not request in the
    associated ClientHello, it MUST abort the handshake with an
@@ -1730,13 +1759,6 @@ Internet-Draft                     TLS                       August 2016
    session resumption does not in general know whether the server will
    accept this request, and therefore it SHOULD send the same extensions
    as it would send normally.
-
-
-
-Rescorla                Expires February 28, 2017              [Page 31]
-
-Internet-Draft                     TLS                       August 2016
-
 
    In general, the specification of each extension type needs to
    describe the effect of the extension both during full handshake and
@@ -1764,6 +1786,14 @@ Internet-Draft                     TLS                       August 2016
       followed regardless of whether the feature is believed to cause a
       security problem.  Often the fact that the extension fields are
       included in the inputs to the Finished message hashes will be
+
+
+
+Rescorla                Expires February 28, 2017              [Page 32]
+
+Internet-Draft                     TLS                       August 2016
+
+
       sufficient, but extreme care is needed when the extension changes
       the meaning of messages sent in the handshake phase.  Designers
       and implementors should be aware of the fact that until the
@@ -1786,14 +1816,6 @@ Internet-Draft                     TLS                       August 2016
 
    -  Allowing the server to offload state to the client, thus allowing
       it to send a HelloRetryRequest without storing any state.  The
-
-
-
-Rescorla                Expires February 28, 2017              [Page 32]
-
-Internet-Draft                     TLS                       August 2016
-
-
       server does this by pickling that post-ClientHello hash state into
       the cookie (protected with some suitable integrity algorithm).
 
@@ -1819,28 +1841,6 @@ Internet-Draft                     TLS                       August 2016
 
    The "extension_data" field of this extension contains a
    "supported_signature_algorithms" value:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
