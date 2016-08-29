@@ -1487,7 +1487,7 @@ Subsequent Handshake:
   <dt>selected_identity</dt>
   <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identies in the client&#8217;s list.</dd>
 </dl>
-<p id="rfc.section.4.2.5.p.4">Each PSK offered by the client also indicates the authentication and key exchange modes with which the server can use it, with each list being in the order of the client&#8217;s preference, with most preferred first.</p>
+<p id="rfc.section.4.2.5.p.4">Each PSK offered by the client also indicates the authentication and key exchange modes with which the server can use it, with each list being in the order of the client&#8217;s preference, with most preferred first. Any PSK MUST only be used with a single HKDF hash algorithm. This restriction is automatically enforced for PSKs established via NewSessionTicket (<a href="#NewSessionTicket">Section 4.5.1</a>) but any externally-established PSKs MUST also follow this rule.</p>
 <p id="rfc.section.4.2.5.p.5">PskKeyExchangeMode values have the following meanings:</p>
 <p/>
 

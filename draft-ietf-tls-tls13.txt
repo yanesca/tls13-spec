@@ -2233,7 +2233,7 @@ Internet-Draft                     TLS                       August 2016
    Each PSK offered by the client also indicates the authentication and
    key exchange modes with which the server can use it, with each list
    being in the order of the client's preference, with most preferred
-   first.
+   first.  Any PSK MUST only be used with a single HKDF hash algorithm.
 
 
 
@@ -2241,6 +2241,10 @@ Rescorla                  Expires March 2, 2017                [Page 40]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   This restriction is automatically enforced for PSKs established via
+   NewSessionTicket (Section 4.5.1) but any externally-established PSKs
+   MUST also follow this rule.
 
    PskKeyExchangeMode values have the following meanings:
 
@@ -2284,10 +2288,6 @@ Internet-Draft                     TLS                       August 2016
 
    The "extension_data" field of this extension contains an
    "EarlyDataIndication" value:
-
-
-
-
 
 
 
