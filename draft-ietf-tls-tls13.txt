@@ -6,7 +6,8 @@ Network Working Group                                        E. Rescorla
 Internet-Draft                                                RTFM, Inc.
 Obsoletes: 5077, 5246, 5746 (if                          August 30, 2016
            approved)
-Updates: 4492, 6066, 6961 (if approved)
+Updates: 4492, 5705, 6066, 6961 (if
+         approved)
 Intended status: Standards Track
 Expires: March 3, 2017
 
@@ -49,7 +50,6 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
 
 
 
@@ -58,6 +58,7 @@ Rescorla                  Expires March 3, 2017                 [Page 1]
 Internet-Draft                     TLS                       August 2016
 
 
+   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
@@ -105,7 +106,6 @@ Table of Contents
        4.2.4.  Key Share . . . . . . . . . . . . . . . . . . . . . .  37
        4.2.5.  Pre-Shared Key Extension  . . . . . . . . . . . . . .  40
        4.2.6.  Early Data Indication . . . . . . . . . . . . . . . .  41
-       4.2.7.  OCSP Status Extensions  . . . . . . . . . . . . . . .  45
 
 
 
@@ -114,6 +114,7 @@ Rescorla                  Expires March 3, 2017                 [Page 2]
 Internet-Draft                     TLS                       August 2016
 
 
+       4.2.7.  OCSP Status Extensions  . . . . . . . . . . . . . . .  45
      4.3.  Server Parameters Messages  . . . . . . . . . . . . . . .  45
        4.3.1.  Encrypted Extensions  . . . . . . . . . . . . . . . .  45
        4.3.2.  Certificate Request . . . . . . . . . . . . . . . . .  46
@@ -142,12 +143,12 @@ Internet-Draft                     TLS                       August 2016
        7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  74
        7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  75
        7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  75
-   8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  75
+   8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  76
      8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  76
      8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  76
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  77
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  77
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  80
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  81
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  81
      11.2.  Informative References . . . . . . . . . . . . . . . . .  83
    Appendix A.  Protocol Data Structures and Constant Values . . . .  90
@@ -161,7 +162,6 @@ Internet-Draft                     TLS                       August 2016
      A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . .  98
        A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . .  99
    Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 100
-     B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 100
 
 
 
@@ -170,6 +170,7 @@ Rescorla                  Expires March 3, 2017                 [Page 3]
 Internet-Draft                     TLS                       August 2016
 
 
+     B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 100
      B.2.  Random Number Generation and Seeding  . . . . . . . . . . 100
      B.3.  Certificates and Authentication . . . . . . . . . . . . . 100
      B.4.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 100
@@ -216,8 +217,7 @@ Internet-Draft                     TLS                       August 2016
 
    These properties should be true even in the face of an attacker who
    has complete control of the network, as described in [RFC3552].  See
-   Appendix D for a more complete statement of the relevant security
-   properties.
+
 
 
 
@@ -225,6 +225,9 @@ Rescorla                  Expires March 3, 2017                 [Page 4]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   Appendix D for a more complete statement of the relevant security
+   properties.
 
    TLS consists of two primary components:
 
@@ -271,9 +274,6 @@ Internet-Draft                     TLS                       August 2016
 
    handshake: An initial negotiation between client and server that
    establishes the parameters of their transactions.
-
-
-
 
 
 
@@ -4182,18 +4182,18 @@ Internet-Draft                     TLS                       August 2016
 
    [RFC5705] defines keying material exporters for TLS in terms of the
    TLS PRF.  This document replaces the PRF with HKDF, thus requiring a
-   new construction.  The exporter interface remains the same, however
-   the value is computed as:
+   new construction.  The exporter interface remains the same.  If
+   context is provided, the value is computed as:
 
-   HKDF-Expand-Label(exporter_secret,
-                     label, context_value, key_length)
+   HKDF-Expand-Label(exporter_secret, label, context_value, key_length)
 
-8.  Compliance Requirements
+   If no context is provided, the value is computed as:
 
+   HKDF-Expand-Label(exporter_secret, label, "", key_length)
 
-
-
-
+   Note that providing no context computes the same value as providing
+   an empty context.  As of this document's publication, no allocated
+   exporter label is used with both modes.  Future specifications MUST
 
 
 
@@ -4201,6 +4201,12 @@ Rescorla                  Expires March 3, 2017                [Page 75]
 
 Internet-Draft                     TLS                       August 2016
 
+
+   NOT provide an empty context and no context with the same label and
+   SHOULD provide a context, possibly empty, in all exporter
+   computations.
+
+8.  Compliance Requirements
 
 8.1.  MTI Cipher Suites
 
@@ -4245,12 +4251,6 @@ Internet-Draft                     TLS                       August 2016
 
    -  "pre_shared_key" is REQUIRED for PSK cipher suites.
 
-   -  "cookie" is REQUIRED for all cipher suites.
-
-   When negotiating use of applicable cipher suites, endpoints MUST
-   abort the connection with a "missing_extension" alert if the required
-   extension was not provided.  Any endpoint that receives any invalid
-
 
 
 Rescorla                  Expires March 3, 2017                [Page 76]
@@ -4258,6 +4258,11 @@ Rescorla                  Expires March 3, 2017                [Page 76]
 Internet-Draft                     TLS                       August 2016
 
 
+   -  "cookie" is REQUIRED for all cipher suites.
+
+   When negotiating use of applicable cipher suites, endpoints MUST
+   abort the connection with a "missing_extension" alert if the required
+   extension was not provided.  Any endpoint that receives any invalid
    combination of cipher suites and extensions MAY abort the connection
    with a "missing_extension" alert, regardless of negotiated
    parameters.
@@ -4301,11 +4306,6 @@ Internet-Draft                     TLS                       August 2016
    -  TLS ContentType Registry: Future values are allocated via
       Standards Action [RFC2434].
 
-   -  TLS Alert Registry: Future values are allocated via Standards
-      Action [RFC2434].
-
-   -  TLS HandshakeType Registry: Future values are allocated via
-      Standards Action [RFC2434].  IANA [SHALL update/has updated] this
 
 
 
@@ -4314,6 +4314,11 @@ Rescorla                  Expires March 3, 2017                [Page 77]
 Internet-Draft                     TLS                       August 2016
 
 
+   -  TLS Alert Registry: Future values are allocated via Standards
+      Action [RFC2434].
+
+   -  TLS HandshakeType Registry: Future values are allocated via
+      Standards Action [RFC2434].  IANA [SHALL update/has updated] this
       registry to rename item 4 from "NewSessionTicket" to
       "new_session_ticket".
 
@@ -4357,11 +4362,6 @@ Internet-Draft                     TLS                       August 2016
    |                              |          |      ed |               |
    |                              |          |         |               |
    | max_fragment_length          |      Yes | Encrypt |            No |
-   | [RFC6066]                    |          |      ed |               |
-   |                              |          |         |               |
-   | client_certificate_url       |      Yes | Encrypt |            No |
-   | [RFC6066]                    |          |      ed |               |
-   |                              |          |         |               |
 
 
 
@@ -4370,6 +4370,11 @@ Rescorla                  Expires March 3, 2017                [Page 78]
 Internet-Draft                     TLS                       August 2016
 
 
+   | [RFC6066]                    |          |      ed |               |
+   |                              |          |         |               |
+   | client_certificate_url       |      Yes | Encrypt |            No |
+   | [RFC6066]                    |          |      ed |               |
+   |                              |          |         |               |
    | trusted_ca_keys [RFC6066]    |      Yes | Encrypt |            No |
    |                              |          |      ed |               |
    |                              |          |         |               |
@@ -4413,11 +4418,6 @@ Internet-Draft                     TLS                       August 2016
    |                              |          |      ed |               |
    |                              |          |         |               |
    | signed_certificate_timestamp |       No | Encrypt |            No |
-   | [RFC6962]                    |          |      ed |               |
-   |                              |          |         |               |
-   | client_certificate_type      |      Yes | Encrypt |            No |
-   | [RFC7250]                    |          |      ed |               |
-   |                              |          |         |               |
 
 
 
@@ -4426,6 +4426,11 @@ Rescorla                  Expires March 3, 2017                [Page 79]
 Internet-Draft                     TLS                       August 2016
 
 
+   | [RFC6962]                    |          |      ed |               |
+   |                              |          |         |               |
+   | client_certificate_type      |      Yes | Encrypt |            No |
+   | [RFC7250]                    |          |      ed |               |
+   |                              |          |         |               |
    | server_certificate_type      |      Yes | Encrypt |            No |
    | [RFC7250]                    |          |      ed |               |
    |                              |          |         |               |
@@ -4468,11 +4473,6 @@ Internet-Draft                     TLS                       August 2016
    [RFC5246].  IANA [shall/has] updated it to list values 7-223 as
    "Reserved".
 
-11.  References
-
-
-
-
 
 
 
@@ -4481,6 +4481,8 @@ Rescorla                  Expires March 3, 2017                [Page 80]
 
 Internet-Draft                     TLS                       August 2016
 
+
+11.  References
 
 11.1.  Normative References
 
@@ -4527,8 +4529,6 @@ Internet-Draft                     TLS                       August 2016
               Counter Mode (GCM) Cipher Suites for TLS", RFC 5288,
               DOI 10.17487/RFC5288, August 2008,
               <http://www.rfc-editor.org/info/rfc5288>.
-
-
 
 
 
