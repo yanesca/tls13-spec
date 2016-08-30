@@ -1314,7 +1314,7 @@ Subsequent Handshake:
 <h3 id="rfc.section.4.2.2"><a href="#rfc.section.4.2.2">4.2.2.</a> <a href="#signature-algorithms" id="signature-algorithms">Signature Algorithms</a></h3>
 <p id="rfc.section.4.2.2.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature algorithms may be used in digital signatures. Clients which desire the server to authenticate via a certificate MUST send this extension.  If a server is authenticating via a certificate and the client has not sent a &#8220;signature_algorithms&#8221; extension then the server MUST close the connection with a fatal &#8220;missing_extension&#8221; alert (see <a href="#mti-extensions">Section 8.2</a>).</p>
 <p id="rfc.section.4.2.2.p.2">Servers which are authenticating via a certificate MUST indicate so by sending the client an empty &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.4.2.2.p.3">The &#8220;extension_data&#8221; field of this extension contains a &#8220;supported_signature_algorithms&#8221; value:</p>
+<p id="rfc.section.4.2.2.p.3">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a &#8220;supported_signature_algorithms&#8221; value:</p>
 <pre>
    enum {
        /* RSASSA-PKCS1-v1_5 algorithms */
