@@ -1138,7 +1138,7 @@ Subsequent Handshake:
   <li>If PSK is being used then the server will send a &#8220;pre_shared_key&#8221; extension indicating the selected key.</li>
   <li>If PSK is not being used, then (EC)DHE and certificate-based authentication are always used.</li>
   <li>When (EC)DHE is in use, the server will also provide a &#8220;key_share&#8221; extension.</li>
-  <li>When authenticating via a certificate, the server will send an empty &#8220;signature_algorithnms&#8221; extension in the ServerHello and will subsequently send Certificate (<a href="#certificate">Section 4.4.1</a>) and CertificateVerify (<a href="#certificate-verify">Section 4.4.2</a>) messages.</li>
+  <li>When authenticating via a certificate, the server will send an empty &#8220;signature_algorithms&#8221; extension in the ServerHello and will subsequently send Certificate (<a href="#certificate">Section 4.4.1</a>) and CertificateVerify (<a href="#certificate-verify">Section 4.4.2</a>) messages.</li>
 </ul>
 <p id="rfc.section.4.1.1.p.7">If the server is unable to negotiate a supported set of parameters (i.e., there is no overlap between the client and server parameters), it MUST return a &#8220;handshake_failure&#8221; alert and close the connection.</p>
 <h3 id="rfc.section.4.1.2"><a href="#rfc.section.4.1.2">4.1.2.</a> <a href="#client-hello" id="client-hello">Client Hello</a></h3>
@@ -1488,7 +1488,7 @@ Subsequent Handshake:
   <dt>identities</dt>
   <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.6</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>selected_identity</dt>
-  <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identies in the client&#8217;s list.</dd>
+  <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identities in the client&#8217;s list.</dd>
 </dl>
 <p id="rfc.section.4.2.5.p.4">Each PSK offered by the client also indicates the authentication and key exchange modes with which the server can use it, with each list being in the order of the client&#8217;s preference, with most preferred first. Any PSK MUST only be used with a single HKDF hash algorithm. This restriction is automatically enforced for PSKs established via NewSessionTicket (<a href="#NewSessionTicket">Section 4.5.1</a>) but any externally-established PSKs MUST also follow this rule.</p>
 <p id="rfc.section.4.2.5.p.5">PskKeyExchangeMode values have the following meanings:</p>

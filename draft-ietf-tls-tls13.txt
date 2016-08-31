@@ -1406,8 +1406,8 @@ Internet-Draft                     TLS                       August 2016
       extension.
 
    -  When authenticating via a certificate, the server will send an
-      empty "signature_algorithnms" extension in the ServerHello and
-      will subsequently send Certificate (Section 4.4.1) and
+      empty "signature_algorithms" extension in the ServerHello and will
+      subsequently send Certificate (Section 4.4.1) and
       CertificateVerify (Section 4.4.2) messages.
 
    If the server is unable to negotiate a supported set of parameters
@@ -2228,7 +2228,7 @@ Internet-Draft                     TLS                       August 2016
       is the one used for 0-RTT data.
 
    selected_identity  The server's chosen identity expressed as a
-      (0-based) index into the identies in the client's list.
+      (0-based) index into the identities in the client's list.
 
    Each PSK offered by the client also indicates the authentication and
    key exchange modes with which the server can use it, with each list
