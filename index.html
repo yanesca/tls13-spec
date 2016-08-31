@@ -370,7 +370,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-8-30" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-8-31" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -391,7 +391,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">August 30, 2016</td>
+  <td class="right">August 31, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -410,7 +410,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: March 3, 2017</td>
+  <td class="left">Expires: March 4, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -431,7 +431,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 3, 2017.</p>
+<p>This Internet-Draft will expire on March 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -993,7 +993,6 @@ Subsequent Handshake:
    uint8 uint64[8];
 </pre>
 <p id="rfc.section.3.4.p.2">All values, here and elsewhere in the specification, are stored in network byte (big-endian) order; the uint32 represented by the hex bytes 01 02 03 04 is equivalent to the decimal value 16909060.</p>
-<p id="rfc.section.3.4.p.3">Note that in some cases (e.g., DH parameters) it is necessary to represent integers as opaque vectors. In such cases, they are represented as unsigned integers (i.e., additional leading zero octets are not used even if the most significant bit is set).</p>
 <h2 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#enumerateds" id="enumerateds">Enumerateds</a></h2>
 <p id="rfc.section.3.5.p.1">An additional sparse data type is available called enum. A field of type enum can only assume the values declared in the definition. Each definition is a different type. Only enumerateds of the same type may be assigned or compared.  Every element of an enumerated must be assigned a value, as demonstrated in the following example. Since the elements of the enumerated are not ordered, they can be assigned any unique value, in any order.</p>
 <pre>
