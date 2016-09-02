@@ -6195,6 +6195,10 @@ Internet-Draft                     TLS                    September 2016
       ACLU
       dkg@fifthhorseman.net
 
+   -  Hubert Kario
+      Red Hat Inc.
+      hkario@redhat.com
+
    -  Phil Karlton (co-author of SSL 3.0)
 
    -  Paul Kocher (co-author of SSL 3.0)
@@ -6206,10 +6210,6 @@ Internet-Draft                     TLS                    September 2016
       hugo@ee.technion.ac.il
 
    -  Adam Langley (co-author of [RFC7627])
-      Google
-      agl@google.com
-
-   -  Ilari Liusvaara
 
 
 
@@ -6218,6 +6218,10 @@ Rescorla                  Expires March 6, 2017               [Page 111]
 Internet-Draft                     TLS                    September 2016
 
 
+      Google
+      agl@google.com
+
+   -  Ilari Liusvaara
       Independent
       ilariliusvaara@welho.com
 
@@ -6263,16 +6267,16 @@ Internet-Draft                     TLS                    September 2016
 
    -  Michael Sabin
 
-   -  Dan Simon
-      Microsoft, Inc.
-      dansimon@microsoft.com
-
 
 
 Rescorla                  Expires March 6, 2017               [Page 112]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   -  Dan Simon
+      Microsoft, Inc.
+      dansimon@microsoft.com
 
    -  Nick Sullivan
       CloudFlare Inc.
@@ -6306,10 +6310,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
