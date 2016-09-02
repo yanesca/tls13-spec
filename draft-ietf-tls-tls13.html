@@ -1587,7 +1587,7 @@ Subsequent Handshake:
 <ul class="empty">
   <li>The EncryptedExtensions message contains any extensions which should be protected, i.e., any which are not needed to establish the cryptographic context.</li>
 </ul>
-<p id="rfc.section.4.3.1.p.5">The same extension types MUST NOT appear in both the ServerHello and EncryptedExtensions.  If the same extension appears in both locations, the client MUST rely only on the value in the EncryptedExtensions block.  All server-sent extensions other than those explicitly listed in <a href="#server-hello">Section 4.1.3</a> or designated in the IANA registry MUST only appear in EncryptedExtensions. Extensions which are designated to appear in ServerHello MUST NOT appear in EncryptedExtensions. Clients MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST terminate the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.3.1.p.5">The same extension types MUST NOT appear in both the ServerHello and EncryptedExtensions. All server-sent extensions other than those explicitly listed in <a href="#server-hello">Section 4.1.3</a> or designated in the IANA registry MUST only appear in EncryptedExtensions. Extensions which are designated to appear in ServerHello MUST NOT appear in EncryptedExtensions. Clients MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST terminate the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.3.1.p.6">Structure of this message:</p>
 <pre>
    struct {
