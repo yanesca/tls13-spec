@@ -1873,7 +1873,7 @@ server_finished_key =
 <p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.5</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.  For handshakes that do not use a resumption_psk, the resumption_context is a string of Hash.Length zeroes. [[Note: this will not be safe if/when we add additional server signatures with PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]</p>
 <p id="rfc.section.4.5.1.p.3">Any ticket MUST only be resumed with a cipher suite that is identical to that negotiated connection where the ticket was established.</p>
 <pre>
- enum { (65535) } TicketExtensionType;
+ enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
  struct {
      TicketExtensionType extension_type;
@@ -3435,7 +3435,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </pre>
 <h3 id="rfc.appendix.A.3.4"><a href="#rfc.appendix.A.3.4">A.3.4.</a> <a href="#ticket-establishment" id="ticket-establishment">Ticket Establishment</a></h3>
 <pre>
- enum { (65535) } TicketExtensionType;
+ enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
  struct {
      TicketExtensionType extension_type;

@@ -3144,7 +3144,7 @@ Internet-Draft                     TLS                    September 2016
    Any ticket MUST only be resumed with a cipher suite that is identical
    to that negotiated connection where the ticket was established.
 
-    enum { (65535) } TicketExtensionType;
+    enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
     struct {
         TicketExtensionType extension_type;
@@ -5434,7 +5434,7 @@ Rescorla                  Expires March 6, 2017                [Page 97]
 Internet-Draft                     TLS                    September 2016
 
 
-    enum { (65535) } TicketExtensionType;
+    enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
     struct {
         TicketExtensionType extension_type;
