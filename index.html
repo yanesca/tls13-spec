@@ -2342,6 +2342,7 @@ HKDF-Expand-Label(exporter_secret, label, context_value, key_length)
 HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </pre>
 <p id="rfc.section.7.3.3.p.3">Note that providing no context computes the same value as providing an empty context. As of this document&#8217;s publication, no allocated exporter label is used with both modes. Future specifications MUST NOT provide an empty context and no context with the same label and SHOULD provide a context, possibly empty, in all exporter computations.</p>
+<p id="rfc.section.7.3.3.p.4">Note: If exporters are used as channel bindings, the exported value MUST be large enough to provide collision resistance.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mti-cipher-suites" id="mti-cipher-suites">MTI Cipher Suites</a></h2>
 <p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites.</p>

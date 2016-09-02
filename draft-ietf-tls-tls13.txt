@@ -4206,6 +4206,9 @@ Internet-Draft                     TLS                    September 2016
    SHOULD provide a context, possibly empty, in all exporter
    computations.
 
+   Note: If exporters are used as channel bindings, the exported value
+   MUST be large enough to provide collision resistance.
+
 8.  Compliance Requirements
 
 8.1.  MTI Cipher Suites
@@ -4246,10 +4249,7 @@ Internet-Draft                     TLS                    September 2016
    -  "signature_algorithms" is REQUIRED for certificate authenticated
       cipher suites.
 
-   -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
-      cipher suites.
 
-   -  "pre_shared_key" is REQUIRED for PSK cipher suites.
 
 
 
@@ -4257,6 +4257,11 @@ Rescorla                  Expires March 6, 2017                [Page 76]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
+      cipher suites.
+
+   -  "pre_shared_key" is REQUIRED for PSK cipher suites.
 
    -  "cookie" is REQUIRED for all cipher suites.
 
@@ -4300,11 +4305,6 @@ Internet-Draft                     TLS                    September 2016
 
          Cipher suites marked as "Yes" are those allocated via Standards
          Track RFCs.  Cipher suites marked as "No" are not; cipher
-         suites marked "No" range from "good" to "bad" from a
-         cryptographic standpoint.
-
-   -  TLS ContentType Registry: Future values are allocated via
-      Standards Action [RFC2434].
 
 
 
@@ -4313,6 +4313,12 @@ Rescorla                  Expires March 6, 2017                [Page 77]
 
 Internet-Draft                     TLS                    September 2016
 
+
+         suites marked "No" range from "good" to "bad" from a
+         cryptographic standpoint.
+
+   -  TLS ContentType Registry: Future values are allocated via
+      Standards Action [RFC2434].
 
    -  TLS Alert Registry: Future values are allocated via Standards
       Action [RFC2434].
@@ -4356,12 +4362,6 @@ Internet-Draft                     TLS                    September 2016
 
    +------------------------------+----------+---------+---------------+
    | Extension                    | Recommen | TLS 1.3 | HelloRetryReq |
-   |                              |      ded |         |          uest |
-   +------------------------------+----------+---------+---------------+
-   | server_name [RFC6066]        |      Yes | Encrypt |            No |
-   |                              |          |      ed |               |
-   |                              |          |         |               |
-   | max_fragment_length          |      Yes | Encrypt |            No |
 
 
 
@@ -4370,6 +4370,12 @@ Rescorla                  Expires March 6, 2017                [Page 78]
 Internet-Draft                     TLS                    September 2016
 
 
+   |                              |      ded |         |          uest |
+   +------------------------------+----------+---------+---------------+
+   | server_name [RFC6066]        |      Yes | Encrypt |            No |
+   |                              |          |      ed |               |
+   |                              |          |         |               |
+   | max_fragment_length          |      Yes | Encrypt |            No |
    | [RFC6066]                    |          |      ed |               |
    |                              |          |         |               |
    | client_certificate_url       |      Yes | Encrypt |            No |
@@ -4412,12 +4418,6 @@ Internet-Draft                     TLS                    September 2016
    |                              |          |      ed |               |
    |                              |          |         |               |
    | application_layer_protocol_n |      Yes | Encrypt |            No |
-   | egotiation [RFC7301]         |          |      ed |               |
-   |                              |          |         |               |
-   | status_request_v2 [RFC6961]  |      Yes | Encrypt |            No |
-   |                              |          |      ed |               |
-   |                              |          |         |               |
-   | signed_certificate_timestamp |       No | Encrypt |            No |
 
 
 
@@ -4426,6 +4426,12 @@ Rescorla                  Expires March 6, 2017                [Page 79]
 Internet-Draft                     TLS                    September 2016
 
 
+   | egotiation [RFC7301]         |          |      ed |               |
+   |                              |          |         |               |
+   | status_request_v2 [RFC6961]  |      Yes | Encrypt |            No |
+   |                              |          |      ed |               |
+   |                              |          |         |               |
+   | signed_certificate_timestamp |       No | Encrypt |            No |
    | [RFC6962]                    |          |      ed |               |
    |                              |          |         |               |
    | client_certificate_type      |      Yes | Encrypt |            No |
@@ -4469,18 +4475,16 @@ Internet-Draft                     TLS                    September 2016
       ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256,
       rsa_pss_sha384, rsa_pss_sha512, ed25519.
 
-   Finally, this document obsoletes a registry originally created in
-   [RFC5246].  IANA [shall/has] updated it to list values 7-223 as
-   "Reserved".
-
-
-
 
 
 Rescorla                  Expires March 6, 2017                [Page 80]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   Finally, this document obsoletes a registry originally created in
+   [RFC5246].  IANA [shall/has] updated it to list values 7-223 as
+   "Reserved".
 
 11.  References
 
@@ -4525,10 +4529,6 @@ Internet-Draft                     TLS                    September 2016
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <http://www.rfc-editor.org/info/rfc5280>.
 
-   [RFC5288]  Salowey, J., Choudhury, A., and D. McGrew, "AES Galois
-              Counter Mode (GCM) Cipher Suites for TLS", RFC 5288,
-              DOI 10.17487/RFC5288, August 2008,
-              <http://www.rfc-editor.org/info/rfc5288>.
 
 
 
@@ -4537,6 +4537,11 @@ Rescorla                  Expires March 6, 2017                [Page 81]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC5288]  Salowey, J., Choudhury, A., and D. McGrew, "AES Galois
+              Counter Mode (GCM) Cipher Suites for TLS", RFC 5288,
+              DOI 10.17487/RFC5288, August 2008,
+              <http://www.rfc-editor.org/info/rfc5288>.
 
    [RFC5289]  Rescorla, E., "TLS Elliptic Curve Cipher Suites with SHA-
               256/384 and AES Galois Counter Mode (GCM)", RFC 5289,
@@ -4582,17 +4587,17 @@ Internet-Draft                     TLS                    September 2016
               DOI 10.17487/RFC6961, June 2013,
               <http://www.rfc-editor.org/info/rfc6961>.
 
-   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
-              Algorithm (DSA) and Elliptic Curve Digital Signature
-              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
-              2013, <http://www.rfc-editor.org/info/rfc6979>.
-
 
 
 Rescorla                  Expires March 6, 2017                [Page 82]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <http://www.rfc-editor.org/info/rfc6979>.
 
    [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
               CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
@@ -4635,11 +4640,6 @@ Internet-Draft                     TLS                    September 2016
               Encryption Use in TLS", 2016,
               <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
 
-   [BBFKZG16]
-              Bhargavan, K., Brzuska, C., Fournet, C., Kohlweiss, M.,
-              Zanella-Beguelin, S., and M. Green, "Downgrade Resilience
-              in Key-Exchange Protocols", Proceedings of IEEE Symposium
-              on Security and Privacy (Oakland) 2016 , 2016.
 
 
 
@@ -4649,6 +4649,12 @@ Rescorla                  Expires March 6, 2017                [Page 83]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [BBFKZG16]
+              Bhargavan, K., Brzuska, C., Fournet, C., Kohlweiss, M.,
+              Zanella-Beguelin, S., and M. Green, "Downgrade Resilience
+              in Key-Exchange Protocols", Proceedings of IEEE Symposium
+              on Security and Privacy (Oakland) 2016 , 2016.
 
    [CHSV16]   Cremers, C., Horvat, M., Scott, S., and T. van der Merwe,
               "Automated Analysis and Verification of TLS 1.3: 0-RTT,
@@ -4691,13 +4697,7 @@ Internet-Draft                     TLS                    September 2016
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
 
-   [LXZFH16]  Li, X., Xu, J., Feng, D., Zhang, Z., and H. Hu, "Multiple
-              Handshakes Security of TLS 1.3 Candidates", Proceedings of
-              IEEE Symposium on Security and Privacy (Oakland) 2016 ,
-              2016.
 
-   [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
-              Syntax Standard, version 1.5", November 1993.
 
 
 
@@ -4705,6 +4705,14 @@ Rescorla                  Expires March 6, 2017                [Page 84]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [LXZFH16]  Li, X., Xu, J., Feng, D., Zhang, Z., and H. Hu, "Multiple
+              Handshakes Security of TLS 1.3 Candidates", Proceedings of
+              IEEE Symposium on Security and Privacy (Oakland) 2016 ,
+              2016.
+
+   [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
+              Syntax Standard, version 1.5", November 1993.
 
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
@@ -4746,14 +4754,6 @@ Internet-Draft                     TLS                    September 2016
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <http://www.rfc-editor.org/info/rfc4303>.
 
-   [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.1", RFC 4346,
-              DOI 10.17487/RFC4346, April 2006,
-              <http://www.rfc-editor.org/info/rfc4346>.
-
-
-
-
 
 
 
@@ -4761,6 +4761,11 @@ Rescorla                  Expires March 6, 2017                [Page 85]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.1", RFC 4346,
+              DOI 10.17487/RFC4346, April 2006,
+              <http://www.rfc-editor.org/info/rfc4346>.
 
    [RFC4366]  Blake-Wilson, S., Nystrom, M., Hopwood, D., Mikkelsen, J.,
               and T. Wright, "Transport Layer Security (TLS)
@@ -4805,11 +4810,6 @@ Internet-Draft                     TLS                    September 2016
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <http://www.rfc-editor.org/info/rfc5116>.
 
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008,
-              <http://www.rfc-editor.org/info/rfc5246>.
-
 
 
 
@@ -4817,6 +4817,11 @@ Rescorla                  Expires March 6, 2017                [Page 86]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <http://www.rfc-editor.org/info/rfc5246>.
 
    [RFC5746]  Rescorla, E., Ray, M., Dispensa, S., and N. Oskov,
               "Transport Layer Security (TLS) Renegotiation Indication
@@ -4862,17 +4867,16 @@ Internet-Draft                     TLS                    September 2016
               DOI 10.17487/RFC6520, February 2012,
               <http://www.rfc-editor.org/info/rfc6520>.
 
-   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
-              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
-              <http://www.rfc-editor.org/info/rfc6962>.
-
-
 
 
 Rescorla                  Expires March 6, 2017                [Page 87]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
+              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
+              <http://www.rfc-editor.org/info/rfc6962>.
 
    [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Message Syntax and Routing",
@@ -4918,10 +4922,6 @@ Internet-Draft                     TLS                    September 2016
               Ephemeral Parameters for Transport Layer Security (TLS)",
               RFC 7919, DOI 10.17487/RFC7919, August 2016,
               <http://www.rfc-editor.org/info/rfc7919>.
-
-
-
-
 
 
 
