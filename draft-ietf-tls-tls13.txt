@@ -3330,7 +3330,7 @@ Internet-Draft                     TLS                    September 2016
    enum {
        alert(21),
        handshake(22),
-       application_data(23)
+       application_data(23),
        (255)
    } ContentType;
 
@@ -5000,7 +5000,7 @@ A.1.  Record Layer
        change_cipher_spec_RESERVED(20),
        alert(21),
        handshake(22),
-       application_data(23)
+       application_data(23),
        (255)
    } ContentType;
 
