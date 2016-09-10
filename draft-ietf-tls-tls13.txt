@@ -159,9 +159,9 @@ Internet-Draft                     TLS                    September 2016
        A.3.2.  Server Parameters Messages  . . . . . . . . . . . . .  97
        A.3.3.  Authentication Messages . . . . . . . . . . . . . . .  98
        A.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . .  98
+       A.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . .  99
      A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . .  99
        A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . . 100
-   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 101
 
 
 
@@ -170,6 +170,7 @@ Rescorla                 Expires March 14, 2017                 [Page 3]
 Internet-Draft                     TLS                    September 2016
 
 
+   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 101
      B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 101
      B.2.  Random Number Generation and Seeding  . . . . . . . . . . 101
      B.3.  Certificates and Authentication . . . . . . . . . . . . . 101
@@ -217,7 +218,6 @@ Internet-Draft                     TLS                    September 2016
 
    These properties should be true even in the face of an attacker who
    has complete control of the network, as described in [RFC3552].  See
-
 
 
 
@@ -5505,6 +5505,15 @@ Internet-Draft                     TLS                    September 2016
         TicketExtension extensions<0..2^16-2>;
     } NewSessionTicket;
 
+A.3.5.  Updating Keys
+
+    enum { update_not_requested(0), update_requested(1), (255)
+    } KeyUpdateRequest;
+
+    struct {
+        KeyUpdateRequest request_update;
+    } KeyUpdate;
+
 A.4.  Cipher Suites
 
    A symmetric cipher suite defines the pair of the AEAD cipher and hash
@@ -5528,15 +5537,6 @@ A.4.  Cipher Suites
    The "CIPHER" component commonly has sub-components used to designate
    the cipher name, bits, and mode, if applicable.  For example,
    "AES_256_GCM" represents 256-bit AES in the GCM mode of operation.
-
-
-
-
-
-
-
-
-
 
 
 

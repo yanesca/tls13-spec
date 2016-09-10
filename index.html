@@ -343,6 +343,7 @@ li, p {
 <link href="#rfc.appendix.A.3.2" rel="Chapter" title="A.3.2 Server Parameters Messages"/>
 <link href="#rfc.appendix.A.3.3" rel="Chapter" title="A.3.3 Authentication Messages"/>
 <link href="#rfc.appendix.A.3.4" rel="Chapter" title="A.3.4 Ticket Establishment"/>
+<link href="#rfc.appendix.A.3.5" rel="Chapter" title="A.3.5 Updating Keys"/>
 <link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Cipher Suites"/>
 <link href="#rfc.appendix.A.4.1" rel="Chapter" title="A.4.1 Unauthenticated Operation"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B Implementation Notes"/>
@@ -519,6 +520,7 @@ li, p {
 <li>A.3.2.   <a href="#rfc.appendix.A.3.2">Server Parameters Messages</a></li>
 <li>A.3.3.   <a href="#rfc.appendix.A.3.3">Authentication Messages</a></li>
 <li>A.3.4.   <a href="#rfc.appendix.A.3.4">Ticket Establishment</a></li>
+<li>A.3.5.   <a href="#rfc.appendix.A.3.5">Updating Keys</a></li>
 </ul><li>A.4.   <a href="#rfc.appendix.A.4">Cipher Suites</a></li>
 <ul><li>A.4.1.   <a href="#rfc.appendix.A.4.1">Unauthenticated Operation</a></li>
 </ul></ul><li>Appendix B.   <a href="#rfc.appendix.B">Implementation Notes</a></li>
@@ -3460,6 +3462,15 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
      opaque ticket&lt;1..2^16-1&gt;;
      TicketExtension extensions&lt;0..2^16-2&gt;;
  } NewSessionTicket;
+</pre>
+<h3 id="rfc.appendix.A.3.5"><a href="#rfc.appendix.A.3.5">A.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
+<pre>
+ enum { update_not_requested(0), update_requested(1), (255)
+ } KeyUpdateRequest;
+
+ struct {
+     KeyUpdateRequest request_update;
+ } KeyUpdate;
 </pre>
 <h2 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
 <p id="rfc.section.A.4.p.1">A symmetric cipher suite defines the pair of the AEAD cipher and hash function to be used with HKDF.  Cipher suite names follow the naming convention:</p>
