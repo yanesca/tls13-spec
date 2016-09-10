@@ -4,12 +4,12 @@
 
 Network Working Group                                        E. Rescorla
 Internet-Draft                                                RTFM, Inc.
-Obsoletes: 5077, 5246, 5746 (if                       September 06, 2016
+Obsoletes: 5077, 5246, 5746 (if                       September 10, 2016
            approved)
 Updates: 4492, 5705, 6066, 6961 (if
          approved)
 Intended status: Standards Track
-Expires: March 10, 2017
+Expires: March 14, 2017
 
 
         The Transport Layer Security (TLS) Protocol Version 1.3
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 10, 2017.
+   This Internet-Draft will expire on March 14, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 1]
+Rescorla                 Expires March 14, 2017                 [Page 1]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 2]
+Rescorla                 Expires March 14, 2017                 [Page 2]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -134,59 +134,59 @@ Internet-Draft                     TLS                    September 2016
      5.4.  Record Padding  . . . . . . . . . . . . . . . . . . . . .  64
      5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  65
    6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  65
-     6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  66
-     6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  67
-   7.  Cryptographic Computations  . . . . . . . . . . . . . . . . .  70
-     7.1.  Key Schedule  . . . . . . . . . . . . . . . . . . . . . .  70
-     7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  73
-     7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  73
-       7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  74
-       7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  75
-       7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  75
-   8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  76
-     8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  76
-     8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  76
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  77
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  77
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  81
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  81
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  83
-   Appendix A.  Protocol Data Structures and Constant Values . . . .  90
-     A.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  90
-     A.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . .  90
-     A.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . .  92
-       A.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . .  92
-       A.3.2.  Server Parameters Messages  . . . . . . . . . . . . .  96
-       A.3.3.  Authentication Messages . . . . . . . . . . . . . . .  97
-       A.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . .  97
-     A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . .  98
-       A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . .  99
-   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 100
+     6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  67
+     6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  68
+   7.  Cryptographic Computations  . . . . . . . . . . . . . . . . .  71
+     7.1.  Key Schedule  . . . . . . . . . . . . . . . . . . . . . .  71
+     7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  74
+     7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  74
+       7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  75
+       7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  76
+       7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  76
+   8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  77
+     8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  77
+     8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  77
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  78
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  78
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  82
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  82
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  84
+   Appendix A.  Protocol Data Structures and Constant Values . . . .  91
+     A.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  91
+     A.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . .  91
+     A.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . .  93
+       A.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . .  93
+       A.3.2.  Server Parameters Messages  . . . . . . . . . . . . .  97
+       A.3.3.  Authentication Messages . . . . . . . . . . . . . . .  98
+       A.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . .  98
+     A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . .  99
+       A.4.1.  Unauthenticated Operation . . . . . . . . . . . . . . 100
+   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 101
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 3]
+Rescorla                 Expires March 14, 2017                 [Page 3]
 
 Internet-Draft                     TLS                    September 2016
 
 
-     B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 100
-     B.2.  Random Number Generation and Seeding  . . . . . . . . . . 100
-     B.3.  Certificates and Authentication . . . . . . . . . . . . . 100
-     B.4.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 100
-     B.5.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 101
-     B.6.  Client Tracking Prevention  . . . . . . . . . . . . . . . 102
-   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 102
-     C.1.  Negotiating with an older server  . . . . . . . . . . . . 103
-     C.2.  Negotiating with an older client  . . . . . . . . . . . . 104
-     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 104
-     C.4.  Backwards Compatibility Security Restrictions . . . . . . 105
-   Appendix D.  Overview of Security Properties  . . . . . . . . . . 106
-     D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 106
-     D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 108
-   Appendix E.  Working Group Information  . . . . . . . . . . . . . 109
-   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 110
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 113
+     B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 101
+     B.2.  Random Number Generation and Seeding  . . . . . . . . . . 101
+     B.3.  Certificates and Authentication . . . . . . . . . . . . . 101
+     B.4.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 101
+     B.5.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 102
+     B.6.  Client Tracking Prevention  . . . . . . . . . . . . . . . 103
+   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 103
+     C.1.  Negotiating with an older server  . . . . . . . . . . . . 104
+     C.2.  Negotiating with an older client  . . . . . . . . . . . . 105
+     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 105
+     C.4.  Backwards Compatibility Security Restrictions . . . . . . 106
+   Appendix D.  Overview of Security Properties  . . . . . . . . . . 107
+     D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 107
+     D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 109
+   Appendix E.  Working Group Information  . . . . . . . . . . . . . 110
+   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 111
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 114
 
 1.  Introduction
 
@@ -221,7 +221,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 4]
+Rescorla                 Expires March 14, 2017                 [Page 4]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 5]
+Rescorla                 Expires March 14, 2017                 [Page 5]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 6]
+Rescorla                 Expires March 14, 2017                 [Page 6]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 7]
+Rescorla                 Expires March 14, 2017                 [Page 7]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 8]
+Rescorla                 Expires March 14, 2017                 [Page 8]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                 [Page 9]
+Rescorla                 Expires March 14, 2017                 [Page 9]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 10]
+Rescorla                 Expires March 14, 2017                [Page 10]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 11]
+Rescorla                 Expires March 14, 2017                [Page 11]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -669,7 +669,7 @@ Auth | {CertificateVerify*}
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 12]
+Rescorla                 Expires March 14, 2017                [Page 12]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -725,7 +725,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 13]
+Rescorla                 Expires March 14, 2017                [Page 13]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 14]
+Rescorla                 Expires March 14, 2017                [Page 14]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 15]
+Rescorla                 Expires March 14, 2017                [Page 15]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 16]
+Rescorla                 Expires March 14, 2017                [Page 16]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -932,7 +932,7 @@ Internet-Draft                     TLS                    September 2016
                      messages that are not always sent.
 
                   () Indicates messages protected using keys
-                     derived from early_traffic_secret.
+                     derived from client_early_traffic_secret.
 
                   {} Indicates messages protected using keys
                      derived from handshake_traffic_secret.
@@ -949,7 +949,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 17]
+Rescorla                 Expires March 14, 2017                [Page 17]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 18]
+Rescorla                 Expires March 14, 2017                [Page 18]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 19]
+Rescorla                 Expires March 14, 2017                [Page 19]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 20]
+Rescorla                 Expires March 14, 2017                [Page 20]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 21]
+Rescorla                 Expires March 14, 2017                [Page 21]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 22]
+Rescorla                 Expires March 14, 2017                [Page 22]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 23]
+Rescorla                 Expires March 14, 2017                [Page 23]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 24]
+Rescorla                 Expires March 14, 2017                [Page 24]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 25]
+Rescorla                 Expires March 14, 2017                [Page 25]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 26]
+Rescorla                 Expires March 14, 2017                [Page 26]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 27]
+Rescorla                 Expires March 14, 2017                [Page 27]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 28]
+Rescorla                 Expires March 14, 2017                [Page 28]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 29]
+Rescorla                 Expires March 14, 2017                [Page 29]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 30]
+Rescorla                 Expires March 14, 2017                [Page 30]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 31]
+Rescorla                 Expires March 14, 2017                [Page 31]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1789,7 +1789,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 32]
+Rescorla                 Expires March 14, 2017                [Page 32]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 33]
+Rescorla                 Expires March 14, 2017                [Page 33]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1901,7 +1901,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 34]
+Rescorla                 Expires March 14, 2017                [Page 34]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -1957,7 +1957,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 35]
+Rescorla                 Expires March 14, 2017                [Page 35]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2013,7 +2013,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 36]
+Rescorla                 Expires March 14, 2017                [Page 36]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2069,7 +2069,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 37]
+Rescorla                 Expires March 14, 2017                [Page 37]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2125,7 +2125,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 38]
+Rescorla                 Expires March 14, 2017                [Page 38]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2181,7 +2181,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 39]
+Rescorla                 Expires March 14, 2017                [Page 39]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2237,7 +2237,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 40]
+Rescorla                 Expires March 14, 2017                [Page 40]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2293,7 +2293,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 41]
+Rescorla                 Expires March 14, 2017                [Page 41]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2349,7 +2349,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 42]
+Rescorla                 Expires March 14, 2017                [Page 42]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2405,7 +2405,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 43]
+Rescorla                 Expires March 14, 2017                [Page 43]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2461,7 +2461,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 44]
+Rescorla                 Expires March 14, 2017                [Page 44]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2517,7 +2517,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 45]
+Rescorla                 Expires March 14, 2017                [Page 45]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2573,7 +2573,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 46]
+Rescorla                 Expires March 14, 2017                [Page 46]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2629,7 +2629,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 47]
+Rescorla                 Expires March 14, 2017                [Page 47]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2685,7 +2685,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 48]
+Rescorla                 Expires March 14, 2017                [Page 48]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2698,22 +2698,25 @@ Internet-Draft                     TLS                    September 2016
    The following table defines the Handshake Context and MAC Base Key
    for each scenario:
 
-   +------------+--------------------------------+---------------------+
-   | Mode       | Handshake Context              | Base Key            |
-   +------------+--------------------------------+---------------------+
-   | 0-RTT      | ClientHello                    | early_traffic_secre |
-   |            |                                | t                   |
-   |            |                                |                     |
-   | 1-RTT      | ClientHello ... later of Encry | handshake_traffic_s |
-   | (Server)   | ptedExtensions/CertificateRequ | ecret               |
-   |            | est                            |                     |
-   |            |                                |                     |
-   | 1-RTT      | ClientHello ... ServerFinished | handshake_traffic_s |
-   | (Client)   |                                | ecret               |
-   |            |                                |                     |
-   | Post-      | ClientHello ... ClientFinished | traffic_secret_N    |
-   | Handshake  | + CertificateRequest           |                     |
-   +------------+--------------------------------+---------------------+
+   +-----------+-----------------------------+-------------------------+
+   | Mode      | Handshake Context           | Base Key                |
+   +-----------+-----------------------------+-------------------------+
+   | 0-RTT     | ClientHello                 | client_early_traffic_se |
+   |           |                             | cret                    |
+   |           |                             |                         |
+   | 1-RTT     | ClientHello ... later of En | [sender]_handshake_traf |
+   | (Server)  | cryptedExtensions/Certifica | fic_secret              |
+   |           | teRequest                   |                         |
+   |           |                             |                         |
+   | 1-RTT     | ClientHello ...             | [sender]_handshake_traf |
+   | (Client)  | ServerFinished              | fic_secret              |
+   |           |                             |                         |
+   | Post-     | ClientHello ...             | [sender]_traffic_secret |
+   | Handshake | ClientFinished +            | _N                      |
+   |           | CertificateRequest          |                         |
+   +-----------+-----------------------------+-------------------------+
+
+   The [sender] in this table denotes the sending side.
 
    Note: The Handshake Context for the last three rows does not include
    any 0-RTT handshake messages, regardless of whether 0-RTT is used.
@@ -2736,15 +2739,14 @@ Internet-Draft                     TLS                    September 2016
 
    Meaning of this message:
 
-      This message conveys the endpoint's certificate chain to the peer.
 
 
-
-
-Rescorla                 Expires March 10, 2017                [Page 49]
+Rescorla                 Expires March 14, 2017                [Page 49]
 
 Internet-Draft                     TLS                    September 2016
 
+
+      This message conveys the endpoint's certificate chain to the peer.
 
    Structure of this message:
 
@@ -2790,17 +2792,19 @@ Internet-Draft                     TLS                    September 2016
    -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
       negotiated otherwise (e.g., [RFC5081]).
 
-   -  The server's end-entity certificate's public key (and associated
-      restrictions) MUST be compatible with the selected authentication
-      algorithm (currently RSA or ECDSA).
 
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 50]
+
+Rescorla                 Expires March 14, 2017                [Page 50]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   -  The server's end-entity certificate's public key (and associated
+      restrictions) MUST be compatible with the selected authentication
+      algorithm (currently RSA or ECDSA).
 
    -  The certificate MUST allow the key to be used for signing (i.e.,
       the digitalSignature bit MUST be set if the Key Usage extension is
@@ -2847,17 +2851,15 @@ Internet-Draft                     TLS                    September 2016
       message was non-empty, one of the certificates in the certificate
       chain SHOULD be issued by one of the listed CAs.
 
-   -  The certificates MUST be signed using an acceptable signature
-      algorithm, as described in Section 4.3.2.  Note that this relaxes
 
 
-
-
-Rescorla                 Expires March 10, 2017                [Page 51]
+Rescorla                 Expires March 14, 2017                [Page 51]
 
 Internet-Draft                     TLS                    September 2016
 
 
+   -  The certificates MUST be signed using an acceptable signature
+      algorithm, as described in Section 4.3.2.  Note that this relaxes
       the constraints on certificate-signing algorithms found in prior
       versions of TLS.
 
@@ -2907,9 +2909,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-
-
-Rescorla                 Expires March 10, 2017                [Page 52]
+Rescorla                 Expires March 14, 2017                [Page 52]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -2965,7 +2965,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 53]
+Rescorla                 Expires March 14, 2017                [Page 53]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3021,7 +3021,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 54]
+Rescorla                 Expires March 14, 2017                [Page 54]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3048,11 +3048,8 @@ Internet-Draft                     TLS                    September 2016
    Base key defined in Section 4.4 using HKDF (see Section 7.1).
    Specifically:
 
-   client_finished_key =
-       HKDF-Expand-Label(BaseKey, "client finished", "", Hash.Length)
-
-   server_finished_key =
-       HKDF-Expand-Label(BaseKey, "server finished", "", Hash.Length)
+   finished_key =
+       HKDF-Expand-Label(BaseKey, "finished", "", Hash.Length)
 
    Structure of this message:
 
@@ -3073,18 +3070,17 @@ Internet-Draft                     TLS                    September 2016
 
       * Only included if present.
 
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 55]
-
-Internet-Draft                     TLS                    September 2016
-
-
    Where HMAC [RFC2104] uses the Hash algorithm for the handshake.  As
    noted above, the HMAC input can generally be implemented by a running
    hash, i.e., just the handshake hash at this point.
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 55]
+
+Internet-Draft                     TLS                    September 2016
+
 
    In previous versions of TLS, the verify_data was always 12 octets
    long.  In the current version of TLS, it is the size of the HMAC
@@ -3130,18 +3126,18 @@ Internet-Draft                     TLS                    September 2016
    connection, either immediately after each other or after specific
    events.  For instance, the server might send a new ticket after post-
    handshake authentication in order to encapsulate the additional
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 56]
-
-Internet-Draft                     TLS                    September 2016
-
-
    client authentication state.  Clients SHOULD attempt to use each
    ticket no more than once, with more recent tickets being used first.
    For handshakes that do not use a resumption_psk, the
    resumption_context is a string of Hash.Length zeroes.  [[Note: this
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 56]
+
+Internet-Draft                     TLS                    September 2016
+
+
    will not be safe if/when we add additional server signatures with
    PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]
 
@@ -3185,19 +3181,18 @@ Internet-Draft                     TLS                    September 2016
       Section 4 of [RFC5077] describes a recommended ticket construction
       mechanism.
 
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 57]
-
-Internet-Draft                     TLS                    September 2016
-
-
    ticket_extensions  A set of extension values for the ticket.  Clients
       MUST ignore unrecognized extensions.
 
    This document defines one ticket extension, "ticket_early_data_info"
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 57]
+
+Internet-Draft                     TLS                    September 2016
+
 
       struct {
           uint32 ticket_age_add;
@@ -3233,43 +3228,54 @@ Internet-Draft                     TLS                    September 2016
 
 4.5.3.  Key and IV Update
 
-    struct {} KeyUpdate;
+    enum { update_not_requested(0), update_requested(1), (255)
+    } KeyUpdateRequest;
+
+    struct {
+        KeyUpdateRequest request_update;
+    } KeyUpdate;
+
+   request_update  Indicates that the recipient of the KeyUpdate should
+      respond with its own KeyUpdate.  If an implementation receives any
+      other value, it MUST terminate the connection with an
+      "illegal_parameter" alert.
 
    The KeyUpdate handshake message is used to indicate that the sender
    is updating its sending cryptographic keys.  This message can be sent
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 58]
+
+Internet-Draft                     TLS                    September 2016
+
+
    by the server after sending its first flight and the client after
    sending its second flight.  Implementations that receive a KeyUpdate
    message prior to receiving a Finished message as part of the 1-RTT
    handshake MUST generate a fatal "unexpected_message" alert.  After
    sending a KeyUpdate message, the sender SHALL send all its traffic
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 58]
-
-Internet-Draft                     TLS                    September 2016
-
-
    using the next generation of keys, computed as described in
    Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
-   their receiving keys and if they have not already updated their
-   sending state up to or past the then current receiving generation
-   MUST send their own KeyUpdate prior to sending any other messages.
-   This mechanism allows either side to force an update to the entire
-   connection.  Note that implementations may receive an arbitrary
-   number of messages between sending a KeyUpdate and receiving the
-   peer's KeyUpdate because those messages may already be in flight.
+   its receiving keys.
 
-   Note that if implementations independently send their own KeyUpdates
-   and they cross in flight, this only results in an update of one
-   generation; when each side receives the other side's update it just
-   updates its receive keys and notes that the generations match and
-   thus no send update is needed.
+   If the request_udate field is set to "update_requested" then the
+   receiver MUST send a KeyUpdate of its own with request_update set to
+   "update_not_requested" prior to sending its next application data
+   record.  This mechanism allows either side to force an update to the
+   entire connection, but causes an implementation which receives
+   multiple KeyUpdates while it is silent to respond with a single
+   update.  Note that implementations may receive an arbitrary number of
+   messages between sending a KeyUpdate and receiving the peer's
+   KeyUpdate because those messages may already be in flight.  However,
+   because send and receive keys are derived from independent traffic
+   secrets, retaining the receive traffic secret does not threaten the
+   forward secrecy of data sent before the sender changed keys.
 
-   Note that the side which sends its KeyUpdate first needs to retain
-   its receive traffic keys (though not the traffic secret) for the
-   previous generation of keys until it receives the KeyUpdate from the
-   other side.
+   If implementations independently send their own KeyUpdates with
+   request_update set to "update_requested", and they cross in flight,
+   then each side will also send a response, with the result that each
+   side increments by two generations.
 
    Both sender and receiver MUST encrypt their KeyUpdate messages with
    the old keys.  Additionally, both sides MUST enforce that a KeyUpdate
@@ -3292,20 +3298,20 @@ Internet-Draft                     TLS                    September 2016
    the result.  Received data is decrypted and verified, reassembled,
    and then delivered to higher-level clients.
 
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 59]
+
+Internet-Draft                     TLS                    September 2016
+
+
    TLS records are typed, which allows multiple higher level protocols
    to be multiplexed over the same record layer.  This document
    specifies three content types: handshake, application data, and
    alert.  Implementations MUST NOT send record types not defined in
    this document unless negotiated by some extension.  If a TLS
    implementation receives an unexpected record type, it MUST send an
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 59]
-
-Internet-Draft                     TLS                    September 2016
-
-
    "unexpected_message" alert.  New record content type values are
    assigned by IANA in the TLS Content Type Registry as described in
    Section 10.
@@ -3348,19 +3354,20 @@ Internet-Draft                     TLS                    September 2016
       records.  This field is deprecated and MUST be ignored for all
       purposes.
 
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 60]
+
+Internet-Draft                     TLS                    September 2016
+
+
    length  The length (in bytes) of the following TLSPlaintext.fragment.
       The length MUST NOT exceed 2^14.
 
    fragment  The data being transmitted.  This value transparent and
       treated as an independent block to be dealt with by the higher-
       level protocol specified by the type field.
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 60]
-
-Internet-Draft                     TLS                    September 2016
-
 
    This document describes TLS Version 1.3, which uses the version { 3,
    4 }.  The version value 3.4 is historical, deriving from the use of {
@@ -3392,6 +3399,25 @@ Internet-Draft                     TLS                    September 2016
    plaintext header followed by an encrypted body, which itself contains
    a type and optional padding.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 61]
+
+Internet-Draft                     TLS                    September 2016
+
+
    struct {
       opaque content[TLSPlaintext.length];
       ContentType type;
@@ -3408,15 +3434,6 @@ Internet-Draft                     TLS                    September 2016
    content  The cleartext of TLSPlaintext.fragment.
 
    type  The content type of the record.
-
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 61]
-
-Internet-Draft                     TLS                    September 2016
-
 
    zeros  An arbitrary-length run of zero-valued bytes may appear in the
       cleartext after the type field.  This provides an opportunity for
@@ -3449,6 +3466,14 @@ Internet-Draft                     TLS                    September 2016
    AEAD ciphers take as input a single key, a nonce, a plaintext, and
    "additional data" to be included in the authentication check, as
    described in Section 2.1 of [RFC5116].  The key is either the
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 62]
+
+Internet-Draft                     TLS                    September 2016
+
+
    client_write_key or the server_write_key, the nonce is derived from
    the sequence number (see Section 5.3) and the client_write_iv or
    server_write_iv, and the additional data input is empty (zero
@@ -3465,14 +3490,6 @@ Internet-Draft                     TLS                    September 2016
    amount that varies with the AEAD cipher.  Since the ciphers might
    incorporate padding, the amount of overhead could vary with different
    lengths of plaintext.  Symbolically,
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 62]
-
-Internet-Draft                     TLS                    September 2016
-
 
       AEADEncrypted =
           AEAD-Encrypt(write_key, nonce, plaintext of fragment)
@@ -3505,6 +3522,14 @@ Internet-Draft                     TLS                    September 2016
    record.  The first record transmitted under a particular set of
    traffic keys record key MUST use sequence number 0.
 
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 63]
+
+Internet-Draft                     TLS                    September 2016
+
+
    Sequence numbers do not wrap.  If a TLS implementation would need to
    wrap a sequence number, it MUST either rekey (Section 4.5.3) or
    terminate the connection.
@@ -3522,13 +3547,6 @@ Internet-Draft                     TLS                    September 2016
 
    The resulting quantity (of length iv_length) is used as the per-
    record nonce.
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 63]
-
-Internet-Draft                     TLS                    September 2016
-
 
    Note: This is a different construction from that in TLS 1.2, which
    specified a partially explicit nonce.
@@ -3561,6 +3579,13 @@ Internet-Draft                     TLS                    September 2016
    content types.  The design also enforces all-zero padding octets,
    which allows for quick detection of padding errors.
 
+
+
+Rescorla                 Expires March 14, 2017                [Page 64]
+
+Internet-Draft                     TLS                    September 2016
+
+
    Implementations MUST limit their scanning to the cleartext returned
    from the AEAD decryption.  If a receiving implementation does not
    find a non-zero octet in the cleartext, it should treat the record as
@@ -3577,15 +3602,6 @@ Internet-Draft                     TLS                    September 2016
    application layer.  Padding for encrypted handshake and alert TLS
    records must still be handled at the TLS layer, though.  Later
    documents may define padding selection algorithms, or define a
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 64]
-
-Internet-Draft                     TLS                    September 2016
-
-
    padding policy request mechanism through TLS extensions or some other
    means.
 
@@ -3617,6 +3633,15 @@ Internet-Draft                     TLS                    September 2016
    indicate end-of-data to the application and, if appropriate for the
    alert type, send a closure alert in response.
 
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 65]
+
+Internet-Draft                     TLS                    September 2016
+
+
    Fatal-level messages are used to indicate abortive closure of the
    connection (See Section 6.2).  Upon receiving a fatal-level alert,
    the TLS implementation SHOULD indicate an error to the application
@@ -3637,7 +3662,38 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 65]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 66]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3693,7 +3749,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 66]
+Rescorla                 Expires March 14, 2017                [Page 67]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3749,7 +3805,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 67]
+Rescorla                 Expires March 14, 2017                [Page 68]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3805,7 +3861,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 68]
+Rescorla                 Expires March 14, 2017                [Page 69]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3861,7 +3917,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 69]
+Rescorla                 Expires March 14, 2017                [Page 70]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3917,7 +3973,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 70]
+Rescorla                 Expires March 14, 2017                [Page 71]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3938,7 +3994,7 @@ Internet-Draft                     TLS                    September 2016
 
    -  Derive-Secret's Secret argument is indicated by the arrow coming
       in from the left.  For instance, the Early Secret is the Secret
-      for generating the early_traffic_secret.
+      for generating the client_early_traffic_secret.
 
    Note that the 0-RTT Finished message is not included in the Derive-
    Secret operation.
@@ -3973,7 +4029,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 71]
+Rescorla                 Expires March 14, 2017                [Page 72]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -3984,26 +4040,36 @@ Internet-Draft                     TLS                    September 2016
    PSK ->  HKDF-Extract
                  |
                  v
-           Early Secret ---> Derive-Secret(., "early traffic secret",
+           Early Secret ---> Derive-Secret(., "client early traffic secret",
                  |                         ClientHello)
-                 |                         = early_traffic_secret
+                 |                         = client_early_traffic_secret
                  v
 (EC)DHE -> HKDF-Extract
                  |
                  v
-              Handshake
-               Secret -----> Derive-Secret(., "handshake traffic secret",
+         Handshake Secret
+                 |
+                 +---------> Derive-Secret(., "client handshake traffic secret",
                  |                         ClientHello...ServerHello)
-                 |                         = handshake_traffic_secret
+                 |                         = client_handshake_traffic_secret
+                 |
+                 +---------> Derive-Secret(., "server handshake traffic secret",
+                 |                         ClientHello...ServerHello)
+                 |                         = server_handshake_traffic_secret
+                 |
                  v
       0 -> HKDF-Extract
                  |
                  v
             Master Secret
                  |
-                 +---------> Derive-Secret(., "application traffic secret",
+                 +---------> Derive-Secret(., "client application traffic secret",
                  |                         ClientHello...Server Finished)
-                 |                         = traffic_secret_0
+                 |                         = client_traffic_secret_0
+                 |
+                 +---------> Derive-Secret(., "server application traffic secret",
+                 |                         ClientHello...Server Finished)
+                 |                         = server_traffic_secret_0
                  |
                  +---------> Derive-Secret(., "exporter master secret",
                  |                         ClientHello...Client Finished)
@@ -4016,6 +4082,14 @@ Internet-Draft                     TLS                    September 2016
    The general pattern here is that the secrets shown down the left side
    of the diagram are just raw entropy without context, whereas the
    secrets down the right side include handshake context and therefore
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 73]
+
+Internet-Draft                     TLS                    September 2016
+
+
    can be used to derive working keys without additional context.  Note
    that the different calls to Derive-Secret may take different Messages
    arguments, even with the same secret.  In a 0-RTT exchange, Derive-
@@ -4027,21 +4101,14 @@ Internet-Draft                     TLS                    September 2016
    skipping rounds, so if PSK is not in use Early Secret will still be
    HKDF-Extract(0, 0).
 
-
-
-Rescorla                 Expires March 10, 2017                [Page 72]
-
-Internet-Draft                     TLS                    September 2016
-
-
 7.2.  Updating Traffic Keys and IVs
 
    Once the handshake is complete, it is possible for either side to
    update its sending traffic keys using the KeyUpdate handshake message
    defined in Section 4.5.3.  The next generation of traffic keys is
-   computed by generating traffic_secret_N+1 from traffic_secret_N as
-   described in this section then re-deriving the traffic keys as
-   described in Section 7.3.
+   computed by generating client_/server_traffic_secret_N+1 from
+   client_/server_traffic_secret_N as described in this section then re-
+   deriving the traffic keys as described in Section 7.3.
 
    The next-generation traffic_secret is computed as:
 
@@ -4049,10 +4116,9 @@ Internet-Draft                     TLS                    September 2016
                              traffic_secret_N,
                              "application traffic secret", "", Hash.Length)
 
-   Once traffic_secret_N+1 and its associated traffic keys have been
-   computed, implementations SHOULD delete traffic_secret_N.  Once the
-   directional keys are no longer needed, they SHOULD be deleted as
-   well.
+   Once client/server_traffic_secret_N+1 and its associated traffic keys
+   have been computed, implementations SHOULD delete client_/
+   server_traffic_secret_N and its associated traffic keys.
 
 7.3.  Traffic Key Calculation
 
@@ -4070,6 +4136,16 @@ Internet-Draft                     TLS                    September 2016
 
    The keying material is computed using:
 
+
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 74]
+
+Internet-Draft                     TLS                    September 2016
+
+
       key = HKDF-Expand-Label(Secret,
                               phase + ", " + purpose,
                               "",
@@ -4078,48 +4154,36 @@ Internet-Draft                     TLS                    September 2016
    The following table describes the inputs to the key calculation for
    each class of traffic keys:
 
+   +-------------+-----------------------------------+-----------------+
+   | Record Type | Secret                            | Phase           |
+   +-------------+-----------------------------------+-----------------+
+   | 0-RTT       | client_early_traffic_secret       | "early          |
+   | Handshake   |                                   | handshake key   |
+   |             |                                   | expansion"      |
+   |             |                                   |                 |
+   | 0-RTT       | client_early_traffic_secret       | "early          |
+   | Application |                                   | application     |
+   |             |                                   | data key        |
+   |             |                                   | expansion"      |
+   |             |                                   |                 |
+   | Handshake   | [sender]_handshake_traffic_secret | "handshake key  |
+   |             |                                   | expansion"      |
+   |             |                                   |                 |
+   | Application | [sender]_traffic_secret_N         | "application    |
+   | Data        |                                   | data key        |
+   |             |                                   | expansion"      |
+   +-------------+-----------------------------------+-----------------+
 
+   The [sender] in this table denotes the sending side.  The following
+   table indicates the purpose values for each type of key:
 
-
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 73]
-
-Internet-Draft                     TLS                    September 2016
-
-
-   +-------------+--------------------------+--------------------------+
-   | Record Type | Secret                   | Phase                    |
-   +-------------+--------------------------+--------------------------+
-   | 0-RTT       | early_traffic_secret     | "early handshake key     |
-   | Handshake   |                          | expansion"               |
-   |             |                          |                          |
-   | 0-RTT       | early_traffic_secret     | "early application data  |
-   | Application |                          | key expansion"           |
-   |             |                          |                          |
-   | Handshake   | handshake_traffic_secret | "handshake key           |
-   |             |                          | expansion"               |
-   |             |                          |                          |
-   | Application | traffic_secret_N         | "application data key    |
-   | Data        |                          | expansion"               |
-   +-------------+--------------------------+--------------------------+
-
-   The following table indicates the purpose values for each type of
-   key:
-
-                 +------------------+--------------------+
-                 | Key Type         | Purpose            |
-                 +------------------+--------------------+
-                 | client_write_key | "client write key" |
-                 |                  |                    |
-                 | server_write_key | "server write key" |
-                 |                  |                    |
-                 | client_write_iv  | "client write iv"  |
-                 |                  |                    |
-                 | server_write_iv  | "server write iv"  |
-                 +------------------+--------------------+
+                          +----------+---------+
+                          | Key Type | Purpose |
+                          +----------+---------+
+                          | key      | "key"   |
+                          |          |         |
+                          | iv       | "iv"    |
+                          +----------+---------+
 
    All the traffic keying material is recomputed whenever the underlying
    Secret changes (e.g., when changing from the handshake to application
@@ -4130,21 +4194,19 @@ Internet-Draft                     TLS                    September 2016
    A conventional Diffie-Hellman computation is performed.  The
    negotiated key (Z) is converted to byte string by encoding in big-
    endian, padded with zeros up to the size of the prime.  This byte
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 75]
+
+Internet-Draft                     TLS                    September 2016
+
+
    string is used as the shared secret, and is used in the key schedule
    as specified above.
 
    Note that this construction differs from previous versions of TLS
    which remove leading zeros.
-
-
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 74]
-
-Internet-Draft                     TLS                    September 2016
-
 
 7.3.2.  Elliptic Curve Diffie-Hellman
 
@@ -4189,19 +4251,18 @@ Internet-Draft                     TLS                    September 2016
 
    If no context is provided, the value is computed as:
 
+
+
+Rescorla                 Expires March 14, 2017                [Page 76]
+
+Internet-Draft                     TLS                    September 2016
+
+
    HKDF-Expand-Label(exporter_secret, label, "", key_length)
 
    Note that providing no context computes the same value as providing
    an empty context.  As of this document's publication, no allocated
    exporter label is used with both modes.  Future specifications MUST
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 75]
-
-Internet-Draft                     TLS                    September 2016
-
-
    NOT provide an empty context and no context with the same label and
    SHOULD provide a context, possibly empty, in all exporter
    computations.
@@ -4246,17 +4307,17 @@ Internet-Draft                     TLS                    September 2016
    -  "signature_algorithms" is REQUIRED for certificate authenticated
       cipher suites.
 
+
+
+Rescorla                 Expires March 14, 2017                [Page 77]
+
+Internet-Draft                     TLS                    September 2016
+
+
    -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
       cipher suites.
 
    -  "pre_shared_key" is REQUIRED for PSK cipher suites.
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 76]
-
-Internet-Draft                     TLS                    September 2016
-
 
    -  "cookie" is REQUIRED for all cipher suites.
 
@@ -4300,19 +4361,20 @@ Internet-Draft                     TLS                    September 2016
 
          Cipher suites marked as "Yes" are those allocated via Standards
          Track RFCs.  Cipher suites marked as "No" are not; cipher
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 78]
+
+Internet-Draft                     TLS                    September 2016
+
+
          suites marked "No" range from "good" to "bad" from a
          cryptographic standpoint.
 
    -  TLS ContentType Registry: Future values are allocated via
       Standards Action [RFC2434].
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 77]
-
-Internet-Draft                     TLS                    September 2016
-
 
    -  TLS Alert Registry: Future values are allocated via Standards
       Action [RFC2434].
@@ -4356,20 +4418,20 @@ Internet-Draft                     TLS                    September 2016
 
    +------------------------------+----------+---------+---------------+
    | Extension                    | Recommen | TLS 1.3 | HelloRetryReq |
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 79]
+
+Internet-Draft                     TLS                    September 2016
+
+
    |                              |      ded |         |          uest |
    +------------------------------+----------+---------+---------------+
    | server_name [RFC6066]        |      Yes | Encrypt |            No |
    |                              |          |      ed |               |
    |                              |          |         |               |
    | max_fragment_length          |      Yes | Encrypt |            No |
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 78]
-
-Internet-Draft                     TLS                    September 2016
-
-
    | [RFC6066]                    |          |      ed |               |
    |                              |          |         |               |
    | client_certificate_url       |      Yes | Encrypt |            No |
@@ -4386,11 +4448,9 @@ Internet-Draft                     TLS                    September 2016
    | user_mapping [RFC4681]       |      Yes | Encrypt |            No |
    |                              |          |      ed |               |
    |                              |          |         |               |
-   | client_authz [RFC5878]       |       No | Encrypt |            No |
-   |                              |          |      ed |               |
+   | client_authz [RFC5878]       |       No |      No |            No |
    |                              |          |         |               |
-   | server_authz [RFC5878]       |       No | Encrypt |            No |
-   |                              |          |      ed |               |
+   | server_authz [RFC5878]       |       No |      No |            No |
    |                              |          |         |               |
    | cert_type [RFC6091]          |      Yes | Encrypt |            No |
    |                              |          |      ed |               |
@@ -4414,18 +4474,18 @@ Internet-Draft                     TLS                    September 2016
    | application_layer_protocol_n |      Yes | Encrypt |            No |
    | egotiation [RFC7301]         |          |      ed |               |
    |                              |          |         |               |
-   | status_request_v2 [RFC6961]  |      Yes | Encrypt |            No |
-   |                              |          |      ed |               |
-   |                              |          |         |               |
-   | signed_certificate_timestamp |       No | Encrypt |            No |
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 79]
+Rescorla                 Expires March 14, 2017                [Page 80]
 
 Internet-Draft                     TLS                    September 2016
 
 
+   | status_request_v2 [RFC6961]  |      Yes | Encrypt |            No |
+   |                              |          |      ed |               |
+   |                              |          |         |               |
+   | signed_certificate_timestamp |       No | Encrypt |            No |
    | [RFC6962]                    |          |      ed |               |
    |                              |          |         |               |
    | client_certificate_type      |      Yes | Encrypt |            No |
@@ -4469,18 +4529,18 @@ Internet-Draft                     TLS                    September 2016
       ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256,
       rsa_pss_sha384, rsa_pss_sha512, ed25519.
 
-   Finally, this document obsoletes a registry originally created in
-   [RFC5246].  IANA [shall/has] updated it to list values 7-223 as
-   "Reserved".
 
 
 
 
-
-Rescorla                 Expires March 10, 2017                [Page 80]
+Rescorla                 Expires March 14, 2017                [Page 81]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   Finally, this document obsoletes a registry originally created in
+   [RFC5246].  IANA [shall/has] updated it to list values 7-223 as
+   "Reserved".
 
 11.  References
 
@@ -4525,18 +4585,19 @@ Internet-Draft                     TLS                    September 2016
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <http://www.rfc-editor.org/info/rfc5280>.
 
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 82]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [RFC5288]  Salowey, J., Choudhury, A., and D. McGrew, "AES Galois
               Counter Mode (GCM) Cipher Suites for TLS", RFC 5288,
               DOI 10.17487/RFC5288, August 2008,
               <http://www.rfc-editor.org/info/rfc5288>.
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 81]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [RFC5289]  Rescorla, E., "TLS Elliptic Curve Cipher Suites with SHA-
               256/384 and AES Galois Counter Mode (GCM)", RFC 5289,
@@ -4582,17 +4643,17 @@ Internet-Draft                     TLS                    September 2016
               DOI 10.17487/RFC6961, June 2013,
               <http://www.rfc-editor.org/info/rfc6961>.
 
+
+
+Rescorla                 Expires March 14, 2017                [Page 83]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <http://www.rfc-editor.org/info/rfc6979>.
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 82]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [RFC7251]  McGrew, D., Bailey, D., Campagna, M., and R. Dugal, "AES-
               CCM Elliptic Curve Cryptography (ECC) Cipher Suites for
@@ -4635,20 +4696,21 @@ Internet-Draft                     TLS                    September 2016
               Encryption Use in TLS", 2016,
               <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
 
+
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 84]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [BBFKZG16]
               Bhargavan, K., Brzuska, C., Fournet, C., Kohlweiss, M.,
               Zanella-Beguelin, S., and M. Green, "Downgrade Resilience
               in Key-Exchange Protocols", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
-
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 83]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [CHSV16]   Cremers, C., Horvat, M., Scott, S., and T. van der Merwe,
               "Automated Analysis and Verification of TLS 1.3: 0-RTT,
@@ -4691,6 +4753,15 @@ Internet-Draft                     TLS                    September 2016
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
 
+
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 85]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [LXZFH16]  Li, X., Xu, J., Feng, D., Zhang, Z., and H. Hu, "Multiple
               Handshakes Security of TLS 1.3 Candidates", Proceedings of
               IEEE Symposium on Security and Privacy (Oakland) 2016 ,
@@ -4698,13 +4769,6 @@ Internet-Draft                     TLS                    September 2016
 
    [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
               Syntax Standard, version 1.5", November 1993.
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 84]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
@@ -4746,21 +4810,18 @@ Internet-Draft                     TLS                    September 2016
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <http://www.rfc-editor.org/info/rfc4303>.
 
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 86]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.1", RFC 4346,
               DOI 10.17487/RFC4346, April 2006,
               <http://www.rfc-editor.org/info/rfc4346>.
-
-
-
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 85]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [RFC4366]  Blake-Wilson, S., Nystrom, M., Hopwood, D., Mikkelsen, J.,
               and T. Wright, "Transport Layer Security (TLS)
@@ -4805,18 +4866,18 @@ Internet-Draft                     TLS                    September 2016
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <http://www.rfc-editor.org/info/rfc5116>.
 
+
+
+
+Rescorla                 Expires March 14, 2017                [Page 87]
+
+Internet-Draft                     TLS                    September 2016
+
+
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
               DOI 10.17487/RFC5246, August 2008,
               <http://www.rfc-editor.org/info/rfc5246>.
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 86]
-
-Internet-Draft                     TLS                    September 2016
-
 
    [RFC5746]  Rescorla, E., Ray, M., Dispensa, S., and N. Oskov,
               "Transport Layer Security (TLS) Renegotiation Indication
@@ -4862,17 +4923,16 @@ Internet-Draft                     TLS                    September 2016
               DOI 10.17487/RFC6520, February 2012,
               <http://www.rfc-editor.org/info/rfc6520>.
 
-   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
-              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
-              <http://www.rfc-editor.org/info/rfc6962>.
 
 
-
-
-Rescorla                 Expires March 10, 2017                [Page 87]
+Rescorla                 Expires March 14, 2017                [Page 88]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
+              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
+              <http://www.rfc-editor.org/info/rfc6962>.
 
    [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Message Syntax and Routing",
@@ -4921,11 +4981,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-
-
-
-
-Rescorla                 Expires March 10, 2017                [Page 88]
+Rescorla                 Expires March 14, 2017                [Page 89]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -4981,7 +5037,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 89]
+Rescorla                 Expires March 14, 2017                [Page 90]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5037,7 +5093,7 @@ A.2.  Alert Messages
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 90]
+Rescorla                 Expires March 14, 2017                [Page 91]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5093,7 +5149,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 91]
+Rescorla                 Expires March 14, 2017                [Page 92]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5149,7 +5205,7 @@ A.3.1.  Key Exchange Messages
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 92]
+Rescorla                 Expires March 14, 2017                [Page 93]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5205,7 +5261,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 93]
+Rescorla                 Expires March 14, 2017                [Page 94]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5261,7 +5317,7 @@ A.3.1.2.  Signature Algorithm Extension
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 94]
+Rescorla                 Expires March 14, 2017                [Page 95]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5317,7 +5373,7 @@ A.3.1.3.  Supported Groups Extension
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 95]
+Rescorla                 Expires March 14, 2017                [Page 96]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5373,7 +5429,7 @@ A.3.2.  Server Parameters Messages
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 96]
+Rescorla                 Expires March 14, 2017                [Page 97]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5429,7 +5485,7 @@ A.3.4.  Ticket Establishment
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 97]
+Rescorla                 Expires March 14, 2017                [Page 98]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5485,7 +5541,7 @@ A.4.  Cipher Suites
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 98]
+Rescorla                 Expires March 14, 2017                [Page 99]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5541,7 +5597,7 @@ A.4.1.  Unauthenticated Operation
 
 
 
-Rescorla                 Expires March 10, 2017                [Page 99]
+Rescorla                 Expires March 14, 2017               [Page 100]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5597,7 +5653,7 @@ B.4.  Cipher Suite Support
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 100]
+Rescorla                 Expires March 14, 2017               [Page 101]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5653,7 +5709,7 @@ B.5.  Implementation Pitfalls
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 101]
+Rescorla                 Expires March 14, 2017               [Page 102]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5709,7 +5765,7 @@ Appendix C.  Backward Compatibility
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 102]
+Rescorla                 Expires March 14, 2017               [Page 103]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5765,7 +5821,7 @@ C.1.  Negotiating with an older server
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 103]
+Rescorla                 Expires March 14, 2017               [Page 104]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5821,7 +5877,7 @@ C.3.  Zero-RTT backwards compatibility
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 104]
+Rescorla                 Expires March 14, 2017               [Page 105]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5877,7 +5933,7 @@ C.4.  Backwards Compatibility Security Restrictions
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 105]
+Rescorla                 Expires March 14, 2017               [Page 106]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5933,7 +5989,7 @@ D.1.  Handshake
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 106]
+Rescorla                 Expires March 14, 2017               [Page 107]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -5989,7 +6045,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 107]
+Rescorla                 Expires March 14, 2017               [Page 108]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6045,7 +6101,7 @@ D.2.  Record Layer
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 108]
+Rescorla                 Expires March 14, 2017               [Page 109]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6101,7 +6157,7 @@ Appendix E.  Working Group Information
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 109]
+Rescorla                 Expires March 14, 2017               [Page 110]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6157,7 +6213,7 @@ Appendix F.  Contributors
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 110]
+Rescorla                 Expires March 14, 2017               [Page 111]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6213,7 +6269,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 111]
+Rescorla                 Expires March 14, 2017               [Page 112]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6269,7 +6325,7 @@ Internet-Draft                     TLS                    September 2016
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 112]
+Rescorla                 Expires March 14, 2017               [Page 113]
 
 Internet-Draft                     TLS                    September 2016
 
@@ -6325,4 +6381,4 @@ Author's Address
 
 
 
-Rescorla                 Expires March 10, 2017               [Page 113]
+Rescorla                 Expires March 14, 2017               [Page 114]
