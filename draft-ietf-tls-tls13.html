@@ -1349,13 +1349,13 @@ Subsequent Handshake:
        ecdsa_secp521r1_sha512 (0x0603),
 
        /* RSASSA-PSS algorithms */
-       rsa_pss_sha256 (0x0700),
-       rsa_pss_sha384 (0x0701),
-       rsa_pss_sha512 (0x0702),
+       rsa_pss_sha256 (0x0804),
+       rsa_pss_sha384 (0x0805),
+       rsa_pss_sha512 (0x0806),
 
        /* EdDSA algorithms */
-       ed25519 (0x0703),
-       ed448 (0x0704),
+       ed25519 (0x0807),
+       ed448 (0x0808),
 
        /* Reserved Code Points */
        private_use (0xFE00..0xFFFF),
@@ -2624,9 +2624,9 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p/>
 
 <ul>
-  <li>TLS SignatureScheme Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms">Section 4.2.3</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li>
+  <li>TLS SignatureScheme Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. Values with the first byte in the range 0-6 or with the second byte in the range 0-3 that are not currently allocated are reserved for backwards compatibility.  This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms">Section 4.2.3</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li>
 </ul>
-<p id="rfc.section.10.p.7">Finally, this document obsoletes a registry originally created in <a href="#RFC5246">[RFC5246]</a>.  IANA [shall/has] updated it to list values 7-223 as &#8220;Reserved&#8221;.</p>
+<p id="rfc.section.10.p.7">Finally, this document obsoletes the TLS HashAlgorithm Registry and the TLS SignatureAlgorithm Registry, both originally created in <a href="#RFC5246">[RFC5246]</a>.  IANA [SHALL update/has updated] the TLS HashAlgorithm Registry to list values 7-223 as &#8220;Reserved&#8221; and the TLS SignatureAlgorithm Registry to list values 4-233 as &#8220;Reserved&#8221;.</p>
 <h1 id="rfc.references"><a href="#rfc.references">11.</a> References</h1>
 <h2 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h2>
 <table>
@@ -3402,13 +3402,13 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
        ecdsa_secp521r1_sha512 (0x0603),
 
        /* RSASSA-PSS algorithms */
-       rsa_pss_sha256 (0x0700),
-       rsa_pss_sha384 (0x0701),
-       rsa_pss_sha512 (0x0702),
+       rsa_pss_sha256 (0x0804),
+       rsa_pss_sha384 (0x0805),
+       rsa_pss_sha512 (0x0806),
 
        /* EdDSA algorithms */
-       ed25519 (0x0703),
-       ed448 (0x0704),
+       ed25519 (0x0807),
+       ed448 (0x0808),
 
        /* Reserved Code Points */
        dsa_sha1_RESERVED (0x0202),
