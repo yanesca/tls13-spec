@@ -1568,7 +1568,6 @@ Subsequent Handshake:
 <ul>
   <li>The TLS version number, AEAD algorithm, and the hash for HKDF.</li>
   <li>The selected ALPN <a href="#RFC7443">[RFC7443]</a> value, if any.</li>
-  <li>The server_name <a href="#RFC6066">[RFC6066]</a> value provided by the client, if any.</li>
 </ul>
 <p id="rfc.section.4.2.7.p.11">Future extensions MUST define their interaction with 0-RTT.</p>
 <p id="rfc.section.4.2.7.p.12">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
