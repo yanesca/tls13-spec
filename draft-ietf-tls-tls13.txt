@@ -2201,9 +2201,11 @@ Internet-Draft                     TLS                    September 2016
 
    client_shares  A list of offered KeyShareEntry values in descending
       order of client preference.  This vector MAY be empty if the
-      client is requesting a HelloRetryRequest.  The ordering of values
-      here SHOULD match that of the ordering of offered support in the
-      "supported_groups" extension.
+      client is requesting a HelloRetryRequest.  Each KeyShareEntry
+      value MUST correspond to a group offered in the "supported_groups"
+      extension and MUST appear in the same order.  However, the values
+      MAY be a non-contiguous subset of the "supported_groups" extension
+      and MAY omit the most preferred groups.
 
    selected_group  The mutually supported group the server intends to
       negotiate and is requesting a retried ClientHello/KeyShare for.
@@ -2231,8 +2233,6 @@ Internet-Draft                     TLS                    September 2016
    these checks fails, then the client MUST abort the handshake with an
    "illegal_parameter" alert.  Otherwise, when sending the new
    ClientHello, the client MUST append a new KeyShareEntry for the group
-   indicated in the selected_group field to the groups in its original
-   KeyShare.  The remaining KeyShareEntry values MUST be preserved.
 
 
 
@@ -2241,6 +2241,9 @@ Rescorla                 Expires March 25, 2017                [Page 40]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   indicated in the selected_group field to the groups in its original
+   KeyShare.  The remaining KeyShareEntry values MUST be preserved.
 
    Note that a HelloRetryRequest might not include the "key_share"
    extension if other extensions are sent, such as if the server is only
@@ -2287,9 +2290,6 @@ Internet-Draft                     TLS                    September 2016
    specify only a single point format.  All curves currently specified
    in this document MUST only be used with the uncompressed point format
    (the format for all ECDH functions is considered uncompressed).
-
-
-
 
 
 
