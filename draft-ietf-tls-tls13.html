@@ -1452,7 +1452,7 @@ Subsequent Handshake:
 
            case server_hello:
                KeyShareEntry server_share;
-       }
+       };
    } KeyShare;
 </pre>
 <p/>
@@ -1500,7 +1500,7 @@ Subsequent Handshake:
 
            case server_hello:
                uint16 selected_identity;
-       }
+       };
    } PreSharedKeyExtension;
 </pre>
 <p/>
@@ -1541,8 +1541,8 @@ Subsequent Handshake:
                uint32 obfuscated_ticket_age;
 
            case server_hello:
-              struct {};
-       }
+               struct {};
+       };
    } EarlyDataIndication;
 </pre>
 <p/>
@@ -1847,7 +1847,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.3.p.5">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages">Section 4.4</a> using HKDF (see <a href="#key-schedule">Section 7.1</a>). Specifically:</p>
 <pre>
 finished_key =
-    HKDF-Expand-Label(BaseKey, "finished", "", Hash.Length)
+    HKDF-Expand-Label(BaseKey, "finished", "", Hash.length)
 </pre>
 <p id="rfc.section.4.4.3.p.6">Structure of this message:</p>
 <pre>
@@ -1880,29 +1880,29 @@ finished_key =
 <pre>
    resumption_psk = HKDF-Expand-Label(
                         resumption_secret,
-                        "resumption psk", "", Hash.Length)
+                        "resumption psk", "", Hash.length)
 
    resumption_context = HKDF-Expand-Label(
                             resumption_secret,
-                            "resumption context", "", Hash.Length)
+                            "resumption context", "", Hash.length)
 </pre>
-<p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.6</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.  For handshakes that do not use a resumption_psk, the resumption_context is a string of Hash.Length zeroes. [[Note: this will not be safe if/when we add additional server signatures with PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]</p>
+<p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.6</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.  For handshakes that do not use a resumption_psk, the resumption_context is a string of Hash.length zeroes. [[Note: this will not be safe if/when we add additional server signatures with PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]</p>
 <p id="rfc.section.4.5.1.p.3">Any ticket MUST only be resumed with a cipher suite that is identical to that negotiated connection where the ticket was established.</p>
 <pre>
- enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
+   enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
- struct {
-     TicketExtensionType extension_type;
-     opaque extension_data&lt;1..2^16-1&gt;;
- } TicketExtension;
+   struct {
+       TicketExtensionType extension_type;
+       opaque extension_data&lt;1..2^16-1&gt;;
+   } TicketExtension;
 
- struct {
-     uint32 ticket_lifetime;
-     PskKeyExchangeMode ke_modes&lt;1..255&gt;;
-     PskAuthenticationMode auth_modes&lt;1..255&gt;;
-     opaque ticket&lt;1..2^16-1&gt;;
-     TicketExtension extensions&lt;0..2^16-2&gt;;
- } NewSessionTicket;
+   struct {
+       uint32 ticket_lifetime;
+       PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+       PskAuthenticationMode auth_modes&lt;1..255&gt;;
+       opaque ticket&lt;1..2^16-1&gt;;
+       TicketExtension extensions&lt;0..2^16-2&gt;;
+   } NewSessionTicket;
 </pre>
 <p/>
 
@@ -2002,7 +2002,7 @@ finished_key =
    } TLSInnerPlaintext;
 
    struct {
-       ContentType opaque_type = application_data(23); /* see fragment.type */
+       ContentType opaque_type = application_data(23); /* see TLSInnerPlaintext.type */
        ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
@@ -2018,7 +2018,7 @@ finished_key =
   <dt>zeros</dt>
   <dd style="margin-left: 8">An arbitrary-length run of zero-valued bytes may appear in the cleartext after the type field.  This provides an opportunity for senders to pad any TLS record by a chosen amount as long as the total stays within record size limits.  See <a href="#record-padding">Section 5.4</a> for more details.</dd>
   <dt>opaque_type</dt>
-  <dd style="margin-left: 8">The outer opaque_type field of a TLSCiphertext record is always set to the value 23 (application_data) for outward compatibility with middleboxes accustomed to parsing previous versions of TLS.  The actual content type of the record is found in fragment.type after decryption.</dd>
+  <dd style="margin-left: 8">The outer opaque_type field of a TLSCiphertext record is always set to the value 23 (application_data) for outward compatibility with middleboxes accustomed to parsing previous versions of TLS.  The actual content type of the record is found in TLSInnerPlaintext.type after decryption.</dd>
   <dt>legacy_record_version</dt>
   <dd style="margin-left: 8">The legacy_record_version field is identical to TLSPlaintext.legacy_record_version and is always { 3, 1 }.  Note that the handshake protocol including the ClientHello and ServerHello messages authenticates the protocol version, so this value is redundant.</dd>
   <dt>length</dt>
@@ -2056,7 +2056,7 @@ finished_key =
 <h2 id="rfc.section.5.4"><a href="#rfc.section.5.4">5.4.</a> <a href="#record-padding" id="record-padding">Record Padding</a></h2>
 <p id="rfc.section.5.4.p.1">All encrypted TLS records can be padded to inflate the size of the TLSCipherText.  This allows the sender to hide the size of the traffic from an observer.</p>
 <p id="rfc.section.5.4.p.2">When generating a TLSCiphertext record, implementations MAY choose to pad.  An unpadded record is just a record with a padding length of zero.  Padding is a string of zero-valued bytes appended to the ContentType field before encryption.  Implementations MUST set the padding octets to all zeros before encrypting.</p>
-<p id="rfc.section.5.4.p.3">Application Data records may contain a zero-length fragment.content if the sender desires.  This permits generation of plausibly-sized cover traffic in contexts where the presence or absence of activity may be sensitive.  Implementations MUST NOT send Handshake or Alert records that have a zero-length fragment.content.</p>
+<p id="rfc.section.5.4.p.3">Application Data records may contain a zero-length TLSInnerPlaintext.content if the sender desires.  This permits generation of plausibly-sized cover traffic in contexts where the presence or absence of activity may be sensitive.  Implementations MUST NOT send Handshake or Alert records that have a zero-length TLSInnerPlaintext.content.</p>
 <p id="rfc.section.5.4.p.4">The padding sent is automatically verified by the record protection mechanism: Upon successful decryption of a TLSCiphertext.fragment, the receiving implementation scans the field from the end toward the beginning until it finds a non-zero octet. This non-zero octet is the content type of the message.  This padding scheme was selected because it allows padding of any encrypted TLS record by an arbitrary size (from zero up to TLS record size limits) without introducing new content types.  The design also enforces all-zero padding octets, which allows for quick detection of padding errors.</p>
 <p id="rfc.section.5.4.p.5">Implementations MUST limit their scanning to the cleartext returned from the AEAD decryption.  If a receiving implementation does not find a non-zero octet in the cleartext, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
@@ -2207,9 +2207,9 @@ finished_key =
     Derive-Secret(Secret, Label, Messages) =
          HKDF-Expand-Label(Secret, Label,
                            Hash(Messages) +
-                           Hash(resumption_context), Hash.Length)
+                           Hash(resumption_context), Hash.length)
 </pre>
-<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash algorithm.  Hash.Length is its output length.</p>
+<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash algorithm.  Hash.length is its output length.</p>
 <p id="rfc.section.7.1.p.3">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of zeroes as long as the size of the Hash that is the basis for the HKDF. Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p/>
 
@@ -2279,7 +2279,7 @@ finished_key =
 <pre>
     traffic_secret_N+1 = HKDF-Expand-Label(
                              traffic_secret_N,
-                             "application traffic secret", "", Hash.Length)
+                             "application traffic secret", "", Hash.length)
 </pre>
 <p id="rfc.section.7.2.p.3">Once client/server_traffic_secret_N+1 and its associated traffic keys have been computed, implementations SHOULD delete client_/server_traffic_secret_N and its associated traffic keys.</p>
 <h2 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#traffic-key-calculation" id="traffic-key-calculation">Traffic Key Calculation</a></h2>
@@ -3188,7 +3188,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
    } TLSInnerPlaintext;
 
    struct {
-       ContentType opaque_type = application_data(23); /* see fragment.type */
+       ContentType opaque_type = application_data(23); /* see TLSInnerPlaintext.type */
        ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
@@ -3343,7 +3343,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 
            case server_hello:
                KeyShareEntry server_share;
-       }
+       };
    } KeyShare;
 
    enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
@@ -3362,7 +3362,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 
            case server_hello:
                uint16 selected_identity;
-       }
+       };
    } PreSharedKeyExtension;
 
    struct {
@@ -3371,8 +3371,8 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
                uint32 obfuscated_ticket_age;
 
            case server_hello:
-              struct {};
-       }
+               struct {};
+       };
    } EarlyDataIndication;
 </pre>
 <h4 id="rfc.appendix.A.3.1.1"><a href="#rfc.appendix.A.3.1.1">A.3.1.1.</a> <a href="#version-extension" id="version-extension">Version Extension</a></h4>
@@ -3495,20 +3495,20 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </pre>
 <h3 id="rfc.appendix.A.3.4"><a href="#rfc.appendix.A.3.4">A.3.4.</a> <a href="#ticket-establishment" id="ticket-establishment">Ticket Establishment</a></h3>
 <pre>
- enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
+   enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
- struct {
-     TicketExtensionType extension_type;
-     opaque extension_data&lt;1..2^16-1&gt;;
- } TicketExtension;
+   struct {
+       TicketExtensionType extension_type;
+       opaque extension_data&lt;1..2^16-1&gt;;
+   } TicketExtension;
 
- struct {
-     uint32 ticket_lifetime;
-     PskKeyExchangeMode ke_modes&lt;1..255&gt;;
-     PskAuthenticationMode auth_modes&lt;1..255&gt;;
-     opaque ticket&lt;1..2^16-1&gt;;
-     TicketExtension extensions&lt;0..2^16-2&gt;;
- } NewSessionTicket;
+   struct {
+       uint32 ticket_lifetime;
+       PskKeyExchangeMode ke_modes&lt;1..255&gt;;
+       PskAuthenticationMode auth_modes&lt;1..255&gt;;
+       opaque ticket&lt;1..2^16-1&gt;;
+       TicketExtension extensions&lt;0..2^16-2&gt;;
+   } NewSessionTicket;
 </pre>
 <h3 id="rfc.appendix.A.3.5"><a href="#rfc.appendix.A.3.5">A.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
 <pre>

@@ -2196,7 +2196,7 @@ Internet-Draft                     TLS                    September 2016
 
               case server_hello:
                   KeyShareEntry server_share;
-          }
+          };
       } KeyShare;
 
    client_shares  A list of offered KeyShareEntry values in descending
@@ -2331,7 +2331,7 @@ Internet-Draft                     TLS                    September 2016
 
             case server_hello:
                 uint16 selected_identity;
-        }
+        };
     } PreSharedKeyExtension;
 
    identities  A list of the identities (labels for keys) that the
@@ -2416,8 +2416,8 @@ Internet-Draft                     TLS                    September 2016
                   uint32 obfuscated_ticket_age;
 
               case server_hello:
-                 struct {};
-          }
+                  struct {};
+          };
       } EarlyDataIndication;
 
    obfuscated_ticket_age  The time since the client learned about the
@@ -3154,7 +3154,7 @@ Internet-Draft                     TLS                    September 2016
    Specifically:
 
    finished_key =
-       HKDF-Expand-Label(BaseKey, "finished", "", Hash.Length)
+       HKDF-Expand-Label(BaseKey, "finished", "", Hash.length)
 
    Structure of this message:
 
@@ -3219,11 +3219,11 @@ Internet-Draft                     TLS                    September 2016
 
       resumption_psk = HKDF-Expand-Label(
                            resumption_secret,
-                           "resumption psk", "", Hash.Length)
+                           "resumption psk", "", Hash.length)
 
       resumption_context = HKDF-Expand-Label(
                                resumption_secret,
-                               "resumption context", "", Hash.Length)
+                               "resumption context", "", Hash.length)
 
    The client MAY use this PSK for future handshakes by including the
    ticket value in the "pre_shared_key" extension in its ClientHello
@@ -3234,7 +3234,7 @@ Internet-Draft                     TLS                    September 2016
    client authentication state.  Clients SHOULD attempt to use each
    ticket no more than once, with more recent tickets being used first.
    For handshakes that do not use a resumption_psk, the
-   resumption_context is a string of Hash.Length zeroes.  [[Note: this
+   resumption_context is a string of Hash.length zeroes.  [[Note: this
    will not be safe if/when we add additional server signatures with
    PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]
 
@@ -3250,20 +3250,20 @@ Rescorla                 Expires March 25, 2017                [Page 58]
 Internet-Draft                     TLS                    September 2016
 
 
-    enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
+      enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
-    struct {
-        TicketExtensionType extension_type;
-        opaque extension_data<1..2^16-1>;
-    } TicketExtension;
+      struct {
+          TicketExtensionType extension_type;
+          opaque extension_data<1..2^16-1>;
+      } TicketExtension;
 
-    struct {
-        uint32 ticket_lifetime;
-        PskKeyExchangeMode ke_modes<1..255>;
-        PskAuthenticationMode auth_modes<1..255>;
-        opaque ticket<1..2^16-1>;
-        TicketExtension extensions<0..2^16-2>;
-    } NewSessionTicket;
+      struct {
+          uint32 ticket_lifetime;
+          PskKeyExchangeMode ke_modes<1..255>;
+          PskAuthenticationMode auth_modes<1..255>;
+          opaque ticket<1..2^16-1>;
+          TicketExtension extensions<0..2^16-2>;
+      } NewSessionTicket;
 
    ke_modes  The key exchange modes with which this ticket can be used
       in descending order of server preference.
@@ -3511,7 +3511,7 @@ Internet-Draft                     TLS                    September 2016
    } TLSInnerPlaintext;
 
    struct {
-       ContentType opaque_type = application_data(23); /* see fragment.type */
+       ContentType opaque_type = application_data(23); /* see TLSInnerPlaintext.type */
        ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
@@ -3540,7 +3540,7 @@ Internet-Draft                     TLS                    September 2016
       always set to the value 23 (application_data) for outward
       compatibility with middleboxes accustomed to parsing previous
       versions of TLS.  The actual content type of the record is found
-      in fragment.type after decryption.
+      in TLSInnerPlaintext.type after decryption.
 
    legacy_record_version  The legacy_record_version field is identical
       to TLSPlaintext.legacy_record_version and is always { 3, 1 }.
@@ -3657,11 +3657,12 @@ Internet-Draft                     TLS                    September 2016
    ContentType field before encryption.  Implementations MUST set the
    padding octets to all zeros before encrypting.
 
-   Application Data records may contain a zero-length fragment.content
-   if the sender desires.  This permits generation of plausibly-sized
-   cover traffic in contexts where the presence or absence of activity
-   may be sensitive.  Implementations MUST NOT send Handshake or Alert
-   records that have a zero-length fragment.content.
+   Application Data records may contain a zero-length
+   TLSInnerPlaintext.content if the sender desires.  This permits
+   generation of plausibly-sized cover traffic in contexts where the
+   presence or absence of activity may be sensitive.  Implementations
+   MUST NOT send Handshake or Alert records that have a zero-length
+   TLSInnerPlaintext.content.
 
    The padding sent is automatically verified by the record protection
    mechanism: Upon successful decryption of a TLSCiphertext.fragment,
@@ -3688,8 +3689,7 @@ Internet-Draft                     TLS                    September 2016
    application layer.  Padding for encrypted handshake and alert TLS
    records must still be handled at the TLS layer, though.  Later
    documents may define padding selection algorithms, or define a
-   padding policy request mechanism through TLS extensions or some other
-   means.
+
 
 
 
@@ -3697,6 +3697,9 @@ Rescorla                 Expires March 25, 2017                [Page 66]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   padding policy request mechanism through TLS extensions or some other
+   means.
 
 5.5.  Limits on Key Usage
 
@@ -3738,9 +3741,6 @@ Internet-Draft                     TLS                    September 2016
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
-
-
-
 
 
 
@@ -4051,10 +4051,10 @@ Internet-Draft                     TLS                    September 2016
        Derive-Secret(Secret, Label, Messages) =
             HKDF-Expand-Label(Secret, Label,
                               Hash(Messages) +
-                              Hash(resumption_context), Hash.Length)
+                              Hash(resumption_context), Hash.length)
 
    The Hash function and the HKDF hash are the cipher suite hash
-   algorithm.  Hash.Length is its output length.
+   algorithm.  Hash.length is its output length.
 
    Given a set of n InputSecrets, the final "master secret" is computed
    by iteratively invoking HKDF-Extract with InputSecret_1,
@@ -4170,7 +4170,7 @@ Internet-Draft                     TLS                    September 2016
 
     traffic_secret_N+1 = HKDF-Expand-Label(
                              traffic_secret_N,
-                             "application traffic secret", "", Hash.Length)
+                             "application traffic secret", "", Hash.length)
 
    Once client/server_traffic_secret_N+1 and its associated traffic keys
    have been computed, implementations SHOULD delete client_/
@@ -5186,7 +5186,7 @@ A.1.  Record Layer
    } TLSInnerPlaintext;
 
    struct {
-       ContentType opaque_type = application_data(23); /* see fragment.type */
+       ContentType opaque_type = application_data(23); /* see TLSInnerPlaintext.type */
        ProtocolVersion legacy_record_version = { 3, 1 };    /* TLS v1.x */
        uint16 length;
        opaque encrypted_record[length];
@@ -5383,7 +5383,7 @@ Internet-Draft                     TLS                    September 2016
 
             case server_hello:
                 KeyShareEntry server_share;
-        }
+        };
     } KeyShare;
 
     enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
@@ -5402,7 +5402,7 @@ Internet-Draft                     TLS                    September 2016
 
             case server_hello:
                 uint16 selected_identity;
-        }
+        };
     } PreSharedKeyExtension;
 
     struct {
@@ -5411,8 +5411,8 @@ Internet-Draft                     TLS                    September 2016
                 uint32 obfuscated_ticket_age;
 
             case server_hello:
-               struct {};
-        }
+                struct {};
+        };
     } EarlyDataIndication;
 
 A.3.1.1.  Version Extension
@@ -5602,20 +5602,20 @@ Rescorla                 Expires March 25, 2017               [Page 100]
 Internet-Draft                     TLS                    September 2016
 
 
-    enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
+      enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
-    struct {
-        TicketExtensionType extension_type;
-        opaque extension_data<1..2^16-1>;
-    } TicketExtension;
+      struct {
+          TicketExtensionType extension_type;
+          opaque extension_data<1..2^16-1>;
+      } TicketExtension;
 
-    struct {
-        uint32 ticket_lifetime;
-        PskKeyExchangeMode ke_modes<1..255>;
-        PskAuthenticationMode auth_modes<1..255>;
-        opaque ticket<1..2^16-1>;
-        TicketExtension extensions<0..2^16-2>;
-    } NewSessionTicket;
+      struct {
+          uint32 ticket_lifetime;
+          PskKeyExchangeMode ke_modes<1..255>;
+          PskAuthenticationMode auth_modes<1..255>;
+          opaque ticket<1..2^16-1>;
+          TicketExtension extensions<0..2^16-2>;
+      } NewSessionTicket;
 
 A.3.5.  Updating Keys
 
