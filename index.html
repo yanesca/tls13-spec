@@ -1459,7 +1459,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>client_shares</dt>
-  <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a group offered in the &#8220;supported_groups&#8221; extension and MUST appear in the same order.  However, the values MAY be a non-contiguous subset of the &#8220;supported_groups&#8221; extension and MAY omit the most preferred groups.</dd>
+  <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  The ordering of values here SHOULD match that of the ordering of offered support in the &#8220;supported_groups&#8221; extension.</dd>
   <dt>selected_group</dt>
   <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
   <dt>server_share</dt>
