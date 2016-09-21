@@ -102,7 +102,7 @@ Table of Contents
        4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  31
      4.2.  Hello Extensions  . . . . . . . . . . . . . . . . . . . .  32
        4.2.1.  Supported Versions  . . . . . . . . . . . . . . . . .  34
-       4.2.2.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  34
+       4.2.2.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  35
        4.2.3.  Signature Algorithms  . . . . . . . . . . . . . . . .  35
        4.2.4.  Negotiated Groups . . . . . . . . . . . . . . . . . .  38
        4.2.5.  Key Share . . . . . . . . . . . . . . . . . . . . . .  39
@@ -1888,6 +1888,27 @@ Internet-Draft                     TLS                    September 2016
    server's selected version is contained in the ServerHello.version
    field as in previous versions of TLS.
 
+4.2.1.1.  Draft Version Indicator
+
+   RFC EDITOR: PLEASE REMOVE THIS SECTION
+
+   While the eventual version indicator for the RFC version of TLS 1.3
+   will be {3, 4}, implementations of draft versions of this
+   specification SHOULD instead advertise {0x7f, [draft-version]} in
+   their "supported_versions" extension, in ServerHello.version, and
+   HelloRetryRequest.server_version.  This allows pre-RFC
+
+
+
+
+Rescorla                 Expires March 25, 2017                [Page 34]
+
+Internet-Draft                     TLS                    September 2016
+
+
+   implementations to safely negotiate with each other, even if they
+   would otherwise be incompatible.
+
 4.2.2.  Cookie
 
       struct {
@@ -1898,14 +1919,6 @@ Internet-Draft                     TLS                    September 2016
 
    -  Allowing the server to force the client to demonstrate
       reachability at their apparent network address (thus providing a
-
-
-
-Rescorla                 Expires March 25, 2017                [Page 34]
-
-Internet-Draft                     TLS                    September 2016
-
-
       measure of DoS protection).  This is primarily useful for non-
       connection-oriented transports (see [RFC6347] for an example of
       this).
@@ -1937,19 +1950,6 @@ Internet-Draft                     TLS                    September 2016
 
    The "extension_data" field of this extension in a ClientHello
    contains a "supported_signature_algorithms" value:
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
