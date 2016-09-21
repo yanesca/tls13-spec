@@ -347,7 +347,6 @@ li, p {
 <link href="#rfc.appendix.A.3.4" rel="Chapter" title="A.3.4 Ticket Establishment"/>
 <link href="#rfc.appendix.A.3.5" rel="Chapter" title="A.3.5 Updating Keys"/>
 <link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Cipher Suites"/>
-<link href="#rfc.appendix.A.4.1" rel="Chapter" title="A.4.1 Unauthenticated Operation"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B Implementation Notes"/>
 <link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 API considerations for 0-RTT"/>
 <link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Random Number Generation and Seeding"/>
@@ -355,6 +354,7 @@ li, p {
 <link href="#rfc.appendix.B.4" rel="Chapter" title="B.4 Cipher Suite Support"/>
 <link href="#rfc.appendix.B.5" rel="Chapter" title="B.5 Implementation Pitfalls"/>
 <link href="#rfc.appendix.B.6" rel="Chapter" title="B.6 Client Tracking Prevention"/>
+<link href="#rfc.appendix.B.7" rel="Chapter" title="B.7 Unauthenticated Operation"/>
 <link href="#rfc.appendix.C" rel="Chapter" title="C Backward Compatibility"/>
 <link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Negotiating with an older server"/>
 <link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Negotiating with an older client"/>
@@ -526,14 +526,14 @@ li, p {
 <li>A.3.4.   <a href="#rfc.appendix.A.3.4">Ticket Establishment</a></li>
 <li>A.3.5.   <a href="#rfc.appendix.A.3.5">Updating Keys</a></li>
 </ul><li>A.4.   <a href="#rfc.appendix.A.4">Cipher Suites</a></li>
-<ul><li>A.4.1.   <a href="#rfc.appendix.A.4.1">Unauthenticated Operation</a></li>
-</ul></ul><li>Appendix B.   <a href="#rfc.appendix.B">Implementation Notes</a></li>
+</ul><li>Appendix B.   <a href="#rfc.appendix.B">Implementation Notes</a></li>
 <ul><li>B.1.   <a href="#rfc.appendix.B.1">API considerations for 0-RTT</a></li>
 <li>B.2.   <a href="#rfc.appendix.B.2">Random Number Generation and Seeding</a></li>
 <li>B.3.   <a href="#rfc.appendix.B.3">Certificates and Authentication</a></li>
 <li>B.4.   <a href="#rfc.appendix.B.4">Cipher Suite Support</a></li>
 <li>B.5.   <a href="#rfc.appendix.B.5">Implementation Pitfalls</a></li>
 <li>B.6.   <a href="#rfc.appendix.B.6">Client Tracking Prevention</a></li>
+<li>B.7.   <a href="#rfc.appendix.B.7">Unauthenticated Operation</a></li>
 </ul><li>Appendix C.   <a href="#rfc.appendix.C">Backward Compatibility</a></li>
 <ul><li>C.1.   <a href="#rfc.appendix.C.1">Negotiating with an older server</a></li>
 <li>C.2.   <a href="#rfc.appendix.C.2">Negotiating with an older client</a></li>
@@ -3584,15 +3584,6 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p id="rfc.section.A.4.p.3">The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and AEAD_AES_128_CCM are defined in <a href="#RFC5116">[RFC5116]</a>. AEAD_CHACHA20_POLY1305 is defined in <a href="#RFC7539">[RFC7539]</a>. AEAD_AES_128_CCM_8 is defined in <a href="#RFC6655">[RFC6655]</a>. The corresponding hash algorithms are defined in <a href="#SHS">[SHS]</a>.</p>
 <p id="rfc.section.A.4.p.4">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot it be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
 <p id="rfc.section.A.4.p.5">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
-<h3 id="rfc.appendix.A.4.1"><a href="#rfc.appendix.A.4.1">A.4.1.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h3>
-<p id="rfc.section.A.4.1.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These cipher suites have been deprecated in TLS 1.3. However, it is still possible to negotiate cipher suites that do not provide verifiable server authentication by several methods, including:</p>
-<p/>
-
-<ul>
-  <li>Raw public keys <a href="#RFC7250">[RFC7250]</a>.</li>
-  <li>Using a public key contained in a certificate but without validation of the certificate chain or any of its contents.</li>
-</ul>
-<p id="rfc.section.A.4.1.p.3">Either technique used alone is vulnerable to man-in-the-middle attacks and therefore unsafe for general use. However, it is also possible to bind such connections to an external authentication mechanism via out-of-band validation of the server&#8217;s public key, trust on first use, or channel bindings <a href="#RFC5929">[RFC5929]</a>. [[NOTE: TLS 1.3 needs a new channel binding definition that has not yet been defined.]] If no such mechanism is used, then the connection has no protection against active man-in-the-middle attack; applications MUST NOT use TLS in such a way absent explicit configuration or a specific application profile.</p>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#implementation-notes" id="implementation-notes">Implementation Notes</a></h1>
 <p id="rfc.section.B.p.1">The TLS protocol cannot prevent many common security mistakes. This section provides several recommendations to assist implementors.</p>
 <h2 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#api-considerations-for-0-rtt" id="api-considerations-for-0-rtt">API considerations for 0-RTT</a></h2>
@@ -3631,6 +3622,15 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </ul>
 <h2 id="rfc.appendix.B.6"><a href="#rfc.appendix.B.6">B.6.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
 <p id="rfc.section.B.6.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>
+<h2 id="rfc.appendix.B.7"><a href="#rfc.appendix.B.7">B.7.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h2>
+<p id="rfc.section.B.7.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These modes have been deprecated in TLS 1.3.  However, it is still possible to negotiate parameters that do not provide verifiable server authentication by several methods, including:</p>
+<p/>
+
+<ul>
+  <li>Raw public keys <a href="#RFC7250">[RFC7250]</a>.</li>
+  <li>Using a public key contained in a certificate but without validation of the certificate chain or any of its contents.</li>
+</ul>
+<p id="rfc.section.B.7.p.3">Either technique used alone is vulnerable to man-in-the-middle attacks and therefore unsafe for general use. However, it is also possible to bind such connections to an external authentication mechanism via out-of-band validation of the server&#8217;s public key, trust on first use, or channel bindings <a href="#RFC5929">[RFC5929]</a>. [[NOTE: TLS 1.3 needs a new channel binding definition that has not yet been defined.]] If no such mechanism is used, then the connection has no protection against active man-in-the-middle attack; applications MUST NOT use TLS in such a way absent explicit configuration or a specific application profile.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#backward-compatibility" id="backward-compatibility">Backward Compatibility</a></h1>
 <p id="rfc.section.C.p.1">The TLS protocol provides a built-in mechanism for version negotiation between endpoints potentially supporting different versions of TLS.</p>
 <p id="rfc.section.C.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and the client supports the highest protocol version available in the server.</p>
