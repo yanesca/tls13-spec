@@ -1133,7 +1133,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>A list of cipher suites which indicates the AEAD cipher/HKDF hash pairs which the client supports.</li>
+  <li>A list of cipher suites which indicates the AEAD algorithm/HKDF hash pairs which the client supports.</li>
   <li>A &#8220;supported_group&#8221; (<a href="#negotiated-groups">Section 4.2.4</a>) extension which indicates the (EC)DHE groups which the client supports and a &#8220;key_share&#8221; (<a href="#key-share">Section 4.2.5</a>) extension which contains (EC)DHE shares for some or all of these groups.</li>
   <li>A &#8220;signature_algorithms&#8221; (<a href="#signature-algorithms">Section 4.2.3</a>) extension which indicates the signature algorithms which the client can accept.</li>
   <li>A &#8220;pre_shared_key&#8221; (<a href="#pre-shared-key-extension">Section 4.2.6</a>) extension which contains the identities of symmetric keys known to the client and the key exchange modes which each PSK supports.</li>
@@ -1365,7 +1365,7 @@ Subsequent Handshake:
    SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
 </pre>
 <p id="rfc.section.4.2.3.p.4">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
-<p id="rfc.section.4.2.3.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash function and then proceed as usual.  The code point groups listed above have the following meanings:</p>
+<p id="rfc.section.4.2.3.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
 <p/>
 
 <dl>
@@ -2027,9 +2027,9 @@ finished_key =
   <dt>encrypted_record</dt>
   <dd style="margin-left: 8">The AEAD encrypted form of the serialized TLSInnerPlaintext structure.</dd>
 </dl>
-<p id="rfc.section.5.2.p.3">AEAD ciphers take as input a single key, a nonce, a plaintext, and &#8220;additional data&#8221; to be included in the authentication check, as described in Section 2.1 of <a href="#RFC5116">[RFC5116]</a>. The key is either the client_write_key or the server_write_key, the nonce is derived from the sequence number (see <a href="#nonce">Section 5.3</a>) and the client_write_iv or server_write_iv, and the additional data input is empty (zero length).  Derivation of traffic keys is defined in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
+<p id="rfc.section.5.2.p.3">AEAD algorithms take as input a single key, a nonce, a plaintext, and &#8220;additional data&#8221; to be included in the authentication check, as described in Section 2.1 of <a href="#RFC5116">[RFC5116]</a>. The key is either the client_write_key or the server_write_key, the nonce is derived from the sequence number (see <a href="#nonce">Section 5.3</a>) and the client_write_iv or server_write_iv, and the additional data input is empty (zero length).  Derivation of traffic keys is defined in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
 <p id="rfc.section.5.2.p.4">The plaintext is the concatenation of TLSPlaintext.fragment, TLSPlaintext.type, and any padding bytes (zeros).</p>
-<p id="rfc.section.5.2.p.5">The AEAD output consists of the ciphertext output by the AEAD encryption operation. The length of the plaintext is greater than TLSPlaintext.length due to the inclusion of TLSPlaintext.type and however much padding is supplied by the sender.  The length of the AEAD output will generally be larger than the plaintext, but by an amount that varies with the AEAD cipher. Since the ciphers might incorporate padding, the amount of overhead could vary with different lengths of plaintext. Symbolically,</p>
+<p id="rfc.section.5.2.p.5">The AEAD output consists of the ciphertext output by the AEAD encryption operation. The length of the plaintext is greater than TLSPlaintext.length due to the inclusion of TLSPlaintext.type and however much padding is supplied by the sender.  The length of the AEAD output will generally be larger than the plaintext, but by an amount that varies with the AEAD algorithm. Since the ciphers might incorporate padding, the amount of overhead could vary with different lengths of plaintext. Symbolically,</p>
 <pre>
    AEADEncrypted =
        AEAD-Encrypt(write_key, nonce, plaintext of fragment)
@@ -2040,7 +2040,7 @@ finished_key =
        AEAD-Decrypt(write_key, nonce, AEADEncrypted)
 </pre>
 <p id="rfc.section.5.2.p.7">If the decryption fails, the receiver MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert.</p>
-<p id="rfc.section.5.2.p.8">An AEAD cipher MUST NOT produce an expansion of greater than 255 bytes.  An endpoint that receives a record from its peer with TLSCipherText.length larger than 2^14 + 256 octets MUST terminate the connection with a &#8220;record_overflow&#8221; alert.  This limit is derived from the maximum TLSPlaintext length of 2^14 octets + 1 octet for ContentType + the maximum AEAD expansion of 255 octets.</p>
+<p id="rfc.section.5.2.p.8">An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion of greater than 255 bytes.  An endpoint that receives a record from its peer with TLSCipherText.length larger than 2^14 + 256 octets MUST terminate the connection with a &#8220;record_overflow&#8221; alert.  This limit is derived from the maximum TLSPlaintext length of 2^14 octets + 1 octet for ContentType + the maximum AEAD expansion of 255 octets.</p>
 <h2 id="rfc.section.5.3"><a href="#rfc.section.5.3">5.3.</a> <a href="#nonce" id="nonce">Per-Record Nonce</a></h2>
 <p id="rfc.section.5.3.p.1">A 64-bit sequence number is maintained separately for reading and writing records.  Each sequence number is set to zero at the beginning of a connection and whenever the key is changed.</p>
 <p id="rfc.section.5.3.p.2">The sequence number is incremented after reading or writing each record.  The first record transmitted under a particular set of traffic keys record key MUST use sequence number 0.</p>
@@ -2206,7 +2206,7 @@ finished_key =
                            Hash(Messages) +
                            Hash(resumption_context), Hash.Length)
 </pre>
-<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash function.  Hash.Length is its output length.</p>
+<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash algorithm.  Hash.Length is its output length.</p>
 <p id="rfc.section.7.1.p.3">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of zeroes as long as the size of the Hash that is the basis for the HKDF. Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p/>
 
@@ -2408,7 +2408,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p/>
 
 <ul>
-  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL add/has added] a &#8220;Recommended&#8221; column to the cipher suite registry. All cipher suites listed in <a href="#cipher-suites">Appendix A.4</a> are marked as &#8220;Yes&#8221;. All other cipher suites are marked as &#8220;No&#8221;. IANA [SHALL add/has added] add a note to this column reading:  <ul class="empty"><li>Cipher suites marked as &#8220;Yes&#8221; are those allocated via Standards Track RFCs. Cipher suites marked as &#8220;No&#8221; are not; cipher suites marked &#8220;No&#8221; range from &#8220;good&#8221; to &#8220;bad&#8221; from a cryptographic standpoint.</li></ul></li>
+  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix A.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</a> has been applied.]]</li>
   <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>.</li>
   <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221;.</li>
@@ -2756,6 +2756,12 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC7539">[RFC7539]</b>
+      </td>
+      <td class="top"><a>Nir, Y.</a> and <a>A. Langley</a>, "<a href="http://tools.ietf.org/html/rfc7539">ChaCha20 and Poly1305 for IETF Protocols</a>", RFC 7539, DOI 10.17487/RFC7539, May 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC7748">[RFC7748]</b>
       </td>
       <td class="top"><a>Langley, A.</a>, <a>Hamburg, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/rfc7748">Elliptic Curves for Security</a>", RFC 7748, DOI 10.17487/RFC7748, January 2016.</td>
@@ -2848,6 +2854,12 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
         <b id="GCM">[GCM]</b>
       </td>
       <td class="top"><a>Dworkin, M.</a>, "<a>Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</a>", NIST Special Publication 800-38D, November 2007.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</b>
+      </td>
+      <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-sandj-tls-iana-registry-updates-00">D/TLS IANA Registry Updates</a>", Internet-Draft draft-sandj-tls-iana-registry-updates-00, September 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3504,9 +3516,9 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
  } KeyUpdate;
 </pre>
 <h2 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
-<p id="rfc.section.A.4.p.1">A symmetric cipher suite defines the pair of the AEAD cipher and hash function to be used with HKDF.  Cipher suite names follow the naming convention:</p>
+<p id="rfc.section.A.4.p.1">A symmetric cipher suite defines the pair of the AEAD algorithm and hash algorithm to be used with HKDF.  Cipher suite names follow the naming convention:</p>
 <pre>
-   CipherSuite TLS_CIPHER_HASH = VALUE;
+   CipherSuite TLS_AEAD_HASH = VALUE;
 </pre>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -3521,8 +3533,8 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
       <td class="left">The string &#8220;TLS&#8221;</td>
     </tr>
     <tr>
-      <td class="left">CIPHER</td>
-      <td class="left">The symmetric cipher used for record protection</td>
+      <td class="left">AEAD</td>
+      <td class="left">The AEAD algorithm used for record protection</td>
     </tr>
     <tr>
       <td class="left">HASH</td>
@@ -3534,45 +3546,40 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.A.4.p.2">The &#8220;CIPHER&#8221; component commonly has sub-components used to designate the cipher name, bits, and mode, if applicable. For example, &#8220;AES_256_GCM&#8221; represents 256-bit AES in the GCM mode of operation.</p>
+<p id="rfc.section.A.4.p.2">This specification defines the following cipher suites for use with TLS 1.3.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
-      <th class="left">Cipher Suite Name</th>
+      <th class="left">Description</th>
       <th class="left">Value</th>
-      <th class="left">Specification</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td class="left">TLS_AES_128_GCM_SHA256</td>
       <td class="left">{0x13,0x01}</td>
-      <td class="left">[This RFC]</td>
     </tr>
     <tr>
       <td class="left">TLS_AES_256_GCM_SHA384</td>
       <td class="left">{0x13,0x02}</td>
-      <td class="left">[This RFC]</td>
     </tr>
     <tr>
       <td class="left">TLS_CHACHA20_POLY1305_SHA256</td>
       <td class="left">{0x13,0x03}</td>
-      <td class="left">[This RFC]</td>
     </tr>
     <tr>
       <td class="left">TLS_AES_128_CCM_SHA256</td>
       <td class="left">{0x13,0x04}</td>
-      <td class="left">[This RFC]</td>
     </tr>
     <tr>
       <td class="left">TLS_AES_128_CCM_8_SHA256</td>
       <td class="left">{0x13,0x05}</td>
-      <td class="left">[This RFC]</td>
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.A.4.p.3">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot it be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
-<p id="rfc.section.A.4.p.4">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
+<p id="rfc.section.A.4.p.3">The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and AEAD_AES_128_CCM are defined in <a href="#RFC5116">[RFC5116]</a>. AEAD_CHACHA20_POLY1305 is defined in <a href="#RFC7539">[RFC7539]</a>. AEAD_AES_128_CCM_8 is defined in <a href="#RFC6655">[RFC6655]</a>. The corresponding hash algorithms are defined in <a href="#SHS">[SHS]</a>.</p>
+<p id="rfc.section.A.4.p.4">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot it be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
+<p id="rfc.section.A.4.p.5">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h3 id="rfc.appendix.A.4.1"><a href="#rfc.appendix.A.4.1">A.4.1.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h3>
 <p id="rfc.section.A.4.1.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These cipher suites have been deprecated in TLS 1.3. However, it is still possible to negotiate cipher suites that do not provide verifiable server authentication by several methods, including:</p>
 <p/>
@@ -3648,7 +3655,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p id="rfc.section.C.4.p.6">Implementations MUST NOT send or accept any records with a version less than { 3, 0 }.</p>
 <p id="rfc.section.C.4.p.7">The security of SSL 3.0 <a href="#SSL3">[SSL3]</a> is considered insufficient for the reasons enumerated in <a href="#RFC7568">[RFC7568]</a>, and MUST NOT be negotiated for any reason.</p>
 <p id="rfc.section.C.4.p.8">Implementations MUST NOT send a ClientHello.legacy_version or ServerHello.version set to { 3, 0 } or less. Any endpoint receiving a Hello message with ClientHello.legacy_version or ServerHello.version set to { 3, 0 } MUST abort the handshake with a &#8220;protocol_version&#8221; alert.</p>
-<p id="rfc.section.C.4.p.9">Implementations MUST NOT use the Truncated HMAC extension, defined in Section 7 of <a href="#RFC6066">[RFC6066]</a>, as it is not applicable to AEAD ciphers and has been shown to be insecure in some scenarios.</p>
+<p id="rfc.section.C.4.p.9">Implementations MUST NOT use the Truncated HMAC extension, defined in Section 7 of <a href="#RFC6066">[RFC6066]</a>, as it is not applicable to AEAD algorithms and has been shown to be insecure in some scenarios.</p>
 <h1 id="rfc.appendix.D"><a href="#rfc.appendix.D">Appendix D.</a> <a href="#security-analysis" id="security-analysis">Overview of Security Properties</a></h1>
 <p id="rfc.section.D.p.1">[[TODO: This section is still a WIP and needs a bunch more work.]]</p>
 <p id="rfc.section.D.p.2">A complete security analysis of TLS is outside the scope of this document.  In this section, we provide an informal description the desired properties as well as references to more detailed work in the research literature which provides more formal definitions.</p>
