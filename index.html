@@ -589,6 +589,13 @@ li, p {
 
 <ul>
   <li>Change RSASSA-PSS and EdDSA SignatureScheme codepoints for better backwards compatibility (*)</li>
+  <li>Move HelloRetryRequest.selected_group to an extension (*)</li>
+  <li>Clarify the behavior of no exporter context and make it the same as an empty context.(*)</li>
+  <li>New KeyUpdate format that allows for requesting/not-requesting an answer (*)</li>
+  <li>New certificate_required alert (*)</li>
+  <li>Renumbered SignatureSchemes because we had a conflict with a a reservation in RFC 5246 (*)</li>
+  <li>Forbid CertificateRequest with 0-RTT and PSK.</li>
+  <li>Relax requirement to check SNI for 0-RTT.</li>
 </ul>
 <p id="rfc.section.1.2.p.4">draft-15</p>
 <p/>
