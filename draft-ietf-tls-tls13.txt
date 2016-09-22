@@ -189,7 +189,7 @@ Internet-Draft                     TLS                    September 2016
      D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 111
    Appendix E.  Working Group Information  . . . . . . . . . . . . . 112
    Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 113
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 116
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 117
 
 1.  Introduction
 
@@ -6400,6 +6400,10 @@ Internet-Draft                     TLS                    September 2016
       Google
       agl@google.com
 
+   -  Xiaoyin Liu
+      University of North Carolina at Chapel Hill
+      xiaoyin.l@outlook.com
+
    -  Ilari Liusvaara
       Independent
       ilariliusvaara@welho.com
@@ -6430,10 +6434,6 @@ Internet-Draft                     TLS                    September 2016
 
    -  Marsh Ray (co-author of [RFC7627])
       Microsoft
-      maray@microsoft.com
-
-   -  Robert Relyea
-      Netscape Communications
 
 
 
@@ -6442,6 +6442,10 @@ Rescorla                 Expires March 26, 2017               [Page 115]
 Internet-Draft                     TLS                    September 2016
 
 
+      maray@microsoft.com
+
+   -  Robert Relyea
+      Netscape Communications
       relyea@netscape.com
 
    -  Kyle Rose
@@ -6484,6 +6488,16 @@ Internet-Draft                     TLS                    September 2016
       Vodafone
       timothy.wright@vodafone.com
 
+
+
+
+
+
+Rescorla                 Expires March 26, 2017               [Page 116]
+
+Internet-Draft                     TLS                    September 2016
+
+
 Author's Address
 
    Eric Rescorla
@@ -6493,4 +6507,46 @@ Author's Address
 
 
 
-Rescorla                 Expires March 26, 2017               [Page 116]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                 Expires March 26, 2017               [Page 117]
