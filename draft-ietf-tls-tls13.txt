@@ -318,9 +318,6 @@ Internet-Draft                     TLS                    September 2016
 
    -  New certificate_required alert (*)
 
-   -  Renumbered SignatureSchemes because we had a conflict with a a
-      reservation in RFC 5246 (*)
-
    -  Forbid CertificateRequest with 0-RTT and PSK.
 
    -  Relax requirement to check SNI for 0-RTT.
@@ -329,7 +326,10 @@ Internet-Draft                     TLS                    September 2016
 
    -  New negotiation syntax as discussed in Berlin (*)
 
+   -  Require CertificateRequest.context to be empty during handshake
+      (*)
 
+   -  Forbid empty tickets (*)
 
 
 
@@ -337,11 +337,6 @@ Rescorla                 Expires March 26, 2017                 [Page 6]
 
 Internet-Draft                     TLS                    September 2016
 
-
-   -  Require CertificateRequest.context to be empty during handshake
-      (*)
-
-   -  Forbid empty tickets (*)
 
    -  Forbid application data messages in between post-handshake
       messages from the same flight (*)
@@ -387,16 +382,17 @@ Internet-Draft                     TLS                    September 2016
 
    -  Clarify how 0-RTT and PSK identities interact.
 
+   -  Add a section describing the data limits for each cipher.
+
+   -  Major editorial restructuring.
+
+
 
 
 Rescorla                 Expires March 26, 2017                 [Page 7]
 
 Internet-Draft                     TLS                    September 2016
 
-
-   -  Add a section describing the data limits for each cipher.
-
-   -  Major editorial restructuring.
 
    -  Replace the Security Analysis section with a WIP draft.
 
@@ -443,16 +439,16 @@ Internet-Draft                     TLS                    September 2016
    -  Make the purpose strings lower-case.  This matches how people are
       implementing for interop.
 
+   -  Define exporters.
+
+   -  Editorial cleanup
+
 
 
 Rescorla                 Expires March 26, 2017                 [Page 8]
 
 Internet-Draft                     TLS                    September 2016
 
-
-   -  Define exporters.
-
-   -  Editorial cleanup
 
    draft-11
 
@@ -499,15 +495,16 @@ Internet-Draft                     TLS                    September 2016
    -  Change HKDF labeling to include protocol version and value
       lengths.
 
+   -  Shift the final decision to abort a handshake due to incompatible
+      certificates to the client rather than having servers abort early.
+
+
 
 
 Rescorla                 Expires March 26, 2017                 [Page 9]
 
 Internet-Draft                     TLS                    September 2016
 
-
-   -  Shift the final decision to abort a handshake due to incompatible
-      certificates to the client rather than having servers abort early.
 
    -  Deprecate SHA-1 with signatures.
 
@@ -555,14 +552,15 @@ Internet-Draft                     TLS                    September 2016
 
    -  Update format of signatures with context.
 
+   -  Remove explicit IV.
+
+
 
 
 Rescorla                 Expires March 26, 2017                [Page 10]
 
 Internet-Draft                     TLS                    September 2016
 
-
-   -  Remove explicit IV.
 
    draft-05
 
@@ -610,6 +608,8 @@ Internet-Draft                     TLS                    September 2016
    -  Remove support for static RSA and DH key exchange.
 
    -  Remove support for non-AEAD ciphers.
+
+
 
 
 
