@@ -1479,10 +1479,8 @@ Internet-Draft                     TLS                    September 2016
       When a client first connects to a server, it is REQUIRED to send
       the ClientHello as its first message.  The client will also send a
       ClientHello when the server has responded to its ClientHello with
-      a HelloRetryRequest that selects cryptographic parameters that
-      don't match the client's "key_share" extension.  In that case, the
-      client MUST send the same ClientHello (without modification)
-      except:
+      a HelloRetryRequest.  In that case, the client MUST send the same
+      ClientHello (without modification) except:
 
    -  Including a new KeyShareEntry as the lowest priority share (i.e.,
       appended to the list of shares in the "key_share" extension).
@@ -1504,6 +1502,8 @@ Internet-Draft                     TLS                    September 2016
    "protocol_version" alert.
 
    Structure of this message:
+
+
 
 
 
@@ -1705,6 +1705,13 @@ Internet-Draft                     TLS                    September 2016
    Note: This is an update to TLS 1.2 so in practice many TLS 1.2
    clients and servers will not behave as specified above.
 
+   RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH Implementations of
+   draft versions (see Section 4.2.1.1) of this specification SHOULD NOT
+   implement this mechanism on either client and server.  A pre-RFC
+   client connecting to RFC servers, or vice versa, will appear to
+   downgrade to TLS 1.2.  With the mechanism enabled, this will cause an
+   interoperability failure.
+
 4.1.4.  Hello Retry Request
 
    When this message will be sent:
@@ -1723,13 +1730,6 @@ Internet-Draft                     TLS                    September 2016
           Extension extensions<2..2^16-1>;
       } HelloRetryRequest;
 
-   The version and extensions fields have the same meanings as their
-   corresponding values in the ServerHello.  The server SHOULD send only
-   the extensions necessary for the client to generate a correct
-   ClientHello pair (currently no such extensions exist).  As with
-   ServerHello, a HelloRetryRequest MUST NOT contain any extensions that
-   were not first offered by the client in its ClientHello, with the
-   exception of optionally the "cookie" (see Section 4.2.2) extension.
 
 
 
@@ -1737,6 +1737,14 @@ Rescorla                 Expires March 26, 2017                [Page 31]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   The version and extensions fields have the same meanings as their
+   corresponding values in the ServerHello.  The server SHOULD send only
+   the extensions necessary for the client to generate a correct
+   ClientHello pair (currently no such extensions exist).  As with
+   ServerHello, a HelloRetryRequest MUST NOT contain any extensions that
+   were not first offered by the client in its ClientHello, with the
+   exception of optionally the "cookie" (see Section 4.2.2) extension.
 
    Upon receipt of a HelloRetryRequest, the client MUST verify that the
    extensions block is not empty and otherwise MUST abort the handshake
@@ -1779,20 +1787,19 @@ Internet-Draft                     TLS                    September 2016
           (65535)
       } ExtensionType;
 
-   Here:
-
-   -  "extension_type" identifies the particular extension type.
-
-   -  "extension_data" contains information specific to the particular
-      extension type.
-
-
 
 
 Rescorla                 Expires March 26, 2017                [Page 32]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   Here:
+
+   -  "extension_type" identifies the particular extension type.
+
+   -  "extension_data" contains information specific to the particular
+      extension type.
 
    The initial set of extensions is defined in [RFC6066].  The list of
    extension types is maintained by IANA as described in Section 10.
@@ -1836,19 +1843,17 @@ Internet-Draft                     TLS                    September 2016
    considerations should be taken into account when designing new
    extensions:
 
-   -  Some cases where a server does not agree to an extension are error
-      conditions, and some are simply refusals to support particular
-      features.  In general, error alerts should be used for the former,
-      and a field in the server extension response for the latter.
-
-
-
 
 
 Rescorla                 Expires March 26, 2017                [Page 33]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   -  Some cases where a server does not agree to an extension are error
+      conditions, and some are simply refusals to support particular
+      features.  In general, error alerts should be used for the former,
+      and a field in the server extension response for the latter.
 
    -  Extensions should, as far as possible, be designed to prevent any
       attack that forces use (or non-use) of a particular feature by
@@ -1892,11 +1897,6 @@ Internet-Draft                     TLS                    September 2016
 
    RFC EDITOR: PLEASE REMOVE THIS SECTION
 
-   While the eventual version indicator for the RFC version of TLS 1.3
-   will be {3, 4}, implementations of draft versions of this
-   specification SHOULD instead advertise {0x7f, [draft-version]} in
-   their "supported_versions" extension, in ServerHello.version, and
-   HelloRetryRequest.server_version.  This allows pre-RFC
 
 
 
@@ -1906,6 +1906,11 @@ Rescorla                 Expires March 26, 2017                [Page 34]
 Internet-Draft                     TLS                    September 2016
 
 
+   While the eventual version indicator for the RFC version of TLS 1.3
+   will be {3, 4}, implementations of draft versions of this
+   specification SHOULD instead advertise {0x7f, [draft-version]} in
+   their "supported_versions" extension, in ServerHello.version, and
+   HelloRetryRequest.server_version.  This allows pre-RFC
    implementations to safely negotiate with each other, even if they
    would otherwise be incompatible.
 
@@ -1948,11 +1953,6 @@ Internet-Draft                     TLS                    September 2016
    Servers which are authenticating via a certificate MUST indicate so
    by sending the client an empty "signature_algorithms" extension.
 
-   The "extension_data" field of this extension in a ClientHello
-   contains a "supported_signature_algorithms" value:
-
-
-
 
 
 
@@ -1961,6 +1961,9 @@ Rescorla                 Expires March 26, 2017                [Page 35]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   The "extension_data" field of this extension in a ClientHello
+   contains a "supported_signature_algorithms" value:
 
       enum {
           /* RSASSA-PKCS1-v1_5 algorithms */
@@ -2006,9 +2009,6 @@ Internet-Draft                     TLS                    September 2016
    RSASSA-PKCS1-v1_5 algorithms  Indicates a signature algorithm using
       RSASSA-PKCS1-v1_5 [RFC3447] with the corresponding hash algorithm
       as defined in [SHS].  These values refer solely to signatures
-      which appear in certificates (see Section 4.4.1.1) and are not
-      defined for use in signed TLS handshake messages.
-
 
 
 
@@ -2017,6 +2017,9 @@ Rescorla                 Expires March 26, 2017                [Page 36]
 
 Internet-Draft                     TLS                    September 2016
 
+
+      which appear in certificates (see Section 4.4.1.1) and are not
+      defined for use in signed TLS handshake messages.
 
    ECDSA algorithms  Indicates a signature algorithm using ECDSA
       [ECDSA], the corresponding curve as defined in ANSI X9.62 [X962]
@@ -2063,9 +2066,6 @@ Internet-Draft                     TLS                    September 2016
       been allocated to align with TLS 1.2's encoding.  Some legacy
       pairs are left unallocated.  These algorithms are deprecated as of
       TLS 1.3.  They MUST NOT be offered or negotiated by any
-      implementation.  In particular, MD5 [SLOTH] and SHA-224 MUST NOT
-      be used.
-
 
 
 
@@ -2073,6 +2073,9 @@ Rescorla                 Expires March 26, 2017                [Page 37]
 
 Internet-Draft                     TLS                    September 2016
 
+
+      implementation.  In particular, MD5 [SLOTH] and SHA-224 MUST NOT
+      be used.
 
    -  ECDSA signature schemes align with TLS 1.2's ECDSA hash/signature
       pairs.  However, the old semantics did not constrain the signing
@@ -2119,9 +2122,6 @@ Internet-Draft                     TLS                    September 2016
           NamedGroup named_group_list<2..2^16-1>;
       } NamedGroupList;
 
-   Elliptic Curve Groups (ECDHE)  Indicates support of the corresponding
-      named curve.  Note that some curves are also recommended in ANSI
-      X9.62 [X962] and FIPS 186-4 [DSS].  Others are recommended in
 
 
 
@@ -2130,6 +2130,9 @@ Rescorla                 Expires March 26, 2017                [Page 38]
 Internet-Draft                     TLS                    September 2016
 
 
+   Elliptic Curve Groups (ECDHE)  Indicates support of the corresponding
+      named curve.  Note that some curves are also recommended in ANSI
+      X9.62 [X962] and FIPS 186-4 [DSS].  Others are recommended in
       [RFC7748].  Values 0xFE00 through 0xFEFF are reserved for private
       use.
 
@@ -2176,15 +2179,15 @@ Internet-Draft                     TLS                    September 2016
       definition.  Endpoints MUST NOT send empty or otherwise invalid
       key_exchange values for any reason.
 
-   The "extension_data" field of this extension contains a "KeyShare"
-   value:
-
 
 
 Rescorla                 Expires March 26, 2017                [Page 39]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   The "extension_data" field of this extension contains a "KeyShare"
+   value:
 
       struct {
           select (Handshake.msg_type) {
@@ -2231,9 +2234,6 @@ Internet-Draft                     TLS                    September 2016
    these checks fails, then the client MUST abort the handshake with an
    "illegal_parameter" alert.  Otherwise, when sending the new
    ClientHello, the client MUST append a new KeyShareEntry for the group
-   indicated in the selected_group field to the groups in its original
-   KeyShare.  The remaining KeyShareEntry values MUST be preserved.
-
 
 
 
@@ -2241,6 +2241,9 @@ Rescorla                 Expires March 26, 2017                [Page 40]
 
 Internet-Draft                     TLS                    September 2016
 
+
+   indicated in the selected_group field to the groups in its original
+   KeyShare.  The remaining KeyShareEntry values MUST be preserved.
 
    Note that a HelloRetryRequest might not include the "key_share"
    extension if other extensions are sent, such as if the server is only
@@ -2287,9 +2290,6 @@ Internet-Draft                     TLS                    September 2016
    specify only a single point format.  All curves currently specified
    in this document MUST only be used with the uncompressed point format
    (the format for all ECDH functions is considered uncompressed).
-
-
-
 
 
 

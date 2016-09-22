@@ -1155,7 +1155,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>When a client first connects to a server, it is REQUIRED to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a HelloRetryRequest that selects cryptographic parameters that don&#8217;t match the client&#8217;s &#8220;key_share&#8221; extension. In that case, the client MUST send the same ClientHello (without modification) except:</li>
+  <li>When a client first connects to a server, it is REQUIRED to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a HelloRetryRequest. In that case, the client MUST send the same ClientHello (without modification) except:</li>
 </ul>
 <p/>
 
@@ -1245,6 +1245,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.4.1.3.p.7">TLS 1.3 clients receiving a TLS 1.2 or below ServerHello MUST check that the last eight octets are not equal to either of these values. TLS 1.2 clients SHOULD also perform this check if the ServerHello indicates TLS 1.1 or below. If a match is found, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert. This mechanism provides limited protection against downgrade attacks over and above that provided by the Finished exchange: because the ServerKeyExchange includes a signature over both random values, it is not possible for an active attacker to modify the randoms without detection as long as ephemeral ciphers are used. It does not provide downgrade protection when static RSA is used.</p>
 <p id="rfc.section.4.1.3.p.8">Note: This is an update to TLS 1.2 so in practice many TLS 1.2 clients and servers will not behave as specified above.</p>
+<p id="rfc.section.4.1.3.p.9">RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH Implementations of draft versions (see <a href="#draft-version-indicator">Section 4.2.1.1</a>) of this specification SHOULD NOT implement this mechanism on either client and server.  A pre-RFC client connecting to RFC servers, or vice versa, will appear to downgrade to TLS 1.2. With the mechanism enabled, this will cause an interoperability failure.</p>
 <h3 id="rfc.section.4.1.4"><a href="#rfc.section.4.1.4">4.1.4.</a> <a href="#hello-retry-request" id="hello-retry-request">Hello Retry Request</a></h3>
 <p id="rfc.section.4.1.4.p.1">When this message will be sent:</p>
 <p/>
