@@ -1155,7 +1155,7 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>When a client first connects to a server, it is REQUIRED to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a HelloRetryRequest that selects cryptographic parameters that don&#8217;t match the client&#8217;s &#8220;key_share&#8221; extension. In that case, the client MUST send the same ClientHello (without modification) except:</li>
+  <li>When a client first connects to a server, it is REQUIRED to send the ClientHello as its first message. The client will also send a ClientHello when the server has responded to its ClientHello with a HelloRetryRequest. In that case, the client MUST send the same ClientHello (without modification) except:</li>
 </ul>
 <p/>
 
@@ -3780,6 +3780,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
   <li>Tom Weinstein</li>
   <li>Hoeteck Wee <br/> Ecole Normale Superieure, Paris <br/> hoeteck@alum.mit.edu</li>
   <li>Tim Wright <br/> Vodafone <br/> timothy.wright@vodafone.com</li>
+  <li>Kazu Yamamoto <br/> Internet Initiative Japan Inc. <br/> kazu@iij.ad.jp</li>
 </ul>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Author's Address</a>

@@ -1479,10 +1479,8 @@ Internet-Draft                     TLS                    September 2016
       When a client first connects to a server, it is REQUIRED to send
       the ClientHello as its first message.  The client will also send a
       ClientHello when the server has responded to its ClientHello with
-      a HelloRetryRequest that selects cryptographic parameters that
-      don't match the client's "key_share" extension.  In that case, the
-      client MUST send the same ClientHello (without modification)
-      except:
+      a HelloRetryRequest.  In that case, the client MUST send the same
+      ClientHello (without modification) except:
 
    -  Including a new KeyShareEntry as the lowest priority share (i.e.,
       appended to the list of shares in the "key_share" extension).
@@ -1504,6 +1502,8 @@ Internet-Draft                     TLS                    September 2016
    "protocol_version" alert.
 
    Structure of this message:
+
+
 
 
 
@@ -6488,8 +6488,8 @@ Internet-Draft                     TLS                    September 2016
       Vodafone
       timothy.wright@vodafone.com
 
-
-
+   -  Kazu Yamamoto
+      Internet Initiative Japan Inc.
 
 
 
@@ -6498,14 +6498,14 @@ Rescorla                 Expires March 26, 2017               [Page 116]
 Internet-Draft                     TLS                    September 2016
 
 
+      kazu@iij.ad.jp
+
 Author's Address
 
    Eric Rescorla
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
 
 
 
