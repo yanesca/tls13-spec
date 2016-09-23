@@ -1910,7 +1910,7 @@ finished_key =
 
    struct {
        TicketExtensionType extension_type;
-       opaque extension_data&lt;1..2^16-1&gt;;
+       opaque extension_data&lt;0..2^16-1&gt;;
    } TicketExtension;
 
    struct {
@@ -3516,7 +3516,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 
    struct {
        TicketExtensionType extension_type;
-       opaque extension_data&lt;1..2^16-1&gt;;
+       opaque extension_data&lt;0..2^16-1&gt;;
    } TicketExtension;
 
    struct {
