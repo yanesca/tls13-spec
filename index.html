@@ -373,7 +373,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-9-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-9-26" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -394,7 +394,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">September 24, 2016</td>
+  <td class="right">September 26, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -413,7 +413,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: March 28, 2017</td>
+  <td class="left">Expires: March 30, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -434,7 +434,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 28, 2017.</p>
+<p>This Internet-Draft will expire on March 30, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1186,9 +1186,7 @@ Subsequent Handshake:
        uint8 minor;
    } ProtocolVersion;
 
-   struct {
-       opaque random_bytes[32];
-   } Random;
+   opaque Random[32];
 
    uint8 CipherSuite[2];    /* Cryptographic suite selector */
 
@@ -1351,7 +1349,7 @@ Subsequent Handshake:
 <h3 id="rfc.section.4.2.3"><a href="#rfc.section.4.2.3">4.2.3.</a> <a href="#signature-algorithms" id="signature-algorithms">Signature Algorithms</a></h3>
 <p id="rfc.section.4.2.3.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature algorithms may be used in digital signatures. Clients which desire the server to authenticate via a certificate MUST send this extension.  If a server is authenticating via a certificate and the client has not sent a &#8220;signature_algorithms&#8221; extension then the server MUST abort the handshake with a &#8220;missing_extension&#8221; alert (see <a href="#mti-extensions">Section 8.2</a>).</p>
 <p id="rfc.section.4.2.3.p.2">Servers which are authenticating via a certificate MUST indicate so by sending the client an empty &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.4.2.3.p.3">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a &#8220;supported_signature_algorithms&#8221; value:</p>
+<p id="rfc.section.4.2.3.p.3">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a SignatureSchemeList value:</p>
 <pre>
    enum {
        /* RSASSA-PKCS1-v1_5 algorithms */
@@ -1379,7 +1377,9 @@ Subsequent Handshake:
        (0xFFFF)
    } SignatureScheme;
 
-   SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
+   struct {
+       SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
+   } SignatureSchemeList;
 </pre>
 <p id="rfc.section.4.2.3.p.4">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
 <p id="rfc.section.4.2.3.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
@@ -1395,7 +1395,7 @@ Subsequent Handshake:
   <dt>EdDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
-<p id="rfc.section.4.2.3.p.7">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in the supported_signature_algorithms vector). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.1</a>).</p>
+<p id="rfc.section.4.2.3.p.7">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.1</a>).</p>
 <p id="rfc.section.4.2.3.p.8">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
 <p id="rfc.section.4.2.3.p.9">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version. In particular:</p>
 <p/>
@@ -3302,9 +3302,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
        uint8 minor;
    } ProtocolVersion;
 
-   struct {
-       opaque random_bytes[32];
-   } Random;
+   opaque Random[32];
 
    uint8 CipherSuite[2];    /* Cryptographic suite selector */
 
@@ -3442,7 +3440,9 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
        (0xFFFF)
    } SignatureScheme;
 
-   SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
+   struct {
+       SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
+   } SignatureSchemeList;
 </pre>
 <h4 id="rfc.appendix.A.3.1.4"><a href="#rfc.appendix.A.3.1.4">A.3.1.4.</a> <a href="#supported-groups-extension" id="supported-groups-extension">Supported Groups Extension</a></h4>
 <pre>
