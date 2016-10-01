@@ -373,7 +373,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-9-30" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-01" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -394,7 +394,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">September 30, 2016</td>
+  <td class="right">October 01, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -413,7 +413,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 3, 2017</td>
+  <td class="left">Expires: April 4, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -434,7 +434,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 3, 2017.</p>
+<p>This Internet-Draft will expire on April 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -619,7 +619,7 @@ li, p {
   <li>Allow cookies to be longer (*)</li>
   <li>Remove the &#8220;context&#8221; from EarlyDataIndication as it was undefined and nobody used it (*)</li>
   <li>Remove 0-RTT EncryptedExtensions and replace the ticket_age extension with an obfuscated version. Also necessitates a change to NewSessionTicket (*).</li>
-  <li>Move the downgrade sentinel to the end of ServerHello.Random to accomodate tlsdate (*).</li>
+  <li>Move the downgrade sentinel to the end of ServerHello.Random to accommodate tlsdate (*).</li>
   <li>Define ecdsa_sha1 (*).</li>
   <li>Allow resumption even after fatal alerts. This matches current practice.</li>
   <li>Remove non-closure warning alerts. Require treating unknown alerts as fatal.</li>
@@ -2419,7 +2419,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
   <li>&#8220;pre_shared_key&#8221; is REQUIRED for PSK cipher suites.</li>
   <li>&#8220;cookie&#8221; is REQUIRED for all cipher suites.</li>
 </ul>
-<p id="rfc.section.8.2.p.5">When negotiating use of applicable cipher suites, endpoints MUST abort the handshake with a &#8220;missing_extension&#8221; alert if the required extension was not provided. Any endpoint that receives any invalid combination of cipher suites and extensions MAY abort the connection with a &#8220;missing_extension&#8221; alert, regardless of negotiated parameters.</p>
+<p id="rfc.section.8.2.p.5">When negotiating use of applicable cipher suites, endpoints MUST abort the handshake with a &#8220;missing_extension&#8221; alert if the required extension was not provided. Any endpoint that receives an invalid combination of cipher suites and extensions MAY abort the connection with a &#8220;missing_extension&#8221; alert, regardless of negotiated parameters.</p>
 <p id="rfc.section.8.2.p.6">Additionally, all implementations MUST support use of the &#8220;server_name&#8221; extension with applications capable of using it.  Servers MAY require clients to send a valid &#8220;server_name&#8221; extension.  Servers requiring this extension SHOULD respond to a ClientHello lacking a &#8220;server_name&#8221; extension by terminating the connection with a &#8220;missing_extension&#8221; alert.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
 <p id="rfc.section.9.p.1">Security issues are discussed throughout this memo, especially in Appendices B, C, and D.</p>
@@ -3734,7 +3734,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </dl>
 <p id="rfc.section.D.2.p.3">Informally, TLS 1.3 provides these properties by AEAD-protecting the plaintext with a strong key. AEAD encryption <a href="#RFC5116">[RFC5116]</a> provides confidentiality and integrity for the data. Non-replayability is provided by using a separate nonce for each record, with the nonce being derived from the record sequence number (<a href="#nonce">Section 5.3</a>), with the sequence number being maintained independently at both sides thus records which are delivered out of order result in AEAD deprotection failures.</p>
 <p id="rfc.section.D.2.p.4">The plaintext protected by the AEAD function consists of content plus variable-length padding. Because the padding is also encrypted, the attacker cannot directly determine the length of the padding, but may be able to measure it indirectly by the use of timing channels exposed during record processing (i.e., seeing how long it takes to process a record). In general, it is not known how to remove this type of channel because even a constant time padding removal function will then feed the content into data-dependent functions.</p>
-<p id="rfc.section.D.2.p.5">Generation N+1 keys are derived from generation N keys via a key derivation function <a href="#updating-traffic-keys">Section 7.2</a>. As long as this function is truly one way, it is not possible to compute the previous keys after a key change (forward secrecy). However, TLS does not provide security for data which is sent after the traffic secret is compromised, even afer a key update (backward secrecy); systems which want backward secrecy must do a fresh handshake and establish a new session key with an (EC)DHE exchange.</p>
+<p id="rfc.section.D.2.p.5">Generation N+1 keys are derived from generation N keys via a key derivation function <a href="#updating-traffic-keys">Section 7.2</a>. As long as this function is truly one way, it is not possible to compute the previous keys after a key change (forward secrecy). However, TLS does not provide security for data which is sent after the traffic secret is compromised, even after a key update (backward secrecy); systems which want backward secrecy must do a fresh handshake and establish a new session key with an (EC)DHE exchange.</p>
 <p id="rfc.section.D.2.p.6">The reader should refer to the following references for analysis of the TLS record layer.</p>
 <h1 id="rfc.appendix.E"><a href="#rfc.appendix.E">Appendix E.</a> <a href="#working-group-information" id="working-group-information">Working Group Information</a></h1>
 <p id="rfc.section.E.p.1">The discussion list for the IETF TLS working group is located at the e-mail address <a href="mailto:tls@ietf.org">tls@ietf.org</a>. Information on the group and information on how to subscribe to the list is at <a href="https://www.ietf.org/mailman/listinfo/tls">https://www.ietf.org/mailman/listinfo/tls</a></p>
