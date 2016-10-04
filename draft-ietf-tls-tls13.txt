@@ -305,8 +305,7 @@ Internet-Draft                     TLS                      October 2016
 
    draft-16
 
-   -  Change parameter negotiation to be orthogonal rather than all-in-
-      one cipher suites (*)
+   -  Revise version negotiation (*)
 
    -  Change RSASSA-PSS and EdDSA SignatureScheme codepoints for better
       backwards compatibility (*)
@@ -329,7 +328,8 @@ Internet-Draft                     TLS                      October 2016
 
    -  New negotiation syntax as discussed in Berlin (*)
 
-
+   -  Require CertificateRequest.context to be empty during handshake
+      (*)
 
 
 
@@ -337,9 +337,6 @@ Rescorla                  Expires April 7, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   -  Require CertificateRequest.context to be empty during handshake
-      (*)
 
    -  Forbid empty tickets (*)
 
@@ -387,14 +384,15 @@ Internet-Draft                     TLS                      October 2016
 
    -  Clarify how 0-RTT and PSK identities interact.
 
+   -  Add a section describing the data limits for each cipher.
+
+
 
 
 Rescorla                  Expires April 7, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   -  Add a section describing the data limits for each cipher.
 
    -  Major editorial restructuring.
 
@@ -443,14 +441,14 @@ Internet-Draft                     TLS                      October 2016
    -  Make the purpose strings lower-case.  This matches how people are
       implementing for interop.
 
+   -  Define exporters.
+
 
 
 Rescorla                  Expires April 7, 2017                 [Page 8]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   -  Define exporters.
 
    -  Editorial cleanup
 
@@ -498,6 +496,8 @@ Internet-Draft                     TLS                      October 2016
 
    -  Change HKDF labeling to include protocol version and value
       lengths.
+
+
 
 
 
