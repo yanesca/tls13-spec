@@ -300,7 +300,6 @@ li, p {
 <link href="#rfc.section.4.2.5" rel="Chapter" title="4.2.5 Key Share"/>
 <link href="#rfc.section.4.2.6" rel="Chapter" title="4.2.6 Pre-Shared Key Extension"/>
 <link href="#rfc.section.4.2.7" rel="Chapter" title="4.2.7 Early Data Indication"/>
-<link href="#rfc.section.4.2.8" rel="Chapter" title="4.2.8 OCSP Status Extensions"/>
 <link href="#rfc.section.4.3" rel="Chapter" title="4.3 Server Parameters Messages"/>
 <link href="#rfc.section.4.3.1" rel="Chapter" title="4.3.1 Encrypted Extensions"/>
 <link href="#rfc.section.4.3.2" rel="Chapter" title="4.3.2 Certificate Request"/>
@@ -479,7 +478,6 @@ li, p {
 <li>4.2.5.   <a href="#rfc.section.4.2.5">Key Share</a></li>
 <li>4.2.6.   <a href="#rfc.section.4.2.6">Pre-Shared Key Extension</a></li>
 <li>4.2.7.   <a href="#rfc.section.4.2.7">Early Data Indication</a></li>
-<li>4.2.8.   <a href="#rfc.section.4.2.8">OCSP Status Extensions</a></li>
 </ul><li>4.3.   <a href="#rfc.section.4.3">Server Parameters Messages</a></li>
 <ul><li>4.3.1.   <a href="#rfc.section.4.3.1">Encrypted Extensions</a></li>
 <li>4.3.2.   <a href="#rfc.section.4.3.2">Certificate Request</a></li>
@@ -1387,7 +1385,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>RSASSA-PKCS1-v1_5 algorithms</dt>
-  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 4.4.1.1</a>) and are not defined for use in signed TLS handshake messages.</dd>
+  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 4.4.1.2</a>) and are not defined for use in signed TLS handshake messages.</dd>
   <dt>ECDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
   <dt>RSASSA-PSS algorithms</dt>
@@ -1395,7 +1393,7 @@ Subsequent Handshake:
   <dt>EdDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
-<p id="rfc.section.4.2.3.p.7">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.1</a>).</p>
+<p id="rfc.section.4.2.3.p.7">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.2</a>).</p>
 <p id="rfc.section.4.2.3.p.8">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
 <p id="rfc.section.4.2.3.p.9">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version. In particular:</p>
 <p/>
@@ -1605,9 +1603,6 @@ Subsequent Handshake:
 </ul>
 <p id="rfc.section.4.2.7.2.p.6">There are several potential sources of error that make an exact measurement of time difficult.  Variations in client and server clocks are likely to be minimal, outside of gross time corrections.  Network propagation delays are most likely causes of a mismatch in legitimate values for elapsed time.  Both the NewSessionTicket and ClientHello messages might be retransmitted and therefore delayed, which might be hidden by TCP.</p>
 <p id="rfc.section.4.2.7.2.p.7">A small allowance for errors in clocks and variations in measurements is advisable.  However, any allowance also increases the opportunity for replay.  In this case, it is better to reject early data and fall back to a full 1-RTT handshake than to risk greater exposure to replay attacks.  In common network topologies for browser clients, small allowances on the order of ten seconds are reasonable.  Clock skew distributions are not symmetric, so the optimal tradeoff may involve an asymmetric replay window.</p>
-<h3 id="rfc.section.4.2.8"><a href="#rfc.section.4.2.8">4.2.8.</a> <a href="#ocsp-status-extensions" id="ocsp-status-extensions">OCSP Status Extensions</a></h3>
-<p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in EncryptedExtensions. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
-<p id="rfc.section.4.2.8.p.2">Note: This means that the certificate status appears prior to the certificates it applies to. This is slightly anomalous but matches the existing behavior for SignedCertificateTimestamps <a href="#RFC6962">[RFC6962]</a>, and is more easily extensible in the handshake state machine.</p>
 <h2 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#server-parameters-messages" id="server-parameters-messages">Server Parameters Messages</a></h2>
 <p id="rfc.section.4.3.p.1">The next two messages from the server, EncryptedExtensions and CertificateRequest, contain encrypted information from the server that determines the rest of the handshake.</p>
 <h3 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#encrypted-extensions" id="encrypted-extensions">Encrypted Extensions</a></h3>
@@ -1752,8 +1747,13 @@ Subsequent Handshake:
    opaque ASN1Cert&lt;1..2^24-1&gt;;
 
    struct {
+       ASN1CertData cert_data;
+       Extension extensions&lt;0..2^16-1&gt;;
+   } CertificateEntry;
+
+   struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       ASN1Cert certificate_list&lt;0..2^24-1&gt;;
+       CertificateEntry certificate_list&lt;0..2^24-1&gt;;
    } Certificate;
 </pre>
 <p/>
@@ -1762,12 +1762,17 @@ Subsequent Handshake:
   <dt>certificate_request_context</dt>
   <dd style="margin-left: 8">If this message is in response to a CertificateRequest, the value of certificate_request_context in that message. Otherwise, in the case of server authentication this field SHALL be zero length.</dd>
   <dt>certificate_list</dt>
-  <dd style="margin-left: 8">This is a sequence (chain) of certificates. The sender&#8217;s certificate MUST come first in the list. Each following certificate SHOULD directly certify one preceding it. Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</dd>
+  <dd style="margin-left: 8">This is a sequence (chain) of CertificateEntry structures, each containing a single certificate and set of extensions. The sender&#8217;s certificate MUST come in the first CertificateEntry in the list.  Each following certificate SHOULD directly certify one preceding it.  Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</dd>
+  <dt>extensions:</dt>
+  <dd style="margin-left: 8">A set of extension values for the CertificateEntry. The &#8220;Extension&#8221; format is defined in <a href="#hello-extensions">Section 4.2</a>. Valid extensions include OCSP Status extensions (<a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a>) and SignedCertificateTimestamps (<a href="#RFC6962">[RFC6962]</a>).  Any extension presented in a Certificate message must only be presented if the corresponding ClientHello extension was presented in the initial handshake.  If an extension applies the the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
 </dl>
 <p id="rfc.section.4.4.1.p.8">Note: Prior to TLS 1.3, &#8220;certificate_list&#8221; ordering required each certificate to certify the one immediately preceding it, however some implementations allowed some flexibility. Servers sometimes send both a current and deprecated intermediate for transitional purposes, and others are simply configured incorrectly, but these cases can nonetheless be validated properly. For maximum compatibility, all implementations SHOULD be prepared to handle potentially extraneous certificates and arbitrary orderings from any TLS version, with the exception of the end-entity certificate which MUST be first.</p>
 <p id="rfc.section.4.4.1.p.9">The server&#8217;s certificate list MUST always be non-empty. A client will send an empty certificate list if it does not have an appropriate certificate to send in response to the server&#8217;s authentication request.</p>
-<h4 id="rfc.section.4.4.1.1"><a href="#rfc.section.4.4.1.1">4.4.1.1.</a> <a href="#server-certificate-selection" id="server-certificate-selection">Server Certificate Selection</a></h4>
-<p id="rfc.section.4.4.1.1.p.1">The following rules apply to the certificates sent by the server:</p>
+<h4 id="rfc.section.4.4.1.1"><a href="#rfc.section.4.4.1.1">4.4.1.1.</a> <a href="#ocsp-status-and-sct-extensions" id="ocsp-status-and-sct-extensions">OCSP Status and SCT Extensions</a></h4>
+<p><a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server sends an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in the CertificateEntry containing the assoiciated certificate. Specifically: The body of the &#8220;status_request&#8221; or &#8220;status_request_v2&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066">[RFC6066]</a> and <a href="#RFC6961">[RFC6961]</a> respectively.</p>
+<p id="rfc.section.4.4.1.1.p.2">Similarly, <a href="#RFC6962">[RFC6962]</a> provides a mechanism for a server to send a Signed Certificate Timestamp (SCT) as an extension in the ServerHello.  In TLS 1.3, the server&#8217;s SCT information is carried in an extension in CertificateEntry.</p>
+<h4 id="rfc.section.4.4.1.2"><a href="#rfc.section.4.4.1.2">4.4.1.2.</a> <a href="#server-certificate-selection" id="server-certificate-selection">Server Certificate Selection</a></h4>
+<p id="rfc.section.4.4.1.2.p.1">The following rules apply to the certificates sent by the server:</p>
 <p/>
 
 <ul>
@@ -1776,12 +1781,12 @@ Subsequent Handshake:
   <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the Key Usage extension is present) with a signature scheme indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
   <li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension, when applicable.</li>
 </ul>
-<p id="rfc.section.4.4.1.1.p.3">All certificates provided by the server MUST be signed by a signature algorithm that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 4.2.3</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
-<p id="rfc.section.4.4.1.1.p.4">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST abort the handshake with an &#8220;unsupported_certificate&#8221; alert.</p>
-<p id="rfc.section.4.4.1.1.p.5">If the server has multiple certificates, it chooses one of them based on the above-mentioned criteria (in addition to other criteria, such as transport layer endpoint, local configuration and preferences).</p>
-<h4 id="rfc.section.4.4.1.2"><a href="#rfc.section.4.4.1.2">4.4.1.2.</a> <a href="#client-certificate-selection" id="client-certificate-selection">Client Certificate Selection</a></h4>
-<p id="rfc.section.4.4.1.2.p.1">The following rules apply to certificates sent by the client:</p>
-<p id="rfc.section.4.4.1.2.p.2">In particular:</p>
+<p id="rfc.section.4.4.1.2.p.3">All certificates provided by the server MUST be signed by a signature algorithm that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 4.2.3</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
+<p id="rfc.section.4.4.1.2.p.4">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST abort the handshake with an &#8220;unsupported_certificate&#8221; alert.</p>
+<p id="rfc.section.4.4.1.2.p.5">If the server has multiple certificates, it chooses one of them based on the above-mentioned criteria (in addition to other criteria, such as transport layer endpoint, local configuration and preferences).</p>
+<h4 id="rfc.section.4.4.1.3"><a href="#rfc.section.4.4.1.3">4.4.1.3.</a> <a href="#client-certificate-selection" id="client-certificate-selection">Client Certificate Selection</a></h4>
+<p id="rfc.section.4.4.1.3.p.1">The following rules apply to certificates sent by the client:</p>
+<p id="rfc.section.4.4.1.3.p.2">In particular:</p>
 <p/>
 
 <ul>
@@ -1790,13 +1795,13 @@ Subsequent Handshake:
   <li>The certificates MUST be signed using an acceptable signature algorithm, as described in <a href="#certificate-request">Section 4.3.2</a>.  Note that this relaxes the constraints on certificate-signing algorithms found in prior versions of TLS.</li>
   <li>If the certificate_extensions list in the certificate request message was non-empty, the end-entity certificate MUST match the extension OIDs recognized by the client, as described in <a href="#certificate-request">Section 4.3.2</a>.</li>
 </ul>
-<p id="rfc.section.4.4.1.2.p.4">Note that, as with the server certificate, there are certificates that use algorithm combinations that cannot be currently used with TLS.</p>
-<h4 id="rfc.section.4.4.1.3"><a href="#rfc.section.4.4.1.3">4.4.1.3.</a> <a href="#receiving-a-certificate-message" id="receiving-a-certificate-message">Receiving a Certificate Message</a></h4>
-<p id="rfc.section.4.4.1.3.p.1">In general, detailed certificate validation procedures are out of scope for TLS (see <a href="#RFC5280">[RFC5280]</a>). This section provides TLS-specific requirements.</p>
-<p id="rfc.section.4.4.1.3.p.2">If the server supplies an empty Certificate message, the client MUST abort the handshake with a &#8220;decode_error&#8221; alert.</p>
-<p id="rfc.section.4.4.1.3.p.3">If the client does not send any certificates, the server MAY at its discretion either continue the handshake without client authentication, or abort the handshake with a &#8220;certificate_required&#8221; alert. Also, if some aspect of the certificate chain was unacceptable (e.g., it was not signed by a known, trusted CA), the server MAY at its discretion either continue the handshake (considering the client unauthenticated) or abort the handshake.</p>
-<p id="rfc.section.4.4.1.3.p.4">Any endpoint receiving any certificate signed using any signature algorithm using an MD5 hash MUST abort the handshake with a &#8220;bad_certificate&#8221; alert.  SHA-1 is deprecated and it is RECOMMENDED that any endpoint receiving any certificate signed using any signature algorithm using a SHA-1 hash abort the handshake with a &#8220;bad_certificate&#8221; alert.  All endpoints are RECOMMENDED to transition to SHA-256 or better as soon as possible to maintain interoperability with implementations currently in the process of phasing out SHA-1 support.</p>
-<p id="rfc.section.4.4.1.3.p.5">Note that a certificate containing a key for one signature algorithm MAY be signed using a different signature algorithm (for instance, an RSA key signed with an ECDSA key).</p>
+<p id="rfc.section.4.4.1.3.p.4">Note that, as with the server certificate, there are certificates that use algorithm combinations that cannot be currently used with TLS.</p>
+<h4 id="rfc.section.4.4.1.4"><a href="#rfc.section.4.4.1.4">4.4.1.4.</a> <a href="#receiving-a-certificate-message" id="receiving-a-certificate-message">Receiving a Certificate Message</a></h4>
+<p id="rfc.section.4.4.1.4.p.1">In general, detailed certificate validation procedures are out of scope for TLS (see <a href="#RFC5280">[RFC5280]</a>). This section provides TLS-specific requirements.</p>
+<p id="rfc.section.4.4.1.4.p.2">If the server supplies an empty Certificate message, the client MUST abort the handshake with a &#8220;decode_error&#8221; alert.</p>
+<p id="rfc.section.4.4.1.4.p.3">If the client does not send any certificates, the server MAY at its discretion either continue the handshake without client authentication, or abort the handshake with a &#8220;certificate_required&#8221; alert. Also, if some aspect of the certificate chain was unacceptable (e.g., it was not signed by a known, trusted CA), the server MAY at its discretion either continue the handshake (considering the client unauthenticated) or abort the handshake.</p>
+<p id="rfc.section.4.4.1.4.p.4">Any endpoint receiving any certificate signed using any signature algorithm using an MD5 hash MUST abort the handshake with a &#8220;bad_certificate&#8221; alert.  SHA-1 is deprecated and it is RECOMMENDED that any endpoint receiving any certificate signed using any signature algorithm using a SHA-1 hash abort the handshake with a &#8220;bad_certificate&#8221; alert.  All endpoints are RECOMMENDED to transition to SHA-256 or better as soon as possible to maintain interoperability with implementations currently in the process of phasing out SHA-1 support.</p>
+<p id="rfc.section.4.4.1.4.p.5">Note that a certificate containing a key for one signature algorithm MAY be signed using a different signature algorithm (for instance, an RSA key signed with an ECDSA key).</p>
 <h3 id="rfc.section.4.4.2"><a href="#rfc.section.4.4.2">4.4.2.</a> <a href="#certificate-verify" id="certificate-verify">Certificate Verify</a></h3>
 <p id="rfc.section.4.4.2.p.1">When this message will be sent:</p>
 <p/>
@@ -2189,7 +2194,7 @@ finished_key =
   <dt>missing_extension</dt>
   <dd style="margin-left: 8">Sent by endpoints that receive a hello message not containing an extension that is mandatory to send for the offered TLS version or other negotiated parameters.  [[TODO: IANA Considerations.]]</dd>
   <dt>unsupported_extension</dt>
-  <dd style="margin-left: 8">Sent by endpoints receiving any hello message containing an extension known to be prohibited for inclusion in the given hello message, including any extensions in a ServerHello not first offered in the corresponding ClientHello.</dd>
+  <dd style="margin-left: 8">Sent by endpoints receiving any hello message containing an extension known to be prohibited for inclusion in the given hello message, including any extensions in a ServerHello or Certificate not first offered in the corresponding ClientHello.</dd>
   <dt>certificate_unobtainable</dt>
   <dd style="margin-left: 8">Sent by servers when unable to obtain a certificate from a URL provided by the client via the &#8220;client_certificate_url&#8221; extension <a href="#RFC6066">[RFC6066]</a>.</dd>
   <dt>unrecognized_name</dt>
@@ -2437,7 +2442,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p/>
 
 <ul>
-  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;HelloRetryRequest&#8221; column with the following two values: &#8220;Yes&#8221;, indicating it may be sent in HelloRetryRequest, and &#8220;No&#8221;, indicating it may not be sent in HelloRetryRequest. This column [shall be/has been] initially populated with the values in this document.</li>
+  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC2434">[RFC2434]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC2434">[RFC2434]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column with the following four values: &#8220;Client&#8221;, indicating that the server shall not send them. &#8220;Clear&#8221;, indicating that they shall be in the ServerHello. &#8220;Encrypted&#8221;, indicating that they shall be in the EncryptedExtensions block, &#8220;Certificate&#8221; indicating that they shall be in the Certificate block, and &#8220;No&#8221; indicating that they are not used in TLS 1.3. This column [shall be/has been] initially populated with the values in this document.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;HelloRetryRequest&#8221; column with the following two values: &#8220;Yes&#8221;, indicating it may be sent in HelloRetryRequest, and &#8220;No&#8221;, indicating it may not be sent in HelloRetryRequest. This column [shall be/has been] initially populated with the values in this document.</li>
 </ul>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -2482,7 +2487,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
     <tr>
       <td class="left">status_request <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
-      <td class="right">Encrypted</td>
+      <td class="right">Certificate</td>
       <td class="right">No</td>
     </tr>
     <tr>
@@ -2554,13 +2559,13 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
     <tr>
       <td class="left">status_request_v2 <a href="#RFC6961">[RFC6961]</a></td>
       <td class="right">Yes</td>
-      <td class="right">Encrypted</td>
+      <td class="right">Certificate</td>
       <td class="right">No</td>
     </tr>
     <tr>
       <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
       <td class="right">No</td>
-      <td class="right">Encrypted</td>
+      <td class="right">Certificate</td>
       <td class="right">No</td>
     </tr>
     <tr>
@@ -2572,7 +2577,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
     <tr>
       <td class="left">server_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
       <td class="right">Yes</td>
-      <td class="right">Encrypted</td>
+      <td class="right">Certificate</td>
       <td class="right">No</td>
     </tr>
     <tr>
@@ -2755,6 +2760,12 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
         <b id="RFC6961">[RFC6961]</b>
       </td>
       <td class="top"><a>Pettersen, Y.</a>, "<a href="http://tools.ietf.org/html/rfc6961">The Transport Layer Security (TLS) Multiple Certificate Status Request Extension</a>", RFC 6961, DOI 10.17487/RFC6961, June 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6962">[RFC6962]</b>
+      </td>
+      <td class="top"><a>Laurie, B.</a>, <a>Langley, A.</a> and <a>E. Kasper</a>, "<a href="http://tools.ietf.org/html/rfc6962">Certificate Transparency</a>", RFC 6962, DOI 10.17487/RFC6962, June 2013.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3072,12 +3083,6 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
         <b id="RFC6520">[RFC6520]</b>
       </td>
       <td class="top"><a>Seggelmann, R.</a>, <a>Tuexen, M.</a> and <a>M. Williams</a>, "<a href="http://tools.ietf.org/html/rfc6520">Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS) Heartbeat Extension</a>", RFC 6520, DOI 10.17487/RFC6520, February 2012.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC6962">[RFC6962]</b>
-      </td>
-      <td class="top"><a>Laurie, B.</a>, <a>Langley, A.</a> and <a>E. Kasper</a>, "<a href="http://tools.ietf.org/html/rfc6962">Certificate Transparency</a>", RFC 6962, DOI 10.17487/RFC6962, June 2013.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3497,8 +3502,13 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
    opaque ASN1Cert&lt;1..2^24-1&gt;;
 
    struct {
+       ASN1CertData cert_data;
+       Extension extensions&lt;0..2^16-1&gt;;
+   } CertificateEntry;
+
+   struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       ASN1Cert certificate_list&lt;0..2^24-1&gt;;
+       CertificateEntry certificate_list&lt;0..2^24-1&gt;;
    } Certificate;
 
    struct {
@@ -3621,7 +3631,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
   <li>Do you ignore the TLS record layer version number in all TLS records? (see <a href="#backward-compatibility">Appendix C</a>)</li>
   <li>Have you ensured that all support for SSL, RC4, EXPORT ciphers, and MD5 (via the &#8220;signature_algorithm&#8221; extension) is completely removed from all possible configurations that support TLS 1.3 or later, and that attempts to use these obsolete capabilities fail correctly? (see <a href="#backward-compatibility">Appendix C</a>)</li>
   <li>Do you handle TLS extensions in ClientHello correctly, including unknown extensions.</li>
-  <li>When the server has requested a client certificate, but no suitable certificate is available, do you correctly send an empty Certificate message, instead of omitting the whole message (see <a href="#client-certificate-selection">Section 4.4.1.2</a>)?</li>
+  <li>When the server has requested a client certificate, but no suitable certificate is available, do you correctly send an empty Certificate message, instead of omitting the whole message (see <a href="#client-certificate-selection">Section 4.4.1.3</a>)?</li>
   <li>When processing the plaintext fragment produced by AEAD-Decrypt and scanning from the end for the ContentType, do you avoid scanning past the start of the cleartext in the event that the peer has sent a malformed plaintext of all-zeros?</li>
   <li>When processing a ClientHello containing a version of { 3, 5 } or higher, do you respond with the highest common version of TLS rather than requiring an exact match? Have you ensured this continues to be true with arbitrarily higher version numbers? (e.g. { 4, 0 }, { 9, 9 }, { 255, 255 })</li>
   <li>Do you properly ignore unrecognized cipher suites (<a href="#client-hello">Section 4.1.2</a>), hello extensions (<a href="#hello-extensions">Section 4.2</a>), named groups (<a href="#negotiated-groups">Section 4.2.4</a>), and signature algorithms (<a href="#signature-algorithms">Section 4.2.3</a>)?</li>
@@ -3652,7 +3662,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 <p id="rfc.section.C.p.1">The TLS protocol provides a built-in mechanism for version negotiation between endpoints potentially supporting different versions of TLS.</p>
 <p id="rfc.section.C.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and the client supports the highest protocol version available in the server.</p>
 <p id="rfc.section.C.p.3">Prior versions of TLS used the record layer version number for various purposes. (TLSPlaintext.legacy_record_version &amp; TLSCiphertext.legacy_record_version) As of TLS 1.3, this field is deprecated and its value MUST be ignored by all implementations. Version negotiation is performed using only the handshake versions.  (ClientHello.legacy_version, ClientHello &#8220;supported_versions&#8221; extension &amp; ServerHello.version) In order to maximize interoperability with older endpoints, implementations that negotiate the use of TLS 1.0-1.2 SHOULD set the record layer version number to the negotiated version for the ServerHello and all records thereafter.</p>
-<p id="rfc.section.C.p.4">For maximum compatibility with previously non-standard behavior and misconfigured deployments, all implementations SHOULD support validation of certification paths based on the expectations in this document, even when handling prior TLS versions&#8217; handshakes. (see <a href="#server-certificate-selection">Section 4.4.1.1</a>)</p>
+<p id="rfc.section.C.p.4">For maximum compatibility with previously non-standard behavior and misconfigured deployments, all implementations SHOULD support validation of certification paths based on the expectations in this document, even when handling prior TLS versions&#8217; handshakes. (see <a href="#server-certificate-selection">Section 4.4.1.2</a>)</p>
 <p id="rfc.section.C.p.5">TLS 1.2 and prior supported an &#8220;Extended Master Secret&#8221; <a href="#RFC7627">[RFC7627]</a> extension which digested large parts of the handshake transcript into the master secret.  Because TLS 1.3 always hashes in the transcript up to the server CertificateVerify, implementations which support both TLS 1.3 and earlier versions SHOULD indicate the use of the Extended Master Secret extension in their APIs whenever TLS 1.3 is used.</p>
 <h2 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#negotiating-with-an-older-server" id="negotiating-with-an-older-server">Negotiating with an older server</a></h2>
 <p id="rfc.section.C.1.p.1">A TLS 1.3 client who wishes to negotiate with such older servers will send a normal TLS 1.3 ClientHello containing { 3, 3 } (TLS 1.2) in ClientHello.legacy_version but with the correct version in the &#8220;supported_versions&#8221; extension. If the server does not support TLS 1.3 it will respond with a ServerHello containing an older version number. If the client agrees to use this version, the negotiation will proceed as appropriate for the negotiated protocol. A client resuming a session SHOULD initiate the connection using the version that was previously negotiated.</p>
