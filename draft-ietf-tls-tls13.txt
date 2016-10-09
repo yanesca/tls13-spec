@@ -4,12 +4,12 @@
 
 Network Working Group                                        E. Rescorla
 Internet-Draft                                                RTFM, Inc.
-Obsoletes: 5077, 5246, 5746 (if                         October 07, 2016
+Obsoletes: 5077, 5246, 5746 (if                         October 09, 2016
            approved)
 Updates: 4492, 5705, 6066, 6961 (if
          approved)
 Intended status: Standards Track
-Expires: April 10, 2017
+Expires: April 12, 2017
 
 
         The Transport Layer Security (TLS) Protocol Version 1.3
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 10, 2017.
+   This Internet-Draft will expire on April 12, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 1]
+Rescorla                 Expires April 12, 2017                 [Page 1]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 2]
+Rescorla                 Expires April 12, 2017                 [Page 2]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -165,20 +165,20 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 3]
+Rescorla                 Expires April 12, 2017                 [Page 3]
 
 Internet-Draft                     TLS                      October 2016
 
 
    Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 103
      B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 103
-     B.2.  Random Number Generation and Seeding  . . . . . . . . . . 103
+     B.2.  Random Number Generation and Seeding  . . . . . . . . . . 104
      B.3.  Certificates and Authentication . . . . . . . . . . . . . 104
      B.4.  Cipher Suite Support  . . . . . . . . . . . . . . . . . . 104
      B.5.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 104
      B.6.  Client Tracking Prevention  . . . . . . . . . . . . . . . 106
      B.7.  Unauthenticated Operation . . . . . . . . . . . . . . . . 106
-   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 106
+   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 107
      C.1.  Negotiating with an older server  . . . . . . . . . . . . 107
      C.2.  Negotiating with an older client  . . . . . . . . . . . . 108
      C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 108
@@ -221,7 +221,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 4]
+Rescorla                 Expires April 12, 2017                 [Page 4]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 5]
+Rescorla                 Expires April 12, 2017                 [Page 5]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 6]
+Rescorla                 Expires April 12, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 7]
+Rescorla                 Expires April 12, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 8]
+Rescorla                 Expires April 12, 2017                 [Page 8]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                 [Page 9]
+Rescorla                 Expires April 12, 2017                 [Page 9]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 10]
+Rescorla                 Expires April 12, 2017                [Page 10]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 11]
+Rescorla                 Expires April 12, 2017                [Page 11]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -669,7 +669,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 12]
+Rescorla                 Expires April 12, 2017                [Page 12]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -725,7 +725,7 @@ Auth | {CertificateVerify*}
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 13]
+Rescorla                 Expires April 12, 2017                [Page 13]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 14]
+Rescorla                 Expires April 12, 2017                [Page 14]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 15]
+Rescorla                 Expires April 12, 2017                [Page 15]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 16]
+Rescorla                 Expires April 12, 2017                [Page 16]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -949,7 +949,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 17]
+Rescorla                 Expires April 12, 2017                [Page 17]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 18]
+Rescorla                 Expires April 12, 2017                [Page 18]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 19]
+Rescorla                 Expires April 12, 2017                [Page 19]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 20]
+Rescorla                 Expires April 12, 2017                [Page 20]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 21]
+Rescorla                 Expires April 12, 2017                [Page 21]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 22]
+Rescorla                 Expires April 12, 2017                [Page 22]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 23]
+Rescorla                 Expires April 12, 2017                [Page 23]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 24]
+Rescorla                 Expires April 12, 2017                [Page 24]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 25]
+Rescorla                 Expires April 12, 2017                [Page 25]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 26]
+Rescorla                 Expires April 12, 2017                [Page 26]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 27]
+Rescorla                 Expires April 12, 2017                [Page 27]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 28]
+Rescorla                 Expires April 12, 2017                [Page 28]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 29]
+Rescorla                 Expires April 12, 2017                [Page 29]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 30]
+Rescorla                 Expires April 12, 2017                [Page 30]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 31]
+Rescorla                 Expires April 12, 2017                [Page 31]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1789,7 +1789,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 32]
+Rescorla                 Expires April 12, 2017                [Page 32]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 33]
+Rescorla                 Expires April 12, 2017                [Page 33]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1901,7 +1901,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 34]
+Rescorla                 Expires April 12, 2017                [Page 34]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -1957,7 +1957,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 35]
+Rescorla                 Expires April 12, 2017                [Page 35]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2013,7 +2013,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 36]
+Rescorla                 Expires April 12, 2017                [Page 36]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2069,7 +2069,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 37]
+Rescorla                 Expires April 12, 2017                [Page 37]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2125,7 +2125,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 38]
+Rescorla                 Expires April 12, 2017                [Page 38]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2181,7 +2181,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 39]
+Rescorla                 Expires April 12, 2017                [Page 39]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2237,7 +2237,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 40]
+Rescorla                 Expires April 12, 2017                [Page 40]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2293,7 +2293,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 41]
+Rescorla                 Expires April 12, 2017                [Page 41]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2349,7 +2349,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 42]
+Rescorla                 Expires April 12, 2017                [Page 42]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2405,7 +2405,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 43]
+Rescorla                 Expires April 12, 2017                [Page 43]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2461,7 +2461,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 44]
+Rescorla                 Expires April 12, 2017                [Page 44]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2517,7 +2517,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 45]
+Rescorla                 Expires April 12, 2017                [Page 45]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2573,7 +2573,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 46]
+Rescorla                 Expires April 12, 2017                [Page 46]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2629,7 +2629,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 47]
+Rescorla                 Expires April 12, 2017                [Page 47]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2685,7 +2685,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 48]
+Rescorla                 Expires April 12, 2017                [Page 48]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2741,7 +2741,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 49]
+Rescorla                 Expires April 12, 2017                [Page 49]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2797,7 +2797,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 50]
+Rescorla                 Expires April 12, 2017                [Page 50]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2853,7 +2853,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 51]
+Rescorla                 Expires April 12, 2017                [Page 51]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2909,7 +2909,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 52]
+Rescorla                 Expires April 12, 2017                [Page 52]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -2965,7 +2965,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 53]
+Rescorla                 Expires April 12, 2017                [Page 53]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3021,7 +3021,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 54]
+Rescorla                 Expires April 12, 2017                [Page 54]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3077,7 +3077,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 55]
+Rescorla                 Expires April 12, 2017                [Page 55]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3133,7 +3133,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 56]
+Rescorla                 Expires April 12, 2017                [Page 56]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3189,7 +3189,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 57]
+Rescorla                 Expires April 12, 2017                [Page 57]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3245,7 +3245,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 58]
+Rescorla                 Expires April 12, 2017                [Page 58]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3301,7 +3301,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 59]
+Rescorla                 Expires April 12, 2017                [Page 59]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3357,7 +3357,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 60]
+Rescorla                 Expires April 12, 2017                [Page 60]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3413,7 +3413,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 61]
+Rescorla                 Expires April 12, 2017                [Page 61]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3469,7 +3469,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 62]
+Rescorla                 Expires April 12, 2017                [Page 62]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3525,7 +3525,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 63]
+Rescorla                 Expires April 12, 2017                [Page 63]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3581,7 +3581,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 64]
+Rescorla                 Expires April 12, 2017                [Page 64]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3637,7 +3637,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 65]
+Rescorla                 Expires April 12, 2017                [Page 65]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3693,7 +3693,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 66]
+Rescorla                 Expires April 12, 2017                [Page 66]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3749,7 +3749,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 67]
+Rescorla                 Expires April 12, 2017                [Page 67]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3805,7 +3805,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 68]
+Rescorla                 Expires April 12, 2017                [Page 68]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3861,7 +3861,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 69]
+Rescorla                 Expires April 12, 2017                [Page 69]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3917,7 +3917,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 70]
+Rescorla                 Expires April 12, 2017                [Page 70]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -3973,7 +3973,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 71]
+Rescorla                 Expires April 12, 2017                [Page 71]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4029,7 +4029,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 72]
+Rescorla                 Expires April 12, 2017                [Page 72]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4085,7 +4085,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 73]
+Rescorla                 Expires April 12, 2017                [Page 73]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4141,7 +4141,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 74]
+Rescorla                 Expires April 12, 2017                [Page 74]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4197,7 +4197,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 75]
+Rescorla                 Expires April 12, 2017                [Page 75]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4253,7 +4253,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 76]
+Rescorla                 Expires April 12, 2017                [Page 76]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4309,7 +4309,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 77]
+Rescorla                 Expires April 12, 2017                [Page 77]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4365,7 +4365,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 78]
+Rescorla                 Expires April 12, 2017                [Page 78]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4421,7 +4421,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 79]
+Rescorla                 Expires April 12, 2017                [Page 79]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4477,7 +4477,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 80]
+Rescorla                 Expires April 12, 2017                [Page 80]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4533,7 +4533,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 81]
+Rescorla                 Expires April 12, 2017                [Page 81]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4589,7 +4589,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 82]
+Rescorla                 Expires April 12, 2017                [Page 82]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4645,7 +4645,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 83]
+Rescorla                 Expires April 12, 2017                [Page 83]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4701,7 +4701,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 84]
+Rescorla                 Expires April 12, 2017                [Page 84]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4757,7 +4757,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 85]
+Rescorla                 Expires April 12, 2017                [Page 85]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4813,7 +4813,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 86]
+Rescorla                 Expires April 12, 2017                [Page 86]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4869,7 +4869,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 87]
+Rescorla                 Expires April 12, 2017                [Page 87]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4925,7 +4925,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 88]
+Rescorla                 Expires April 12, 2017                [Page 88]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -4981,7 +4981,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 89]
+Rescorla                 Expires April 12, 2017                [Page 89]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5037,7 +5037,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 90]
+Rescorla                 Expires April 12, 2017                [Page 90]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5093,7 +5093,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 91]
+Rescorla                 Expires April 12, 2017                [Page 91]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5149,7 +5149,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 92]
+Rescorla                 Expires April 12, 2017                [Page 92]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5205,7 +5205,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 93]
+Rescorla                 Expires April 12, 2017                [Page 93]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5261,7 +5261,7 @@ A.2.  Alert Messages
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 94]
+Rescorla                 Expires April 12, 2017                [Page 94]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5317,7 +5317,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 95]
+Rescorla                 Expires April 12, 2017                [Page 95]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5373,7 +5373,7 @@ A.3.1.  Key Exchange Messages
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 96]
+Rescorla                 Expires April 12, 2017                [Page 96]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5429,7 +5429,7 @@ Internet-Draft                     TLS                      October 2016
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 97]
+Rescorla                 Expires April 12, 2017                [Page 97]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5485,7 +5485,7 @@ A.3.1.2.  Cookie Extension
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 98]
+Rescorla                 Expires April 12, 2017                [Page 98]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5541,7 +5541,7 @@ A.3.1.4.  Supported Groups Extension
 
 
 
-Rescorla                 Expires April 10, 2017                [Page 99]
+Rescorla                 Expires April 12, 2017                [Page 99]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5597,7 +5597,7 @@ A.3.2.  Server Parameters Messages
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 100]
+Rescorla                 Expires April 12, 2017               [Page 100]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5653,7 +5653,7 @@ A.3.4.  Ticket Establishment
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 101]
+Rescorla                 Expires April 12, 2017               [Page 101]
 
 Internet-Draft                     TLS                      October 2016
 
@@ -5672,6 +5672,10 @@ Internet-Draft                     TLS                      October 2016
           opaque ticket<1..2^16-1>;
           TicketExtension extensions<0..2^16-2>;
       } NewSessionTicket;
+
+      struct {
+          uint32 ticket_age_add;
+      } TicketEarlyDataInfo;
 
 A.3.5.  Updating Keys
 
@@ -5702,17 +5706,16 @@ A.4.  Cipher Suites
       | VALUE     | The two byte ID assigned for this cipher suite |
       +-----------+------------------------------------------------+
 
-   This specification defines the following cipher suites for use with
-   TLS 1.3.
 
 
 
-
-
-Rescorla                 Expires April 10, 2017               [Page 102]
+Rescorla                 Expires April 12, 2017               [Page 102]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   This specification defines the following cipher suites for use with
+   TLS 1.3.
 
               +------------------------------+-------------+
               | Description                  | Value       |
@@ -5757,19 +5760,21 @@ B.1.  API considerations for 0-RTT
    SHOULD NOT automatically resend 0-RTT data if it is rejected by the
    server.
 
+
+
+
+
+
+Rescorla                 Expires April 12, 2017               [Page 103]
+
+Internet-Draft                     TLS                      October 2016
+
+
 B.2.  Random Number Generation and Seeding
 
    TLS requires a cryptographically secure pseudorandom number generator
    (PRNG).  In most cases, the operating system provides an appropriate
    facility such as /dev/urandom, which should be used absent other
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 103]
-
-Internet-Draft                     TLS                      October 2016
-
-
    (performance) concerns.  It is generally preferable to use an
    existing PRNG implementation in preference to crafting a new one, and
    many adequate cryptographic libraries are already available under
@@ -5813,19 +5818,19 @@ B.5.  Implementation Pitfalls
       size?  In particular, the certificate and certificate request
       handshake messages can be large enough to require fragmentation.
 
+
+
+
+Rescorla                 Expires April 12, 2017               [Page 104]
+
+Internet-Draft                     TLS                      October 2016
+
+
    -  Do you ignore the TLS record layer version number in all TLS
       records? (see Appendix C)
 
    -  Have you ensured that all support for SSL, RC4, EXPORT ciphers,
       and MD5 (via the "signature_algorithm" extension) is completely
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 104]
-
-Internet-Draft                     TLS                      October 2016
-
-
       removed from all possible configurations that support TLS 1.3 or
       later, and that attempts to use these obsolete capabilities fail
       correctly? (see Appendix C)
@@ -5868,19 +5873,20 @@ Internet-Draft                     TLS                      October 2016
    -  Does your TLS client check that the Diffie-Hellman parameters sent
       by the server are acceptable, (see Section 4.2.5.1)?
 
+
+
+
+
+Rescorla                 Expires April 12, 2017               [Page 105]
+
+Internet-Draft                     TLS                      October 2016
+
+
    -  Do you use a strong and, most importantly, properly seeded random
       number generator (see Appendix B.2) when generating Diffie-Hellman
       private values, the ECDSA "k" parameter, and other security-
       critical values?  It is RECOMMENDED that implementations implement
       "deterministic ECDSA" as specified in [RFC6979].
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 105]
-
-Internet-Draft                     TLS                      October 2016
-
 
    -  Do you zero-pad Diffie-Hellman public key values to the group size
       (see Section 4.2.5.1)?
@@ -5921,6 +5927,17 @@ B.7.  Unauthenticated Operation
    NOT use TLS in such a way absent explicit configuration or a specific
    application profile.
 
+
+
+
+
+
+
+Rescorla                 Expires April 12, 2017               [Page 106]
+
+Internet-Draft                     TLS                      October 2016
+
+
 Appendix C.  Backward Compatibility
 
    The TLS protocol provides a built-in mechanism for version
@@ -5929,15 +5946,6 @@ Appendix C.  Backward Compatibility
 
    TLS 1.x and SSL 3.0 use compatible ClientHello messages.  Servers can
    also handle clients trying to use future versions of TLS as long as
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 106]
-
-Internet-Draft                     TLS                      October 2016
-
-
    the ClientHello format remains compatible and the client supports the
    highest protocol version available in the server.
 
@@ -5979,20 +5987,19 @@ C.1.  Negotiating with an older server
    resuming a session SHOULD initiate the connection using the version
    that was previously negotiated.
 
+
+
+Rescorla                 Expires April 12, 2017               [Page 107]
+
+Internet-Draft                     TLS                      October 2016
+
+
    Note that 0-RTT data is not compatible with older servers.  See
    Appendix C.3.
 
    If the version chosen by the server is not supported by the client
    (or not acceptable), the client MUST abort the handshake with a
    "protocol_version" alert.
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 107]
-
-Internet-Draft                     TLS                      October 2016
-
 
    If a TLS server receives a ClientHello containing a version number
    greater than the highest version supported by the server, it MUST
@@ -6034,6 +6041,15 @@ C.3.  Zero-RTT backwards compatibility
    handshake.  This can cause issues when a client attempts to use
    0-RTT, particularly against multi-server deployments.  For example, a
    deployment could deploy TLS 1.3 gradually with some servers
+
+
+
+
+Rescorla                 Expires April 12, 2017               [Page 108]
+
+Internet-Draft                     TLS                      October 2016
+
+
    implementing TLS 1.3 and some implementing TLS 1.2, or a TLS 1.3
    deployment could be downgraded to TLS 1.2.
 
@@ -6041,14 +6057,6 @@ C.3.  Zero-RTT backwards compatibility
    it receives a ServerHello with TLS 1.2 or older.  A client that
    attempts to repair this error SHOULD NOT send a TLS 1.2 ClientHello,
    but instead send a TLS 1.3 ClientHello without 0-RTT data.
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 108]
-
-Internet-Draft                     TLS                      October 2016
-
 
    To avoid this error condition, multi-server deployments SHOULD ensure
    a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
@@ -6091,20 +6099,16 @@ C.4.  Backwards Compatibility Security Restrictions
    ServerHello.version set to { 3, 0 } MUST abort the handshake with a
    "protocol_version" alert.
 
-   Implementations MUST NOT use the Truncated HMAC extension, defined in
-   Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
-   and has been shown to be insecure in some scenarios.
 
 
-
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 109]
+Rescorla                 Expires April 12, 2017               [Page 109]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   Implementations MUST NOT use the Truncated HMAC extension, defined in
+   Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
+   and has been shown to be insecure in some scenarios.
 
 Appendix D.  Overview of Security Properties
 
@@ -6151,17 +6155,15 @@ D.1.  Handshake
       session keys with the server, but those session keys are distinct
       from those established by the client.
 
-   Peer Authentication.  The client's view of the peer identity should
-      reflect the server's identity.  If the client is authenticated,
 
 
-
-
-Rescorla                 Expires April 10, 2017               [Page 110]
+Rescorla                 Expires April 12, 2017               [Page 110]
 
 Internet-Draft                     TLS                      October 2016
 
 
+   Peer Authentication.  The client's view of the peer identity should
+      reflect the server's identity.  If the client is authenticated,
       the server's view of the peer identity should match the client's
       identity.
 
@@ -6208,16 +6210,15 @@ Internet-Draft                     TLS                      October 2016
    Exporters computed with different labels and contexts are
    computationally independent, so it is not feasible to compute one
    from another or the session secret from the exported value.  Note:
-   exporters can produce arbitrary-length values.  If exporters are to
 
 
 
-
-Rescorla                 Expires April 10, 2017               [Page 111]
+Rescorla                 Expires April 12, 2017               [Page 111]
 
 Internet-Draft                     TLS                      October 2016
 
 
+   exporters can produce arbitrary-length values.  If exporters are to
    be used as channel bindings, the exported value MUST be large enough
    to provide collision resistance.
 
@@ -6264,15 +6265,17 @@ D.2.  Record Layer
    Order protection/non-replayability  An attacker should not be able to
       cause the receiver to accept a record which it has already
       accepted or cause the receiver to accept record N+1 without having
-      first processed record N.  [[TODO: If we merge in DTLS to this
-      document, we will need to update this guarantee.]]
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 112]
+
+Rescorla                 Expires April 12, 2017               [Page 112]
 
 Internet-Draft                     TLS                      October 2016
 
+
+      first processed record N.  [[TODO: If we merge in DTLS to this
+      document, we will need to update this guarantee.]]
 
    Length concealment.  Given a record with a given external length, the
       attacker should not be able to determine the amount of the record
@@ -6318,17 +6321,17 @@ Appendix E.  Working Group Information
 
    The discussion list for the IETF TLS working group is located at the
    e-mail address tls@ietf.org [1].  Information on the group and
-   information on how to subscribe to the list is at
-   https://www.ietf.org/mailman/listinfo/tls
 
 
 
 
-
-Rescorla                 Expires April 10, 2017               [Page 113]
+Rescorla                 Expires April 12, 2017               [Page 113]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   information on how to subscribe to the list is at
+   https://www.ietf.org/mailman/listinfo/tls
 
    Archives of the list can be found at: https://www.ietf.org/mail-
    archive/web/tls/current/index.html
@@ -6375,17 +6378,17 @@ Appendix F.  Contributors
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
       INRIA
-      antoine.delignat-lavaud@inria.fr
-
-   -  Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2)
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 114]
+Rescorla                 Expires April 12, 2017               [Page 114]
 
 Internet-Draft                     TLS                      October 2016
 
 
+      antoine.delignat-lavaud@inria.fr
+
+   -  Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2)
       Independent
       tim@dierks.org
 
@@ -6431,16 +6434,17 @@ Internet-Draft                     TLS                      October 2016
       ACLU
       dkg@fifthhorseman.net
 
-   -  Hubert Kario
-      Red Hat Inc.
-      hkario@redhat.com
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 115]
+Rescorla                 Expires April 12, 2017               [Page 115]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Hubert Kario
+      Red Hat Inc.
+      hkario@redhat.com
 
    -  Phil Karlton (co-author of SSL 3.0)
 
@@ -6486,18 +6490,18 @@ Internet-Draft                     TLS                      October 2016
 
    -  Andrei Popov
       Microsoft
-      andrei.popov@microsoft.com
-
-   -  Marsh Ray (co-author of [RFC7627])
-      Microsoft
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 116]
+Rescorla                 Expires April 12, 2017               [Page 116]
 
 Internet-Draft                     TLS                      October 2016
 
 
+      andrei.popov@microsoft.com
+
+   -  Marsh Ray (co-author of [RFC7627])
+      Microsoft
       maray@microsoft.com
 
    -  Robert Relyea
@@ -6542,18 +6546,18 @@ Internet-Draft                     TLS                      October 2016
 
    -  Tim Wright
       Vodafone
-      timothy.wright@vodafone.com
-
-   -  Kazu Yamamoto
-      Internet Initiative Japan Inc.
 
 
 
-Rescorla                 Expires April 10, 2017               [Page 117]
+Rescorla                 Expires April 12, 2017               [Page 117]
 
 Internet-Draft                     TLS                      October 2016
 
 
+      timothy.wright@vodafone.com
+
+   -  Kazu Yamamoto
+      Internet Initiative Japan Inc.
       kazu@iij.ad.jp
 
 Author's Address
@@ -6601,8 +6605,4 @@ Author's Address
 
 
 
-
-
-
-
-Rescorla                 Expires April 10, 2017               [Page 118]
+Rescorla                 Expires April 12, 2017               [Page 118]
