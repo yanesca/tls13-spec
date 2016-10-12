@@ -4992,14 +4992,6 @@ Internet-Draft                     TLS                      October 2016
               allowed during PSK", 2015, <https://www.ietf.org/mail-
               archive/web/tls/current/msg18215.html>.
 
-   [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
-              RFC 793, DOI 10.17487/RFC0793, September 1981,
-              <http://www.rfc-editor.org/info/rfc793>.
-
-   [RFC1948]  Bellovin, S., "Defending Against Sequence Number Attacks",
-              RFC 1948, DOI 10.17487/RFC1948, May 1996,
-              <http://www.rfc-editor.org/info/rfc1948>.
-
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
               DOI 10.17487/RFC3552, July 2003,
@@ -5015,14 +5007,6 @@ Internet-Draft                     TLS                      October 2016
               RFC 4279, DOI 10.17487/RFC4279, December 2005,
               <http://www.rfc-editor.org/info/rfc4279>.
 
-   [RFC4302]  Kent, S., "IP Authentication Header", RFC 4302,
-              DOI 10.17487/RFC4302, December 2005,
-              <http://www.rfc-editor.org/info/rfc4302>.
-
-   [RFC4303]  Kent, S., "IP Encapsulating Security Payload (ESP)",
-              RFC 4303, DOI 10.17487/RFC4303, December 2005,
-              <http://www.rfc-editor.org/info/rfc4303>.
-
    [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.1", RFC 4346,
               DOI 10.17487/RFC4346, April 2006,
@@ -5032,15 +5016,6 @@ Internet-Draft                     TLS                      October 2016
               and T. Wright, "Transport Layer Security (TLS)
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
-
-
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 90]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
               Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
@@ -5056,6 +5031,16 @@ Internet-Draft                     TLS                      October 2016
               "Transport Layer Security (TLS) Session Resumption without
               Server-Side State", RFC 4507, DOI 10.17487/RFC4507, May
               2006, <http://www.rfc-editor.org/info/rfc4507>.
+
+
+
+
+
+
+Rescorla                 Expires April 15, 2017                [Page 90]
+
+Internet-Draft                     TLS                      October 2016
+
 
    [RFC4681]  Santesson, S., Medvinsky, A., and J. Ball, "TLS User
               Mapping Extension", RFC 4681, DOI 10.17487/RFC4681,
@@ -5090,20 +5075,6 @@ Internet-Draft                     TLS                      October 2016
               Extension", RFC 5746, DOI 10.17487/RFC5746, February 2010,
               <http://www.rfc-editor.org/info/rfc5746>.
 
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 91]
-
-Internet-Draft                     TLS                      October 2016
-
-
-   [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
-              for Establishing a Secure Real-time Transport Protocol
-              (SRTP) Security Context Using Datagram Transport Layer
-              Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
-              2010, <http://www.rfc-editor.org/info/rfc5763>.
-
    [RFC5764]  McGrew, D. and E. Rescorla, "Datagram Transport Layer
               Security (DTLS) Extension to Establish Keys for the Secure
               Real-time Transport Protocol (SRTP)", RFC 5764,
@@ -5117,6 +5088,15 @@ Internet-Draft                     TLS                      October 2016
    [RFC5929]  Altman, J., Williams, N., and L. Zhu, "Channel Bindings
               for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
               <http://www.rfc-editor.org/info/rfc5929>.
+
+
+
+
+
+Rescorla                 Expires April 15, 2017                [Page 91]
+
+Internet-Draft                     TLS                      October 2016
+
 
    [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
               for Transport Layer Security (TLS) Authentication",
@@ -5141,18 +5121,6 @@ Internet-Draft                     TLS                      October 2016
               Protocol (HTTP/1.1): Message Syntax and Routing",
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <http://www.rfc-editor.org/info/rfc7230>.
-
-
-
-
-
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 92]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
@@ -5179,6 +5147,13 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC7568, June 2015,
               <http://www.rfc-editor.org/info/rfc7568>.
 
+
+
+Rescorla                 Expires April 15, 2017                [Page 92]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC7627]  Bhargavan, K., Ed., Delignat-Lavaud, A., Pironti, A.,
               Langley, A., and M. Ray, "Transport Layer Security (TLS)
               Session Hash and Extended Master Secret Extension",
@@ -5198,17 +5173,6 @@ Internet-Draft                     TLS                      October 2016
               (TLS) Cached Information Extension", RFC 7924,
               DOI 10.17487/RFC7924, July 2016,
               <http://www.rfc-editor.org/info/rfc7924>.
-
-
-
-
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 93]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
@@ -5235,9 +5199,45 @@ Internet-Draft                     TLS                      October 2016
    [X501]     "Information Technology - Open Systems Interconnection -
               The Directory: Models", ITU-T X.501, 1993.
 
+
+
+
+
+
+
+Rescorla                 Expires April 15, 2017                [Page 93]
+
+Internet-Draft                     TLS                      October 2016
+
+
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
