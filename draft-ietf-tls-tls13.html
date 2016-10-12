@@ -2916,6 +2916,12 @@ HKDF-Expand-Label(Secret, label, "", key_length)
     </tr>
     <tr>
       <td class="reference">
+        <b id="FW15">[FW15]</b>
+      </td>
+      <td class="top"><a title="Red Hat Product Security">Florian Weimer, .</a>, "<a>Factoring RSA Keys With TLS Perfect Forward Secrecy</a>", September 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="GCM">[GCM]</b>
       </td>
       <td class="top"><a>Dworkin, M.</a>, "<a>Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</a>", NIST Special Publication 800-38D, November 2007.</td>
@@ -3679,6 +3685,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
   <li>Does your TLS client check that the Diffie-Hellman parameters sent by the server are acceptable, (see <a href="#ffdhe-param">Section 4.2.5.1</a>)?</li>
   <li>Do you use a strong and, most importantly, properly seeded random number generator (see <a href="#random-number-generation-and-seeding">Appendix B.2</a>) when generating Diffie-Hellman private values, the ECDSA &#8220;k&#8221; parameter, and other security-critical values? It is RECOMMENDED that implementations implement &#8220;deterministic ECDSA&#8221; as specified in <a href="#RFC6979">[RFC6979]</a>.</li>
   <li>Do you zero-pad Diffie-Hellman public key values to the group size (see <a href="#ffdhe-param">Section 4.2.5.1</a>)?</li>
+  <li>Do you verify signatures after making them to protect against RSA-CRT key leaks? <a href="#FW15">[FW15]</a></li>
 </ul>
 <h2 id="rfc.appendix.B.6"><a href="#rfc.appendix.B.6">B.6.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
 <p id="rfc.section.B.6.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>

@@ -4949,6 +4949,9 @@ Internet-Draft                     TLS                      October 2016
               <https://www.ietf.org/mail-archive/web/openpgp/current/
               msg00999.html>.
 
+   [FW15]     Florian Weimer, ., "Factoring RSA Keys With TLS Perfect
+              Forward Secrecy", September 2015.
+
    [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
@@ -4973,11 +4976,8 @@ Internet-Draft                     TLS                      October 2016
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
 
-   [PSK-FINISHED]
-              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
-              "Revision 10: possible attack if client authentication is
-              allowed during PSK", 2015, <https://www.ietf.org/mail-
-              archive/web/tls/current/msg18215.html>.
+
+
 
 
 
@@ -4985,6 +4985,12 @@ Rescorla                 Expires April 15, 2017                [Page 89]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   [PSK-FINISHED]
+              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
+              "Revision 10: possible attack if client authentication is
+              allowed during PSK", 2015, <https://www.ietf.org/mail-
+              archive/web/tls/current/msg18215.html>.
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -5027,12 +5033,6 @@ Internet-Draft                     TLS                      October 2016
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
 
-   [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
-              Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
-              for Transport Layer Security (TLS)", RFC 4492,
-              DOI 10.17487/RFC4492, May 2006,
-              <http://www.rfc-editor.org/info/rfc4492>.
-
 
 
 
@@ -5041,6 +5041,12 @@ Rescorla                 Expires April 15, 2017                [Page 90]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
+              Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
+              for Transport Layer Security (TLS)", RFC 4492,
+              DOI 10.17487/RFC4492, May 2006,
+              <http://www.rfc-editor.org/info/rfc4492>.
 
    [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
               Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
@@ -5084,12 +5090,6 @@ Internet-Draft                     TLS                      October 2016
               Extension", RFC 5746, DOI 10.17487/RFC5746, February 2010,
               <http://www.rfc-editor.org/info/rfc5746>.
 
-   [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
-              for Establishing a Secure Real-time Transport Protocol
-              (SRTP) Security Context Using Datagram Transport Layer
-              Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
-              2010, <http://www.rfc-editor.org/info/rfc5763>.
-
 
 
 
@@ -5097,6 +5097,12 @@ Rescorla                 Expires April 15, 2017                [Page 91]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
+              for Establishing a Secure Real-time Transport Protocol
+              (SRTP) Security Context Using Datagram Transport Layer
+              Security (DTLS)", RFC 5763, DOI 10.17487/RFC5763, May
+              2010, <http://www.rfc-editor.org/info/rfc5763>.
 
    [RFC5764]  McGrew, D. and E. Rescorla, "Datagram Transport Layer
               Security (DTLS) Extension to Establish Keys for the Secure
@@ -5136,6 +5142,18 @@ Internet-Draft                     TLS                      October 2016
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <http://www.rfc-editor.org/info/rfc7230>.
 
+
+
+
+
+
+
+
+Rescorla                 Expires April 15, 2017                [Page 92]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
               Transport Layer Security (TLS) and Datagram Transport
@@ -5146,13 +5164,6 @@ Internet-Draft                     TLS                      October 2016
               "Transport Layer Security (TLS) Application-Layer Protocol
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <http://www.rfc-editor.org/info/rfc7301>.
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 92]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC7366]  Gutmann, P., "Encrypt-then-MAC for Transport Layer
               Security (TLS) and Datagram Transport Layer Security
@@ -5188,6 +5199,17 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC7924, July 2016,
               <http://www.rfc-editor.org/info/rfc7924>.
 
+
+
+
+
+
+
+Rescorla                 Expires April 15, 2017                [Page 93]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
               Cryptosystems", Communications of the ACM v. 21, n. 2, pp.
@@ -5201,14 +5223,6 @@ Internet-Draft                     TLS                      October 2016
               Attacks: Breaking Authentication in TLS, IKE, and SSH",
               Network and Distributed System Security Symposium (NDSS
               2016) , 2016.
-
-
-
-
-Rescorla                 Expires April 15, 2017                [Page 93]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [SSL2]     Hickman, K., "The SSL Protocol", February 1995.
 
@@ -5224,20 +5238,6 @@ Internet-Draft                     TLS                      October 2016
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -5941,6 +5941,9 @@ Internet-Draft                     TLS                      October 2016
    -  Do you zero-pad Diffie-Hellman public key values to the group size
       (see Section 4.2.5.1)?
 
+   -  Do you verify signatures after making them to protect against RSA-
+      CRT key leaks?  [FW15]
+
 B.6.  Client Tracking Prevention
 
    Clients SHOULD NOT reuse a session ticket for multiple connections.
@@ -5983,9 +5986,6 @@ Appendix C.  Backward Compatibility
    negotiation between endpoints potentially supporting different
    versions of TLS.
 
-   TLS 1.x and SSL 3.0 use compatible ClientHello messages.  Servers can
-   also handle clients trying to use future versions of TLS as long as
-
 
 
 
@@ -5994,6 +5994,8 @@ Rescorla                 Expires April 15, 2017               [Page 107]
 Internet-Draft                     TLS                      October 2016
 
 
+   TLS 1.x and SSL 3.0 use compatible ClientHello messages.  Servers can
+   also handle clients trying to use future versions of TLS as long as
    the ClientHello format remains compatible and the client supports the
    highest protocol version available in the server.
 
@@ -6038,9 +6040,7 @@ C.1.  Negotiating with an older server
    Note that 0-RTT data is not compatible with older servers.  See
    Appendix C.3.
 
-   If the version chosen by the server is not supported by the client
-   (or not acceptable), the client MUST abort the handshake with a
-   "protocol_version" alert.
+
 
 
 
@@ -6049,6 +6049,10 @@ Rescorla                 Expires April 15, 2017               [Page 108]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   If the version chosen by the server is not supported by the client
+   (or not acceptable), the client MUST abort the handshake with a
+   "protocol_version" alert.
 
    If a TLS server receives a ClientHello containing a version number
    greater than the highest version supported by the server, it MUST
@@ -6093,10 +6097,6 @@ C.3.  Zero-RTT backwards compatibility
    implementing TLS 1.3 and some implementing TLS 1.2, or a TLS 1.3
    deployment could be downgraded to TLS 1.2.
 
-   A client that attempts to send 0-RTT data MUST fail a connection if
-   it receives a ServerHello with TLS 1.2 or older.  A client that
-   attempts to repair this error SHOULD NOT send a TLS 1.2 ClientHello,
-   but instead send a TLS 1.3 ClientHello without 0-RTT data.
 
 
 
@@ -6105,6 +6105,11 @@ Rescorla                 Expires April 15, 2017               [Page 109]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   A client that attempts to send 0-RTT data MUST fail a connection if
+   it receives a ServerHello with TLS 1.2 or older.  A client that
+   attempts to repair this error SHOULD NOT send a TLS 1.2 ClientHello,
+   but instead send a TLS 1.3 ClientHello without 0-RTT data.
 
    To avoid this error condition, multi-server deployments SHOULD ensure
    a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
@@ -6147,11 +6152,6 @@ C.4.  Backwards Compatibility Security Restrictions
    ServerHello.version set to { 3, 0 } MUST abort the handshake with a
    "protocol_version" alert.
 
-   Implementations MUST NOT use the Truncated HMAC extension, defined in
-   Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
-   and has been shown to be insecure in some scenarios.
-
-
 
 
 
@@ -6161,6 +6161,10 @@ Rescorla                 Expires April 15, 2017               [Page 110]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   Implementations MUST NOT use the Truncated HMAC extension, defined in
+   Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
+   and has been shown to be insecure in some scenarios.
 
 Appendix D.  Overview of Security Properties
 
@@ -6207,10 +6211,6 @@ D.1.  Handshake
       session keys with the server, but those session keys are distinct
       from those established by the client.
 
-   Peer Authentication.  The client's view of the peer identity should
-      reflect the server's identity.  If the client is authenticated,
-
-
 
 
 Rescorla                 Expires April 15, 2017               [Page 111]
@@ -6218,6 +6218,8 @@ Rescorla                 Expires April 15, 2017               [Page 111]
 Internet-Draft                     TLS                      October 2016
 
 
+   Peer Authentication.  The client's view of the peer identity should
+      reflect the server's identity.  If the client is authenticated,
       the server's view of the peer identity should match the client's
       identity.
 
@@ -6264,8 +6266,6 @@ Internet-Draft                     TLS                      October 2016
    Exporters computed with different labels and contexts are
    computationally independent, so it is not feasible to compute one
    from another or the session secret from the exported value.  Note:
-   exporters can produce arbitrary-length values.  If exporters are to
-   be used as channel bindings, the exported value MUST be large enough
 
 
 
@@ -6274,6 +6274,8 @@ Rescorla                 Expires April 15, 2017               [Page 112]
 Internet-Draft                     TLS                      October 2016
 
 
+   exporters can produce arbitrary-length values.  If exporters are to
+   be used as channel bindings, the exported value MUST be large enough
    to provide collision resistance.  The exporters provided in TLS 1.3
    are derived from the same handshake contexts as the early traffic
    keys and the application traffic keys respectively, and thus have
@@ -6318,9 +6320,7 @@ D.2.  Record Layer
    Confidentiality.  An attacker should not be able to determine the
       plaintext contents of a given record.
 
-   Integrity.  An attacker should not be able to craft a new record
-      which is different from an existing record which will be accepted
-      by the receiver.
+
 
 
 
@@ -6329,6 +6329,10 @@ Rescorla                 Expires April 15, 2017               [Page 113]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   Integrity.  An attacker should not be able to craft a new record
+      which is different from an existing record which will be accepted
+      by the receiver.
 
    Order protection/non-replayability  An attacker should not be able to
       cause the receiver to accept a record which it has already
@@ -6373,10 +6377,6 @@ Internet-Draft                     TLS                      October 2016
    secrecy must do a fresh handshake and establish a new session key
    with an (EC)DHE exchange.
 
-   The reader should refer to the following references for analysis of
-   the TLS record layer.
-
-
 
 
 
@@ -6385,6 +6385,9 @@ Rescorla                 Expires April 15, 2017               [Page 114]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   The reader should refer to the following references for analysis of
+   the TLS record layer.
 
 Appendix E.  Working Group Information
 
@@ -6432,9 +6435,6 @@ Appendix F.  Contributors
       IBM
       canetti@watson.ibm.com
 
-   -  Pete Chown
-      Skygate Technology Ltd
-
 
 
 Rescorla                 Expires April 15, 2017               [Page 115]
@@ -6442,6 +6442,8 @@ Rescorla                 Expires April 15, 2017               [Page 115]
 Internet-Draft                     TLS                      October 2016
 
 
+   -  Pete Chown
+      Skygate Technology Ltd
       pc@skygate.co.uk
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
@@ -6488,8 +6490,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Subodh Iyengar
       Facebook
-      subodh@fb.com
-
 
 
 
@@ -6497,6 +6497,8 @@ Rescorla                 Expires April 15, 2017               [Page 116]
 
 Internet-Draft                     TLS                      October 2016
 
+
+      subodh@fb.com
 
    -  Daniel Kahn Gillmor
       ACLU
@@ -6544,8 +6546,6 @@ Internet-Draft                     TLS                      October 2016
       Microsoft
       mnystrom@microsoft.com
 
-   -  Alfredo Pironti (co-author of [RFC7627])
-      INRIA
 
 
 
@@ -6554,6 +6554,8 @@ Rescorla                 Expires April 15, 2017               [Page 117]
 Internet-Draft                     TLS                      October 2016
 
 
+   -  Alfredo Pironti (co-author of [RFC7627])
+      INRIA
       alfredo.pironti@inria.fr
 
    -  Andrei Popov
@@ -6600,8 +6602,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Tom Weinstein
 
-   -  Hoeteck Wee
-      Ecole Normale Superieure, Paris
 
 
 
@@ -6610,6 +6610,8 @@ Rescorla                 Expires April 15, 2017               [Page 118]
 Internet-Draft                     TLS                      October 2016
 
 
+   -  Hoeteck Wee
+      Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
 
    -  Tim Wright
@@ -6626,8 +6628,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
 
 
 
