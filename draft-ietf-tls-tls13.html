@@ -372,7 +372,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-10" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-12" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -393,7 +393,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 10, 2016</td>
+  <td class="right">October 12, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -412,7 +412,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 13, 2017</td>
+  <td class="left">Expires: April 15, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -433,7 +433,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 13, 2017.</p>
+<p>This Internet-Draft will expire on April 15, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -587,6 +587,8 @@ li, p {
 
 <ul>
   <li>Add max_early_data_size field to TicketEarlyDataInfo (*)</li>
+  <li>Add a 0-RTT exporter and change the transcript for the regular exporter (*).</li>
+  <li>Explicitly allow predicting ClientFinished for NST.</li>
 </ul>
 <p id="rfc.section.1.2.p.4">draft-16</p>
 <p/>
@@ -596,7 +598,7 @@ li, p {
   <li>Change RSASSA-PSS and EdDSA SignatureScheme codepoints for better backwards compatibility (*)</li>
   <li>Move HelloRetryRequest.selected_group to an extension (*)</li>
   <li>Clarify the behavior of no exporter context and make it the same as an empty context.(*)</li>
-  <li>New KeyUpdate format that allows for requesting/not-requesting an answer (*)</li>
+  <li>New KeyUpdate format that allows for requesting/not-requesting an answer. This also means changes to the key schedule to support independent updates (*)</li>
   <li>New certificate_required alert (*)</li>
   <li>Forbid CertificateRequest with 0-RTT and PSK.</li>
   <li>Relax requirement to check SNI for 0-RTT.</li>
@@ -972,7 +974,8 @@ Subsequent Handshake:
   <li>This data is not forward secret, because it is encrypted solely with the PSK.</li>
   <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (See <a href="#replay-time">Section 4.2.7.2</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
-<p id="rfc.section.2.3.p.5">The remainder of this document provides a detailed description of TLS.</p>
+<p id="rfc.section.2.3.p.5">The same warnings apply to any use of the early exporter secret.</p>
+<p id="rfc.section.2.3.p.6">The remainder of this document provides a detailed description of TLS.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#presentation-language" id="presentation-language">Presentation Language</a></h1>
 <p id="rfc.section.3.p.1">This document deals with the formatting of data in an external representation.  The following very basic and somewhat casually defined presentation syntax will be used. The syntax draws from several sources in its structure. Although it resembles the programming language &#8220;C&#8221; in its syntax and XDR <a href="#RFC4506">[RFC4506]</a> in both its syntax and intent, it would be risky to draw too many parallels. The purpose of this presentation language is to document TLS only; it has no general application beyond that particular goal.</p>
 <h2 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#basic-block-size" id="basic-block-size">Basic Block Size</a></h2>
@@ -1916,6 +1919,7 @@ finished_key =
 </pre>
 <p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.6</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.  For handshakes that do not use a resumption_psk, the resumption_context is a string of Hash.length zeroes. [[Note: this will not be safe if/when we add additional server signatures with PSK: OPEN ISSUE https://github.com/tlswg/tls13-spec/issues/558]]</p>
 <p id="rfc.section.4.5.1.p.3">Any ticket MUST only be resumed with a cipher suite that is identical to that negotiated connection where the ticket was established.</p>
+<p id="rfc.section.4.5.1.p.4">Note: Although the resumption_psk depends on the client&#8217;s second flight, servers which do not request client authentication MAY compute the remainder of the transcript independently and then send a NewSessionTicket immediately upon sending its Finished rather than waiting for the client Finished.</p>
 <pre>
    enum { ticket_early_data_info(1), (65535) } TicketExtensionType;
 
@@ -1946,14 +1950,14 @@ finished_key =
   <dt>ticket_extensions</dt>
   <dd style="margin-left: 8">A set of extension values for the ticket. Clients MUST ignore unrecognized extensions.</dd>
 </dl>
-<p id="rfc.section.4.5.1.p.5">This document defines one ticket extension, &#8220;ticket_early_data_info&#8221;</p>
+<p id="rfc.section.4.5.1.p.6">This document defines one ticket extension, &#8220;ticket_early_data_info&#8221;</p>
 <pre>
    struct {
        uint32 ticket_age_add;
        uint32 max_early_data_size;           
    } TicketEarlyDataInfo;
 </pre>
-<p id="rfc.section.4.5.1.p.6">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.7</a>)). It contains the following values:</p>
+<p id="rfc.section.4.5.1.p.7">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.7</a>)). It contains the following values:</p>
 <p/>
 
 <dl>
@@ -2263,9 +2267,15 @@ finished_key =
    PSK -&gt;  HKDF-Extract
                  |
                  v
-           Early Secret ---&gt; Derive-Secret(., "client early traffic secret",
-                 |                         ClientHello)
-                 |                         = client_early_traffic_secret
+           Early Secret
+                 |
+                 +--------&gt; Derive-Secret(., "client early traffic secret",
+                 |                        ClientHello)
+                 |                        = client_early_traffic_secret
+                 |
+                 +--------&gt; Derive-Secret(., "early exporter master secret",
+                 |                        ClientHello)
+                 |                        = early_exporter_secret
                  v
 (EC)DHE -&gt; HKDF-Extract
                  |
@@ -2295,7 +2305,7 @@ finished_key =
                  |                         = server_traffic_secret_0
                  |
                  +---------&gt; Derive-Secret(., "exporter master secret",
-                 |                         ClientHello...Client Finished)
+                 |                         ClientHello...Server Finished)
                  |                         = exporter_secret
                  |
                  +---------&gt; Derive-Secret(., "resumption master secret",
@@ -2399,13 +2409,14 @@ finished_key =
 <h3 id="rfc.section.7.3.3"><a href="#rfc.section.7.3.3">7.3.3.</a> <a href="#exporters" id="exporters">Exporters</a></h3>
 <p><a href="#RFC5705">[RFC5705]</a> defines keying material exporters for TLS in terms of the TLS PRF. This document replaces the PRF with HKDF, thus requiring a new construction. The exporter interface remains the same. If context is provided, the value is computed as:</p>
 <pre>
-HKDF-Expand-Label(exporter_secret, label, context_value, key_length)
+HKDF-Expand-Label(Secret, label, context_value, key_length)
 </pre>
-<p id="rfc.section.7.3.3.p.2">If no context is provided, the value is computed as:</p>
+<p id="rfc.section.7.3.3.p.2">Where Secret is either the early_exporter_secret or the exporter_secret.  Implementations MUST use the exporter_secret unless explicitly specified by the application. When adding TLS 1.3 to TLS 1.2 stacks, the exporter_secret MUST be for the existing exporter interface.</p>
+<p id="rfc.section.7.3.3.p.3">If no context is provided, the value is computed as:</p>
 <pre>
-HKDF-Expand-Label(exporter_secret, label, "", key_length)
+HKDF-Expand-Label(Secret, label, "", key_length)
 </pre>
-<p id="rfc.section.7.3.3.p.3">Note that providing no context computes the same value as providing an empty context. As of this document&#8217;s publication, no allocated exporter label is used with both modes. Future specifications MUST NOT provide an empty context and no context with the same label and SHOULD provide a context, possibly empty, in all exporter computations.</p>
+<p id="rfc.section.7.3.3.p.4">Note that providing no context computes the same value as providing an empty context. As of this document&#8217;s publication, no allocated exporter label is used with both modes. Future specifications MUST NOT provide an empty context and no context with the same label and SHOULD provide a context, possibly empty, in all exporter computations.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mti-cipher-suites" id="mti-cipher-suites">MTI Cipher Suites</a></h2>
 <p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites.</p>
@@ -3735,7 +3746,7 @@ HKDF-Expand-Label(exporter_secret, label, "", key_length)
 </dl>
 <p id="rfc.section.D.1.p.5">Informally, the signature-based modes of TLS 1.3 provide for the establishment of a unique, secret, shared, key established by an (EC)DHE key exchange and authenticated by the server&#8217;s signature over the handshake transcript, as well as tied to the server&#8217;s identity by a MAC. If the client is authenticated by a certificate, it also signs over the handshake transcript and provides a MAC tied to both identities. <a href="#SIGMA">[SIGMA]</a> describes the analysis of this type of key exchange protocol. If fresh (EC)DHE keys are used for each connection, then the output keys are forward secret.</p>
 <p id="rfc.section.D.1.p.6">The PSK and resumption-PSK modes bootstrap from a long-term shared secret into a unique per-connection short-term session key. This secret may have been established in a previous handshake. If PSK-(EC)DHE modes are used, this session key will also be forward secret. The resumption-PSK mode has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.</p>
-<p id="rfc.section.D.1.p.7">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance.</p>
+<p id="rfc.section.D.1.p.7">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
 <p id="rfc.section.D.1.p.8">For all handshake modes, the Finished MAC (and where present, the signature), prevents downgrade attacks. In addition, the use of certain bytes in the random nonces as described in <a href="#server-hello">Section 4.1.3</a> allows the detection of downgrade to previous TLS versions.</p>
 <p id="rfc.section.D.1.p.9">As soon as the client and the server have exchanged enough information to establish shared keys, the remainder of the handshake is encrypted, thus providing protection against passive attackers. Because the server authenticates before the client, the client can ensure that it only reveals its identity to an authenticated server. Note that implementations must use the provided record padding mechanism during the handshake to avoid leaking information about the identities due to length.</p>
 <p id="rfc.section.D.1.p.10">The 0-RTT mode of operation generally provides the same security properties as 1-RTT data, with the two exceptions that the 0-RTT encryption keys do not provide full forward secrecy and that the the server is not able to guarantee full uniqueness of the handshake (non-replayability) without keeping potentially undue amounts of state. See <a href="#early-data-indication">Section 4.2.7</a> for one mechanism to limit the exposure to replay.</p>
