@@ -1353,7 +1353,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.1.p.3">The server MUST NOT send the &#8220;supported_versions&#8221; extension. The server&#8217;s selected version is contained in the ServerHello.version field as in previous versions of TLS.</p>
 <h4 id="rfc.section.4.2.1.1"><a href="#rfc.section.4.2.1.1">4.2.1.1.</a> <a href="#draft-version-indicator" id="draft-version-indicator">Draft Version Indicator</a></h4>
 <p id="rfc.section.4.2.1.1.p.1">RFC EDITOR: PLEASE REMOVE THIS SECTION</p>
-<p id="rfc.section.4.2.1.1.p.2">While the eventual version indicator for the RFC version of TLS 1.3 will be {3, 4}, implementations of draft versions of this specification SHOULD instead advertise {0x7f, [draft-version]} in their &#8220;supported_versions&#8221; extension, in ServerHello.version, and HelloRetryRequest.server_version.  This allows pre-RFC implementations to safely negotiate with each other, even if they would otherwise be incompatible.</p>
+<p id="rfc.section.4.2.1.1.p.2">While the eventual version indicator for the RFC version of TLS 1.3 will be {3, 4}, implementations of draft versions of this specification SHOULD instead advertise {0x7f, [draft-version]} in their &#8220;supported_versions&#8221; extension, in ServerHello.version, and HelloRetryRequest.server_version.  For instance, draft-17 would be encoded as the bytes 7f 11.  This allows pre-RFC implementations to safely negotiate with each other, even if they would otherwise be incompatible.</p>
 <h3 id="rfc.section.4.2.2"><a href="#rfc.section.4.2.2">4.2.2.</a> <a href="#cookie" id="cookie">Cookie</a></h3>
 <pre>
    struct {

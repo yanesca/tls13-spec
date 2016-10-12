@@ -1966,9 +1966,10 @@ Internet-Draft                     TLS                      October 2016
    will be {3, 4}, implementations of draft versions of this
    specification SHOULD instead advertise {0x7f, [draft-version]} in
    their "supported_versions" extension, in ServerHello.version, and
-   HelloRetryRequest.server_version.  This allows pre-RFC
-   implementations to safely negotiate with each other, even if they
-   would otherwise be incompatible.
+   HelloRetryRequest.server_version.  For instance, draft-17 would be
+   encoded as the bytes 7f 11.  This allows pre-RFC implementations to
+   safely negotiate with each other, even if they would otherwise be
+   incompatible.
 
 4.2.2.  Cookie
 
@@ -2008,7 +2009,6 @@ Internet-Draft                     TLS                      October 2016
 
    Servers which are authenticating via a certificate MUST indicate so
    by sending the client an empty "signature_algorithms" extension.
-
 
 
 
