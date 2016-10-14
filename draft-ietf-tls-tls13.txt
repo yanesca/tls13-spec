@@ -1436,8 +1436,8 @@ Internet-Draft                     TLS                      October 2016
    Protocol messages MUST be sent in the order defined below (and shown
    in the diagrams in Section 2).  A peer which receives a handshake
    message in an unexpected order MUST abort the handshake with an
-   "unexpected_message" alert.  results in an "unexpected_message" fatal
-   error.  Unneeded handshake messages are omitted, however.
+   "unexpected_message" alert.  Unneeded handshake messages are omitted,
+   however.
 
    New handshake message types are assigned by IANA as described in
    Section 10.

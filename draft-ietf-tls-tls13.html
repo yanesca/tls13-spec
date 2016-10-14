@@ -1158,7 +1158,7 @@ Subsequent Handshake:
        } body;
    } Handshake;
 </pre>
-<p id="rfc.section.4.p.2">Protocol messages MUST be sent in the order defined below (and shown in the diagrams in <a href="#protocol-overview">Section 2</a>).  A peer which receives a handshake message in an unexpected order MUST abort the handshake with an &#8220;unexpected_message&#8221; alert.  results in an &#8220;unexpected_message&#8221; fatal error. Unneeded handshake messages are omitted, however.</p>
+<p id="rfc.section.4.p.2">Protocol messages MUST be sent in the order defined below (and shown in the diagrams in <a href="#protocol-overview">Section 2</a>).  A peer which receives a handshake message in an unexpected order MUST abort the handshake with an &#8220;unexpected_message&#8221; alert.  Unneeded handshake messages are omitted, however.</p>
 <p id="rfc.section.4.p.3">New handshake message types are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h2 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#key-exchange-messages" id="key-exchange-messages">Key Exchange Messages</a></h2>
 <p id="rfc.section.4.1.p.1">The key exchange messages are used to exchange security capabilities between the client and server and to establish the traffic keys used to protect the handshake and data.</p>
