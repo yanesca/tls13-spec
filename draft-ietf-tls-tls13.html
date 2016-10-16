@@ -372,7 +372,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-14" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-16" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -393,7 +393,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 14, 2016</td>
+  <td class="right">October 16, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -412,7 +412,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 17, 2017</td>
+  <td class="left">Expires: April 19, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -433,7 +433,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 17, 2017.</p>
+<p>This Internet-Draft will expire on April 19, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -589,6 +589,7 @@ li, p {
   <li>Add max_early_data_size field to TicketEarlyDataInfo (*)</li>
   <li>Add a 0-RTT exporter and change the transcript for the regular exporter (*).</li>
   <li>Merge TicketExtensions and Extensions registry. Changes ticket_early_data_info code point (*).</li>
+  <li>Replace Client.key_shares in response to HRR (*)</li>
   <li>Explicitly allow predicting ClientFinished for NST.</li>
   <li>Clarify conditions for allowing 0-RTT with PSK.</li>
 </ul>
@@ -1194,7 +1195,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>Including a new KeyShareEntry as the lowest priority share (i.e., appended to the list of shares in the &#8220;key_share&#8221; extension).</li>
+  <li>If a &#8220;key_share&#8221; extension was supplied in the HelloRetryRequest, replacing the list of shares with a list containing a single KeyShareEntry from the indicated group.</li>
   <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication">Section 4.2.7</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
   <li>Including a &#8220;cookie&#8221; extension if one was provided in the HelloRetryRequest.</li>
 </ul>
@@ -1293,7 +1294,7 @@ Subsequent Handshake:
    } HelloRetryRequest;
 </pre>
 <p id="rfc.section.4.1.4.p.4">The version and extensions fields have the same meanings as their corresponding values in the ServerHello.  The server SHOULD send only the extensions necessary for the client to generate a correct ClientHello pair (currently no such extensions exist). As with ServerHello, a HelloRetryRequest MUST NOT contain any extensions that were not first offered by the client in its ClientHello, with the exception of optionally the &#8220;cookie&#8221; (see <a href="#cookie">Section 4.2.2</a>) extension.</p>
-<p id="rfc.section.4.1.4.p.5">Upon receipt of a HelloRetryRequest, the client MUST verify that the extensions block is not empty and otherwise MUST abort the handshake with a &#8220;decode_error&#8221; alert.  Clients SHOULD also abort the handshake with an &#8220;unexpected_message&#8221; alert in response to any second HelloRetryRequest which was sent in the same connection (i.e., where the ClientHello was itself in response to a HelloRetryRequest).</p>
+<p id="rfc.section.4.1.4.p.5">Upon receipt of a HelloRetryRequest, the client MUST verify that the extensions block is not empty and otherwise MUST abort the handshake with a &#8220;decode_error&#8221; alert. Clients MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert if the HelloRetryRequest would not result in any change in the ClientHello. If a client receives a second HelloRetryRequest in the same connection (i.e., where the ClientHello was itself in response to a HelloRetryRequest), it MUST abort the handshake with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.4.1.4.p.6">Otherwise, the client MUST process all extensions in the HelloRetryRequest and send a second updated ClientHello. The HelloRetryRequest extensions defined in this specification are:</p>
 <p/>
 
@@ -1301,7 +1302,6 @@ Subsequent Handshake:
   <li>cookie (see <a href="#cookie">Section 4.2.2</a>)</li>
   <li>key_share (see <a href="#key-share">Section 4.2.5</a>)</li>
 </ul>
-<p id="rfc.section.4.1.4.p.8">Note that HelloRetryRequest extensions are defined such that the original ClientHello may be computed from the new one, given minimal state about which HelloRetryRequest extensions were sent. For example, the key_share extension causes the new KeyShareEntry to be appended to the client_shares field, rather than replacing it.</p>
 <h2 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#hello-extensions" id="hello-extensions">Hello Extensions</a></h2>
 <p id="rfc.section.4.2.p.1">The extension format is:</p>
 <pre>
