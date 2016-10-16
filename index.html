@@ -1537,7 +1537,11 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.6.p.1">The &#8220;pre_shared_key&#8221; extension is used to indicate the identity of the pre-shared key to be used with a given handshake in association with PSK key establishment (see <a href="#RFC4279">[RFC4279]</a> for background).</p>
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains a &#8220;PreSharedKeyExtension&#8221; value:</p>
 <pre>
-   opaque PskIdentity&lt;0..2^16-1&gt;;
+   struct {
+       opaque identity&lt;0..2^16-1&gt;;
+       uint32 obfuscated_ticket_age;
+   } PskIdentity;
+
    opaque PskBinderEntry&lt;32..255&gt;;
    
    struct {
@@ -1557,6 +1561,8 @@ Subsequent Handshake:
 <dl>
   <dt>identities</dt>
   <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.9</a>), the first identity is the one used for 0-RTT data.</dd>
+  <dt>obfuscated_ticket_age</dt>
+  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. External tickets SHOULD use an obfuscated_ticket_age of 0; servers MUST ignore this value for external tickets.</dd>
   <dt>binders</dt>
   <dd style="margin-left: 8">A series of HMAC values, one for each PSK offered in the &#8220;pre_shared_keys&#8221; extension and in the same order, computed as described below.</dd>
   <dt>selected_identity</dt>
@@ -1604,25 +1610,12 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.9.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-               uint32 obfuscated_ticket_age;
-
-           case server_hello:
-               struct {};
-       };
    } EarlyDataIndication;
 </pre>
-<p/>
-
-<dl>
-  <dt>obfuscated_ticket_age</dt>
-  <dd style="margin-left: 8">The time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds.</dd>
-</dl>
-<p id="rfc.section.4.2.9.p.4">A server MUST validate that the ticket_age is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT.</p>
-<p id="rfc.section.4.2.9.p.5">The parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.9.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
-<p id="rfc.section.4.2.9.p.7">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
+<p id="rfc.section.4.2.9.p.3">A server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
+<p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.4.2.9.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
+<p id="rfc.section.4.2.9.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
 
 <ul>
@@ -1630,22 +1623,22 @@ Subsequent Handshake:
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
   <li>Request that the client send another ClientHello by responding with a HelloRetryRequest.  A client MUST NOT include the &#8220;early_data&#8221; extension in its followup ClientHello.</li>
 </ul>
-<p id="rfc.section.4.2.9.p.9">In order to accept early data, the server server MUST have accepted a PSK cipher suite and selected the the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
+<p id="rfc.section.4.2.9.p.8">In order to accept early data, the server server MUST have accepted a PSK cipher suite and selected the the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
 <p/>
 
 <ul>
   <li>The TLS version number, AEAD algorithm, and the hash for HKDF.</li>
   <li>The selected ALPN <a href="#RFC7443">[RFC7443]</a> value, if any.</li>
 </ul>
-<p id="rfc.section.4.2.9.p.11">Future extensions MUST define their interaction with 0-RTT.</p>
-<p id="rfc.section.4.2.9.p.12">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
-<p id="rfc.section.4.2.9.p.13">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, if the server fails to decrypt any 0-RTT record following an accepted &#8220;early_data&#8221; extension it MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
-<p id="rfc.section.4.2.9.p.14">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the ALPN value has changed, it is likely unsafe to retransmit the original application layer data.</p>
+<p id="rfc.section.4.2.9.p.10">Future extensions MUST define their interaction with 0-RTT.</p>
+<p id="rfc.section.4.2.9.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
+<p id="rfc.section.4.2.9.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, if the server fails to decrypt any 0-RTT record following an accepted &#8220;early_data&#8221; extension it MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
+<p id="rfc.section.4.2.9.p.13">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the ALPN value has changed, it is likely unsafe to retransmit the original application layer data.</p>
 <h4 id="rfc.section.4.2.9.1"><a href="#rfc.section.4.2.9.1">4.2.9.1.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
 <p id="rfc.section.4.2.9.1.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the &#8220;end_of_early_data&#8221; alert. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s &#8220;end_of_early_data&#8221; alert.</p>
 <h4 id="rfc.section.4.2.9.2"><a href="#rfc.section.4.2.9.2">4.2.9.2.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
 <p id="rfc.section.4.2.9.2.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.</p>
-<p id="rfc.section.4.2.9.2.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;early_data&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a session ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;early_data&#8221; extension, it can subtract the base value and check to see if the value used by the client matches its expectations.</p>
+<p id="rfc.section.4.2.9.2.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a session ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;pre_shared_key&#8221; extension, it can subtract the base value and check to see if the value used by the client matches its expectations.</p>
 <p id="rfc.section.4.2.9.2.p.3">The ticket age (the value with &#8220;ticket_age_add&#8221; subtracted) provided by the client will be shorter than the actual time elapsed on the server by a single round trip time.  This difference is comprised of the delay in sending the NewSessionTicket message to the client, plus the time taken to send the ClientHello to the server.  For this reason, a server SHOULD measure the round trip time prior to sending the NewSessionTicket message and account for that in the value it saves.</p>
 <p id="rfc.section.4.2.9.2.p.4">To properly validate the ticket age, a server needs to save at least two items:</p>
 <p/>
@@ -1955,6 +1948,7 @@ finished_key =
 <pre>
    struct {
        uint32 ticket_lifetime;
+       uint32 ticket_age_add;
        opaque ticket&lt;1..2^16-1&gt;;
        Extension extensions&lt;0..2^16-2&gt;;
    } NewSessionTicket;
@@ -1964,6 +1958,8 @@ finished_key =
 <dl>
   <dt>ticket_lifetime</dt>
   <dd style="margin-left: 8">Indicates the lifetime in seconds as a 32-bit unsigned integer in network byte order from the time of ticket issuance.  Servers MUST NOT use any value more than 604800 seconds (7 days).  The value of zero indicates that the ticket should be discarded immediately. Clients MUST NOT cache session tickets for longer than 7 days, regardless of the ticket_lifetime. It MAY delete the ticket earlier based on local policy. A server MAY treat a ticket as valid for a shorter period of time than what is stated in the ticket_lifetime.</dd>
+  <dt>ticket_age_add</dt>
+  <dd style="margin-left: 8">A randomly generated 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;early_data&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.</dd>
   <dt>ticket</dt>
   <dd style="margin-left: 8">The value of the ticket to be used as the PSK identifier.  The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
   <dt>ticket_extensions</dt>
@@ -1976,12 +1972,10 @@ finished_key =
        uint32 max_early_data_size;           
    } TicketEarlyDataInfo;
 </pre>
-<p id="rfc.section.4.5.1.p.7">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.9</a>)). It contains the following values:</p>
+<p id="rfc.section.4.5.1.p.7">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.9</a>)). It contains the following value:</p>
 <p/>
 
 <dl>
-  <dt>ticket_age_add</dt>
-  <dd style="margin-left: 8">A randomly generated 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;early_data&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.</dd>
   <dt>max_early_data_size</dt>
   <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
 </dl>
@@ -3360,7 +3354,11 @@ HKDF-Expand-Label(Secret, label, "", key_length)
        };
    } KeyShare;
 
-   opaque PskIdentity&lt;0..2^16-1&gt;;
+   struct {
+       opaque identity&lt;0..2^16-1&gt;;
+       uint32 obfuscated_ticket_age;
+   } PskIdentity;
+
    opaque PskBinderEntry&lt;32..255&gt;;
    
    struct {
@@ -3382,13 +3380,6 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } PskKeyExchangeModes;
 
    struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-               uint32 obfuscated_ticket_age;
-
-           case server_hello:
-               struct {};
-       };
    } EarlyDataIndication;
 </pre>
 <h4 id="rfc.appendix.A.3.1.1"><a href="#rfc.appendix.A.3.1.1">A.3.1.1.</a> <a href="#version-extension" id="version-extension">Version Extension</a></h4>
@@ -3520,6 +3511,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 <pre>
    struct {
        uint32 ticket_lifetime;
+       uint32 ticket_age_add;
        opaque ticket&lt;1..2^16-1&gt;;
        Extension extensions&lt;0..2^16-2&gt;;
    } NewSessionTicket;
