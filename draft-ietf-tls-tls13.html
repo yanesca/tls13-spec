@@ -1968,7 +1968,6 @@ finished_key =
 <p id="rfc.section.4.5.1.p.6">This document defines one ticket extension, &#8220;ticket_early_data_info&#8221;</p>
 <pre>
    struct {
-       uint32 ticket_age_add;
        uint32 max_early_data_size;           
    } TicketEarlyDataInfo;
 </pre>
@@ -3517,7 +3516,6 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } NewSessionTicket;
 
    struct {
-       uint32 ticket_age_add;
        uint32 max_early_data_size;           
    } TicketEarlyDataInfo;
 </pre>

@@ -128,7 +128,7 @@ Internet-Draft                     TLS                      October 2016
      4.5.  Post-Handshake Messages . . . . . . . . . . . . . . . . .  60
        4.5.1.  New Session Ticket Message  . . . . . . . . . . . . .  60
        4.5.2.  Post-Handshake Authentication . . . . . . . . . . . .  62
-       4.5.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  63
+       4.5.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  62
      4.6.  Handshake Layer and Key Changes . . . . . . . . . . . . .  64
    5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  64
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  64
@@ -3430,7 +3430,6 @@ Internet-Draft                     TLS                      October 2016
    This document defines one ticket extension, "ticket_early_data_info"
 
       struct {
-          uint32 ticket_age_add;
           uint32 max_early_data_size;
       } TicketEarlyDataInfo;
 
@@ -3462,6 +3461,7 @@ Internet-Draft                     TLS                      October 2016
    certificate_request_context value allows the server to disambiguate
    the responses).
 
+4.5.3.  Key and IV Update
 
 
 
@@ -3473,8 +3473,6 @@ Rescorla                 Expires April 19, 2017                [Page 62]
 
 Internet-Draft                     TLS                      October 2016
 
-
-4.5.3.  Key and IV Update
 
       enum { update_not_requested(0), update_requested(1), (255)
       } KeyUpdateRequest;
@@ -3522,6 +3520,8 @@ Internet-Draft                     TLS                      October 2016
    with the old key is received before accepting any messages encrypted
    with the new key.  Failure to do so may allow message truncation
    attacks.
+
+
 
 
 
@@ -5722,7 +5722,6 @@ Internet-Draft                     TLS                      October 2016
       } NewSessionTicket;
 
       struct {
-          uint32 ticket_age_add;
           uint32 max_early_data_size;
       } TicketEarlyDataInfo;
 
@@ -5757,6 +5756,7 @@ A.4.  Cipher Suites
 
    This specification defines the following cipher suites for use with
    TLS 1.3.
+
 
 
 
