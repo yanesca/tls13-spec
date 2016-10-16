@@ -3565,7 +3565,9 @@ Internet-Draft                     TLS                      October 2016
       purposes.
 
    length  The length (in bytes) of the following TLSPlaintext.fragment.
-      The length MUST NOT exceed 2^14.
+      The length MUST NOT exceed 2^14.  An endpoint that receives a
+      record that exceeds this length MUST terminate the connection with
+      a "record_overflow" alert.
 
    fragment  The data being transmitted.  This value transparent and
       treated as an independent block to be dealt with by the higher-
@@ -3576,8 +3578,6 @@ Internet-Draft                     TLS                      October 2016
    3, 1 } for TLS 1.0 and { 3, 0 } for SSL 3.0.  In order to maximize
    backwards compatibility, the record layer version identifies as
    simply TLS 1.0.  Endpoints supporting other versions negotiate the
-   version to use by following the procedure and requirements in
-   Appendix C.
 
 
 
@@ -3585,6 +3585,9 @@ Rescorla                 Expires April 19, 2017                [Page 64]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   version to use by following the procedure and requirements in
+   Appendix C.
 
    Implementations MUST NOT send zero-length fragments of Handshake or
    Alert types, even if those fragments contain padding.  Zero-length
@@ -3631,9 +3634,6 @@ Internet-Draft                     TLS                      October 2016
       total stays within record size limits.  See Section 5.4 for more
       details.
 
-   opaque_type  The outer opaque_type field of a TLSCiphertext record is
-      always set to the value 23 (application_data) for outward
-      compatibility with middleboxes accustomed to parsing previous
 
 
 
@@ -3642,6 +3642,9 @@ Rescorla                 Expires April 19, 2017                [Page 65]
 Internet-Draft                     TLS                      October 2016
 
 
+   opaque_type  The outer opaque_type field of a TLSCiphertext record is
+      always set to the value 23 (application_data) for outward
+      compatibility with middleboxes accustomed to parsing previous
       versions of TLS.  The actual content type of the record is found
       in TLSInnerPlaintext.type after decryption.
 
@@ -3686,9 +3689,6 @@ Internet-Draft                     TLS                      October 2016
 
    In order to decrypt and verify, the cipher takes as input the key,
    nonce, and the AEADEncrypted value.  The output is either the
-   plaintext or an error indicating that the decryption failed.  There
-   is no separate integrity check.  That is:
-
 
 
 
@@ -3697,6 +3697,9 @@ Rescorla                 Expires April 19, 2017                [Page 66]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   plaintext or an error indicating that the decryption failed.  There
+   is no separate integrity check.  That is:
 
       plaintext of fragment =
           AEAD-Decrypt(write_key, nonce, AEADEncrypted)
@@ -3741,9 +3744,6 @@ Internet-Draft                     TLS                      October 2016
 
    Note: This is a different construction from that in TLS 1.2, which
    specified a partially explicit nonce.
-
-
-
 
 
 

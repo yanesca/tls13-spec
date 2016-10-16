@@ -2030,7 +2030,7 @@ finished_key =
   <dt>legacy_record_version</dt>
   <dd style="margin-left: 8">This value MUST be set to { 3, 1 } for all records.  This field is deprecated and MUST be ignored for all purposes.</dd>
   <dt>length</dt>
-  <dd style="margin-left: 8">The length (in bytes) of the following TLSPlaintext.fragment. The length MUST NOT exceed 2^14.</dd>
+  <dd style="margin-left: 8">The length (in bytes) of the following TLSPlaintext.fragment. The length MUST NOT exceed 2^14. An endpoint that receives a record that exceeds this length MUST terminate the connection with a &#8220;record_overflow&#8221; alert.</dd>
   <dt>fragment</dt>
   <dd style="margin-left: 8">The data being transmitted. This value transparent and treated as an independent block to be dealt with by the higher-level protocol specified by the type field.</dd>
 </dl>
