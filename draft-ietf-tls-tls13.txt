@@ -1242,6 +1242,8 @@ Internet-Draft                     TLS                      October 2016
 
       enum { low, medium, high } Amount;
 
+   For numerical values, the notation (floor..ceiling) is also allowed.
+
 3.6.  Constructed Types
 
    Structure types may be constructed from primitive types for
@@ -1258,7 +1260,8 @@ Internet-Draft                     TLS                      October 2016
    The fields within a structure may be qualified using the type's name,
    with a syntax much like that available for enumerateds.  For example,
    T.f2 refers to the second field of the previous declaration.
-   Structure definitions may be embedded.
+   Structure definitions may be embedded.  Anonymous structs may also be
+   defined inside other structures.
 
 3.6.1.  Variants
 
@@ -1275,9 +1278,6 @@ Internet-Draft                     TLS                      October 2016
    The body of the variant structure may be given a label for reference.
    The mechanism by which the variant is selected at runtime is not
    prescribed by the presentation language.
-
-
-
 
 
 
