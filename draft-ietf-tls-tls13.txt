@@ -801,7 +801,7 @@ Internet-Draft                     TLS                      October 2016
    requested), and Finished.
 
    At this point, the handshake is complete, and the client and server
-   may exchange application layer data.  Application data MUST NOT be
+   may exchange application layer data.  Application Data MUST NOT be
    sent prior to sending the Finished message.  Note that while the
    server may send application data prior to receiving the client's
    Authentication messages, any data sent at that point is, of course,
@@ -3519,7 +3519,7 @@ Internet-Draft                     TLS                      October 2016
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 10.
 
-   Application data messages are carried by the record layer and are
+   Application Data messages are carried by the record layer and are
    fragmented and encrypted as described below.  The messages are
    treated as transparent data to the record layer.
 
@@ -3588,7 +3588,7 @@ Internet-Draft                     TLS                      October 2016
 
    Implementations MUST NOT send zero-length fragments of Handshake or
    Alert types, even if those fragments contain padding.  Zero-length
-   fragments of Application data MAY be sent as they are potentially
+   fragments of Application Data MAY be sent as they are potentially
    useful as a traffic analysis countermeasure.
 
    When record protection has not yet been engaged, TLSPlaintext
