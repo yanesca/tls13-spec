@@ -86,13 +86,13 @@ Table of Contents
      2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  18
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  20
      3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  20
-     3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  20
+     3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  21
      3.3.  Vectors . . . . . . . . . . . . . . . . . . . . . . . . .  21
      3.4.  Numbers . . . . . . . . . . . . . . . . . . . . . . . . .  22
      3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  22
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  23
        3.6.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  23
-     3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  24
+     3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  25
      3.8.  Decoding Errors . . . . . . . . . . . . . . . . . . . . .  25
    4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  25
      4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  26
@@ -1075,6 +1075,14 @@ Internet-Draft                     TLS                      October 2016
        data appear to be 1-RTT data (because it is protected with
        different keys.)
 
+   Protocols MUST NOT use 0-RTT data without a profile that defines its
+   use.  That profile needs to identify which messages or interactions
+   are safe to use with 0-RTT.  In addition, to avoid accidental misuse,
+   implementations SHOULD NOT enable 0-RTT unless specifically
+   requested.  Special functions for 0-RTT data are RECOMMENDED to
+   ensure that an application is always aware that it is sending or
+   receiving data that might be replayed.
+
    The same warnings apply to any use of the early exporter secret.
 
    The remainder of this document provides a detailed description of
@@ -1105,6 +1113,15 @@ Internet-Draft                     TLS                      October 2016
    This byte ordering for multi-byte values is the commonplace network
    byte order or big-endian format.
 
+
+
+
+
+Rescorla                 Expires April 19, 2017                [Page 20]
+
+Internet-Draft                     TLS                      October 2016
+
+
 3.2.  Miscellaneous
 
    Comments begin with "/*" and end with "*/".
@@ -1114,13 +1131,6 @@ Internet-Draft                     TLS                      October 2016
 
    Single-byte entities containing uninterpreted data are of type
    opaque.
-
-
-
-Rescorla                 Expires April 19, 2017                [Page 20]
-
-Internet-Draft                     TLS                      October 2016
-
 
 3.3.  Vectors
 
@@ -1160,6 +1170,14 @@ Internet-Draft                     TLS                      October 2016
    sufficient to represent the value 400 (see Section 3.4).  On the
    other hand, longer can represent up to 800 bytes of data, or 400
    uint16 elements, and it may be empty.  Its encoding will include a
+
+
+
+Rescorla                 Expires April 19, 2017                [Page 21]
+
+Internet-Draft                     TLS                      October 2016
+
+
    two-byte actual length field prepended to the vector.  The length of
    an encoded vector must be an exact multiple of the length of a single
    element (e.g., a 17-byte vector of uint16 would be illegal).
@@ -1168,15 +1186,6 @@ Internet-Draft                     TLS                      October 2016
             /* length field is 2 bytes, cannot be empty */
       uint16 longer<0..800>;
             /* zero to 400 16-bit unsigned integers */
-
-
-
-
-
-Rescorla                 Expires April 19, 2017                [Page 21]
-
-Internet-Draft                     TLS                      October 2016
-
 
 3.4.  Numbers
 
@@ -1206,8 +1215,8 @@ Internet-Draft                     TLS                      October 2016
       enum { e1(v1), e2(v2), ... , en(vn) [[, (n)]] } Te;
 
    Future extension or additions to the protocol may define new values.
-   Implementations need to be able to parse and ignore them unless their
-   definition states otherwise.
+   Upon Implementations need to be able to parse and ignore them unless
+   their definition states otherwise.
 
    An enumerated occupies as much space in the byte stream as would its
    maximal defined ordinal value.  The following definition would cause
@@ -1218,6 +1227,13 @@ Internet-Draft                     TLS                      October 2016
    One may optionally specify a value without its associated tag to
    force the width definition without defining a superfluous element.
 
+
+
+Rescorla                 Expires April 19, 2017                [Page 22]
+
+Internet-Draft                     TLS                      October 2016
+
+
    In the following example, Taste will consume two bytes in the data
    stream but can only assume the values 1, 2, or 4 in current version
    of protocol.
@@ -1226,14 +1242,6 @@ Internet-Draft                     TLS                      October 2016
 
    The names of the elements of an enumeration are scoped within the
    defined type.  In the first example, a fully qualified reference to
-
-
-
-Rescorla                 Expires April 19, 2017                [Page 22]
-
-Internet-Draft                     TLS                      October 2016
-
-
    the second element of the enumeration would be Color.blue.  Such
    qualification is not required if the target of the assignment is well
    specified.
@@ -1274,6 +1282,14 @@ Internet-Draft                     TLS                      October 2016
    type that defines the possible variants the structure defines.  There
    must be a case arm for every element of the enumeration declared in
    the select.  Case arms have limited fall-through: if two case arms
+
+
+
+Rescorla                 Expires April 19, 2017                [Page 23]
+
+Internet-Draft                     TLS                      October 2016
+
+
    follow in immediate succession with no fields in between, then they
    both contain the same fields.  Thus, in the example below, "orange"
    and "banana" both contain V2.  Note that this piece of syntax was
@@ -1282,13 +1298,6 @@ Internet-Draft                     TLS                      October 2016
    The body of the variant structure may be given a label for reference.
    The mechanism by which the variant is selected at runtime is not
    prescribed by the presentation language.
-
-
-
-Rescorla                 Expires April 19, 2017                [Page 23]
-
-Internet-Draft                     TLS                      October 2016
-
 
       struct {
           T1 f1;
@@ -1328,6 +1337,15 @@ Internet-Draft                     TLS                      October 2016
           } variant_body;       /* optional label on variant */
       } VariantRecord;
 
+
+
+
+
+Rescorla                 Expires April 19, 2017                [Page 24]
+
+Internet-Draft                     TLS                      October 2016
+
+
 3.7.  Constants
 
    Typed constants can be defined for purposes of specification by
@@ -1338,13 +1356,6 @@ Internet-Draft                     TLS                      October 2016
    of a multi-element structure or vector may be omitted.
 
    For example:
-
-
-
-Rescorla                 Expires April 19, 2017                [Page 24]
-
-Internet-Draft                     TLS                      October 2016
-
 
       struct {
           uint8 f1;
@@ -1371,17 +1382,6 @@ Internet-Draft                     TLS                      October 2016
    where they are encapsulated within one or more TLSPlaintext or
    TLSCiphertext structures, which are processed and transmitted as
    specified by the current active session state.
-
-
-
-
-
-
-
-
-
-
-
 
 
 
