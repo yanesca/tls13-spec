@@ -842,27 +842,26 @@ Rescorla                 Expires April 20, 2017                [Page 15]
 Internet-Draft                     TLS                      October 2016
 
 
-   ~~~
-        Client                                               Server
+            Client                                               Server
 
-        ClientHello
-          + key_share             -------->
-                                  <--------       HelloRetryRequest
+            ClientHello
+              + key_share             -------->
+                                      <--------       HelloRetryRequest
 
-        ClientHello
-          + key_share             -------->
-                                                        ServerHello
-                                                        + key_share
-                                              {EncryptedExtensions}
-                                              {CertificateRequest*}
-                                                     {Certificate*}
-                                               {CertificateVerify*}
-                                                         {Finished}
-                                  <--------     [Application Data*]
-        {Certificate*}
-        {CertificateVerify*}
-        {Finished}                -------->
-        [Application Data]        <------->     [Application Data] ~~~
+            ClientHello
+              + key_share             -------->
+                                                            ServerHello
+                                                            + key_share
+                                                  {EncryptedExtensions}
+                                                  {CertificateRequest*}
+                                                         {Certificate*}
+                                                   {CertificateVerify*}
+                                                             {Finished}
+                                      <--------     [Application Data*]
+            {Certificate*}
+            {CertificateVerify*}
+            {Finished}                -------->
+            [Application Data]        <------->     [Application Data]
 
         Figure 2: Message flow for a full handshake with mismatched
                                 parameters
@@ -889,6 +888,7 @@ Internet-Draft                     TLS                      October 2016
    PSKs can be used with (EC)DHE exchange in order to provide forward
    secrecy in combination with shared keys, or can be used alone, at the
    cost of losing forward secrecy.
+
 
 
 
@@ -4613,9 +4613,9 @@ Internet-Draft                     TLS                      October 2016
    registries and their allocation policies are below:
 
    -  TLS Cipher Suite Registry: Values with the first byte in the range
-      0-254 (decimal) are assigned via Specification Required [RFC5226].
+      0-254 (decimal) are assigned via Specification Required [RFC2434].
       Values with the first byte 255 (decimal) are reserved for Private
-      Use [RFC5226].
+      Use [RFC2434].
 
       IANA [SHALL add/has added] the cipher suites listed in
       Appendix A.4 to the registry.  The "Value" and "Description"
@@ -4625,13 +4625,13 @@ Internet-Draft                     TLS                      October 2016
       applied.]]
 
    -  TLS ContentType Registry: Future values are allocated via
-      Standards Action [RFC5226].
+      Standards Action [RFC2434].
 
    -  TLS Alert Registry: Future values are allocated via Standards
-      Action [RFC5226].
+      Action [RFC2434].
 
    -  TLS HandshakeType Registry: Future values are allocated via
-      Standards Action [RFC5226].  IANA [SHALL update/has updated] this
+      Standards Action [RFC2434].  IANA [SHALL update/has updated] this
       registry to rename item 4 from "NewSessionTicket" to
       "new_session_ticket".
 
@@ -4641,7 +4641,7 @@ Internet-Draft                     TLS                      October 2016
 
    -  TLS ExtensionType Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
-      [RFC5226].  Values with the first byte 255 (decimal) are reserved
+      [RFC2434].  Values with the first byte 255 (decimal) are reserved
 
 
 
@@ -4650,7 +4650,7 @@ Rescorla                 Expires April 20, 2017                [Page 83]
 Internet-Draft                     TLS                      October 2016
 
 
-      for Private Use [RFC5226].  IANA [SHALL update/has updated] this
+      for Private Use [RFC2434].  IANA [SHALL update/has updated] this
       registry to include the "key_share", "pre_shared_key", and
       "early_data" extensions as defined in this document.
 
@@ -4793,8 +4793,8 @@ Internet-Draft                     TLS                      October 2016
 
    -  TLS SignatureScheme Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
-      [RFC5226].  Values with the first byte 255 (decimal) are reserved
-      for Private Use [RFC5226].  Values with the first byte in the
+      [RFC2434].  Values with the first byte 255 (decimal) are reserved
+      for Private Use [RFC2434].  Values with the first byte in the
       range 0-6 or with the second byte in the range 0-3 that are not
       currently allocated are reserved for backwards compatibility.
       This registry SHALL have a "Recommended" column.  The registry
@@ -4845,15 +4845,15 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
+   [RFC2434]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", RFC 2434,
+              DOI 10.17487/RFC2434, October 1998,
+              <http://www.rfc-editor.org/info/rfc2434>.
+
    [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
               Standards (PKCS) #1: RSA Cryptography Specifications
               Version 2.1", RFC 3447, DOI 10.17487/RFC3447, February
               2003, <http://www.rfc-editor.org/info/rfc3447>.
-
-   [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
-              IANA Considerations Section in RFCs", BCP 26, RFC 5226,
-              DOI 10.17487/RFC5226, May 2008,
-              <http://www.rfc-editor.org/info/rfc5226>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
