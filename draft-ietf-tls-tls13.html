@@ -949,7 +949,7 @@ Subsequent Handshake:
   <li>The PSK identity</li>
   <li>The cipher suite for use with this PSK</li>
   <li>The key exchange and authentication modes this PSK is allowed to be used with</li>
-  <li>The Application-Layer Protocol Negotiation (ALPN) label(s)</li>
+  <li>The Application-Layer Protocol Negotiation (ALPN) protocol, if any is to be used</li>
   <li>The Server Name Indication (SNI), if any is to be used</li>
 </ul>
 <p id="rfc.section.2.3.p.4">Note: only the first two of these need to be provisioned to use an out-of-band PSK in 1-RTT mode.</p>
@@ -1608,7 +1608,7 @@ Subsequent Handshake:
    } EarlyDataIndication;
 </pre>
 <p id="rfc.section.4.2.9.p.3">A server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
-<p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.4.2.9.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
 <p id="rfc.section.4.2.9.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
@@ -1618,17 +1618,17 @@ Subsequent Handshake:
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
   <li>Request that the client send another ClientHello by responding with a HelloRetryRequest.  A client MUST NOT include the &#8220;early_data&#8221; extension in its followup ClientHello.</li>
 </ul>
-<p id="rfc.section.4.2.9.p.8">In order to accept early data, the server server MUST have accepted a PSK cipher suite and selected the the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
+<p id="rfc.section.4.2.9.p.8">In order to accept early data, the server MUST have accepted a PSK cipher suite and selected the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
 <p/>
 
 <ul>
   <li>The TLS version number, AEAD algorithm, and the hash for HKDF.</li>
-  <li>The selected ALPN <a href="#RFC7443">[RFC7443]</a> value, if any.</li>
+  <li>The selected ALPN <a href="#RFC7301">[RFC7301]</a> protocol, if any.</li>
 </ul>
 <p id="rfc.section.4.2.9.p.10">Future extensions MUST define their interaction with 0-RTT.</p>
 <p id="rfc.section.4.2.9.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
 <p id="rfc.section.4.2.9.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, if the server fails to decrypt any 0-RTT record following an accepted &#8220;early_data&#8221; extension it MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
-<p id="rfc.section.4.2.9.p.13">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the ALPN value has changed, it is likely unsafe to retransmit the original application layer data.</p>
+<p id="rfc.section.4.2.9.p.13">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the selected ALPN protocol has changed, it is likely unsafe to retransmit the original application layer data.</p>
 <h4 id="rfc.section.4.2.9.1"><a href="#rfc.section.4.2.9.1">4.2.9.1.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
 <p id="rfc.section.4.2.9.1.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the &#8220;end_of_early_data&#8221; alert. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s &#8220;end_of_early_data&#8221; alert.</p>
 <h4 id="rfc.section.4.2.9.2"><a href="#rfc.section.4.2.9.2">4.2.9.2.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
@@ -2793,12 +2793,6 @@ HKDF-Expand-Label(Secret, label, "", key_length)
         <b id="RFC6979">[RFC6979]</b>
       </td>
       <td class="top"><a>Pornin, T.</a>, "<a href="http://tools.ietf.org/html/rfc6979">Deterministic Usage of the Digital Signature Algorithm (DSA) and Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", RFC 6979, DOI 10.17487/RFC6979, August 2013.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC7443">[RFC7443]</b>
-      </td>
-      <td class="top"><a>Patil, P.</a>, <a>Reddy, T.</a>, <a>Salgueiro, G.</a> and <a>M. Petit-Huguenin</a>, "<a href="http://tools.ietf.org/html/rfc7443">Application-Layer Protocol Negotiation (ALPN) Labels for Session Traversal Utilities for NAT (STUN) Usages</a>", RFC 7443, DOI 10.17487/RFC7443, January 2015.</td>
     </tr>
     <tr>
       <td class="reference">

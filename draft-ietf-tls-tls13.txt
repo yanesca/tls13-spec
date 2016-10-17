@@ -971,7 +971,8 @@ Internet-Draft                     TLS                      October 2016
    -  The key exchange and authentication modes this PSK is allowed to
       be used with
 
-   -  The Application-Layer Protocol Negotiation (ALPN) label(s)
+   -  The Application-Layer Protocol Negotiation (ALPN) protocol, if any
+      is to be used
 
    -  The Server Name Indication (SNI), if any is to be used
 
@@ -981,7 +982,6 @@ Internet-Draft                     TLS                      October 2016
    As shown in Figure 4, the Zero-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
-
 
 
 
@@ -2557,11 +2557,11 @@ Internet-Draft                     TLS                      October 2016
    the handshake but reject 0-RTT, and SHOULD NOT take any other action
    that assumes that this ClientHello is fresh.
 
-   The parameters for the 0-RTT data (symmetric cipher suite, ALPN,
-   etc.) are the same as those which were negotiated in the connection
-   which established the PSK.  The PSK used to encrypt the early data
-   MUST be the first PSK listed in the client's "pre_shared_key"
-   extension.
+   The parameters for the 0-RTT data (symmetric cipher suite, ALPN
+   protocol, etc.) are the same as those which were negotiated in the
+   connection which established the PSK.  The PSK used to encrypt the
+   early data MUST be the first PSK listed in the client's
+   "pre_shared_key" extension.
 
    0-RTT messages sent in the first flight have the same content types
    as their corresponding messages sent in other flights (handshake,
@@ -2596,15 +2596,15 @@ Internet-Draft                     TLS                      October 2016
       with a HelloRetryRequest.  A client MUST NOT include the
       "early_data" extension in its followup ClientHello.
 
-   In order to accept early data, the server server MUST have accepted a
-   PSK cipher suite and selected the the first key offered in the
-   client's "pre_shared_key" extension.  In addition, it MUST verify
-   that the following values are consistent with those negotiated in the
+   In order to accept early data, the server MUST have accepted a PSK
+   cipher suite and selected the first key offered in the client's
+   "pre_shared_key" extension.  In addition, it MUST verify that the
+   following values are consistent with those negotiated in the
    connection during which the ticket was established.
 
    -  The TLS version number, AEAD algorithm, and the hash for HKDF.
 
-   -  The selected ALPN [RFC7443] value, if any.
+   -  The selected ALPN [RFC7301] protocol, if any.
 
    Future extensions MUST define their interaction with 0-RTT.
 
@@ -2635,8 +2635,8 @@ Internet-Draft                     TLS                      October 2016
 
 
    client applications MUST take care that the negotiated parameters are
-   consistent with those it expected.  For example, if the ALPN value
-   has changed, it is likely unsafe to retransmit the original
+   consistent with those it expected.  For example, if the selected ALPN
+   protocol has changed, it is likely unsafe to retransmit the original
    application layer data.
 
 4.2.9.1.  Processing Order
@@ -4903,12 +4903,6 @@ Internet-Draft                     TLS                      October 2016
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <http://www.rfc-editor.org/info/rfc6979>.
 
-   [RFC7443]  Patil, P., Reddy, T., Salgueiro, G., and M. Petit-
-              Huguenin, "Application-Layer Protocol Negotiation (ALPN)
-              Labels for Session Traversal Utilities for NAT (STUN)
-              Usages", RFC 7443, DOI 10.17487/RFC7443, January 2015,
-              <http://www.rfc-editor.org/info/rfc7443>.
-
    [RFC7539]  Nir, Y. and A. Langley, "ChaCha20 and Poly1305 for IETF
               Protocols", RFC 7539, DOI 10.17487/RFC7539, May 2015,
               <http://www.rfc-editor.org/info/rfc7539>.
@@ -4922,6 +4916,12 @@ Internet-Draft                     TLS                      October 2016
               RFC 7919, DOI 10.17487/RFC7919, August 2016,
               <http://www.rfc-editor.org/info/rfc7919>.
 
+   [SHS]      National Institute of Standards and Technology, U.S.
+              Department of Commerce, "Secure Hash Standard", NIST FIPS
+              PUB 180-4, March 2012.
+
+
+
 
 
 
@@ -4929,10 +4929,6 @@ Rescorla                 Expires April 20, 2017                [Page 88]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   [SHS]      National Institute of Standards and Technology, U.S.
-              Department of Commerce, "Secure Hash Standard", NIST FIPS
-              PUB 180-4, March 2012.
 
    [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
@@ -4978,6 +4974,10 @@ Internet-Draft                     TLS                      October 2016
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
+
+
+
+
 
 
 
