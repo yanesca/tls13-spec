@@ -1520,9 +1520,8 @@ Internet-Draft                     TLS                      October 2016
 
    If the server is unable to negotiate a supported set of parameters
    (i.e., there is no overlap between the client and server parameters),
-   it MUST abort the handshake and and SHOULD send either a
-   "handshake_failure" or "insufficient_security" fatal alert (see
-   Section 6).
+   it MUST abort the handshake with either a "handshake_failure" or
+   "insufficient_security" fatal alert (see Section 6).
 
 4.1.2.  Client Hello
 
@@ -1555,6 +1554,7 @@ Internet-Draft                     TLS                      October 2016
    "protocol_version" alert.
 
    Structure of this message:
+
 
 
 
@@ -1712,7 +1712,7 @@ Internet-Draft                     TLS                      October 2016
       context.  Currently the only such extensions are "key_share",
       "pre_shared_key", and "signature_algorithms".  Clients MUST check
       the ServerHello for the presence of any forbidden extensions and
-      if any are found MUST abort the handshake with a
+      if any are found MUST abort the handshake with an
       "illegal_parameter" alert.  In prior versions of TLS, the
       extensions field could be omitted entirely if not needed, similar
       to ClientHello.  As of TLS 1.3, all clients and servers will send
@@ -2309,7 +2309,7 @@ Internet-Draft                     TLS                      October 2016
    KeyShareEntry for any group not indicated in the "supported_groups"
    extension.  If a HelloRetryRequest was received, the client MUST
    verify that the selected NamedGroup matches that supplied in the
-   selected_group field and MUST abort the connection with an
+   selected_group field and MUST abort the handshake with an
    "illegal_parameter" alert if it does not.
 
    [[TODO: Recommendation about what the client offers.  Presumably
@@ -3874,10 +3874,10 @@ Internet-Draft                     TLS                      October 2016
 
    Alert messages convey the severity of the message (warning or fatal)
    and a description of the alert.  Warning-level messages are used to
-   indicate orderly closure of the connection (see Section 6.1).  Upon
-   receiving a warning-level alert, the TLS implementation SHOULD
-   indicate end-of-data to the application and, if appropriate for the
-   alert type, send a closure alert in response.
+   indicate orderly closure of the connection or the end of early data
+   (see Section 6.1).  Upon receiving a warning-level alert, the TLS
+   implementation SHOULD indicate end-of-data to the application and, if
+   appropriate for the alert type, send a closure alert in response.
 
    Fatal-level messages are used to indicate abortive closure of the
    connection (See Section 6.2).  Upon receiving a fatal-level alert,
