@@ -374,7 +374,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-17" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-18" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -395,7 +395,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 17, 2016</td>
+  <td class="right">October 18, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -414,7 +414,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 20, 2017</td>
+  <td class="left">Expires: April 21, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -435,7 +435,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 20, 2017.</p>
+<p>This Internet-Draft will expire on April 21, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1082,7 +1082,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.3.6.p.2">The fields within a structure may be qualified using the type&#8217;s name, with a syntax much like that available for enumerateds. For example, T.f2 refers to the second field of the previous declaration. Structure definitions may be embedded. Anonymous structs may also be defined inside other structures.</p>
 <h3 id="rfc.section.3.6.1"><a href="#rfc.section.3.6.1">3.6.1.</a> <a href="#variants" id="variants">Variants</a></h3>
-<p id="rfc.section.3.6.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>.</p>
+<p id="rfc.section.3.6.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
 <p id="rfc.section.3.6.1.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
@@ -1092,7 +1092,8 @@ Subsequent Handshake:
        Tn fn;
        select (E) {
            case e1: Te1;
-           case e2: Te2;
+           case e2: Te21;
+                    Te22;
            case e3: case e4: Te3;
            ....
            case en: Ten;
@@ -1542,11 +1543,11 @@ Subsequent Handshake:
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-              PskIdentity identities&lt;6..2^16-1&gt;;
-              PskBinderEntry binders&lt;33..2^16-1&gt;;
-              
+               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskBinderEntry binders&lt;33..2^16-1&gt;;
+
            case server_hello:
-              uint16 selected_identity;
+               uint16 selected_identity;
        };
 
    } PreSharedKeyExtension;
@@ -1848,8 +1849,8 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.2.p.3">Structure of this message:</p>
 <pre>
    struct {
-        SignatureScheme algorithm;
-        opaque signature&lt;0..2^16-1&gt;;
+       SignatureScheme algorithm;
+       opaque signature&lt;0..2^16-1&gt;;
    } CertificateVerify;
 </pre>
 <p id="rfc.section.4.4.2.p.4">The algorithm field specifies the signature algorithm used (see <a href="#signature-algorithms">Section 4.2.3</a> for the definition of this field). The signature is a digital signature using that algorithm that covers the hash output described in <a href="#authentication-messages">Section 4.4</a> namely:</p>
@@ -2039,9 +2040,9 @@ finished_key =
 <p id="rfc.section.5.2.p.1">The record protection functions translate a TLSPlaintext structure into a TLSCiphertext. The deprotection functions reverse the process. In TLS 1.3 as opposed to previous versions of TLS, all ciphers are modeled as &#8220;Authenticated Encryption with Additional Data&#8221; (AEAD) <a href="#RFC5116">[RFC5116]</a>.  AEAD functions provide a unified encryption and authentication operation which turns plaintext into authenticated ciphertext and back again. Each encrypted record consists of a plaintext header followed by an encrypted body, which itself contains a type and optional padding.</p>
 <pre>
    struct {
-      opaque content[TLSPlaintext.length];
-      ContentType type;
-      uint8 zeros[length_of_padding];
+       opaque content[TLSPlaintext.length];
+       ContentType type;
+       uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -3183,9 +3184,9 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } TLSPlaintext;
 
    struct {
-      opaque content[TLSPlaintext.length];
-      ContentType type;
-      uint8 zeros[length_of_padding];
+       opaque content[TLSPlaintext.length];
+       ContentType type;
+       uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -3353,11 +3354,11 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-              PskIdentity identities&lt;6..2^16-1&gt;;
-              PskBinderEntry binders&lt;33..2^16-1&gt;;
-              
+               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskBinderEntry binders&lt;33..2^16-1&gt;;
+
            case server_hello:
-              uint16 selected_identity;
+               uint16 selected_identity;
        };
 
    } PreSharedKeyExtension;
@@ -3488,8 +3489,8 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } Certificate;
 
    struct {
-        SignatureScheme algorithm;
-        opaque signature&lt;0..2^16-1&gt;;
+       SignatureScheme algorithm;
+       opaque signature&lt;0..2^16-1&gt;;
    } CertificateVerify;
 
    struct {
