@@ -2381,11 +2381,11 @@ Internet-Draft                     TLS                      October 2016
       struct {
           select (Handshake.msg_type) {
               case client_hello:
-                  PskIdentity identities<6..2^16-1>;
-                  PskBinderEntry binders<33..2^16-1>;
+                 PskIdentity identities<6..2^16-1>;
+                 PskBinderEntry binders<33..2^16-1>;
 
               case server_hello:
-                  uint16 selected_identity;
+                 uint16 selected_identity;
           };
 
       } PreSharedKeyExtension;
@@ -3180,8 +3180,8 @@ Internet-Draft                     TLS                      October 2016
    Structure of this message:
 
       struct {
-          SignatureScheme algorithm;
-          opaque signature<0..2^16-1>;
+           SignatureScheme algorithm;
+           opaque signature<0..2^16-1>;
       } CertificateVerify;
 
    The algorithm field specifies the signature algorithm used (see
@@ -3655,9 +3655,9 @@ Internet-Draft                     TLS                      October 2016
    a type and optional padding.
 
    struct {
-       opaque content[TLSPlaintext.length];
-       ContentType type;
-       uint8 zeros[length_of_padding];
+      opaque content[TLSPlaintext.length];
+      ContentType type;
+      uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -5292,9 +5292,9 @@ A.1.  Record Layer
    } TLSPlaintext;
 
    struct {
-       opaque content[TLSPlaintext.length];
-       ContentType type;
-       uint8 zeros[length_of_padding];
+      opaque content[TLSPlaintext.length];
+      ContentType type;
+      uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -5505,11 +5505,11 @@ Internet-Draft                     TLS                      October 2016
       struct {
           select (Handshake.msg_type) {
               case client_hello:
-                  PskIdentity identities<6..2^16-1>;
-                  PskBinderEntry binders<33..2^16-1>;
+                 PskIdentity identities<6..2^16-1>;
+                 PskBinderEntry binders<33..2^16-1>;
 
               case server_hello:
-                  uint16 selected_identity;
+                 uint16 selected_identity;
           };
 
       } PreSharedKeyExtension;
@@ -5692,8 +5692,8 @@ A.3.3.  Authentication Messages
       } Certificate;
 
       struct {
-          SignatureScheme algorithm;
-          opaque signature<0..2^16-1>;
+           SignatureScheme algorithm;
+           opaque signature<0..2^16-1>;
       } CertificateVerify;
 
       struct {
