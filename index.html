@@ -594,6 +594,7 @@ li, p {
   <li>Add a 0-RTT exporter and change the transcript for the regular exporter (*).</li>
   <li>Merge TicketExtensions and Extensions registry. Changes ticket_early_data_info code point (*).</li>
   <li>Replace Client.key_shares in response to HRR (*)</li>
+  <li>Remove redundant labels for traffic key derivation (*)</li>
   <li>Explicitly allow predicting ClientFinished for NST.</li>
   <li>Clarify conditions for allowing 0-RTT with PSK.</li>
 </ul>
@@ -2338,69 +2339,38 @@ finished_key =
 
 <ul>
   <li>A secret value</li>
-  <li>A phase value indicating the phase of the protocol the keys are being generated for</li>
   <li>A purpose value indicating the specific value being generated</li>
   <li>The length of the key</li>
 </ul>
-<p id="rfc.section.7.3.p.3">The keying material is computed using:</p>
+<p id="rfc.section.7.3.p.3">The traffic keying material is generated from an input traffic secret value using:</p>
 <pre>
-   key = HKDF-Expand-Label(Secret,
-                           phase + ", " + purpose,
-                           "",
-                           key_length)
+    [sender]_write_key = HKDF-Expand-Label(Secret, "key", "", key_length)
+    [sender]_write_iv = HKDF-Expand-Label(Secret, "iv", "", iv_length)
 </pre>
-<p id="rfc.section.7.3.p.4">The following table describes the inputs to the key calculation for each class of traffic keys:</p>
+<p id="rfc.section.7.3.p.4">[sender] denotes the sending side.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
       <th class="left">Record Type</th>
       <th class="left">Secret</th>
-      <th class="left">Phase</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td class="left">0-RTT Handshake</td>
-      <td class="left">client_early_traffic_secret</td>
-      <td class="left">&#8220;early handshake key expansion&#8221;</td>
-    </tr>
-    <tr>
       <td class="left">0-RTT Application</td>
       <td class="left">client_early_traffic_secret</td>
-      <td class="left">&#8220;early application data key expansion&#8221;</td>
     </tr>
     <tr>
       <td class="left">Handshake</td>
       <td class="left">[sender]_handshake_traffic_secret</td>
-      <td class="left">&#8220;handshake key expansion&#8221;</td>
     </tr>
     <tr>
       <td class="left">Application Data</td>
       <td class="left">[sender]_traffic_secret_N</td>
-      <td class="left">&#8220;application data key expansion&#8221;</td>
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.7.3.p.5">The [sender] in this table denotes the sending side. The following table indicates the purpose values for each type of key:</p>
-<table cellpadding="3" cellspacing="0" class="tt full center">
-  <thead>
-    <tr>
-      <th class="left">Key Type</th>
-      <th class="left">Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="left">key</td>
-      <td class="left">&#8220;key&#8221;</td>
-    </tr>
-    <tr>
-      <td class="left">iv</td>
-      <td class="left">&#8220;iv&#8221;</td>
-    </tr>
-  </tbody>
-</table>
-<p id="rfc.section.7.3.p.6">All the traffic keying material is recomputed whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
+<p id="rfc.section.7.3.p.5">All the traffic keying material is recomputed whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
 <h3 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> <a href="#diffie-hellman" id="diffie-hellman">Diffie-Hellman</a></h3>
 <p id="rfc.section.7.3.1.p.1">A conventional Diffie-Hellman computation is performed. The negotiated key (Z) is converted to byte string by encoding in big-endian, padded with zeros up to the size of the prime. This byte string is used as the shared secret, and is used in the key schedule as specified above.</p>
 <p id="rfc.section.7.3.1.p.2">Note that this construction differs from previous versions of TLS which remove leading zeros.</p>

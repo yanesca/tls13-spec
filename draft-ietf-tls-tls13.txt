@@ -142,17 +142,17 @@ Internet-Draft                     TLS                      October 2016
      7.1.  Key Schedule  . . . . . . . . . . . . . . . . . . . . . .  74
      7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  77
      7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  78
-       7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  79
+       7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  78
        7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  79
-       7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  80
+       7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  79
    8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  80
      8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  80
-     8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  81
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  82
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  82
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  86
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  86
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  88
+     8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  80
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  81
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  81
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  85
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  85
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  87
    Appendix A.  Protocol Data Structures and Constant Values . . . .  94
      A.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  94
      A.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . .  94
@@ -320,6 +320,8 @@ Internet-Draft                     TLS                      October 2016
 
    -  Replace Client.key_shares in response to HRR (*)
 
+   -  Remove redundant labels for traffic key derivation (*)
+
    -  Explicitly allow predicting ClientFinished for NST.
 
    -  Clarify conditions for allowing 0-RTT with PSK.
@@ -328,8 +330,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Revise version negotiation (*)
 
-   -  Change RSASSA-PSS and EdDSA SignatureScheme codepoints for better
-      backwards compatibility (*)
 
 
 
@@ -337,6 +337,9 @@ Rescorla                 Expires April 22, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Change RSASSA-PSS and EdDSA SignatureScheme codepoints for better
+      backwards compatibility (*)
 
    -  Move HelloRetryRequest.selected_group to an extension (*)
 
@@ -382,9 +385,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Allow cookies to be longer (*)
 
-   -  Remove the "context" from EarlyDataIndication as it was undefined
-      and nobody used it (*)
-
 
 
 
@@ -393,6 +393,9 @@ Rescorla                 Expires April 22, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Remove the "context" from EarlyDataIndication as it was undefined
+      and nobody used it (*)
 
    -  Remove 0-RTT EncryptedExtensions and replace the ticket_age
       extension with an obfuscated version.  Also necessitates a change
@@ -439,9 +442,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Restructure key schedule and add a resumption_context value.
 
-   -  Require DH public keys and secrets to be zero-padded to the size
-      of the group.
-
 
 
 
@@ -449,6 +449,9 @@ Rescorla                 Expires April 22, 2017                 [Page 8]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Require DH public keys and secrets to be zero-padded to the size
+      of the group.
 
    -  Remove the redundant length fields in KeyShareEntry.
 
@@ -495,9 +498,6 @@ Internet-Draft                     TLS                      October 2016
    -  Remove early_handshake content type.  Terminate 0-RTT data with an
       alert.
 
-   -  Reset sequence number upon key change (as proposed by Fournet et
-      al.)
-
 
 
 
@@ -505,6 +505,9 @@ Rescorla                 Expires April 22, 2017                 [Page 9]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Reset sequence number upon key change (as proposed by Fournet et
+      al.)
 
    draft-10
 
@@ -552,15 +555,15 @@ Internet-Draft                     TLS                      October 2016
 
    -  Merge EarlyDataIndication and KnownConfiguration.
 
-   -  Change code point for server_configuration to avoid collision with
-      server_hello_done.
-
 
 
 Rescorla                 Expires April 22, 2017                [Page 10]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Change code point for server_configuration to avoid collision with
+      server_hello_done.
 
    -  Relax certificate_list ordering requirement to match current
       practice.
@@ -608,15 +611,14 @@ Internet-Draft                     TLS                      October 2016
 
    draft-03
 
-   -  Remove GMT time.
-
-
 
 
 Rescorla                 Expires April 22, 2017                [Page 11]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Remove GMT time.
 
    -  Merge in support for ECC from RFC 4492 but without explicit
       curves.
@@ -664,8 +666,6 @@ Internet-Draft                     TLS                      October 2016
    algorithms, optionally authenticate each other, and establish shared
    secret keying material.  Once the handshake is complete, the peers
    use the established keys to protect application layer traffic.
-
-
 
 
 
@@ -4321,62 +4321,27 @@ Internet-Draft                     TLS                      October 2016
 
    -  A secret value
 
-   -  A phase value indicating the phase of the protocol the keys are
-      being generated for
-
    -  A purpose value indicating the specific value being generated
 
    -  The length of the key
 
-   The keying material is computed using:
+   The traffic keying material is generated from an input traffic secret
+   value using:
 
-      key = HKDF-Expand-Label(Secret,
-                              phase + ", " + purpose,
-                              "",
-                              key_length)
+    [sender]_write_key = HKDF-Expand-Label(Secret, "key", "", key_length)
+    [sender]_write_iv = HKDF-Expand-Label(Secret, "iv", "", iv_length)
 
-   The following table describes the inputs to the key calculation for
-   each class of traffic keys:
+   [sender] denotes the sending side.
 
-   +-------------+-----------------------------------+-----------------+
-   | Record Type | Secret                            | Phase           |
-   +-------------+-----------------------------------+-----------------+
-   | 0-RTT       | client_early_traffic_secret       | "early          |
-   | Handshake   |                                   | handshake key   |
-   |             |                                   | expansion"      |
-   |             |                                   |                 |
-   | 0-RTT       | client_early_traffic_secret       | "early          |
-   | Application |                                   | application     |
-   |             |                                   | data key        |
-   |             |                                   | expansion"      |
-   |             |                                   |                 |
-   | Handshake   | [sender]_handshake_traffic_secret | "handshake key  |
-   |             |                                   | expansion"      |
-   |             |                                   |                 |
-   | Application | [sender]_traffic_secret_N         | "application    |
-   | Data        |                                   | data key        |
-   |             |                                   | expansion"      |
-   +-------------+-----------------------------------+-----------------+
-
-   The [sender] in this table denotes the sending side.  The following
-   table indicates the purpose values for each type of key:
-
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 78]
-
-Internet-Draft                     TLS                      October 2016
-
-
-                          +----------+---------+
-                          | Key Type | Purpose |
-                          +----------+---------+
-                          | key      | "key"   |
-                          |          |         |
-                          | iv       | "iv"    |
-                          +----------+---------+
+         +-------------------+-----------------------------------+
+         | Record Type       | Secret                            |
+         +-------------------+-----------------------------------+
+         | 0-RTT Application | client_early_traffic_secret       |
+         |                   |                                   |
+         | Handshake         | [sender]_handshake_traffic_secret |
+         |                   |                                   |
+         | Application Data  | [sender]_traffic_secret_N         |
+         +-------------------+-----------------------------------+
 
    All the traffic keying material is recomputed whenever the underlying
    Secret changes (e.g., when changing from the handshake to application
@@ -4392,6 +4357,18 @@ Internet-Draft                     TLS                      October 2016
 
    Note that this construction differs from previous versions of TLS
    which remove leading zeros.
+
+
+
+
+
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 78]
+
+Internet-Draft                     TLS                      October 2016
+
 
 7.3.2.  Elliptic Curve Diffie-Hellman
 
@@ -4418,14 +4395,6 @@ Internet-Draft                     TLS                      October 2016
       secret key of appropriate length (into scalar input) and the
       standard public basepoint (into u-coordinate point input).
 
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 79]
-
-Internet-Draft                     TLS                      October 2016
-
-
    -  The ECDH shared secret is the result of applying ECDH function to
       the secret key (into scalar input) and the peer's public key (into
       u-coordinate point input).  The output is used raw, with no
@@ -4449,6 +4418,13 @@ Internet-Draft                     TLS                      October 2016
    interface.
 
    If no context is provided, the value is computed as:
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 79]
+
+Internet-Draft                     TLS                      October 2016
+
 
    HKDF-Expand-Label(Secret, label, "", key_length)
 
@@ -4475,13 +4451,6 @@ Internet-Draft                     TLS                      October 2016
    TLS-compliant application MUST support key exchange with secp256r1
    (NIST P-256) and SHOULD support key exchange with X25519 [RFC7748].
 
-
-
-Rescorla                 Expires April 22, 2017                [Page 80]
-
-Internet-Draft                     TLS                      October 2016
-
-
 8.2.  MTI Extensions
 
    In the absence of an application profile standard specifying
@@ -4504,6 +4473,14 @@ Internet-Draft                     TLS                      October 2016
 
    All implementations MUST send and use these extensions when offering
    applicable features:
+
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 80]
+
+Internet-Draft                     TLS                      October 2016
+
 
    -  "supported_versions" is REQUIRED for all ClientHello messages.
 
@@ -4531,13 +4508,6 @@ Internet-Draft                     TLS                      October 2016
    requirements MUST abort the handshake with a "missing_extension"
    alert.
 
-
-
-Rescorla                 Expires April 22, 2017                [Page 81]
-
-Internet-Draft                     TLS                      October 2016
-
-
    Additionally, all implementations MUST support use of the
    "server_name" extension with applications capable of using it.
    Servers MAY require clients to send a valid "server_name" extension.
@@ -4560,6 +4530,13 @@ Internet-Draft                     TLS                      October 2016
       0-254 (decimal) are assigned via Specification Required [RFC5226].
       Values with the first byte 255 (decimal) are reserved for Private
       Use [RFC5226].
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 81]
+
+Internet-Draft                     TLS                      October 2016
+
 
       IANA [SHALL add/has added] the cipher suites listed in
       Appendix A.4 to the registry.  The "Value" and "Description"
@@ -4586,14 +4563,6 @@ Internet-Draft                     TLS                      October 2016
    -  TLS ExtensionType Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
       [RFC5226].  Values with the first byte 255 (decimal) are reserved
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 82]
-
-Internet-Draft                     TLS                      October 2016
-
-
       for Private Use [RFC5226].  IANA [SHALL update/has updated] this
       registry to include the "key_share", "pre_shared_key", and
       "early_data" extensions as defined in this document.
@@ -4617,6 +4586,14 @@ Internet-Draft                     TLS                      October 2016
 
       IANA [shall update/has updated] this registry to include a
       "HelloRetryRequest" column with the following two values: "Yes",
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 82]
+
+Internet-Draft                     TLS                      October 2016
+
+
       indicating it may be sent in HelloRetryRequest, and "No",
       indicating it may not be sent in HelloRetryRequest.  This column
       [shall be/has been] initially populated with the values in this
@@ -4642,14 +4619,6 @@ Internet-Draft                     TLS                      October 2016
    |                             |          |          |               |
    | status_request [RFC6066]    |      Yes | Certific |            No |
    |                             |          |      ate |               |
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 83]
-
-Internet-Draft                     TLS                      October 2016
-
-
    |                             |          |          |               |
    | user_mapping [RFC4681]      |      Yes | Encrypte |            No |
    |                             |          |        d |               |
@@ -4673,6 +4642,14 @@ Internet-Draft                     TLS                      October 2016
    |                             |          |          |               |
    | use_srtp [RFC5764]          |      Yes | Encrypte |            No |
    |                             |          |        d |               |
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 83]
+
+Internet-Draft                     TLS                      October 2016
+
+
    |                             |          |          |               |
    | heartbeat [RFC6520]         |      Yes | Encrypte |            No |
    |                             |          |        d |               |
@@ -4698,14 +4675,6 @@ Internet-Draft                     TLS                      October 2016
    |                             |          |          |               |
    | extended_master_secret      |      Yes |       No |            No |
    | [RFC7627]                   |          |          |               |
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 84]
-
-Internet-Draft                     TLS                      October 2016
-
-
    |                             |          |          |               |
    | SessionTicket TLS [RFC4507] |      Yes |       No |            No |
    |                             |          |          |               |
@@ -4729,6 +4698,14 @@ Internet-Draft                     TLS                      October 2016
    | document]]                  |          |          |               |
    |                             |          |          |               |
    | ticket_early_data_info      |      Yes |   Ticket |            No |
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 84]
+
+Internet-Draft                     TLS                      October 2016
+
+
    | [[this document]]           |          |          |               |
    +-----------------------------+----------+----------+---------------+
 
@@ -4753,15 +4730,6 @@ Internet-Draft                     TLS                      October 2016
    Registry to list values 7-223 as "Reserved" and the TLS
    SignatureAlgorithm Registry to list values 4-233 as "Reserved".
 
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 85]
-
-Internet-Draft                     TLS                      October 2016
-
-
 11.  References
 
 11.1.  Normative References
@@ -4783,6 +4751,16 @@ Internet-Draft                     TLS                      October 2016
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
               <http://www.rfc-editor.org/info/rfc2104>.
+
+
+
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 85]
+
+Internet-Draft                     TLS                      October 2016
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -4809,15 +4787,6 @@ Internet-Draft                     TLS                      October 2016
               Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
               March 2010, <http://www.rfc-editor.org/info/rfc5705>.
 
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 86]
-
-Internet-Draft                     TLS                      October 2016
-
-
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
               Key Derivation Function (HKDF)", RFC 5869,
               DOI 10.17487/RFC5869, May 2010,
@@ -4842,6 +4811,13 @@ Internet-Draft                     TLS                      October 2016
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
+
+
+Rescorla                 Expires April 22, 2017                [Page 86]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
@@ -4863,16 +4839,6 @@ Internet-Draft                     TLS                      October 2016
    [SHS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Secure Hash Standard", NIST FIPS
               PUB 180-4, March 2012.
-
-
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 87]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
@@ -4896,6 +4862,18 @@ Internet-Draft                     TLS                      October 2016
               in Key-Exchange Protocols", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
 
+
+
+
+
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 87]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [CHSV16]   Cremers, C., Horvat, M., Scott, S., and T. van der Merwe,
               "Automated Analysis and Verification of TLS 1.3: 0-RTT,
               Resumption and Delayed Authentication", Proceedings of
@@ -4918,17 +4896,6 @@ Internet-Draft                     TLS                      October 2016
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
-
-
-
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 88]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [FGSW16]   Fischlin, M., Guenther, F., Schmidt, B., and B. Warinschi,
               "Key Confirmation in Key Exchange: A Formal Treatment and
@@ -4956,6 +4923,13 @@ Internet-Draft                     TLS                      October 2016
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
 
+
+
+Rescorla                 Expires April 22, 2017                [Page 88]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [LXZFH16]  Li, X., Xu, J., Feng, D., Zhang, Z., and H. Hu, "Multiple
               Handshakes Security of TLS 1.3 Candidates", Proceedings of
               IEEE Symposium on Security and Privacy (Oakland) 2016 ,
@@ -4977,14 +4951,6 @@ Internet-Draft                     TLS                      October 2016
               Text on Security Considerations", BCP 72, RFC 3552,
               DOI 10.17487/RFC3552, July 2003,
               <http://www.rfc-editor.org/info/rfc3552>.
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 89]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC4086]  Eastlake 3rd, D., Schiller, J., and S. Crocker,
               "Randomness Requirements for Security", BCP 106, RFC 4086,
@@ -5012,6 +4978,14 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC4492, May 2006,
               <http://www.rfc-editor.org/info/rfc4492>.
 
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 89]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
               Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
               2006, <http://www.rfc-editor.org/info/rfc4506>.
@@ -5034,13 +5008,6 @@ Internet-Draft                     TLS                      October 2016
               "Transport Layer Security (TLS) Session Resumption without
               Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
               January 2008, <http://www.rfc-editor.org/info/rfc5077>.
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 90]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC5081]  Mavrogiannopoulos, N., "Using OpenPGP Keys for Transport
               Layer Security (TLS) Authentication", RFC 5081,
@@ -5067,6 +5034,14 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC5764, May 2010,
               <http://www.rfc-editor.org/info/rfc5764>.
 
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 90]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC5878]  Brown, M. and R. Housley, "Transport Layer Security (TLS)
               Authorization Extensions", RFC 5878, DOI 10.17487/RFC5878,
               May 2010, <http://www.rfc-editor.org/info/rfc5878>.
@@ -5087,16 +5062,6 @@ Internet-Draft                     TLS                      October 2016
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <http://www.rfc-editor.org/info/rfc6347>.
-
-
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 91]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
               Layer Security (TLS) and Datagram Transport Layer Security
@@ -5125,6 +5090,14 @@ Internet-Draft                     TLS                      October 2016
               (DTLS)", RFC 7366, DOI 10.17487/RFC7366, September 2014,
               <http://www.rfc-editor.org/info/rfc7366>.
 
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 91]
+
+Internet-Draft                     TLS                      October 2016
+
+
    [RFC7465]  Popov, A., "Prohibiting RC4 Cipher Suites", RFC 7465,
               DOI 10.17487/RFC7465, February 2015,
               <http://www.rfc-editor.org/info/rfc7465>.
@@ -5143,16 +5116,6 @@ Internet-Draft                     TLS                      October 2016
    [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
               October 2015, <http://www.rfc-editor.org/info/rfc7685>.
-
-
-
-
-
-
-Rescorla                 Expires April 22, 2017                [Page 92]
-
-Internet-Draft                     TLS                      October 2016
-
 
    [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
               (TLS) Cached Information Extension", RFC 7924,
@@ -5184,9 +5147,46 @@ Internet-Draft                     TLS                      October 2016
    [X501]     "Information Technology - Open Systems Interconnection -
               The Directory: Models", ITU-T X.501, 1993.
 
+
+
+Rescorla                 Expires April 22, 2017                [Page 92]
+
+Internet-Draft                     TLS                      October 2016
+
+
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
