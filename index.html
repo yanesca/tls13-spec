@@ -374,7 +374,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-19" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -395,7 +395,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 18, 2016</td>
+  <td class="right">October 19, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -414,7 +414,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 21, 2017</td>
+  <td class="left">Expires: April 22, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -435,7 +435,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 21, 2017.</p>
+<p>This Internet-Draft will expire on April 22, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -850,7 +850,7 @@ Auth | {CertificateVerify*}
 
 <dl>
   <dt>EncryptedExtensions.</dt>
-  <dd style="margin-left: 8">responses to any extensions that are not required to determine the cryptographic parameters. [<a href="#encrypted-extensions">Section 4.3.1</a>]</dd>
+  <dd style="margin-left: 8">responses to any extensions that are not required to determine the cryptographic parameters, other than those that are specific to individual certificates. [<a href="#encrypted-extensions">Section 4.3.1</a>]</dd>
   <dt>CertificateRequest.</dt>
   <dd style="margin-left: 8">if certificate-based client authentication is desired, the desired parameters for that certificate. This message is omitted if client authentication is not desired. [<a href="#certificate-request">Section 4.3.2</a>]</dd>
 </dl>
@@ -859,9 +859,9 @@ Auth | {CertificateVerify*}
 
 <dl>
   <dt>Certificate.</dt>
-  <dd style="margin-left: 8">the certificate of the endpoint. This message is omitted if the server is not authenticating with a certificate. Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or the cached information extension <a href="#RFC7924">[RFC7924]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 4.4.1</a>]</dd>
+  <dd style="margin-left: 8">the certificate of the endpoint and any per-certificate extensions.  This message is omitted by the server if not authenticating with a certificate and by the client if the server did not send CertificateRequest (thus indicating that the client should not authenticate with a certificate). Note that if raw public keys <a href="#RFC7250">[RFC7250]</a> or the cached information extension <a href="#RFC7924">[RFC7924]</a> are in use, then this message will not contain a certificate but rather some other value corresponding to the server&#8217;s long-term key.  [<a href="#certificate">Section 4.4.1</a>]</dd>
   <dt>CertificateVerify.</dt>
-  <dd style="margin-left: 8">a signature over the entire handshake using the public key in the Certificate message. This message is omitted if the server is not authenticating via a certificate. [<a href="#certificate-verify">Section 4.4.2</a>]</dd>
+  <dd style="margin-left: 8">a signature over the entire handshake using the public key in the Certificate message. This message is omitted if the endpoint is not authenticating via a certificate. [<a href="#certificate-verify">Section 4.4.2</a>]</dd>
   <dt>Finished.</dt>
   <dd style="margin-left: 8">a MAC (Message Authentication Code) over the entire handshake.  This message provides key confirmation, binds the endpoint&#8217;s identity to the exchanged keys, and in PSK mode also authenticates the handshake. [<a href="#finished">Section 4.4.3</a>]</dd>
 </dl>
@@ -1137,7 +1137,7 @@ Subsequent Handshake:
    Example1 ex1 = {1, 4};  /* assigns f1 = 1, f2 = 4 */
 </pre>
 <h2 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
-<p id="rfc.section.3.8.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decoding_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.3.8.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#handshake-protocol" id="handshake-protocol">Handshake Protocol</a></h1>
 <p id="rfc.section.4.p.1">The handshake protocol is used to negotiate the secure attributes of a session. Handshake messages are supplied to the TLS record layer, where they are encapsulated within one or more TLSPlaintext or TLSCiphertext structures, which are processed and transmitted as specified by the current active session state.</p>
 <pre>
@@ -1247,7 +1247,7 @@ Subsequent Handshake:
   <dt>extensions</dt>
   <dd style="margin-left: 8">Clients request extended functionality from servers by sending data in the extensions field.  The actual &#8220;Extension&#8221; format is defined in <a href="#hello-extensions">Section 4.2</a>.</dd>
 </dl>
-<p id="rfc.section.4.1.2.p.9">In the event that a client requests additional functionality using extensions, and this functionality is not supplied by the server, the client MAY abort the handshake. Note that TLS 1.3 ClientHello messages MUST always contain extensions, and a TLS 1.3 server MUST respond to any TLS 1.3 ClientHello without extensions or with data following the extensions block with a &#8220;decode_error&#8221; alert. TLS 1.3 servers may receive TLS 1.2 ClientHello messages without extensions. If negotiating TLS 1.2, a server MUST check that the message either contains no data after legacy_compression_methods or that it contains a valid extensions block with no data following.  If not, then it MUST abort the handshake with a &#8220;decode_error&#8221; alert.</p>
+<p id="rfc.section.4.1.2.p.9">In the event that a client requests additional functionality using extensions, and this functionality is not supplied by the server, the client MAY abort the handshake. Note that TLS 1.3 ClientHello messages always contain extensions (minimally they must contain &#8220;supported_versions&#8221; or they will be interpreted as TLS 1.2 ClientHello messages). TLS 1.3 servers may receive TLS 1.2 ClientHello messages without extensions. If negotiating TLS 1.2, a server MUST check that the message either contains no data after legacy_compression_methods or that it contains a valid extensions block with no data following.  If not, then it MUST abort the handshake with a &#8220;decode_error&#8221; alert.</p>
 <p id="rfc.section.4.1.2.p.10">After sending the ClientHello message, the client waits for a ServerHello or HelloRetryRequest message.</p>
 <h3 id="rfc.section.4.1.3"><a href="#rfc.section.4.1.3">4.1.3.</a> <a href="#server-hello" id="server-hello">Server Hello</a></h3>
 <p id="rfc.section.4.1.3.p.1">When this message will be sent:</p>
@@ -1275,7 +1275,7 @@ Subsequent Handshake:
   <dt>cipher_suite</dt>
   <dd style="margin-left: 8">The single cipher suite selected by the server from the list in ClientHello.cipher_suites. A client which receives a cipher suite that was not offered MUST abort the handshake.</dd>
   <dt>extensions</dt>
-  <dd style="margin-left: 8">A list of extensions.  Note that only extensions offered by the client can appear in the server&#8217;s list. In TLS 1.3, as opposed to previous versions of TLS, the server&#8217;s extensions are split between the ServerHello and the EncryptedExtensions <a href="#encrypted-extensions">Section 4.3.1</a> message. The ServerHello MUST only include extensions which are required to establish the cryptographic context. Currently the only such extensions are &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;signature_algorithms&#8221;.  Clients MUST check the ServerHello for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert. In prior versions of TLS, the extensions field could be omitted entirely if not needed, similar to ClientHello. As of TLS 1.3, all clients and servers will send at least one extension (at least &#8220;key_share&#8221; or &#8220;pre_shared_key&#8221;).</dd>
+  <dd style="margin-left: 8">A list of extensions.  Note that only extensions offered by the client can appear in the server&#8217;s list. In TLS 1.3, as opposed to previous versions of TLS, the server&#8217;s extensions are split between the ServerHello, EncryptedExtensions <a href="#encrypted-extensions">Section 4.3.1</a> message. The ServerHello MUST only include extensions which are required to establish the cryptographic context. Currently the only such extensions are &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;signature_algorithms&#8221;.  Clients MUST check the ServerHello for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert. In prior versions of TLS, the extensions field could be omitted entirely if not needed, similar to ClientHello. As of TLS 1.3, all clients and servers will send at least one extension (at least &#8220;key_share&#8221; or &#8220;pre_shared_key&#8221;).</dd>
 </dl>
 <p id="rfc.section.4.1.3.p.5">TLS 1.3 has a downgrade protection mechanism embedded in the server&#8217;s random value. TLS 1.3 server implementations which respond to a ClientHello indicating only support for TLS 1.2 or below MUST set the last eight bytes of their Random value to the bytes:</p>
 <pre>
@@ -1340,9 +1340,9 @@ Subsequent Handshake:
   <li>&#8220;extension_data&#8221; contains information specific to the particular extension type.</li>
 </ul>
 <p id="rfc.section.4.2.p.4">The initial set of extensions is defined in <a href="#RFC6066">[RFC6066]</a>.  The list of extension types is maintained by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
-<p id="rfc.section.4.2.p.5">An extension type MUST NOT appear in the ServerHello or HelloRetryRequest unless the same extension type appeared in the corresponding ClientHello.  If a client receives an extension type in ServerHello or HelloRetryRequest that it did not request in the associated ClientHello, it MUST abort the handshake with an &#8220;unsupported_extension&#8221; fatal alert.</p>
+<p id="rfc.section.4.2.p.5">An extension type MUST NOT appear in the ServerHello or HelloRetryRequest unless the same extension type appeared in the corresponding ClientHello (with the exception of &#8220;cookie&#8221;, as noted in <a href="#cookie">Section 4.2.2</a>).  If a client receives an extension type in ServerHello or HelloRetryRequest that it did not request in the associated ClientHello, it MUST abort the handshake with an &#8220;unsupported_extension&#8221; fatal alert.</p>
 <p id="rfc.section.4.2.p.6">Nonetheless, &#8220;server-oriented&#8221; extensions may be provided within this framework. Such an extension (say, of type x) would require the client to first send an extension of type x in a ClientHello with empty extension_data to indicate that it supports the extension type. In this case, the client is offering the capability to understand the extension type, and the server is taking the client up on its offer.</p>
-<p id="rfc.section.4.2.p.7">When multiple extensions of different types are present in the ClientHello or ServerHello messages, the extensions MAY appear in any order. There MUST NOT be more than one extension of the same type.</p>
+<p id="rfc.section.4.2.p.7">When multiple extensions of different types are present in the ClientHello or ServerHello messages, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension">Section 4.2.6</a> which MUST be last. There MUST NOT be more than one extension of the same type.</p>
 <p id="rfc.section.4.2.p.8">Finally, note that extensions can be sent both when starting a new session and when in resumption-PSK mode. A client that requests session resumption does not in general know whether the server will accept this request, and therefore it SHOULD send the same extensions as it would send normally.</p>
 <p id="rfc.section.4.2.p.9">In general, the specification of each extension type needs to describe the effect of the extension both during full handshake and session resumption. Most current TLS extensions are relevant only when a session is initiated: when an older session is resumed, the server does not process these extensions in ClientHello, and does not include them in ServerHello. However, some extensions may specify different behavior during session resumption.  [[TODO: update this and the previous paragraph to cover PSK-based resumption.]]</p>
 <p id="rfc.section.4.2.p.10">There are subtle (and not so subtle) interactions that may occur in this protocol between new features and existing features which may result in a significant reduction in overall security. The following considerations should be taken into account when designing new extensions:</p>
@@ -1380,8 +1380,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.2.p.3">When sending a HelloRetryRequest, the server MAY provide a &#8220;cookie&#8221; extension to the client (this is an exception to the usual rule that the only extensions that may be sent are those that appear in the ClientHello). When sending the new ClientHello, the client MUST echo the value of the extension.  Clients MUST NOT use cookies in subsequent connections.</p>
 <h3 id="rfc.section.4.2.3"><a href="#rfc.section.4.2.3">4.2.3.</a> <a href="#signature-algorithms" id="signature-algorithms">Signature Algorithms</a></h3>
 <p id="rfc.section.4.2.3.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature algorithms may be used in digital signatures. Clients which desire the server to authenticate via a certificate MUST send this extension.  If a server is authenticating via a certificate and the client has not sent a &#8220;signature_algorithms&#8221; extension then the server MUST abort the handshake with a &#8220;missing_extension&#8221; alert (see <a href="#mti-extensions">Section 8.2</a>).</p>
-<p id="rfc.section.4.2.3.p.2">Servers which are authenticating via a certificate MUST indicate so by sending the client an empty &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.4.2.3.p.3">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a SignatureSchemeList value:</p>
+<p id="rfc.section.4.2.3.p.2">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a SignatureSchemeList value:</p>
 <pre>
    enum {
        /* RSASSA-PKCS1-v1_5 algorithms */
@@ -1413,8 +1412,8 @@ Subsequent Handshake:
        SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
    } SignatureSchemeList;
 </pre>
-<p id="rfc.section.4.2.3.p.4">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
-<p id="rfc.section.4.2.3.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
+<p id="rfc.section.4.2.3.p.3">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
+<p id="rfc.section.4.2.3.p.4">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
 <p/>
 
 <dl>
@@ -1427,9 +1426,9 @@ Subsequent Handshake:
   <dt>EdDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
-<p id="rfc.section.4.2.3.p.7">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.2</a>).</p>
-<p id="rfc.section.4.2.3.p.8">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.4.2.3.p.9">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version. In particular:</p>
+<p id="rfc.section.4.2.3.p.6">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.2</a>).</p>
+<p id="rfc.section.4.2.3.p.7">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
+<p id="rfc.section.4.2.3.p.8">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246">[RFC5246]</a> when negotiating that version. In particular:</p>
 <p/>
 
 <ul>
@@ -1471,7 +1470,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8">Indicates support of the corresponding finite field group, defined in <a href="#RFC7919">[RFC7919]</a>.  Values 0x01FC through 0x01FF are reserved for private use.</dd>
 </dl>
 <p id="rfc.section.4.2.4.p.5">Items in named_group_list are ordered according to the client&#8217;s preferences (most preferred choice first).</p>
-<p id="rfc.section.4.2.4.p.6">As of TLS 1.3, servers are permitted to send the &#8220;supported_groups&#8221; extension to the client. If the server has a group it prefers to the ones in the &#8220;key_share&#8221; extension but is still willing to accept the ClientHello, it SHOULD send &#8220;supported_groups&#8221; to update the client&#8217;s view of its preferences; this extension SHOULD contain all groups the server supports, regardless of whether they are currently supported by the client. Clients MUST NOT act upon any information found in &#8220;supported_groups&#8221; prior to successful completion of the handshake, but MAY use the information learned from a successfully completed handshake to change what groups they offer to a server in subsequent connections.</p>
+<p id="rfc.section.4.2.4.p.6">As of TLS 1.3, servers are permitted to send the &#8220;supported_groups&#8221; extension to the client. If the server has a group it prefers to the ones in the &#8220;key_share&#8221; extension but is still willing to accept the ClientHello, it SHOULD send &#8220;supported_groups&#8221; to update the client&#8217;s view of its preferences; this extension SHOULD contain all groups the server supports, regardless of whether they are currently supported by the client. Clients MUST NOT act upon any information found in &#8220;supported_groups&#8221; prior to successful completion of the handshake, but MAY use the information learned from a successfully completed handshake to change what groups they use in their &#8220;key_share&#8221; extension in subsequent connections.</p>
 <h3 id="rfc.section.4.2.5"><a href="#rfc.section.4.2.5">4.2.5.</a> <a href="#key-share" id="key-share">Key Share</a></h3>
 <p id="rfc.section.4.2.5.p.1">The &#8220;key_share&#8221; extension contains the endpoint&#8217;s cryptographic parameters.</p>
 <p id="rfc.section.4.2.5.p.2">Clients MAY send an empty client_shares vector in order to request group selection from the server at the cost of an additional round trip.  (see <a href="#hello-retry-request">Section 4.1.4</a>)</p>
@@ -1515,7 +1514,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8">A single KeyShareEntry value that is in the same group as one of the client&#8217;s shares.</dd>
 </dl>
 <p id="rfc.section.4.2.5.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and and MAY abort the handshake with an &#8220;illegal_parameter&#8221; alert if one is violated.</p>
-<p id="rfc.section.4.2.5.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST first verify that the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello. It MUST then verify that the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST append a new KeyShareEntry for the group indicated in the selected_group field to the groups in its original KeyShare. The remaining KeyShareEntry values MUST be preserved.</p>
+<p id="rfc.section.4.2.5.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST first verify that the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello. It MUST then verify that the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field.</p>
 <p id="rfc.section.4.2.5.p.8">Note that a HelloRetryRequest might not include the &#8220;key_share&#8221; extension if other extensions are sent, such as if the server is only sending a cookie.</p>
 <p id="rfc.section.4.2.5.p.9">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension.  If a HelloRetryRequest was received, the client MUST verify that the selected NamedGroup matches that supplied in the selected_group field and MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert if it does not.</p>
 <p id="rfc.section.4.2.5.p.10">[[TODO: Recommendation about what the client offers.  Presumably which integer DH groups and which curves.]]</p>
@@ -1543,11 +1542,11 @@ Subsequent Handshake:
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-              PskIdentity identities&lt;6..2^16-1&gt;;
-              PskBinderEntry binders&lt;33..2^16-1&gt;;
-              
+               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskBinderEntry binders&lt;33..2^16-1&gt;;
+
            case server_hello:
-              uint16 selected_identity;
+               uint16 selected_identity;
        };
 
    } PreSharedKeyExtension;
@@ -1602,13 +1601,13 @@ Subsequent Handshake:
 </dl>
 <h3 id="rfc.section.4.2.8"><a href="#rfc.section.4.2.8">4.2.8.</a> <a href="#psk-binder-1" id="psk-binder-1">PSK Binder</a></h3>
 <h3 id="rfc.section.4.2.9"><a href="#rfc.section.4.2.9">4.2.9.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h3>
-<p id="rfc.section.4.2.9.p.1">When PSK resumption is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.4.2.9.p.1">When a PSK is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.4.2.9.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
    } EarlyDataIndication;
 </pre>
-<p id="rfc.section.4.2.9.p.3">A server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
+<p id="rfc.section.4.2.9.p.3">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
 <p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.4.2.9.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
 <p id="rfc.section.4.2.9.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
@@ -1623,7 +1622,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>The TLS version number, AEAD algorithm, and the hash for HKDF.</li>
+  <li>The TLS version number and cipher suite.</li>
   <li>The selected ALPN <a href="#RFC7301">[RFC7301]</a> protocol, if any.</li>
 </ul>
 <p id="rfc.section.4.2.9.p.10">Future extensions MUST define their interaction with 0-RTT.</p>
@@ -1658,10 +1657,9 @@ Subsequent Handshake:
 <p/>
 
 <ul class="empty">
-  <li>The EncryptedExtensions message contains any extensions which should be protected, i.e., any which are not needed to establish the cryptographic context.</li>
+  <li>The EncryptedExtensions message contains any extensions which should be protected, i.e., any which are not needed to establish the cryptographic context, but which are not associated with individual certificates. The client MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</li>
 </ul>
-<p id="rfc.section.4.3.1.p.5">The same extension types MUST NOT appear in both the ServerHello and EncryptedExtensions. All server-sent extensions other than those explicitly listed in <a href="#server-hello">Section 4.1.3</a> or designated in the IANA registry MUST only appear in EncryptedExtensions. Extensions which are designated to appear in ServerHello MUST NOT appear in EncryptedExtensions. Clients MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
-<p id="rfc.section.4.3.1.p.6">Structure of this message:</p>
+<p id="rfc.section.4.3.1.p.5">Structure of this message:</p>
 <pre>
    struct {
        Extension extensions&lt;0..2^16-1&gt;;
@@ -1849,8 +1847,8 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.2.p.3">Structure of this message:</p>
 <pre>
    struct {
-        SignatureScheme algorithm;
-        opaque signature&lt;0..2^16-1&gt;;
+       SignatureScheme algorithm;
+       opaque signature&lt;0..2^16-1&gt;;
    } CertificateVerify;
 </pre>
 <p id="rfc.section.4.4.2.p.4">The algorithm field specifies the signature algorithm used (see <a href="#signature-algorithms">Section 4.2.3</a> for the definition of this field). The signature is a digital signature using that algorithm that covers the hash output described in <a href="#authentication-messages">Section 4.4</a> namely:</p>
@@ -2040,9 +2038,9 @@ finished_key =
 <p id="rfc.section.5.2.p.1">The record protection functions translate a TLSPlaintext structure into a TLSCiphertext. The deprotection functions reverse the process. In TLS 1.3 as opposed to previous versions of TLS, all ciphers are modeled as &#8220;Authenticated Encryption with Additional Data&#8221; (AEAD) <a href="#RFC5116">[RFC5116]</a>.  AEAD functions provide a unified encryption and authentication operation which turns plaintext into authenticated ciphertext and back again. Each encrypted record consists of a plaintext header followed by an encrypted body, which itself contains a type and optional padding.</p>
 <pre>
    struct {
-      opaque content[TLSPlaintext.length];
-      ContentType type;
-      uint8 zeros[length_of_padding];
+       opaque content[TLSPlaintext.length];
+       ContentType type;
+       uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -3184,9 +3182,9 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } TLSPlaintext;
 
    struct {
-      opaque content[TLSPlaintext.length];
-      ContentType type;
-      uint8 zeros[length_of_padding];
+       opaque content[TLSPlaintext.length];
+       ContentType type;
+       uint8 zeros[length_of_padding];
    } TLSInnerPlaintext;
 
    struct {
@@ -3354,11 +3352,11 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-              PskIdentity identities&lt;6..2^16-1&gt;;
-              PskBinderEntry binders&lt;33..2^16-1&gt;;
-              
+               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskBinderEntry binders&lt;33..2^16-1&gt;;
+
            case server_hello:
-              uint16 selected_identity;
+               uint16 selected_identity;
        };
 
    } PreSharedKeyExtension;
@@ -3489,8 +3487,8 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } Certificate;
 
    struct {
-        SignatureScheme algorithm;
-        opaque signature&lt;0..2^16-1&gt;;
+       SignatureScheme algorithm;
+       opaque signature&lt;0..2^16-1&gt;;
    } CertificateVerify;
 
    struct {
