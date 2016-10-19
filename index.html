@@ -300,8 +300,7 @@ li, p {
 <link href="#rfc.section.4.2.5" rel="Chapter" title="4.2.5 Key Share"/>
 <link href="#rfc.section.4.2.6" rel="Chapter" title="4.2.6 Pre-Shared Key Extension"/>
 <link href="#rfc.section.4.2.7" rel="Chapter" title="4.2.7 Pre-Shared Key Exchange Modes"/>
-<link href="#rfc.section.4.2.8" rel="Chapter" title="4.2.8 PSK Binder"/>
-<link href="#rfc.section.4.2.9" rel="Chapter" title="4.2.9 Early Data Indication"/>
+<link href="#rfc.section.4.2.8" rel="Chapter" title="4.2.8 Early Data Indication"/>
 <link href="#rfc.section.4.3" rel="Chapter" title="4.3 Server Parameters"/>
 <link href="#rfc.section.4.3.1" rel="Chapter" title="4.3.1 Encrypted Extensions"/>
 <link href="#rfc.section.4.3.2" rel="Chapter" title="4.3.2 Certificate Request"/>
@@ -480,8 +479,7 @@ li, p {
 <li>4.2.5.   <a href="#rfc.section.4.2.5">Key Share</a></li>
 <li>4.2.6.   <a href="#rfc.section.4.2.6">Pre-Shared Key Extension</a></li>
 <li>4.2.7.   <a href="#rfc.section.4.2.7">Pre-Shared Key Exchange Modes</a></li>
-<li>4.2.8.   <a href="#rfc.section.4.2.8">PSK Binder</a></li>
-<li>4.2.9.   <a href="#rfc.section.4.2.9">Early Data Indication</a></li>
+<li>4.2.8.   <a href="#rfc.section.4.2.8">Early Data Indication</a></li>
 </ul><li>4.3.   <a href="#rfc.section.4.3">Server Parameters</a></li>
 <ul><li>4.3.1.   <a href="#rfc.section.4.3.1">Encrypted Extensions</a></li>
 <li>4.3.2.   <a href="#rfc.section.4.3.2">Certificate Request</a></li>
@@ -996,7 +994,7 @@ Subsequent Handshake:
 
 <ol>
   <li>This data is not forward secret, as it is encrypted solely under keys derived using the offered PSK.</li>
-  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (See <a href="#replay-time">Section 4.2.9.2</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
+  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (See <a href="#replay-time">Section 4.2.8.2</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
 <p id="rfc.section.2.3.p.9">Protocols MUST NOT use 0-RTT data without a profile that defines its use. That profile needs to identify which messages or interactions are safe to use with 0-RTT. In addition, to avoid accidental misuse, implementations SHOULD NOT enable 0-RTT unless specifically requested. Special functions for 0-RTT data are RECOMMENDED to ensure that an application is always aware that it is sending or receiving data that might be replayed.</p>
 <p id="rfc.section.2.3.p.10">The same warnings apply to any use of the early exporter secret.</p>
@@ -1209,7 +1207,7 @@ Subsequent Handshake:
 
 <ul>
   <li>If a &#8220;key_share&#8221; extension was supplied in the HelloRetryRequest, replacing the list of shares with a list containing a single KeyShareEntry from the indicated group.</li>
-  <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication">Section 4.2.9</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
+  <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication">Section 4.2.8</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
   <li>Including a &#8220;cookie&#8221; extension if one was provided in the HelloRetryRequest.</li>
 </ul>
 <p id="rfc.section.4.1.2.p.4">Because TLS 1.3 forbids renegotiation, if a server receives a ClientHello at any other time, it MUST terminate the connection.</p>
@@ -1555,7 +1553,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>identities</dt>
-  <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.9</a>), the first identity is the one used for 0-RTT data.</dd>
+  <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.8</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>obfuscated_ticket_age</dt>
   <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. External tickets SHOULD use an obfuscated_ticket_age of 0; servers MUST ignore this value for external tickets.</dd>
   <dt>binders</dt>
@@ -1599,18 +1597,17 @@ Subsequent Handshake:
   <dt>psk_dhe_ke</dt>
   <dd style="margin-left: 8">PSK key establishment with (EC)DHE key establishment. In this mode, the client and servers MUST supply &#8220;key_share&#8221; values as described in <a href="#key-share">Section 4.2.5</a>.</dd>
 </dl>
-<h3 id="rfc.section.4.2.8"><a href="#rfc.section.4.2.8">4.2.8.</a> <a href="#psk-binder-1" id="psk-binder-1">PSK Binder</a></h3>
-<h3 id="rfc.section.4.2.9"><a href="#rfc.section.4.2.9">4.2.9.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h3>
-<p id="rfc.section.4.2.9.p.1">When a PSK is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.9.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
+<h3 id="rfc.section.4.2.8"><a href="#rfc.section.4.2.8">4.2.8.</a> <a href="#early-data-indication" id="early-data-indication">Early Data Indication</a></h3>
+<p id="rfc.section.4.2.8.p.1">When a PSK is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.4.2.8.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value:</p>
 <pre>
    struct {
    } EarlyDataIndication;
 </pre>
-<p id="rfc.section.4.2.9.p.3">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.9.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
-<p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.9.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
-<p id="rfc.section.4.2.9.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
+<p id="rfc.section.4.2.8.p.3">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.8.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
+<p id="rfc.section.4.2.8.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
+<p id="rfc.section.4.2.8.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
+<p id="rfc.section.4.2.8.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of two ways:</p>
 <p/>
 
 <ul>
@@ -1618,32 +1615,32 @@ Subsequent Handshake:
   <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
   <li>Request that the client send another ClientHello by responding with a HelloRetryRequest.  A client MUST NOT include the &#8220;early_data&#8221; extension in its followup ClientHello.</li>
 </ul>
-<p id="rfc.section.4.2.9.p.8">In order to accept early data, the server MUST have accepted a PSK cipher suite and selected the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
+<p id="rfc.section.4.2.8.p.8">In order to accept early data, the server MUST have accepted a PSK cipher suite and selected the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>
 <p/>
 
 <ul>
   <li>The TLS version number and cipher suite.</li>
   <li>The selected ALPN <a href="#RFC7301">[RFC7301]</a> protocol, if any.</li>
 </ul>
-<p id="rfc.section.4.2.9.p.10">Future extensions MUST define their interaction with 0-RTT.</p>
-<p id="rfc.section.4.2.9.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
-<p id="rfc.section.4.2.9.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, if the server fails to decrypt any 0-RTT record following an accepted &#8220;early_data&#8221; extension it MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
-<p id="rfc.section.4.2.9.p.13">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the selected ALPN protocol has changed, it is likely unsafe to retransmit the original application layer data.</p>
-<h4 id="rfc.section.4.2.9.1"><a href="#rfc.section.4.2.9.1">4.2.9.1.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
-<p id="rfc.section.4.2.9.1.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the &#8220;end_of_early_data&#8221; alert. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s &#8220;end_of_early_data&#8221; alert.</p>
-<h4 id="rfc.section.4.2.9.2"><a href="#rfc.section.4.2.9.2">4.2.9.2.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
-<p id="rfc.section.4.2.9.2.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.</p>
-<p id="rfc.section.4.2.9.2.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a session ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;pre_shared_key&#8221; extension, it can subtract the base value and check to see if the value used by the client matches its expectations.</p>
-<p id="rfc.section.4.2.9.2.p.3">The ticket age (the value with &#8220;ticket_age_add&#8221; subtracted) provided by the client will be shorter than the actual time elapsed on the server by a single round trip time.  This difference is comprised of the delay in sending the NewSessionTicket message to the client, plus the time taken to send the ClientHello to the server.  For this reason, a server SHOULD measure the round trip time prior to sending the NewSessionTicket message and account for that in the value it saves.</p>
-<p id="rfc.section.4.2.9.2.p.4">To properly validate the ticket age, a server needs to save at least two items:</p>
+<p id="rfc.section.4.2.8.p.10">Future extensions MUST define their interaction with 0-RTT.</p>
+<p id="rfc.section.4.2.8.p.11">If any of these checks fail, the server MUST NOT respond with the extension and must discard all the remaining first flight data (thus falling back to 1-RTT). If the client attempts a 0-RTT handshake but the server rejects it, it will generally not have the 0-RTT record protection keys and must instead trial decrypt each record with the 1-RTT handshake keys until it finds one that decrypts properly, and then pick up the handshake from that point.</p>
+<p id="rfc.section.4.2.8.p.12">If the server chooses to accept the &#8220;early_data&#8221; extension, then it MUST comply with the same error handling requirements specified for all records when processing early data records.  Specifically, if the server fails to decrypt any 0-RTT record following an accepted &#8220;early_data&#8221; extension it MUST terminate the connection with a &#8220;bad_record_mac&#8221; alert as per <a href="#record-payload-protection">Section 5.2</a>.</p>
+<p id="rfc.section.4.2.8.p.13">If the server rejects the &#8220;early_data&#8221; extension, the client application MAY opt to retransmit the data once the handshake has been completed. TLS stacks SHOULD not do this automatically and client applications MUST take care that the negotiated parameters are consistent with those it expected. For example, if the selected ALPN protocol has changed, it is likely unsafe to retransmit the original application layer data.</p>
+<h4 id="rfc.section.4.2.8.1"><a href="#rfc.section.4.2.8.1">4.2.8.1.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
+<p id="rfc.section.4.2.8.1.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the &#8220;end_of_early_data&#8221; alert. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s &#8220;end_of_early_data&#8221; alert.</p>
+<h4 id="rfc.section.4.2.8.2"><a href="#rfc.section.4.2.8.2">4.2.8.2.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
+<p id="rfc.section.4.2.8.2.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.</p>
+<p id="rfc.section.4.2.8.2.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a session ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;pre_shared_key&#8221; extension, it can subtract the base value and check to see if the value used by the client matches its expectations.</p>
+<p id="rfc.section.4.2.8.2.p.3">The ticket age (the value with &#8220;ticket_age_add&#8221; subtracted) provided by the client will be shorter than the actual time elapsed on the server by a single round trip time.  This difference is comprised of the delay in sending the NewSessionTicket message to the client, plus the time taken to send the ClientHello to the server.  For this reason, a server SHOULD measure the round trip time prior to sending the NewSessionTicket message and account for that in the value it saves.</p>
+<p id="rfc.section.4.2.8.2.p.4">To properly validate the ticket age, a server needs to save at least two items:</p>
 <p/>
 
 <ul>
   <li>The time that the server generated the session ticket and the estimated round trip time can be added together to form a baseline time.</li>
   <li>The &#8220;ticket_age_add&#8221; parameter from the NewSessionTicket is needed to recover the ticket age from the &#8220;obfuscated_ticket_age&#8221; parameter.</li>
 </ul>
-<p id="rfc.section.4.2.9.2.p.6">There are several potential sources of error that make an exact measurement of time difficult.  Variations in client and server clocks are likely to be minimal, outside of gross time corrections.  Network propagation delays are most likely causes of a mismatch in legitimate values for elapsed time.  Both the NewSessionTicket and ClientHello messages might be retransmitted and therefore delayed, which might be hidden by TCP.</p>
-<p id="rfc.section.4.2.9.2.p.7">A small allowance for errors in clocks and variations in measurements is advisable.  However, any allowance also increases the opportunity for replay.  In this case, it is better to reject early data and fall back to a full 1-RTT handshake than to risk greater exposure to replay attacks.  In common network topologies for browser clients, small allowances on the order of ten seconds are reasonable.  Clock skew distributions are not symmetric, so the optimal tradeoff may involve an asymmetric replay window.</p>
+<p id="rfc.section.4.2.8.2.p.6">There are several potential sources of error that make an exact measurement of time difficult.  Variations in client and server clocks are likely to be minimal, outside of gross time corrections.  Network propagation delays are most likely causes of a mismatch in legitimate values for elapsed time.  Both the NewSessionTicket and ClientHello messages might be retransmitted and therefore delayed, which might be hidden by TCP.</p>
+<p id="rfc.section.4.2.8.2.p.7">A small allowance for errors in clocks and variations in measurements is advisable.  However, any allowance also increases the opportunity for replay.  In this case, it is better to reject early data and fall back to a full 1-RTT handshake than to risk greater exposure to replay attacks.  In common network topologies for browser clients, small allowances on the order of ten seconds are reasonable.  Clock skew distributions are not symmetric, so the optimal tradeoff may involve an asymmetric replay window.</p>
 <h2 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#server-parameters" id="server-parameters">Server Parameters</a></h2>
 <p id="rfc.section.4.3.p.1">The next two messages from the server, EncryptedExtensions and CertificateRequest, contain encrypted information from the server that determines the rest of the handshake.</p>
 <h3 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#encrypted-extensions" id="encrypted-extensions">Encrypted Extensions</a></h3>
@@ -1966,7 +1963,7 @@ finished_key =
        uint32 max_early_data_size;           
    } TicketEarlyDataInfo;
 </pre>
-<p id="rfc.section.4.5.1.p.7">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.9</a>)). It contains the following value:</p>
+<p id="rfc.section.4.5.1.p.7">This extension indicates that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.8</a>)). It contains the following value:</p>
 <p/>
 
 <dl>
@@ -3696,7 +3693,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 <p id="rfc.section.D.1.p.8">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
 <p id="rfc.section.D.1.p.9">For all handshake modes, the Finished MAC (and where present, the signature), prevents downgrade attacks. In addition, the use of certain bytes in the random nonces as described in <a href="#server-hello">Section 4.1.3</a> allows the detection of downgrade to previous TLS versions.</p>
 <p id="rfc.section.D.1.p.10">As soon as the client and the server have exchanged enough information to establish shared keys, the remainder of the handshake is encrypted, thus providing protection against passive attackers. Because the server authenticates before the client, the client can ensure that it only reveals its identity to an authenticated server. Note that implementations must use the provided record padding mechanism during the handshake to avoid leaking information about the identities due to length.</p>
-<p id="rfc.section.D.1.p.11">The 0-RTT mode of operation generally provides the same security properties as 1-RTT data, with the two exceptions that the 0-RTT encryption keys do not provide full forward secrecy and that the the server is not able to guarantee full uniqueness of the handshake (non-replayability) without keeping potentially undue amounts of state. See <a href="#early-data-indication">Section 4.2.9</a> for one mechanism to limit the exposure to replay.</p>
+<p id="rfc.section.D.1.p.11">The 0-RTT mode of operation generally provides the same security properties as 1-RTT data, with the two exceptions that the 0-RTT encryption keys do not provide full forward secrecy and that the the server is not able to guarantee full uniqueness of the handshake (non-replayability) without keeping potentially undue amounts of state. See <a href="#early-data-indication">Section 4.2.8</a> for one mechanism to limit the exposure to replay.</p>
 <p id="rfc.section.D.1.p.12">The reader should refer to the following references for analysis of the TLS handshake <a href="#CHSV16">[CHSV16]</a> <a href="#FGSW16">[FGSW16]</a> <a href="#LXZFH16">[LXZFH16]</a>.</p>
 <h2 id="rfc.appendix.D.2"><a href="#rfc.appendix.D.2">D.2.</a> <a href="#security-record-layer" id="security-record-layer">Record Layer</a></h2>
 <p id="rfc.section.D.2.p.1">The record layer depends on the handshake producing a strong session key which can be used to derive bidirectional traffic keys and nonces.  Assuming that is true, and the keys are used for no more data than indicated in <a href="#limits-on-key-usage">Section 5.5</a> then the record layer should provide the following guarantees:</p>
