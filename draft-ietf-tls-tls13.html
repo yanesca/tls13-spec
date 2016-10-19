@@ -1954,8 +1954,8 @@ finished_key =
   <dd style="margin-left: 8">A randomly generated 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;early_data&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.</dd>
   <dt>ticket</dt>
   <dd style="margin-left: 8">The value of the ticket to be used as the PSK identifier.  The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
-  <dt>ticket_extensions</dt>
-  <dd style="margin-left: 8">A set of extension values for the ticket. Clients MUST ignore unrecognized extensions.</dd>
+  <dt>extensions</dt>
+  <dd style="margin-left: 8">A set of extension values for the ticket. The &#8220;Extension&#8221; format is defined in <a href="#hello-extensions">Section 4.2</a>. Clients MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.5.1.p.6">This document defines one ticket extension, &#8220;ticket_early_data_info&#8221;</p>
 <pre>

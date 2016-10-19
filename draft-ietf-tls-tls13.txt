@@ -3395,8 +3395,9 @@ Internet-Draft                     TLS                      October 2016
       Section 4 of [RFC5077] describes a recommended ticket construction
       mechanism.
 
-   ticket_extensions  A set of extension values for the ticket.  Clients
-      MUST ignore unrecognized extensions.
+   extensions  A set of extension values for the ticket.  The
+      "Extension" format is defined in Section 4.2.  Clients MUST ignore
+      unrecognized extensions.
 
    This document defines one ticket extension, "ticket_early_data_info"
 
@@ -3409,7 +3410,6 @@ Internet-Draft                     TLS                      October 2016
 
    max_early_data_size  The maximum amount of 0-RTT data that the client
       is allowed to send when using this ticket, in bytes.  Only
-      Application Data payload is counted.  A server receiving more than
 
 
 
@@ -3418,6 +3418,7 @@ Rescorla                 Expires April 22, 2017                [Page 61]
 Internet-Draft                     TLS                      October 2016
 
 
+      Application Data payload is counted.  A server receiving more than
       max_early_data_size bytes of 0-RTT data SHOULD terminate the
       connection with an "unexpected_message" alert.
 
@@ -3464,7 +3465,6 @@ Internet-Draft                     TLS                      October 2016
    its traffic using the next generation of keys, computed as described
    in Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
    its receiving keys.
-
 
 
 
