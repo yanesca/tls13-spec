@@ -283,8 +283,8 @@ li, p {
 <link href="#rfc.section.3.4" rel="Chapter" title="3.4 Numbers"/>
 <link href="#rfc.section.3.5" rel="Chapter" title="3.5 Enumerateds"/>
 <link href="#rfc.section.3.6" rel="Chapter" title="3.6 Constructed Types"/>
-<link href="#rfc.section.3.6.1" rel="Chapter" title="3.6.1 Variants"/>
 <link href="#rfc.section.3.7" rel="Chapter" title="3.7 Constants"/>
+<link href="#rfc.section.3.7.1" rel="Chapter" title="3.7.1 Variants"/>
 <link href="#rfc.section.3.8" rel="Chapter" title="3.8 Decoding Errors"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Handshake Protocol"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Key Exchange Messages"/>
@@ -462,9 +462,9 @@ li, p {
 <li>3.4.   <a href="#rfc.section.3.4">Numbers</a></li>
 <li>3.5.   <a href="#rfc.section.3.5">Enumerateds</a></li>
 <li>3.6.   <a href="#rfc.section.3.6">Constructed Types</a></li>
-<ul><li>3.6.1.   <a href="#rfc.section.3.6.1">Variants</a></li>
-</ul><li>3.7.   <a href="#rfc.section.3.7">Constants</a></li>
-<li>3.8.   <a href="#rfc.section.3.8">Decoding Errors</a></li>
+<li>3.7.   <a href="#rfc.section.3.7">Constants</a></li>
+<ul><li>3.7.1.   <a href="#rfc.section.3.7.1">Variants</a></li>
+</ul><li>3.8.   <a href="#rfc.section.3.8">Decoding Errors</a></li>
 </ul><li>4.   <a href="#rfc.section.4">Handshake Protocol</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Key Exchange Messages</a></li>
 <ul><li>4.1.1.   <a href="#rfc.section.4.1.1">Cryptographic Negotiation</a></li>
@@ -1001,7 +1001,7 @@ Subsequent Handshake:
 <p id="rfc.section.2.3.p.10">The same warnings apply to any use of the early exporter secret.</p>
 <p id="rfc.section.2.3.p.11">The remainder of this document provides a detailed description of TLS.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#presentation-language" id="presentation-language">Presentation Language</a></h1>
-<p id="rfc.section.3.p.1">This document deals with the formatting of data in an external representation.  The following very basic and somewhat casually defined presentation syntax will be used. The syntax draws from several sources in its structure. Although it resembles the programming language &#8220;C&#8221; in its syntax and XDR <a href="#RFC4506">[RFC4506]</a> in both its syntax and intent, it would be risky to draw too many parallels. The purpose of this presentation language is to document TLS only; it has no general application beyond that particular goal.</p>
+<p id="rfc.section.3.p.1">This document deals with the formatting of data in an external representation.  The following very basic and somewhat casually defined presentation syntax will be used.</p>
 <h2 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#basic-block-size" id="basic-block-size">Basic Block Size</a></h2>
 <p id="rfc.section.3.1.p.1">The representation of all data items is explicitly specified. The basic data block size is one byte (i.e., 8 bits). Multiple byte data items are concatenations of bytes, from left to right, from top to bottom. From the byte stream, a multi-byte item (a numeric in the example) is formed (using C notation) by:</p>
 <pre>
@@ -1080,9 +1080,17 @@ Subsequent Handshake:
    } [[T]];
 </pre>
 <p id="rfc.section.3.6.p.2">The fields within a structure may be qualified using the type&#8217;s name, with a syntax much like that available for enumerateds. For example, T.f2 refers to the second field of the previous declaration. Structure definitions may be embedded. Anonymous structs may also be defined inside other structures.</p>
-<h3 id="rfc.section.3.6.1"><a href="#rfc.section.3.6.1">3.6.1.</a> <a href="#variants" id="variants">Variants</a></h3>
-<p id="rfc.section.3.6.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
-<p id="rfc.section.3.6.1.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
+<h2 id="rfc.section.3.7"><a href="#rfc.section.3.7">3.7.</a> <a href="#constants" id="constants">Constants</a></h2>
+<p id="rfc.section.3.7.p.1">Fields and variables may be assigned a fixed value using &#8220;=&#8221;, as in:</p>
+<pre>
+   struct {
+       T1 f1 = 8;  /* T.f1 must always be 8 */
+       T2 f2;
+   } T;
+</pre>
+<h3 id="rfc.section.3.7.1"><a href="#rfc.section.3.7.1">3.7.1.</a> <a href="#variants" id="variants">Variants</a></h3>
+<p id="rfc.section.3.7.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
+<p id="rfc.section.3.7.1.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
        T1 f1;
@@ -1099,7 +1107,7 @@ Subsequent Handshake:
        } [[fv]];
    } [[Tv]];
 </pre>
-<p id="rfc.section.3.6.1.p.3">For example:</p>
+<p id="rfc.section.3.7.1.p.3">For example:</p>
 <pre>
    enum { apple, orange, banana } VariantTag;
 
@@ -1122,18 +1130,6 @@ Subsequent Handshake:
              V2;   /* VariantBody, tag = orange or banana */
        } variant_body;       /* optional label on variant */
    } VariantRecord;
-</pre>
-<h2 id="rfc.section.3.7"><a href="#rfc.section.3.7">3.7.</a> <a href="#constants" id="constants">Constants</a></h2>
-<p id="rfc.section.3.7.p.1">Typed constants can be defined for purposes of specification by declaring a symbol of the desired type and assigning values to it.</p>
-<p id="rfc.section.3.7.p.2">Under-specified types (opaque, variable-length vectors, and structures that contain opaque) cannot be assigned values. No fields of a multi-element structure or vector may be omitted.</p>
-<p id="rfc.section.3.7.p.3">For example:</p>
-<pre>
-   struct {
-       uint8 f1;
-       uint8 f2;
-   } Example1;
-
-   Example1 ex1 = {1, 4};  /* assigns f1 = 1, f2 = 4 */
 </pre>
 <h2 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
 <p id="rfc.section.3.8.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
@@ -2938,12 +2934,6 @@ HKDF-Expand-Label(Secret, label, "", key_length)
         <b id="RFC4492">[RFC4492]</b>
       </td>
       <td class="top"><a>Blake-Wilson, S.</a>, <a>Bolyard, N.</a>, <a>Gupta, V.</a>, <a>Hawk, C.</a> and <a>B. Moeller</a>, "<a href="http://tools.ietf.org/html/rfc4492">Elliptic Curve Cryptography (ECC) Cipher Suites for Transport Layer Security (TLS)</a>", RFC 4492, DOI 10.17487/RFC4492, May 2006.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC4506">[RFC4506]</b>
-      </td>
-      <td class="top"><a>Eisler, M.</a>, "<a href="http://tools.ietf.org/html/rfc4506">XDR: External Data Representation Standard</a>", STD 67, RFC 4506, DOI 10.17487/RFC4506, May 2006.</td>
     </tr>
     <tr>
       <td class="reference">

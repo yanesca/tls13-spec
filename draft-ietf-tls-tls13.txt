@@ -86,13 +86,13 @@ Table of Contents
      2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  18
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  20
      3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  20
-     3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  21
+     3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  20
      3.3.  Vectors . . . . . . . . . . . . . . . . . . . . . . . . .  21
      3.4.  Numbers . . . . . . . . . . . . . . . . . . . . . . . . .  22
      3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  22
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  23
-       3.6.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  23
-     3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  25
+     3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  23
+       3.7.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  24
      3.8.  Decoding Errors . . . . . . . . . . . . . . . . . . . . .  25
    4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  25
      4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  26
@@ -1092,12 +1092,7 @@ Internet-Draft                     TLS                      October 2016
 
    This document deals with the formatting of data in an external
    representation.  The following very basic and somewhat casually
-   defined presentation syntax will be used.  The syntax draws from
-   several sources in its structure.  Although it resembles the
-   programming language "C" in its syntax and XDR [RFC4506] in both its
-   syntax and intent, it would be risky to draw too many parallels.  The
-   purpose of this presentation language is to document TLS only; it has
-   no general application beyond that particular goal.
+   defined presentation syntax will be used.
 
 3.1.  Basic Block Size
 
@@ -1113,7 +1108,12 @@ Internet-Draft                     TLS                      October 2016
    This byte ordering for multi-byte values is the commonplace network
    byte order or big-endian format.
 
+3.2.  Miscellaneous
 
+   Comments begin with "/*" and end with "*/".
+
+   Optional components are denoted by enclosing them in "[[ ]]" double
+   brackets.
 
 
 
@@ -1121,13 +1121,6 @@ Rescorla                 Expires April 22, 2017                [Page 20]
 
 Internet-Draft                     TLS                      October 2016
 
-
-3.2.  Miscellaneous
-
-   Comments begin with "/*" and end with "*/".
-
-   Optional components are denoted by enclosing them in "[[ ]]" double
-   brackets.
 
    Single-byte entities containing uninterpreted data are of type
    opaque.
@@ -1170,6 +1163,13 @@ Internet-Draft                     TLS                      October 2016
    sufficient to represent the value 400 (see Section 3.4).  On the
    other hand, longer can represent up to 800 bytes of data, or 400
    uint16 elements, and it may be empty.  Its encoding will include a
+   two-byte actual length field prepended to the vector.  The length of
+   an encoded vector must be an exact multiple of the length of a single
+   element (e.g., a 17-byte vector of uint16 would be illegal).
+
+
+
+
 
 
 
@@ -1177,10 +1177,6 @@ Rescorla                 Expires April 22, 2017                [Page 21]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   two-byte actual length field prepended to the vector.  The length of
-   an encoded vector must be an exact multiple of the length of a single
-   element (e.g., a 17-byte vector of uint16 would be illegal).
 
       opaque mandatory<300..400>;
             /* length field is 2 bytes, cannot be empty */
@@ -1227,16 +1223,16 @@ Internet-Draft                     TLS                      October 2016
    One may optionally specify a value without its associated tag to
    force the width definition without defining a superfluous element.
 
+   In the following example, Taste will consume two bytes in the data
+   stream but can only assume the values 1, 2, or 4 in current version
+   of protocol.
+
 
 
 Rescorla                 Expires April 22, 2017                [Page 22]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   In the following example, Taste will consume two bytes in the data
-   stream but can only assume the values 1, 2, or 4 in current version
-   of protocol.
 
       enum { sweet(1), sour(2), bitter(4), (32000) } Taste;
 
@@ -1275,13 +1271,17 @@ Internet-Draft                     TLS                      October 2016
    Structure definitions may be embedded.  Anonymous structs may also be
    defined inside other structures.
 
-3.6.1.  Variants
+3.7.  Constants
 
-   Defined structures may have variants based on some knowledge that is
-   available within the environment.  The selector must be an enumerated
-   type that defines the possible variants the structure defines.  There
-   must be a case arm for every element of the enumeration declared in
-   the select.  Case arms have limited fall-through: if two case arms
+   Fields and variables may be assigned a fixed value using "=", as in:
+
+      struct {
+          T1 f1 = 8;  /* T.f1 must always be 8 */
+          T2 f2;
+      } T;
+
+
+
 
 
 
@@ -1290,6 +1290,13 @@ Rescorla                 Expires April 22, 2017                [Page 23]
 Internet-Draft                     TLS                      October 2016
 
 
+3.7.1.  Variants
+
+   Defined structures may have variants based on some knowledge that is
+   available within the environment.  The selector must be an enumerated
+   type that defines the possible variants the structure defines.  There
+   must be a case arm for every element of the enumeration declared in
+   the select.  Case arms have limited fall-through: if two case arms
    follow in immediate succession with no fields in between, then they
    both contain the same fields.  Thus, in the example below, "orange"
    and "banana" both contain V2.  Note that this piece of syntax was
@@ -1317,6 +1324,28 @@ Internet-Draft                     TLS                      October 2016
 
    For example:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                 Expires April 22, 2017                [Page 24]
+
+Internet-Draft                     TLS                      October 2016
+
+
       enum { apple, orange, banana } VariantTag;
 
       struct {
@@ -1339,31 +1368,6 @@ Internet-Draft                     TLS                      October 2016
           } variant_body;       /* optional label on variant */
       } VariantRecord;
 
-
-
-Rescorla                 Expires April 22, 2017                [Page 24]
-
-Internet-Draft                     TLS                      October 2016
-
-
-3.7.  Constants
-
-   Typed constants can be defined for purposes of specification by
-   declaring a symbol of the desired type and assigning values to it.
-
-   Under-specified types (opaque, variable-length vectors, and
-   structures that contain opaque) cannot be assigned values.  No fields
-   of a multi-element structure or vector may be omitted.
-
-   For example:
-
-      struct {
-          uint8 f1;
-          uint8 f2;
-      } Example1;
-
-      Example1 ex1 = {1, 4};  /* assigns f1 = 1, f2 = 4 */
-
 3.8.  Decoding Errors
 
    TLS defines two generic alerts (see Section 6) to use upon failure to
@@ -1382,10 +1386,6 @@ Internet-Draft                     TLS                      October 2016
    where they are encapsulated within one or more TLSPlaintext or
    TLSCiphertext structures, which are processed and transmitted as
    specified by the current active session state.
-
-
-
-
 
 
 
@@ -4986,10 +4986,6 @@ Rescorla                 Expires April 22, 2017                [Page 89]
 Internet-Draft                     TLS                      October 2016
 
 
-   [RFC4506]  Eisler, M., Ed., "XDR: External Data Representation
-              Standard", STD 67, RFC 4506, DOI 10.17487/RFC4506, May
-              2006, <http://www.rfc-editor.org/info/rfc4506>.
-
    [RFC4507]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
               Server-Side State", RFC 4507, DOI 10.17487/RFC4507, May
@@ -5034,6 +5030,10 @@ Internet-Draft                     TLS                      October 2016
               DOI 10.17487/RFC5764, May 2010,
               <http://www.rfc-editor.org/info/rfc5764>.
 
+   [RFC5878]  Brown, M. and R. Housley, "Transport Layer Security (TLS)
+              Authorization Extensions", RFC 5878, DOI 10.17487/RFC5878,
+              May 2010, <http://www.rfc-editor.org/info/rfc5878>.
+
 
 
 
@@ -5041,10 +5041,6 @@ Rescorla                 Expires April 22, 2017                [Page 90]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   [RFC5878]  Brown, M. and R. Housley, "Transport Layer Security (TLS)
-              Authorization Extensions", RFC 5878, DOI 10.17487/RFC5878,
-              May 2010, <http://www.rfc-editor.org/info/rfc5878>.
 
    [RFC5929]  Altman, J., Williams, N., and L. Zhu, "Channel Bindings
               for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
@@ -5090,6 +5086,10 @@ Internet-Draft                     TLS                      October 2016
               (DTLS)", RFC 7366, DOI 10.17487/RFC7366, September 2014,
               <http://www.rfc-editor.org/info/rfc7366>.
 
+   [RFC7465]  Popov, A., "Prohibiting RC4 Cipher Suites", RFC 7465,
+              DOI 10.17487/RFC7465, February 2015,
+              <http://www.rfc-editor.org/info/rfc7465>.
+
 
 
 
@@ -5097,10 +5097,6 @@ Rescorla                 Expires April 22, 2017                [Page 91]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   [RFC7465]  Popov, A., "Prohibiting RC4 Cipher Suites", RFC 7465,
-              DOI 10.17487/RFC7465, February 2015,
-              <http://www.rfc-editor.org/info/rfc7465>.
 
    [RFC7568]  Barnes, R., Thomson, M., Pironti, A., and A. Langley,
               "Deprecating Secure Sockets Layer Version 3.0", RFC 7568,
@@ -5146,6 +5142,10 @@ Internet-Draft                     TLS                      October 2016
 
    [X501]     "Information Technology - Open Systems Interconnection -
               The Directory: Models", ITU-T X.501, 1993.
+
+
+
+
 
 
 
