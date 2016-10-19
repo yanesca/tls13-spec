@@ -1466,7 +1466,7 @@ Internet-Draft                     TLS                      October 2016
    -  A list of cipher suites which indicates the AEAD algorithm/HKDF
       hash pairs which the client supports.
 
-   -  A "supported_group" (Section 4.2.4) extension which indicates the
+   -  A "supported_groups" (Section 4.2.4) extension which indicates the
       (EC)DHE groups which the client supports and a "key_share"
       (Section 4.2.5) extension which contains (EC)DHE shares for some
       or all of these groups.
@@ -1483,7 +1483,7 @@ Internet-Draft                     TLS                      October 2016
    options are entirely orthogonal: the server independently selects a
    cipher suite, an (EC)DHE group and key share for key establishment,
    and a signature algorithm/certificate pair to authenticate itself to
-   the client.  If there is overlap in the "supported_group" extension
+   the client.  If there is overlap in the "supported_groups" extension
    but the client did not offer a compatible "key_share" extension, then
    the server will respond with a HelloRetryRequest (Section 4.1.4)
    message.
@@ -1492,7 +1492,7 @@ Internet-Draft                     TLS                      October 2016
    establishment mode from the set indicated by client's
    "psk_key_exchange_modes extension (PSK alone or with (EC)DHE).  Note
    that if the PSK can be used without (EC)DHE then non-overlap in the
-   "supported_group" parameters need not be fatal.
+   "supported_groups" parameters need not be fatal.
 
    The server indicates its selected parameters in the ServerHello as
    follows:
@@ -5873,7 +5873,7 @@ B.5.  Implementation Pitfalls
       records? (see Appendix C)
 
    -  Have you ensured that all support for SSL, RC4, EXPORT ciphers,
-      and MD5 (via the "signature_algorithm" extension) is completely
+      and MD5 (via the "signature_algorithms" extension) is completely
 
 
 
