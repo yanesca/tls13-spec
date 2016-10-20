@@ -591,14 +591,14 @@ li, p {
   <li>Remove the 0-RTT Finished, resumption_context, and replace with a psk_binder field in the PSK itself (*)</li>
   <li>Restructure PSK key exchange negotiation modes (*)</li>
   <li>Add max_early_data_size field to TicketEarlyDataInfo (*)</li>
-  <li>Add a 0-RTT exporter and change the transcript for the regular exporter (*).</li>
-  <li>Merge TicketExtensions and Extensions registry. Changes ticket_early_data_info code point (*).</li>
+  <li>Add a 0-RTT exporter and change the transcript for the regular exporter (*)</li>
+  <li>Merge TicketExtensions and Extensions registry. Changes ticket_early_data_info code point (*)</li>
   <li>Replace Client.key_shares in response to HRR (*)</li>
   <li>Remove redundant labels for traffic key derivation (*)</li>
-  <li>Harmonize requirements about cipher suite matching: for resumption you need to match KDF but for 0-RTT you need whole cipher suite. This allows PSKs to actually negotiate cipher suites. (*).</li>
-  <li>Explicitly allow non-offered extensions in NewSessionTicket.</li>
-  <li>Explicitly allow predicting ClientFinished for NST.</li>
-  <li>Clarify conditions for allowing 0-RTT with PSK.</li>
+  <li>Harmonize requirements about cipher suite matching: for resumption you need to match KDF but for 0-RTT you need whole cipher suite. This allows PSKs to actually negotiate cipher suites. (*)</li>
+  <li>Explicitly allow non-offered extensions in NewSessionTicket</li>
+  <li>Explicitly allow predicting ClientFinished for NST</li>
+  <li>Clarify conditions for allowing 0-RTT with PSK</li>
 </ul>
 <p id="rfc.section.1.2.p.4">draft-16</p>
 <p/>
@@ -943,18 +943,16 @@ Subsequent Handshake:
 <p id="rfc.section.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify message. When a client offers resumption via PSK, it SHOULD also supply a &#8220;key_share&#8221; extension to the server as well to allow the server to decline resumption and fall back to a full handshake, if needed. The server responds with a &#8220;pre_shared_key&#8221; extension to negotiate use of PSK key establishment and can (as shown here) respond with a &#8220;key_share&#8221; extension to do (EC)DHE key establishment, thus providing forward secrecy.</p>
 <p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF to be used with the PSK MUST also be provisioned.</p>
 <h2 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a></h2>
-<p id="rfc.section.2.3.p.1">When clients and servers share a PSK (either obtained out-of-band or via a previous handshake), TLS 1.3 allows clients to end data on its first flight (&#8220;early data&#8221;). The client uses the PSK to authenticate the server and to encrypt the early data.</p>
+<p id="rfc.section.2.3.p.1">When clients and servers share a PSK (either obtained out-of-band or via a previous handshake), TLS 1.3 allows clients to send data on the first flight (&#8220;early data&#8221;). The client uses the PSK to authenticate the server and to encrypt the early data.</p>
 <p id="rfc.section.2.3.p.2">When clients use a PSK obtained out-of-band then the following additional information MUST be provisioned to both parties:</p>
 <p/>
 
 <ul>
   <li>The cipher suite for use with this PSK</li>
-  <li>The key exchange and authentication modes this PSK is allowed to be used with</li>
   <li>The Application-Layer Protocol Negotiation (ALPN) protocol, if any is to be used</li>
   <li>The Server Name Indication (SNI), if any is to be used</li>
 </ul>
-<p id="rfc.section.2.3.p.4">Note: only the first two of these need to be provisioned to use an out-of-band PSK in 1-RTT mode.</p>
-<p id="rfc.section.2.3.p.5">As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
+<p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
 <div id="rfc.figure.4"/>
 <div id="tls-0-rtt"/>
 <pre>
@@ -991,16 +989,16 @@ Subsequent Handshake:
                   derived from traffic_secret_N
 </pre>
 <p class="figure">Figure 4: Message flow for a zero round trip handshake</p>
-<p id="rfc.section.2.3.p.6">IMPORTANT NOTE: The security properties for 0-RTT data are weaker than those for other kinds of TLS data.  Specifically:</p>
+<p id="rfc.section.2.3.p.5">IMPORTANT NOTE: The security properties for 0-RTT data are weaker than those for other kinds of TLS data.  Specifically:</p>
 <p/>
 
 <ol>
   <li>This data is not forward secret, as it is encrypted solely under keys derived using the offered PSK.</li>
   <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (See <a href="#replay-time">Section 4.2.8.2</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
-<p id="rfc.section.2.3.p.8">Protocols MUST NOT use 0-RTT data without a profile that defines its use. That profile needs to identify which messages or interactions are safe to use with 0-RTT. In addition, to avoid accidental misuse, implementations SHOULD NOT enable 0-RTT unless specifically requested. Special functions for 0-RTT data are RECOMMENDED to ensure that an application is always aware that it is sending or receiving data that might be replayed.</p>
-<p id="rfc.section.2.3.p.9">The same warnings apply to any use of the early exporter secret.</p>
-<p id="rfc.section.2.3.p.10">The remainder of this document provides a detailed description of TLS.</p>
+<p id="rfc.section.2.3.p.7">Protocols MUST NOT use 0-RTT data without a profile that defines its use. That profile needs to identify which messages or interactions are safe to use with 0-RTT. In addition, to avoid accidental misuse, implementations SHOULD NOT enable 0-RTT unless specifically requested. Special functions for 0-RTT data are RECOMMENDED to ensure that an application is always aware that it is sending or receiving data that might be replayed.</p>
+<p id="rfc.section.2.3.p.8">The same warnings apply to any use of the early exporter secret.</p>
+<p id="rfc.section.2.3.p.9">The remainder of this document provides a detailed description of TLS.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#presentation-language" id="presentation-language">Presentation Language</a></h1>
 <p id="rfc.section.3.p.1">This document deals with the formatting of data in an external representation.  The following very basic and somewhat casually defined presentation syntax will be used.</p>
 <h2 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#basic-block-size" id="basic-block-size">Basic Block Size</a></h2>
@@ -1069,7 +1067,7 @@ Subsequent Handshake:
 <pre>
    enum { low, medium, high } Amount;
 </pre>
-<p id="rfc.section.3.5.p.8">The names assigned to enumerateds do not need to be unique.  The numerical value can describe a range over which the same name applies.  The value includes the minimum and maximum inclusive values in that range, separated by two period characters.</p>
+<p id="rfc.section.3.5.p.8">The names assigned to enumerateds do not need to be unique.  The numerical value can describe a range over which the same name applies.  The value includes the minimum and maximum inclusive values in that range, separated by two period characters. This is principally useful for reserving regions of the space.</p>
 <pre>
    enum { sad(0), meh(1..254), happy (255) } Mood;
 </pre>
@@ -1324,7 +1322,7 @@ Subsequent Handshake:
   <li>&#8220;extension_data&#8221; contains information specific to the particular extension type.</li>
 </ul>
 <p id="rfc.section.4.2.p.4">The list of extension types is maintained by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
-<p id="rfc.section.4.2.p.5">The client sends its extensions in the ClientHello. The server MAY send extensions in the ServerHello, EncryptedExtensions, Certificate, and HelloRetryRequest messages. The table in <a href="#iana-considerations">Section 10</a> indicates where a given extension may appear. If the client receives an extension which is not specified for a given message it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.2.p.5">The client sends its extensions in the ClientHello. The server MAY send extensions in the ServerHello, EncryptedExtensions, Certificate, and HelloRetryRequest messages. The NewSessionTicket also allows the server to send extensions to the client though these are not directly associated with the extensions in the ClientHello.  The table in <a href="#iana-considerations">Section 10</a> indicates where a given extension may appear. If the client receives an extension which is not specified for a given message it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.2.p.6">The server MUST NOT send any extensions which did not appear in the corresponding ClientHello, with the exception of the NewSessionTicket message and the &#8220;cookie&#8221; extension in the HelloRetryRequest message.  Upon receiving an unexpected extension, it MUST abort the handshake with an &#8220;unsupported_extension&#8221; alert. Server-oriented extensions are supported by having the client send an extension with zero-length extension_data indicating support for that extension type.</p>
 <p id="rfc.section.4.2.p.7">When multiple extensions of different types are present, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension">Section 4.2.6</a> which MUST be the last extension in the ClientHello.  There MUST NOT be more than one extension of the same type.</p>
 <p id="rfc.section.4.2.p.8">In TLS 1.3, unlike TLS 1.2, extensions are renegotiated with each handshake even when in resumption-PSK mode. However, 0-RTT parameters are those negotiated in the previous handshake; mismatches may require rejecting 0-RTT (see <a href="#early-data-indication">Section 4.2.8</a>).</p>
@@ -1497,7 +1495,7 @@ Subsequent Handshake:
   <dd style="margin-left: 8">A single KeyShareEntry value that is in the same group as one of the client&#8217;s shares.</dd>
 </dl>
 <p id="rfc.section.4.2.5.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and abort the handshake with an &#8220;illegal_parameter&#8221; alert if one is violated.</p>
-<p id="rfc.section.4.2.5.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello and (2) the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field.</p>
+<p id="rfc.section.4.2.5.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello; and (2) the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field.</p>
 <p id="rfc.section.4.2.5.p.8">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension.  If a HelloRetryRequest was received, the client MUST verify that the selected NamedGroup matches that supplied in the selected_group field and MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert if it does not.</p>
 <h4 id="rfc.section.4.2.5.1"><a href="#rfc.section.4.2.5.1">4.2.5.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
 <p id="rfc.section.4.2.5.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (Y = g^X mod p) for the specified group (see <a href="#RFC7919">[RFC7919]</a> for group definitions) encoded as a big-endian integer, padded with zeros to the size of p in bytes.</p>
@@ -1628,7 +1626,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.3.p.1">The next two messages from the server, EncryptedExtensions and CertificateRequest, contain encrypted information from the server that determines the rest of the handshake.</p>
 <h3 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#encrypted-extensions" id="encrypted-extensions">Encrypted Extensions</a></h3>
 <p id="rfc.section.4.3.1.p.1">In all handshakes, the server MUST send the EncryptedExtensions message immediately after the ServerHello message. This is the first message that is encrypted under keys derived from handshake_traffic_secret.</p>
-<p id="rfc.section.4.3.1.p.2">The EncryptedExtensions message contains any extensions which should be protected, i.e., any which are not needed to establish the cryptographic context, but which are not associated with individual certificates. The client MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.3.1.p.2">The EncryptedExtensions message contains extensions which should be protected, i.e., any which are not needed to establish the cryptographic context, but which are not associated with individual certificates. The client MUST check EncryptedExtensions for the presence of any forbidden extensions and if any are found MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.3.1.p.3">Structure of this message:</p>
 <pre>
    struct {
@@ -1818,7 +1816,7 @@ Subsequent Handshake:
 </ul>
 <p id="rfc.section.4.4.2.p.8">This structure is intended to prevent an attack on previous versions of previous versions of TLS in which the ServerKeyExchange format meant that attackers could obtain a signature of a message with a chosen, 32-byte prefix. The initial 64 byte pad clears that prefix.</p>
 <p id="rfc.section.4.4.2.p.9">The context string for a server signature is &#8220;TLS 1.3, server CertificateVerify&#8221; and for a client signature is &#8220;TLS 1.3, client CertificateVerify&#8221;.</p>
-<p id="rfc.section.4.4.2.p.10">For example, if Hash(Handshake Context + Certificate) was 32 bytes of 01 (this length would make sense for SHA-256, the input to the final signing process for a server CertificateVerify would be:</p>
+<p id="rfc.section.4.4.2.p.10">For example, if Hash(Handshake Context + Certificate) was 32 bytes of 01 (this length would make sense for SHA-256), the input to the final signing process for a server CertificateVerify would be:</p>
 <pre>
    2020202020202020202020202020202020202020202020202020202020202020
    2020202020202020202020202020202020202020202020202020202020202020
@@ -1867,8 +1865,7 @@ finished_key =
 <h3 id="rfc.section.4.5.1"><a href="#rfc.section.4.5.1">4.5.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
 <p id="rfc.section.4.5.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the following two values derived from the resumption master secret:</p>
 <pre>
-   resumption_psk = HKDF-Expand-Label(
-                                      resumption_secret,
+   resumption_psk = HKDF-Expand-Label(resumption_secret,
                                       "resumption psk", "", Hash.Length)
 </pre>
 <p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.6</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.</p>
@@ -2283,7 +2280,7 @@ finished_key =
     [sender]_write_key = HKDF-Expand-Label(Secret, "key", "", key_length)
     [sender]_write_iv = HKDF-Expand-Label(Secret, "iv", "", iv_length)
 </pre>
-<p id="rfc.section.7.3.p.4">[sender] denotes the sending side.</p>
+<p id="rfc.section.7.3.p.4">[sender] denotes the sending side. The Secret value for each record type is shown in the table below.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
