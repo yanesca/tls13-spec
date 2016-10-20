@@ -92,7 +92,7 @@ Table of Contents
      3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  23
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  24
      3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  24
-       3.7.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  25
+       3.7.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  24
      3.8.  Decoding Errors . . . . . . . . . . . . . . . . . . . . .  26
    4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  26
      4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  27
@@ -1297,18 +1297,13 @@ Internet-Draft                     TLS                      October 2016
       Color color = Color.blue;     /* overspecified, legal */
       Color color = blue;           /* correct, type implicit */
 
-   For enumerateds that are never converted to external representation,
-   the numerical information may be omitted.
-
-      enum { low, medium, high } Amount;
-
    The names assigned to enumerateds do not need to be unique.  The
    numerical value can describe a range over which the same name
    applies.  The value includes the minimum and maximum inclusive values
    in that range, separated by two period characters.  This is
    principally useful for reserving regions of the space.
 
-      enum { sad(0), meh(1..254), happy (255) } Mood;
+      enum { sad(0), meh(1..254), happy(255) } Mood;
 
 3.6.  Constructed Types
 
@@ -1338,6 +1333,11 @@ Internet-Draft                     TLS                      October 2016
           T2 f2;
       } T;
 
+3.7.1.  Variants
+
+   Defined structures may have variants based on some knowledge that is
+   available within the environment.  The selector must be an enumerated
+   type that defines the possible variants the structure defines.  There
 
 
 
@@ -1346,11 +1346,6 @@ Rescorla                 Expires April 23, 2017                [Page 24]
 Internet-Draft                     TLS                      October 2016
 
 
-3.7.1.  Variants
-
-   Defined structures may have variants based on some knowledge that is
-   available within the environment.  The selector must be an enumerated
-   type that defines the possible variants the structure defines.  There
    must be a case arm for every element of the enumeration declared in
    the select.  Case arms have limited fall-through: if two case arms
    follow in immediate succession with no fields in between, then they
@@ -1397,12 +1392,17 @@ Internet-Draft                     TLS                      October 2016
 
 
 
+
+
+
+
+
 Rescorla                 Expires April 23, 2017                [Page 25]
 
 Internet-Draft                     TLS                      October 2016
 
 
-      enum { apple, orange, banana } VariantTag;
+      enum { apple(0), orange(1), banana(2) } VariantTag;
 
       struct {
           uint16 number;
@@ -1415,7 +1415,7 @@ Internet-Draft                     TLS                      October 2016
       } V2;
 
       struct {
-          select (VariantTag) { /* value of selector is implicit */
+          select (VariantTag) {
               case apple:
                 V1;   /* VariantBody, tag = apple */
               case orange:

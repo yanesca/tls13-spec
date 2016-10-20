@@ -1064,13 +1064,9 @@ Subsequent Handshake:
    Color color = Color.blue;     /* overspecified, legal */
    Color color = blue;           /* correct, type implicit */
 </pre>
-<p id="rfc.section.3.5.p.7">For enumerateds that are never converted to external representation, the numerical information may be omitted.</p>
+<p id="rfc.section.3.5.p.7">The names assigned to enumerateds do not need to be unique.  The numerical value can describe a range over which the same name applies.  The value includes the minimum and maximum inclusive values in that range, separated by two period characters. This is principally useful for reserving regions of the space.</p>
 <pre>
-   enum { low, medium, high } Amount;
-</pre>
-<p id="rfc.section.3.5.p.8">The names assigned to enumerateds do not need to be unique.  The numerical value can describe a range over which the same name applies.  The value includes the minimum and maximum inclusive values in that range, separated by two period characters. This is principally useful for reserving regions of the space.</p>
-<pre>
-   enum { sad(0), meh(1..254), happy (255) } Mood;
+   enum { sad(0), meh(1..254), happy(255) } Mood;
 </pre>
 <h2 id="rfc.section.3.6"><a href="#rfc.section.3.6">3.6.</a> <a href="#constructed-types" id="constructed-types">Constructed Types</a></h2>
 <p id="rfc.section.3.6.p.1">Structure types may be constructed from primitive types for convenience. Each specification declares a new, unique type. The syntax for definition is much like that of C.</p>
@@ -1112,7 +1108,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.3.7.1.p.3">For example:</p>
 <pre>
-   enum { apple, orange, banana } VariantTag;
+   enum { apple(0), orange(1), banana(2) } VariantTag;
 
    struct {
        uint16 number;
@@ -1125,7 +1121,7 @@ Subsequent Handshake:
    } V2;
 
    struct {
-       select (VariantTag) { /* value of selector is implicit */
+       select (VariantTag) {
            case apple:
              V1;   /* VariantBody, tag = apple */
            case orange:
