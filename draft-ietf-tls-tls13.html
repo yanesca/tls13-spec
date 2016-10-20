@@ -284,8 +284,8 @@ li, p {
 <link href="#rfc.section.3.5" rel="Chapter" title="3.5 Enumerateds"/>
 <link href="#rfc.section.3.6" rel="Chapter" title="3.6 Constructed Types"/>
 <link href="#rfc.section.3.7" rel="Chapter" title="3.7 Constants"/>
-<link href="#rfc.section.3.7.1" rel="Chapter" title="3.7.1 Variants"/>
-<link href="#rfc.section.3.8" rel="Chapter" title="3.8 Decoding Errors"/>
+<link href="#rfc.section.3.8" rel="Chapter" title="3.8 Variants"/>
+<link href="#rfc.section.3.9" rel="Chapter" title="3.9 Decoding Errors"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Handshake Protocol"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Key Exchange Messages"/>
 <link href="#rfc.section.4.1.1" rel="Chapter" title="4.1.1 Cryptographic Negotiation"/>
@@ -463,8 +463,8 @@ li, p {
 <li>3.5.   <a href="#rfc.section.3.5">Enumerateds</a></li>
 <li>3.6.   <a href="#rfc.section.3.6">Constructed Types</a></li>
 <li>3.7.   <a href="#rfc.section.3.7">Constants</a></li>
-<ul><li>3.7.1.   <a href="#rfc.section.3.7.1">Variants</a></li>
-</ul><li>3.8.   <a href="#rfc.section.3.8">Decoding Errors</a></li>
+<li>3.8.   <a href="#rfc.section.3.8">Variants</a></li>
+<li>3.9.   <a href="#rfc.section.3.9">Decoding Errors</a></li>
 </ul><li>4.   <a href="#rfc.section.4">Handshake Protocol</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Key Exchange Messages</a></li>
 <ul><li>4.1.1.   <a href="#rfc.section.4.1.1">Cryptographic Negotiation</a></li>
@@ -1087,9 +1087,9 @@ Subsequent Handshake:
        T2 f2;
    } T;
 </pre>
-<h3 id="rfc.section.3.7.1"><a href="#rfc.section.3.7.1">3.7.1.</a> <a href="#variants" id="variants">Variants</a></h3>
-<p id="rfc.section.3.7.1.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
-<p id="rfc.section.3.7.1.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
+<h2 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> <a href="#variants" id="variants">Variants</a></h2>
+<p id="rfc.section.3.8.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
+<p id="rfc.section.3.8.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
        T1 f1;
@@ -1106,7 +1106,7 @@ Subsequent Handshake:
        } [[fv]];
    } [[Tv]];
 </pre>
-<p id="rfc.section.3.7.1.p.3">For example:</p>
+<p id="rfc.section.3.8.p.3">For example:</p>
 <pre>
    enum { apple(0), orange(1), banana(2) } VariantTag;
 
@@ -1130,8 +1130,8 @@ Subsequent Handshake:
        } variant_body;       /* optional label on variant */
    } VariantRecord;
 </pre>
-<h2 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
-<p id="rfc.section.3.8.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
+<h2 id="rfc.section.3.9"><a href="#rfc.section.3.9">3.9.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
+<p id="rfc.section.3.9.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#handshake-protocol" id="handshake-protocol">Handshake Protocol</a></h1>
 <p id="rfc.section.4.p.1">The handshake protocol is used to negotiate the secure attributes of a session. Handshake messages are supplied to the TLS record layer, where they are encapsulated within one or more TLSPlaintext or TLSCiphertext structures, which are processed and transmitted as specified by the current active session state.</p>
 <pre>

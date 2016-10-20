@@ -92,8 +92,8 @@ Table of Contents
      3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  23
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  24
      3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  24
-       3.7.1.  Variants  . . . . . . . . . . . . . . . . . . . . . .  24
-     3.8.  Decoding Errors . . . . . . . . . . . . . . . . . . . . .  26
+     3.8.  Variants  . . . . . . . . . . . . . . . . . . . . . . . .  24
+     3.9.  Decoding Errors . . . . . . . . . . . . . . . . . . . . .  26
    4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  26
      4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  27
        4.1.1.  Cryptographic Negotiation . . . . . . . . . . . . . .  28
@@ -1333,7 +1333,7 @@ Internet-Draft                     TLS                      October 2016
           T2 f2;
       } T;
 
-3.7.1.  Variants
+3.8.  Variants
 
    Defined structures may have variants based on some knowledge that is
    available within the environment.  The selector must be an enumerated
@@ -1424,7 +1424,7 @@ Internet-Draft                     TLS                      October 2016
           } variant_body;       /* optional label on variant */
       } VariantRecord;
 
-3.8.  Decoding Errors
+3.9.  Decoding Errors
 
    TLS defines two generic alerts (see Section 6) to use upon failure to
    parse a message.  Peers which receive a message which cannot be
