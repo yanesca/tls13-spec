@@ -2559,6 +2559,8 @@ Internet-Draft                     TLS                      October 2016
    advertised modes; however if it does so, the impact will just be that
    the client's attempts at resumption fail.
 
+   The server MUST NOT send a "psk_key_exchange_modes" extension.
+
       enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
 
       struct {
@@ -2567,8 +2569,6 @@ Internet-Draft                     TLS                      October 2016
 
    psk_ke  PSK-only key establishment.  In this mode, the server MUST
       not supply a "key_share" value.
-
-
 
 
 
