@@ -694,7 +694,7 @@ Internet-Draft                     TLS                      October 2016
 
    -  A pre-shared symmetric key (PSK), and
 
-   -  A combination of a pre-shared symmetric and Diffie-Hellman.
+   -  A combination of PSK and Diffie-Hellman.
 
    Figure 1 below shows the basic full TLS handshake:
 
