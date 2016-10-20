@@ -326,9 +326,9 @@ Internet-Draft                     TLS                      October 2016
       you need to match KDF but for 0-RTT you need whole cipher suite.
       This allows PSKs to actually negotiate cipher suites. (*)
 
-   -  Explicitly allow non-offered extensions in NewSessionTicket
+   -  Move SCT and OCSP into Certificate.extensions (*)
 
-   -  Explicitly allow predicting ClientFinished for NST
+   -  Explicitly allow non-offered extensions in NewSessionTicket
 
 
 
@@ -337,6 +337,8 @@ Rescorla                 Expires April 23, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Explicitly allow predicting ClientFinished for NST
 
    -  Clarify conditions for allowing 0-RTT with PSK
 
@@ -384,8 +386,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Remove old PRNG text.
 
-   -  Explicitly require checking that handshake records not span key
-      changes.
 
 
 
@@ -393,6 +393,9 @@ Rescorla                 Expires April 23, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Explicitly require checking that handshake records not span key
+      changes.
 
    draft-14
 
@@ -440,15 +443,14 @@ Internet-Draft                     TLS                      October 2016
 
    -  Turn PSK-resumption response into an index to save room
 
-   -  Move CertificateStatus to an extension
-
-
 
 
 Rescorla                 Expires April 23, 2017                 [Page 8]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Move CertificateStatus to an extension
 
    -  Extra fields in NewSessionTicket.
 
@@ -496,8 +498,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Update IANA considerations section and relax some of the policies.
 
-   -  Unify authentication modes.  Add post-handshake client
-      authentication.
 
 
 
@@ -505,6 +505,9 @@ Rescorla                 Expires April 23, 2017                 [Page 9]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Unify authentication modes.  Add post-handshake client
+      authentication.
 
    -  Remove early_handshake content type.  Terminate 0-RTT data with an
       alert.
@@ -550,9 +553,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Update lists of available AEAD cipher suites and error alerts.
 
-   -  Reduce maximum permitted record expansion for AEAD from 2048 to
-      256 octets.
-
 
 
 
@@ -561,6 +561,9 @@ Rescorla                 Expires April 23, 2017                [Page 10]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Reduce maximum permitted record expansion for AEAD from 2048 to
+      256 octets.
 
    -  Require digital signatures even when a previous configuration is
       used.
@@ -607,9 +610,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Remove ChangeCipherSpec.
 
-   -  Renumber the new handshake messages to be somewhat more consistent
-      with existing convention and to remove a duplicate registration.
-
 
 
 
@@ -617,6 +617,9 @@ Rescorla                 Expires April 23, 2017                [Page 11]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Renumber the new handshake messages to be somewhat more consistent
+      with existing convention and to remove a duplicate registration.
 
    -  Remove renegotiation.
 
@@ -663,9 +666,6 @@ Internet-Draft                     TLS                      October 2016
    An implementation of TLS 1.3 that also supports TLS 1.2 might need to
    include changes to support these changes even when TLS 1.3 is not in
    use.  See the referenced sections for more details.
-
-
-
 
 
 
@@ -4962,8 +4962,8 @@ Internet-Draft                     TLS                      October 2016
 
    [I-D.sandj-tls-iana-registry-updates]
               Salowey, J. and S. Turner, "D/TLS IANA Registry Updates",
-              draft-sandj-tls-iana-registry-updates-00 (work in
-              progress), September 2016.
+              draft-sandj-tls-iana-registry-updates-01 (work in
+              progress), October 2016.
 
    [IEEE1363]
               IEEE, "Standard Specifications for Public Key

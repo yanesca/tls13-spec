@@ -596,6 +596,7 @@ li, p {
   <li>Replace Client.key_shares in response to HRR (*)</li>
   <li>Remove redundant labels for traffic key derivation (*)</li>
   <li>Harmonize requirements about cipher suite matching: for resumption you need to match KDF but for 0-RTT you need whole cipher suite. This allows PSKs to actually negotiate cipher suites. (*)</li>
+  <li>Move SCT and OCSP into Certificate.extensions (*)</li>
   <li>Explicitly allow non-offered extensions in NewSessionTicket</li>
   <li>Explicitly allow predicting ClientFinished for NST</li>
   <li>Clarify conditions for allowing 0-RTT with PSK</li>
@@ -2805,7 +2806,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
       <td class="reference">
         <b id="I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</b>
       </td>
-      <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-sandj-tls-iana-registry-updates-00">D/TLS IANA Registry Updates</a>", Internet-Draft draft-sandj-tls-iana-registry-updates-00, September 2016.</td>
+      <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-sandj-tls-iana-registry-updates-01">D/TLS IANA Registry Updates</a>", Internet-Draft draft-sandj-tls-iana-registry-updates-01, October 2016.</td>
     </tr>
     <tr>
       <td class="reference">
