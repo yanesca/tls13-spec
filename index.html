@@ -1590,7 +1590,7 @@ Subsequent Handshake:
 
 <ul>
   <li>Ignore the extension and return no response. This indicates that the server has ignored any early data and an ordinary 1-RTT handshake is required.</li>
-  <li>Return an empty extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
+  <li>Return its own extension, indicating that it intends to process the early data. It is not possible for the server to accept only a subset of the early data messages.</li>
   <li>Request that the client send another ClientHello by responding with a HelloRetryRequest.  A client MUST NOT include the &#8220;early_data&#8221; extension in its followup ClientHello.</li>
 </ul>
 <p id="rfc.section.4.2.8.p.8">In order to accept early data, the server MUST have accepted a PSK cipher suite and selected the first key offered in the client&#8217;s &#8220;pre_shared_key&#8221; extension. In addition, it MUST verify that the following values are consistent with those negotiated in the connection during which the ticket was established.</p>

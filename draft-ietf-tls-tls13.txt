@@ -2634,7 +2634,7 @@ Rescorla                 Expires April 24, 2017                [Page 47]
 Internet-Draft                     TLS                      October 2016
 
 
-   -  Return an empty extension, indicating that it intends to process
+   -  Return its own extension, indicating that it intends to process
       the early data.  It is not possible for the server to accept only
       a subset of the early data messages.
 
