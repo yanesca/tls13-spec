@@ -351,10 +351,9 @@ li, p {
 <link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 API considerations for 0-RTT"/>
 <link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Random Number Generation and Seeding"/>
 <link href="#rfc.appendix.B.3" rel="Chapter" title="B.3 Certificates and Authentication"/>
-<link href="#rfc.appendix.B.4" rel="Chapter" title="B.4 Cipher Suite Support"/>
-<link href="#rfc.appendix.B.5" rel="Chapter" title="B.5 Implementation Pitfalls"/>
-<link href="#rfc.appendix.B.6" rel="Chapter" title="B.6 Client Tracking Prevention"/>
-<link href="#rfc.appendix.B.7" rel="Chapter" title="B.7 Unauthenticated Operation"/>
+<link href="#rfc.appendix.B.4" rel="Chapter" title="B.4 Implementation Pitfalls"/>
+<link href="#rfc.appendix.B.5" rel="Chapter" title="B.5 Client Tracking Prevention"/>
+<link href="#rfc.appendix.B.6" rel="Chapter" title="B.6 Unauthenticated Operation"/>
 <link href="#rfc.appendix.C" rel="Chapter" title="C Backward Compatibility"/>
 <link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Negotiating with an older server"/>
 <link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Negotiating with an older client"/>
@@ -373,7 +372,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-21" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-22" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -394,7 +393,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 21, 2016</td>
+  <td class="right">October 22, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -413,7 +412,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 24, 2017</td>
+  <td class="left">Expires: April 25, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -434,7 +433,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 24, 2017.</p>
+<p>This Internet-Draft will expire on April 25, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -530,10 +529,9 @@ li, p {
 <ul><li>B.1.   <a href="#rfc.appendix.B.1">API considerations for 0-RTT</a></li>
 <li>B.2.   <a href="#rfc.appendix.B.2">Random Number Generation and Seeding</a></li>
 <li>B.3.   <a href="#rfc.appendix.B.3">Certificates and Authentication</a></li>
-<li>B.4.   <a href="#rfc.appendix.B.4">Cipher Suite Support</a></li>
-<li>B.5.   <a href="#rfc.appendix.B.5">Implementation Pitfalls</a></li>
-<li>B.6.   <a href="#rfc.appendix.B.6">Client Tracking Prevention</a></li>
-<li>B.7.   <a href="#rfc.appendix.B.7">Unauthenticated Operation</a></li>
+<li>B.4.   <a href="#rfc.appendix.B.4">Implementation Pitfalls</a></li>
+<li>B.5.   <a href="#rfc.appendix.B.5">Client Tracking Prevention</a></li>
+<li>B.6.   <a href="#rfc.appendix.B.6">Unauthenticated Operation</a></li>
 </ul><li>Appendix C.   <a href="#rfc.appendix.C">Backward Compatibility</a></li>
 <ul><li>C.1.   <a href="#rfc.appendix.C.1">Negotiating with an older server</a></li>
 <li>C.2.   <a href="#rfc.appendix.C.2">Negotiating with an older client</a></li>
@@ -3480,12 +3478,10 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 <h2 id="rfc.appendix.B.2"><a href="#rfc.appendix.B.2">B.2.</a> <a href="#random-number-generation-and-seeding" id="random-number-generation-and-seeding">Random Number Generation and Seeding</a></h2>
 <p id="rfc.section.B.2.p.1">TLS requires a cryptographically secure pseudorandom number generator (PRNG).  In most cases, the operating system provides an appropriate facility such as /dev/urandom, which should be used absent other (performance) concerns.  It is generally preferable to use an existing PRNG implementation in preference to crafting a new one, and many adequate cryptographic libraries are already available under favorable license terms.  Should those prove unsatisfactory, <a href="#RFC4086">[RFC4086]</a> provides guidance on the generation of random values.</p>
 <h2 id="rfc.appendix.B.3"><a href="#rfc.appendix.B.3">B.3.</a> <a href="#certificates-and-authentication" id="certificates-and-authentication">Certificates and Authentication</a></h2>
-<p id="rfc.section.B.3.p.1">Implementations are responsible for verifying the integrity of certificates and should generally support certificate revocation messages. Certificates should always be verified to ensure proper signing by a trusted Certificate Authority (CA). The selection and addition of trusted CAs should be done very carefully.  Users should be able to view information about the certificate and root CA.</p>
-<h2 id="rfc.appendix.B.4"><a href="#rfc.appendix.B.4">B.4.</a> <a href="#cipher-suite-support" id="cipher-suite-support">Cipher Suite Support</a></h2>
-<p id="rfc.section.B.4.p.1">TLS supports a range of key sizes and security levels, including some that provide no or minimal security. A proper implementation will probably not support many cipher suites. Applications SHOULD also enforce minimum and maximum key sizes. For example, certification paths containing keys or signatures weaker than 2048-bit RSA or 224-bit ECDSA are not appropriate for secure applications.  See also <a href="#backwards-compatibility-security-restrictions">Appendix C.4</a>.</p>
-<h2 id="rfc.appendix.B.5"><a href="#rfc.appendix.B.5">B.5.</a> <a href="#implementation-pitfalls" id="implementation-pitfalls">Implementation Pitfalls</a></h2>
-<p id="rfc.section.B.5.p.1">Implementation experience has shown that certain parts of earlier TLS specifications are not easy to understand, and have been a source of interoperability and security problems. Many of these areas have been clarified in this document, but this appendix contains a short list of the most important things that require special attention from implementors.</p>
-<p id="rfc.section.B.5.p.2">TLS protocol issues:</p>
+<p id="rfc.section.B.3.p.1">Implementations are responsible for verifying the integrity of certificates and should generally support certificate revocation messages. Certificates should always be verified to ensure proper signing by a trusted Certificate Authority (CA). The selection and addition of trusted CAs should be done very carefully.  Users should be able to view information about the certificate and root CA.  Applications SHOULD also enforce minimum and maximum key sizes. For example, certification paths containing keys or signatures weaker than 2048-bit RSA or 224-bit ECDSA are not appropriate for secure applications.</p>
+<h2 id="rfc.appendix.B.4"><a href="#rfc.appendix.B.4">B.4.</a> <a href="#implementation-pitfalls" id="implementation-pitfalls">Implementation Pitfalls</a></h2>
+<p id="rfc.section.B.4.p.1">Implementation experience has shown that certain parts of earlier TLS specifications are not easy to understand, and have been a source of interoperability and security problems. Many of these areas have been clarified in this document, but this appendix contains a short list of the most important things that require special attention from implementors.</p>
+<p id="rfc.section.B.4.p.2">TLS protocol issues:</p>
 <p/>
 
 <ul>
@@ -3497,7 +3493,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
   <li>When processing the plaintext fragment produced by AEAD-Decrypt and scanning from the end for the ContentType, do you avoid scanning past the start of the cleartext in the event that the peer has sent a malformed plaintext of all-zeros?</li>
   <li>Do you properly ignore unrecognized cipher suites (<a href="#client-hello">Section 4.1.2</a>), hello extensions (<a href="#extensions">Section 4.2</a>), named groups (<a href="#negotiated-groups">Section 4.2.4</a>), and signature algorithms (<a href="#signature-algorithms">Section 4.2.3</a>)?</li>
 </ul>
-<p id="rfc.section.B.5.p.4">Cryptographic details:</p>
+<p id="rfc.section.B.4.p.4">Cryptographic details:</p>
 <p/>
 
 <ul>
@@ -3509,17 +3505,17 @@ HKDF-Expand-Label(Secret, label, "", key_length)
   <li>Do you zero-pad Diffie-Hellman public key values to the group size (see <a href="#ffdhe-param">Section 4.2.5.1</a>)?</li>
   <li>Do you verify signatures after making them to protect against RSA-CRT key leaks? <a href="#FW15">[FW15]</a></li>
 </ul>
-<h2 id="rfc.appendix.B.6"><a href="#rfc.appendix.B.6">B.6.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
-<p id="rfc.section.B.6.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>
-<h2 id="rfc.appendix.B.7"><a href="#rfc.appendix.B.7">B.7.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h2>
-<p id="rfc.section.B.7.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These modes have been deprecated in TLS 1.3.  However, it is still possible to negotiate parameters that do not provide verifiable server authentication by several methods, including:</p>
+<h2 id="rfc.appendix.B.5"><a href="#rfc.appendix.B.5">B.5.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a></h2>
+<p id="rfc.section.B.5.p.1">Clients SHOULD NOT reuse a session ticket for multiple connections. Reuse of a session ticket allows passive observers to correlate different connections.  Servers that issue session tickets SHOULD offer at least as many session tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new session tickets with every connection. This ensures that clients are always able to use a new session ticket when creating a new connection.</p>
+<h2 id="rfc.appendix.B.6"><a href="#rfc.appendix.B.6">B.6.</a> <a href="#unauthenticated-operation" id="unauthenticated-operation">Unauthenticated Operation</a></h2>
+<p id="rfc.section.B.6.p.1">Previous versions of TLS offered explicitly unauthenticated cipher suites based on anonymous Diffie-Hellman. These modes have been deprecated in TLS 1.3.  However, it is still possible to negotiate parameters that do not provide verifiable server authentication by several methods, including:</p>
 <p/>
 
 <ul>
   <li>Raw public keys <a href="#RFC7250">[RFC7250]</a>.</li>
   <li>Using a public key contained in a certificate but without validation of the certificate chain or any of its contents.</li>
 </ul>
-<p id="rfc.section.B.7.p.3">Either technique used alone is vulnerable to man-in-the-middle attacks and therefore unsafe for general use. However, it is also possible to bind such connections to an external authentication mechanism via out-of-band validation of the server&#8217;s public key, trust on first use, or channel bindings <a href="#RFC5929">[RFC5929]</a>. [[NOTE: TLS 1.3 needs a new channel binding definition that has not yet been defined.]] If no such mechanism is used, then the connection has no protection against active man-in-the-middle attack; applications MUST NOT use TLS in such a way absent explicit configuration or a specific application profile.</p>
+<p id="rfc.section.B.6.p.3">Either technique used alone is vulnerable to man-in-the-middle attacks and therefore unsafe for general use. However, it is also possible to bind such connections to an external authentication mechanism via out-of-band validation of the server&#8217;s public key, trust on first use, or channel bindings <a href="#RFC5929">[RFC5929]</a>. [[NOTE: TLS 1.3 needs a new channel binding definition that has not yet been defined.]] If no such mechanism is used, then the connection has no protection against active man-in-the-middle attack; applications MUST NOT use TLS in such a way absent explicit configuration or a specific application profile.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#backward-compatibility" id="backward-compatibility">Backward Compatibility</a></h1>
 <p id="rfc.section.C.p.1">The TLS protocol provides a built-in mechanism for version negotiation between endpoints potentially supporting different versions of TLS.</p>
 <p id="rfc.section.C.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and the client supports the highest protocol version available in the server.</p>
