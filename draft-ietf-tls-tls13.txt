@@ -2568,7 +2568,7 @@ Internet-Draft                     TLS                      October 2016
       } PskKeyExchangeModes;
 
    psk_ke  PSK-only key establishment.  In this mode, the server MUST
-      not supply a "key_share" value.
+      NOT supply a "key_share" value.
 
 
 
@@ -2885,7 +2885,7 @@ Internet-Draft                     TLS                      October 2016
       Separate specifications may define matching rules for other
       certificate extensions.
 
-   Servers which are authenticating with a PSK MUST not send the
+   Servers which are authenticating with a PSK MUST NOT send the
    CertificateRequest message.
 
 4.4.  Authentication Messages
