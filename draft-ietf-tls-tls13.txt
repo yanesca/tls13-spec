@@ -4490,7 +4490,7 @@ Internet-Draft                     TLS                      October 2016
    otherwise, a TLS-compliant application MUST implement the
    TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the
    TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher
-   suites.
+   suites. (see Appendix A.4)
 
    A TLS-compliant application MUST support digital signatures with
    rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for
@@ -4506,6 +4506,8 @@ Internet-Draft                     TLS                      October 2016
 
    -  Supported Versions ("supported_versions"; Section 4.2.1)
 
+   -  Cookie ("cookie"; Section 4.2.2)
+
    -  Signature Algorithms ("signature_algorithms"; Section 4.2.3)
 
    -  Negotiated Groups ("supported_groups"; Section 4.2.4)
@@ -4513,8 +4515,6 @@ Internet-Draft                     TLS                      October 2016
    -  Key Share ("key_share"; Section 4.2.5)
 
    -  Pre-Shared Key ("pre_shared_key"; Section 4.2.6)
-
-   -  Cookie ("cookie"; Section 4.2.2)
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
 
@@ -4565,7 +4565,7 @@ Internet-Draft                     TLS                      October 2016
 9.  Security Considerations
 
    Security issues are discussed throughout this memo, especially in
-   Appendices B, C, and D.
+   Appendix B, Appendix C, and Appendix D.
 
 10.  IANA Considerations
 

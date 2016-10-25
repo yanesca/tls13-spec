@@ -2326,7 +2326,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 <p id="rfc.section.7.3.3.p.4">Note that providing no context computes the same value as providing an empty context. As of this document&#8217;s publication, no allocated exporter label is used with both modes. Future specifications MUST NOT provide an empty context and no context with the same label and SHOULD provide a context, possibly empty, in all exporter computations.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mti-cipher-suites" id="mti-cipher-suites">MTI Cipher Suites</a></h2>
-<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites.</p>
+<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites. (see <a href="#cipher-suites">Appendix A.4</a>)</p>
 <p id="rfc.section.8.1.p.2">A TLS-compliant application MUST support digital signatures with rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for CertificateVerify and certificates), and ecdsa_secp256r1_sha256. A TLS-compliant application MUST support key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748">[RFC7748]</a>.</p>
 <h2 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#mti-extensions" id="mti-extensions">MTI Extensions</a></h2>
 <p id="rfc.section.8.2.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following TLS extensions:</p>
@@ -2334,11 +2334,11 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 
 <ul>
   <li>Supported Versions (&#8220;supported_versions&#8221;; <a href="#supported-versions">Section 4.2.1</a>)</li>
+  <li>Cookie (&#8220;cookie&#8221;; <a href="#cookie">Section 4.2.2</a>)</li>
   <li>Signature Algorithms (&#8220;signature_algorithms&#8221;; <a href="#signature-algorithms">Section 4.2.3</a>)</li>
   <li>Negotiated Groups (&#8220;supported_groups&#8221;; <a href="#negotiated-groups">Section 4.2.4</a>)</li>
   <li>Key Share (&#8220;key_share&#8221;; <a href="#key-share">Section 4.2.5</a>)</li>
   <li>Pre-Shared Key (&#8220;pre_shared_key&#8221;; <a href="#pre-shared-key-extension">Section 4.2.6</a>)</li>
-  <li>Cookie (&#8220;cookie&#8221;; <a href="#cookie">Section 4.2.2</a>)</li>
   <li>Server Name Indication (&#8220;server_name&#8221;; Section 3 of <a href="#RFC6066">[RFC6066]</a>)</li>
 </ul>
 <p id="rfc.section.8.2.p.3">All implementations MUST send and use these extensions when offering applicable features:</p>
@@ -2360,7 +2360,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
 <p id="rfc.section.8.2.p.7">Servers receiving a ClientHello which does not conform to these requirements MUST abort the handshake with a &#8220;missing_extension&#8221; alert.</p>
 <p id="rfc.section.8.2.p.8">Additionally, all implementations MUST support use of the &#8220;server_name&#8221; extension with applications capable of using it.  Servers MAY require clients to send a valid &#8220;server_name&#8221; extension.  Servers requiring this extension SHOULD respond to a ClientHello lacking a &#8220;server_name&#8221; extension by terminating the connection with a &#8220;missing_extension&#8221; alert.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
-<p id="rfc.section.9.p.1">Security issues are discussed throughout this memo, especially in Appendices B, C, and D.</p>
+<p id="rfc.section.9.p.1">Security issues are discussed throughout this memo, especially in <a href="#implementation-notes">Appendix B</a>, <a href="#backward-compatibility">Appendix C</a>, and <a href="#security-analysis">Appendix D</a>.</p>
 <h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
 <p id="rfc.section.10.p.1">This document uses several registries that were originally created in <a href="#RFC4346">[RFC4346]</a>. IANA has updated these to reference this document. The registries and their allocation policies are below:</p>
 <p/>
