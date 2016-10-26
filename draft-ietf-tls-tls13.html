@@ -883,12 +883,12 @@ Auth | {CertificateVerify*}
          Client                                               Server
 
          ClientHello
-         + key_share               --------&gt;
-                                   &lt;--------       HelloRetryRequest
+         + key_share             --------&gt;
+                                 &lt;--------         HelloRetryRequest
                                                          + key_share
 
          ClientHello
-         + key_share               --------&gt;
+         + key_share             --------&gt;
                                                          ServerHello
                                                          + key_share
                                                {EncryptedExtensions}
@@ -896,11 +896,11 @@ Auth | {CertificateVerify*}
                                                       {Certificate*}
                                                 {CertificateVerify*}
                                                           {Finished}
-                                   &lt;--------     [Application Data*]
+                                 &lt;--------       [Application Data*]
          {Certificate*}
          {CertificateVerify*}
-         {Finished}                --------&gt;
-         [Application Data]        &lt;-------&gt;     [Application Data]
+         {Finished}              --------&gt;
+         [Application Data]      &lt;-------&gt;        [Application Data]
 </pre>
 <p class="figure">Figure 2: Message flow for a full handshake with mismatched parameters</p>
 <p id="rfc.section.2.1.p.2">Note: The handshake transcript includes the initial ClientHello/HelloRetryRequest exchange; it is not reset with the new ClientHello.</p>
@@ -936,7 +936,7 @@ Subsequent Handshake:
        ClientHello
        + key_share*
        + psk_key_exchange_modes
-       + pre_shared_key         --------&gt;
+       + pre_shared_key          --------&gt;
                                                        ServerHello
                                                   + pre_shared_key
                                                       + key_share*
@@ -971,17 +971,17 @@ Subsequent Handshake:
          + pre_shared_key_modes
          + pre_shared_key
          (Application Data*)
-         (end_of_early_data)       --------&gt;
+         (end_of_early_data)     --------&gt;
                                                          ServerHello
                                                         + early_data
                                                     + pre_shared_key
                                                         + key_share*
                                                {EncryptedExtensions}
                                                           {Finished}
-                                   &lt;--------     [Application Data*]
-         {Finished}                --------&gt;
+                                 &lt;--------       [Application Data*]
+         {Finished}              --------&gt;
 
-         [Application Data]        &lt;-------&gt;      [Application Data]
+         [Application Data]      &lt;-------&gt;        [Application Data]
 
                *  Indicates optional or situation-dependent
                   messages/extensions that are not always sent.
@@ -2203,14 +2203,14 @@ finished_key =
                  v
            Early Secret
                  |
-                 +------&gt; Derive-Secret(.,
-                 |                      "external psk binder key" |
-                 |                      "resumption psk binder key",
-                 |                      "")
+                 +-----&gt; Derive-Secret(.,
+                 |                     "external psk binder key" |
+                 |                     "resumption psk binder key",
+                 |                     "")
                  |                     = binder_key
                  |
-                 +------&gt; Derive-Secret(., "client early traffic secret",
-                 |                      ClientHello)
+                 +-----&gt; Derive-Secret(., "client early traffic secret",
+                 |                     ClientHello)
                  |                     = client_early_traffic_secret
                  |
                  +-----&gt; Derive-Secret(., "early exporter master secret",

@@ -901,12 +901,12 @@ Internet-Draft                     TLS                      October 2016
             Client                                               Server
 
             ClientHello
-            + key_share               -------->
-                                      <--------       HelloRetryRequest
+            + key_share             -------->
+                                    <--------         HelloRetryRequest
                                                             + key_share
 
             ClientHello
-            + key_share               -------->
+            + key_share             -------->
                                                             ServerHello
                                                             + key_share
                                                   {EncryptedExtensions}
@@ -914,11 +914,11 @@ Internet-Draft                     TLS                      October 2016
                                                          {Certificate*}
                                                    {CertificateVerify*}
                                                              {Finished}
-                                      <--------     [Application Data*]
+                                    <--------       [Application Data*]
             {Certificate*}
             {CertificateVerify*}
-            {Finished}                -------->
-            [Application Data]        <------->     [Application Data]
+            {Finished}              -------->
+            [Application Data]      <------->        [Application Data]
 
         Figure 2: Message flow for a full handshake with mismatched
                                 parameters
@@ -981,7 +981,7 @@ Internet-Draft                     TLS                      October 2016
           ClientHello
           + key_share*
           + psk_key_exchange_modes
-          + pre_shared_key         -------->
+          + pre_shared_key          -------->
                                                           ServerHello
                                                      + pre_shared_key
                                                          + key_share*
@@ -1074,17 +1074,17 @@ Internet-Draft                     TLS                      October 2016
             + pre_shared_key_modes
             + pre_shared_key
             (Application Data*)
-            (end_of_early_data)       -------->
+            (end_of_early_data)     -------->
                                                             ServerHello
                                                            + early_data
                                                        + pre_shared_key
                                                            + key_share*
                                                   {EncryptedExtensions}
                                                              {Finished}
-                                      <--------     [Application Data*]
-            {Finished}                -------->
+                                    <--------       [Application Data*]
+            {Finished}              -------->
 
-            [Application Data]        <------->      [Application Data]
+            [Application Data]      <------->        [Application Data]
 
                   *  Indicates optional or situation-dependent
                      messages/extensions that are not always sent.
@@ -4249,7 +4249,7 @@ Internet-Draft                     TLS                      October 2016
                  v
            Early Secret
                  |
-                 +------> Derive-Secret(.,
+                 +-----> Derive-Secret(.,
 
 
 
@@ -4258,13 +4258,13 @@ Rescorla                 Expires April 29, 2017                [Page 76]
 Internet-Draft                     TLS                      October 2016
 
 
-                 |                      "external psk binder key" |
-                 |                      "resumption psk binder key",
-                 |                      "")
+                 |                     "external psk binder key" |
+                 |                     "resumption psk binder key",
+                 |                     "")
                  |                     = binder_key
                  |
-                 +------> Derive-Secret(., "client early traffic secret",
-                 |                      ClientHello)
+                 +-----> Derive-Secret(., "client early traffic secret",
+                 |                     ClientHello)
                  |                     = client_early_traffic_secret
                  |
                  +-----> Derive-Secret(., "early exporter master secret",
