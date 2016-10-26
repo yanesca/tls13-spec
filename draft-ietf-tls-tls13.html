@@ -582,7 +582,14 @@ li, p {
 <p id="rfc.section.1.1.p.11">server: The endpoint which did not initiate the TLS connection.</p>
 <h2 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a> <a href="#major-differences-from-tls-12" id="major-differences-from-tls-12">Major Differences from TLS 1.2</a></h2>
 <p id="rfc.section.1.2.p.1">(*) indicates changes to the wire protocol which may require implementations to update.</p>
-<p id="rfc.section.1.2.p.2">draft-17</p>
+<p id="rfc.section.1.2.p.2">draft-18</p>
+<p/>
+
+<ul>
+  <li>Fix signature_algorithms entry in extensions table.</li>
+  <li>Restate rule from RFC 6066 that you can&#8217;t resume unless SNI is the same.</li>
+</ul>
+<p id="rfc.section.1.2.p.4">draft-17</p>
 <p/>
 
 <ul>
@@ -599,7 +606,7 @@ li, p {
   <li>Explicitly allow predicting ClientFinished for NST</li>
   <li>Clarify conditions for allowing 0-RTT with PSK</li>
 </ul>
-<p id="rfc.section.1.2.p.4">draft-16</p>
+<p id="rfc.section.1.2.p.6">draft-16</p>
 <p/>
 
 <ul>
@@ -612,7 +619,7 @@ li, p {
   <li>Forbid CertificateRequest with 0-RTT and PSK.</li>
   <li>Relax requirement to check SNI for 0-RTT.</li>
 </ul>
-<p id="rfc.section.1.2.p.6">draft-15</p>
+<p id="rfc.section.1.2.p.8">draft-15</p>
 <p/>
 
 <ul>
@@ -627,7 +634,7 @@ li, p {
   <li>Remove old PRNG text.</li>
   <li>Explicitly require checking that handshake records not span key changes.</li>
 </ul>
-<p id="rfc.section.1.2.p.8">draft-14</p>
+<p id="rfc.section.1.2.p.10">draft-14</p>
 <p/>
 
 <ul>
@@ -645,7 +652,7 @@ li, p {
   <li>Major editorial restructuring.</li>
   <li>Replace the Security Analysis section with a WIP draft.</li>
 </ul>
-<p id="rfc.section.1.2.p.10">draft-13</p>
+<p id="rfc.section.1.2.p.12">draft-13</p>
 <p/>
 
 <ul>
@@ -661,7 +668,7 @@ li, p {
   <li>Remove the redundant length fields in KeyShareEntry.</li>
   <li>Define a cookie field for HRR.</li>
 </ul>
-<p id="rfc.section.1.2.p.12">draft-12</p>
+<p id="rfc.section.1.2.p.14">draft-12</p>
 <p/>
 
 <ul>
@@ -674,7 +681,7 @@ li, p {
   <li>Define exporters.</li>
   <li>Editorial cleanup</li>
 </ul>
-<p id="rfc.section.1.2.p.14">draft-11</p>
+<p id="rfc.section.1.2.p.16">draft-11</p>
 <p/>
 
 <ul>
@@ -687,14 +694,14 @@ li, p {
   <li>Remove early_handshake content type. Terminate 0-RTT data with an alert.</li>
   <li>Reset sequence number upon key change (as proposed by Fournet et al.)</li>
 </ul>
-<p id="rfc.section.1.2.p.16">draft-10</p>
+<p id="rfc.section.1.2.p.18">draft-10</p>
 <p/>
 
 <ul>
   <li>Remove ClientCertificateTypes field from CertificateRequest and add extensions.</li>
   <li>Merge client and server key shares into a single extension.</li>
 </ul>
-<p id="rfc.section.1.2.p.18">draft-09</p>
+<p id="rfc.section.1.2.p.20">draft-09</p>
 <p/>
 
 <ul>
@@ -708,7 +715,7 @@ li, p {
   <li>Deprecate SHA-1 with signatures.</li>
   <li>Add MTI algorithms.</li>
 </ul>
-<p id="rfc.section.1.2.p.20">draft-08</p>
+<p id="rfc.section.1.2.p.22">draft-08</p>
 <p/>
 
 <ul>
@@ -721,7 +728,7 @@ li, p {
   <li>Change code point for server_configuration to avoid collision with server_hello_done.</li>
   <li>Relax certificate_list ordering requirement to match current practice.</li>
 </ul>
-<p id="rfc.section.1.2.p.22">draft-07</p>
+<p id="rfc.section.1.2.p.24">draft-07</p>
 <p/>
 
 <ul>
@@ -731,7 +738,7 @@ li, p {
   <li>Move ClientKeyShare into an extension.</li>
   <li>Move to HKDF.</li>
 </ul>
-<p id="rfc.section.1.2.p.24">draft-06</p>
+<p id="rfc.section.1.2.p.26">draft-06</p>
 <p/>
 
 <ul>
@@ -740,14 +747,14 @@ li, p {
   <li>Update format of signatures with context.</li>
   <li>Remove explicit IV.</li>
 </ul>
-<p id="rfc.section.1.2.p.26">draft-05</p>
+<p id="rfc.section.1.2.p.28">draft-05</p>
 <p/>
 
 <ul>
   <li>Prohibit SSL negotiation for backwards compatibility.</li>
   <li>Fix which MS is used for exporters.</li>
 </ul>
-<p id="rfc.section.1.2.p.28">draft-04</p>
+<p id="rfc.section.1.2.p.30">draft-04</p>
 <p/>
 
 <ul>
@@ -757,7 +764,7 @@ li, p {
   <li>Remove renegotiation.</li>
   <li>Remove point format negotiation.</li>
 </ul>
-<p id="rfc.section.1.2.p.30">draft-03</p>
+<p id="rfc.section.1.2.p.32">draft-03</p>
 <p/>
 
 <ul>
@@ -767,7 +774,7 @@ li, p {
   <li>Rename {Client,Server}KeyExchange to {Client,Server}KeyShare.</li>
   <li>Add an explicit HelloRetryRequest to reject the client&#8217;s.</li>
 </ul>
-<p id="rfc.section.1.2.p.32">draft-02</p>
+<p id="rfc.section.1.2.p.34">draft-02</p>
 <p/>
 
 <ul>

@@ -303,6 +303,13 @@ Internet-Draft                     TLS                      October 2016
    (*) indicates changes to the wire protocol which may require
    implementations to update.
 
+   draft-18
+
+   -  Fix signature_algorithms entry in extensions table.
+
+   -  Restate rule from RFC 6066 that you can't resume unless SNI is the
+      same.
+
    draft-17
 
    -  Remove the 0-RTT Finished, resumption_context, and replace with a
@@ -322,13 +329,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Remove redundant labels for traffic key derivation (*)
 
-   -  Harmonize requirements about cipher suite matching: for resumption
-      you need to match KDF but for 0-RTT you need whole cipher suite.
-      This allows PSKs to actually negotiate cipher suites. (*)
-
-   -  Move SCT and OCSP into Certificate.extensions (*)
-
-   -  Explicitly allow non-offered extensions in NewSessionTicket
 
 
 
@@ -337,6 +337,14 @@ Rescorla                 Expires April 29, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Harmonize requirements about cipher suite matching: for resumption
+      you need to match KDF but for 0-RTT you need whole cipher suite.
+      This allows PSKs to actually negotiate cipher suites. (*)
+
+   -  Move SCT and OCSP into Certificate.extensions (*)
+
+   -  Explicitly allow non-offered extensions in NewSessionTicket
 
    -  Explicitly allow predicting ClientFinished for NST
 
@@ -378,14 +386,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Clean up alert guidance (*)
 
-   -  Clearer guidance on what is needed for TLS 1.2.
-
-   -  Guidance on 0-RTT time windows.
-
-   -  Rename a bunch of fields.
-
-   -  Remove old PRNG text.
-
 
 
 
@@ -393,6 +393,14 @@ Rescorla                 Expires April 29, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Clearer guidance on what is needed for TLS 1.2.
+
+   -  Guidance on 0-RTT time windows.
+
+   -  Rename a bunch of fields.
+
+   -  Remove old PRNG text.
 
    -  Explicitly require checking that handshake records not span key
       changes.
@@ -435,6 +443,13 @@ Internet-Draft                     TLS                      October 2016
 
    -  Allow server to send SupportedGroups.
 
+
+
+Rescorla                 Expires April 29, 2017                 [Page 8]
+
+Internet-Draft                     TLS                      October 2016
+
+
    -  Remove 0-RTT client authentication
 
    -  Remove (EC)DHE 0-RTT.
@@ -442,13 +457,6 @@ Internet-Draft                     TLS                      October 2016
    -  Flesh out 0-RTT PSK mode and shrink EarlyDataIndication
 
    -  Turn PSK-resumption response into an index to save room
-
-
-
-Rescorla                 Expires April 29, 2017                 [Page 8]
-
-Internet-Draft                     TLS                      October 2016
-
 
    -  Move CertificateStatus to an extension
 
@@ -489,14 +497,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
 
-   -  Remove sequence number and version from additional_data, which is
-      now empty.
-
-   -  Reorder values in HkdfLabel.
-
-   -  Add support for version anti-downgrade mechanism.
-
-   -  Update IANA considerations section and relax some of the policies.
 
 
 
@@ -505,6 +505,15 @@ Rescorla                 Expires April 29, 2017                 [Page 9]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Remove sequence number and version from additional_data, which is
+      now empty.
+
+   -  Reorder values in HkdfLabel.
+
+   -  Add support for version anti-downgrade mechanism.
+
+   -  Update IANA considerations section and relax some of the policies.
 
    -  Unify authentication modes.  Add post-handshake client
       authentication.
@@ -545,15 +554,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Add MTI algorithms.
 
-   draft-08
-
-   -  Remove support for weak and lesser used named curves.
-
-   -  Remove support for MD5 and SHA-224 hashes with signatures.
-
-   -  Update lists of available AEAD cipher suites and error alerts.
-
-
 
 
 
@@ -561,6 +561,14 @@ Rescorla                 Expires April 29, 2017                [Page 10]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   draft-08
+
+   -  Remove support for weak and lesser used named curves.
+
+   -  Remove support for MD5 and SHA-224 hashes with signatures.
+
+   -  Update lists of available AEAD cipher suites and error alerts.
 
    -  Reduce maximum permitted record expansion for AEAD from 2048 to
       256 octets.
@@ -602,14 +610,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Prohibit SSL negotiation for backwards compatibility.
 
-   -  Fix which MS is used for exporters.
-
-   draft-04
-
-   -  Modify key computations to include session hash.
-
-   -  Remove ChangeCipherSpec.
-
 
 
 
@@ -617,6 +617,14 @@ Rescorla                 Expires April 29, 2017                [Page 11]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Fix which MS is used for exporters.
+
+   draft-04
+
+   -  Modify key computations to include session hash.
+
+   -  Remove ChangeCipherSpec.
 
    -  Renumber the new handshake messages to be somewhat more consistent
       with existing convention and to remove a duplicate registration.
@@ -658,6 +666,14 @@ Internet-Draft                     TLS                      October 2016
    This document defines several changes that optionally affect
    implementations of TLS 1.2:
 
+
+
+
+Rescorla                 Expires April 29, 2017                [Page 12]
+
+Internet-Draft                     TLS                      October 2016
+
+
    -  A version downgrade protection mechanism is described in
       Section 4.1.3.
 
@@ -666,13 +682,6 @@ Internet-Draft                     TLS                      October 2016
    An implementation of TLS 1.3 that also supports TLS 1.2 might need to
    include changes to support these changes even when TLS 1.3 is not in
    use.  See the referenced sections for more details.
-
-
-
-Rescorla                 Expires April 29, 2017                [Page 12]
-
-Internet-Draft                     TLS                      October 2016
-
 
 2.  Protocol Overview
 
@@ -697,15 +706,6 @@ Internet-Draft                     TLS                      October 2016
    -  A combination of PSK and Diffie-Hellman.
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-
-
-
-
 
 
 
