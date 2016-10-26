@@ -4126,7 +4126,7 @@ Internet-Draft                     TLS                      October 2016
 
    insufficient_security  Returned instead of "handshake_failure" when a
       negotiation has failed specifically because the server requires
-      ciphers more secure than those supported by the client.
+      parameters more secure than those supported by the client.
 
    internal_error  An internal error unrelated to the peer or the
       correctness of the protocol (such as a memory allocation failure)
