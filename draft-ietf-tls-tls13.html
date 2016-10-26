@@ -1706,24 +1706,23 @@ Subsequent Handshake:
   </thead>
   <tbody>
     <tr>
-      <td class="left">1-RTT (Server)</td>
+      <td class="left">Server</td>
       <td class="left">ClientHello &#8230; later of EncryptedExtensions/CertificateRequest</td>
-      <td class="left">[sender]_handshake_traffic_secret</td>
+      <td class="left">server_handshake_traffic_secret</td>
     </tr>
     <tr>
-      <td class="left">1-RTT (Client)</td>
+      <td class="left">Client</td>
       <td class="left">ClientHello &#8230; ServerFinished</td>
-      <td class="left">[sender]_handshake_traffic_secret</td>
+      <td class="left">client_handshake_traffic_secret</td>
     </tr>
     <tr>
       <td class="left">Post-Handshake</td>
       <td class="left">ClientHello &#8230; ClientFinished + CertificateRequest</td>
-      <td class="left">[sender]_traffic_secret_N</td>
+      <td class="left">client_traffic_secret_N</td>
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.4.p.8">The [sender] in this table denotes the sending side.</p>
-<p id="rfc.section.4.4.p.9">In all cases, the handshake context is formed by concatenating the indicated handshake messages, including the handshake message type and length fields.</p>
+<p id="rfc.section.4.4.p.8">In all cases, the handshake context is formed by concatenating the indicated handshake messages, including the handshake message type and length fields.</p>
 <h3 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#certificate" id="certificate">Certificate</a></h3>
 <p id="rfc.section.4.4.1.p.1">The server MUST send a Certificate message whenever the agreed-upon key exchange method uses certificates for authentication (this includes all key exchange methods defined in this document except PSK).  This message conveys the endpoint&#8217;s certificate chain to the peer.</p>
 <p id="rfc.section.4.4.1.p.2">The client MUST send a Certificate message if and only if the server has requested client authentication via a CertificateRequest message (<a href="#certificate-request">Section 4.3.2</a>). If the server requests client authentication but no suitable certificate is available, the client MUST send a Certificate message containing no certificates (i.e., with the &#8220;certificate_list&#8221; field having length 0).</p>
