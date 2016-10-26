@@ -305,6 +305,9 @@ Internet-Draft                     TLS                      October 2016
 
    draft-18
 
+   -  Remove unnecessary resumption_psk which is the only thing expanded
+      from the resumption master secret. (*).
+
    -  Fix signature_algorithms entry in extensions table.
 
    -  Restate rule from RFC 6066 that you can't resume unless SNI is the
@@ -327,9 +330,6 @@ Internet-Draft                     TLS                      October 2016
 
    -  Replace Client.key_shares in response to HRR (*)
 
-   -  Remove redundant labels for traffic key derivation (*)
-
-
 
 
 
@@ -337,6 +337,8 @@ Rescorla                 Expires April 29, 2017                 [Page 6]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Remove redundant labels for traffic key derivation (*)
 
    -  Harmonize requirements about cipher suite matching: for resumption
       you need to match KDF but for 0-RTT you need whole cipher suite.
@@ -384,8 +386,6 @@ Internet-Draft                     TLS                      October 2016
    -  Forbid application data messages in between post-handshake
       messages from the same flight (*)
 
-   -  Clean up alert guidance (*)
-
 
 
 
@@ -393,6 +393,8 @@ Rescorla                 Expires April 29, 2017                 [Page 7]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Clean up alert guidance (*)
 
    -  Clearer guidance on what is needed for TLS 1.2.
 
@@ -441,14 +443,14 @@ Internet-Draft                     TLS                      October 2016
 
    draft-13
 
-   -  Allow server to send SupportedGroups.
-
 
 
 Rescorla                 Expires April 29, 2017                 [Page 8]
 
 Internet-Draft                     TLS                      October 2016
 
+
+   -  Allow server to send SupportedGroups.
 
    -  Remove 0-RTT client authentication
 
@@ -496,8 +498,6 @@ Internet-Draft                     TLS                      October 2016
    draft-11
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
-
-
 
 
 
@@ -3372,10 +3372,7 @@ Internet-Draft                     TLS                      October 2016
    At any time after the server has received the client Finished
    message, it MAY send a NewSessionTicket message.  This message
    creates a pre-shared key (PSK) binding between the ticket value and
-   the following two values derived from the resumption master secret:
-
-   resumption_psk = HKDF-Expand-Label(resumption_secret,
-                                      "resumption psk", "", Hash.Length)
+   the resumption master secret.
 
    The client MAY use this PSK for future handshakes by including the
    ticket value in the "pre_shared_key" extension in its ClientHello
@@ -3391,8 +3388,8 @@ Internet-Draft                     TLS                      October 2016
    the client provides the same SNI value as described in Section 3 of
    [RFC6066].
 
-   Note: Although the resumption_psk depends on the client's second
-   flight, servers which do not request client authentication MAY
+   Note: Although the resumption master secret depends on the client's
+   second flight, servers which do not request client authentication MAY
    compute the remainder of the transcript independently and then send a
    NewSessionTicket immediately upon sending its Finished rather than
    waiting for the client Finished.
@@ -3410,6 +3407,9 @@ Internet-Draft                     TLS                      October 2016
       (7 days).  The value of zero indicates that the ticket should be
       discarded immediately.  Clients MUST NOT cache session tickets for
       longer than 7 days, regardless of the ticket_lifetime.  It MAY
+      delete the ticket earlier based on local policy.  A server MAY
+      treat a ticket as valid for a shorter period of time than what is
+      stated in the ticket_lifetime.
 
 
 
@@ -3417,10 +3417,6 @@ Rescorla                 Expires April 29, 2017                [Page 61]
 
 Internet-Draft                     TLS                      October 2016
 
-
-      delete the ticket earlier based on local policy.  A server MAY
-      treat a ticket as valid for a shorter period of time than what is
-      stated in the ticket_lifetime.
 
    ticket_age_add  A randomly generated 32-bit value that is used to
       obscure the age of the ticket that the client includes in the
@@ -3466,6 +3462,10 @@ Internet-Draft                     TLS                      October 2016
    Note: Because client authentication may require prompting the user,
    servers MUST be prepared for some delay, including receiving an
    arbitrary number of other messages between sending the
+   CertificateRequest and receiving a response.  In addition, clients
+   which receive multiple CertificateRequests in close succession MAY
+   respond to them in a different order than they were received (the
+
 
 
 
@@ -3474,9 +3474,6 @@ Rescorla                 Expires April 29, 2017                [Page 62]
 Internet-Draft                     TLS                      October 2016
 
 
-   CertificateRequest and receiving a response.  In addition, clients
-   which receive multiple CertificateRequests in close succession MAY
-   respond to them in a different order than they were received (the
    certificate_request_context value allows the server to disambiguate
    the responses).
 
@@ -3521,6 +3518,9 @@ Internet-Draft                     TLS                      October 2016
 
    If implementations independently send their own KeyUpdates with
    request_update set to "update_requested", and they cross in flight,
+   then each side will also send a response, with the result that each
+   side increments by two generations.
+
 
 
 
@@ -3529,9 +3529,6 @@ Rescorla                 Expires April 29, 2017                [Page 63]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   then each side will also send a response, with the result that each
-   side increments by two generations.
 
    Both sender and receiver MUST encrypt their KeyUpdate messages with
    the old keys.  Additionally, both sides MUST enforce that a KeyUpdate
@@ -3578,6 +3575,9 @@ Internet-Draft                     TLS                      October 2016
    boundaries are not preserved in the record layer (i.e., multiple
    messages of the same ContentType MAY be coalesced into a single
    TLSPlaintext record, or a single message MAY be fragmented across
+   several records).  Alert messages (Section 6) MUST NOT be fragmented
+   across records.
+
 
 
 
@@ -3585,9 +3585,6 @@ Rescorla                 Expires April 29, 2017                [Page 64]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   several records).  Alert messages (Section 6) MUST NOT be fragmented
-   across records.
 
    enum {
        alert(21),
@@ -3634,6 +3631,9 @@ Internet-Draft                     TLS                      October 2016
 
    When record protection has not yet been engaged, TLSPlaintext
    structures are written directly onto the wire.  Once record
+   protection has started, TLSPlaintext records are protected and sent
+   as described in the following section.
+
 
 
 
@@ -3641,9 +3641,6 @@ Rescorla                 Expires April 29, 2017                [Page 65]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   protection has started, TLSPlaintext records are protected and sent
-   as described in the following section.
 
 5.2.  Record Payload Protection
 
@@ -3689,6 +3686,9 @@ Internet-Draft                     TLS                      October 2016
    legacy_record_version  The legacy_record_version field is identical
       to TLSPlaintext.legacy_record_version and is always 0x0301.  Note
       that the handshake protocol including the ClientHello and
+      ServerHello messages authenticates the protocol version, so this
+      value is redundant.
+
 
 
 
@@ -3697,9 +3697,6 @@ Rescorla                 Expires April 29, 2017                [Page 66]
 
 Internet-Draft                     TLS                      October 2016
 
-
-      ServerHello messages authenticates the protocol version, so this
-      value is redundant.
 
    length  The length (in bytes) of the following
       TLSCiphertext.fragment, which is the sum of the lengths of the
@@ -3745,7 +3742,10 @@ Internet-Draft                     TLS                      October 2016
    If the decryption fails, the receiver MUST terminate the connection
    with a "bad_record_mac" alert.
 
-
+   An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion of
+   greater than 255 bytes.  An endpoint that receives a record from its
+   peer with TLSCipherText.length larger than 2^14 + 256 octets MUST
+   terminate the connection with a "record_overflow" alert.  This limit
 
 
 
@@ -3754,10 +3754,6 @@ Rescorla                 Expires April 29, 2017                [Page 67]
 Internet-Draft                     TLS                      October 2016
 
 
-   An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion of
-   greater than 255 bytes.  An endpoint that receives a record from its
-   peer with TLSCipherText.length larger than 2^14 + 256 octets MUST
-   terminate the connection with a "record_overflow" alert.  This limit
    is derived from the maximum TLSPlaintext length of 2^14 octets + 1
    octet for ContentType + the maximum AEAD expansion of 255 octets.
 
@@ -3801,7 +3797,11 @@ Internet-Draft                     TLS                      October 2016
    When generating a TLSCiphertext record, implementations MAY choose to
    pad.  An unpadded record is just a record with a padding length of
    zero.  Padding is a string of zero-valued bytes appended to the
+   ContentType field before encryption.  Implementations MUST set the
+   padding octets to all zeros before encrypting.
 
+   Application Data records may contain a zero-length
+   TLSInnerPlaintext.content if the sender desires.  This permits
 
 
 
@@ -3810,11 +3810,6 @@ Rescorla                 Expires April 29, 2017                [Page 68]
 Internet-Draft                     TLS                      October 2016
 
 
-   ContentType field before encryption.  Implementations MUST set the
-   padding octets to all zeros before encrypting.
-
-   Application Data records may contain a zero-length
-   TLSInnerPlaintext.content if the sender desires.  This permits
    generation of plausibly-sized cover traffic in contexts where the
    presence or absence of activity may be sensitive.  Implementations
    MUST NOT send Handshake or Alert records that have a zero-length
@@ -3857,6 +3852,11 @@ Internet-Draft                     TLS                      October 2016
    Implementations SHOULD do a key update Section 4.5.3 prior to
    reaching these limits.
 
+   For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
+   encrypted on a given connection while keeping a safety margin of
+   approximately 2^-57 for Authenticated Encryption (AE) security.  For
+   ChaCha20/Poly1305, the record sequence number would wrap before the
+   safety limit is reached.
 
 
 
@@ -3865,12 +3865,6 @@ Rescorla                 Expires April 29, 2017                [Page 69]
 
 Internet-Draft                     TLS                      October 2016
 
-
-   For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
-   encrypted on a given connection while keeping a safety margin of
-   approximately 2^-57 for Authenticated Encryption (AE) security.  For
-   ChaCha20/Poly1305, the record sequence number would wrap before the
-   safety limit is reached.
 
 6.  Alert Protocol
 
@@ -3897,6 +3891,12 @@ Internet-Draft                     TLS                      October 2016
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
+
+
+
+
+
+
 
 
 
@@ -6196,13 +6196,13 @@ Internet-Draft                     TLS                      October 2016
    transitively includes the original handshake transcript, because that
    transcript is digested into the values which produce the Resumption
    Master Secret.  This requires that both the KDF used to produce the
-   RMS and the MAC used to compute the binder be collision resistant.
-   These are properties of HKDF and HMAC respectively when used with
-   collision resistant hash functions and producing output of at least
-   256 bits.  Any future replacement of these functions MUST also
-   provide collision resistance.  Note: The binder does not cover the
-   binder values from other PSKs, though they are included in the
-   Finished MAC.
+   resumption master secret and the MAC used to compute the binder be
+   collision resistant.  These are properties of HKDF and HMAC
+   respectively when used with collision resistant hash functions and
+   producing output of at least 256 bits.  Any future replacement of
+   these functions MUST also provide collision resistance.  Note: The
+   binder does not cover the binder values from other PSKs, though they
+   are included in the Finished MAC.
 
    If an exporter is used, then it produces values which are unique and
    secret (because they are generated from a unique session key).
