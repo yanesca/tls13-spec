@@ -372,7 +372,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-27" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-28" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -393,7 +393,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">October 27, 2016</td>
+  <td class="right">October 28, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -412,7 +412,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: April 30, 2017</td>
+  <td class="left">Expires: May 1, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -433,7 +433,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 30, 2017.</p>
+<p>This Internet-Draft will expire on May 1, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1515,7 +1515,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains a &#8220;PreSharedKeyExtension&#8221; value:</p>
 <pre>
    struct {
-       opaque identity&lt;0..2^16-1&gt;;
+       opaque identity&lt;1..2^16-1&gt;;
        uint32 obfuscated_ticket_age;
    } PskIdentity;
 
@@ -1524,7 +1524,7 @@ Subsequent Handshake:
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskIdentity identities&lt;7..2^16-1&gt;;
                PskBinderEntry binders&lt;33..2^16-1&gt;;
 
            case server_hello:
@@ -3236,7 +3236,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    } KeyShare;
 
    struct {
-       opaque identity&lt;0..2^16-1&gt;;
+       opaque identity&lt;1..2^16-1&gt;;
        uint32 obfuscated_ticket_age;
    } PskIdentity;
 
@@ -3245,7 +3245,7 @@ HKDF-Expand-Label(Secret, label, "", key_length)
    struct {
        select (Handshake.msg_type) {
            case client_hello:
-               PskIdentity identities&lt;6..2^16-1&gt;;
+               PskIdentity identities&lt;7..2^16-1&gt;;
                PskBinderEntry binders&lt;33..2^16-1&gt;;
 
            case server_hello:
