@@ -372,7 +372,7 @@ li, p {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-11-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-11-04" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -393,7 +393,7 @@ li, p {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">November 02, 2016</td>
+  <td class="right">November 04, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -412,7 +412,7 @@ li, p {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: May 6, 2017</td>
+  <td class="left">Expires: May 8, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -433,7 +433,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 6, 2017.</p>
+<p>This Internet-Draft will expire on May 8, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1816,7 +1816,7 @@ Subsequent Handshake:
   <li>A single 0 byte which serves as the separator</li>
   <li>The content to be signed</li>
 </ul>
-<p id="rfc.section.4.4.2.p.8">This structure is intended to prevent an attack on previous versions of previous versions of TLS in which the ServerKeyExchange format meant that attackers could obtain a signature of a message with a chosen, 32-byte prefix. The initial 64 byte pad clears that prefix.</p>
+<p id="rfc.section.4.4.2.p.8">This structure is intended to prevent an attack on previous versions of TLS in which the ServerKeyExchange format meant that attackers could obtain a signature of a message with a chosen, 32-byte prefix. The initial 64 byte pad clears that prefix.</p>
 <p id="rfc.section.4.4.2.p.9">The context string for a server signature is &#8220;TLS 1.3, server CertificateVerify&#8221; and for a client signature is &#8220;TLS 1.3, client CertificateVerify&#8221;.</p>
 <p id="rfc.section.4.4.2.p.10">For example, if Hash(Handshake Context + Certificate) was 32 bytes of 01 (this length would make sense for SHA-256), the input to the final signing process for a server CertificateVerify would be:</p>
 <pre>
