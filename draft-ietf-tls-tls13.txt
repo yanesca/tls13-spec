@@ -6488,8 +6488,8 @@ Internet-Draft                     TLS                     November 2016
       Microsoft
       mnystrom@microsoft.com
 
-   -  Alfredo Pironti (co-author of [RFC7627])
-      INRIA
+   -  Kazuho Oku
+      DeNA Co., Ltd.
 
 
 
@@ -6498,6 +6498,10 @@ Rescorla                  Expires May 29, 2017                [Page 116]
 Internet-Draft                     TLS                     November 2016
 
 
+      kazuhooku@gmail.com
+
+   -  Alfredo Pironti (co-author of [RFC7627])
+      INRIA
       alfredo.pironti@inria.fr
 
    -  Andrei Popov
@@ -6542,10 +6546,6 @@ Internet-Draft                     TLS                     November 2016
       CloudFlare Inc.
       filippo@cloudflare.com
 
-   -  Tom Weinstein
-
-   -  Hoeteck Wee
-      Ecole Normale Superieure, Paris
 
 
 
@@ -6554,6 +6554,10 @@ Rescorla                  Expires May 29, 2017                [Page 117]
 Internet-Draft                     TLS                     November 2016
 
 
+   -  Tom Weinstein
+
+   -  Hoeteck Wee
+      Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
 
    -  Tim Wright
@@ -6570,10 +6574,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
