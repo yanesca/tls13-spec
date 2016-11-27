@@ -381,7 +381,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-11-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-11-27" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -402,7 +402,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">November 25, 2016</td>
+  <td class="right">November 27, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -421,7 +421,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: May 29, 2017</td>
+  <td class="left">Expires: May 31, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -442,7 +442,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 29, 2017.</p>
+<p>This Internet-Draft will expire on May 31, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1796,7 +1796,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.1.4.p.4">Any endpoint receiving any certificate signed using any signature algorithm using an MD5 hash MUST abort the handshake with a &#8220;bad_certificate&#8221; alert.  SHA-1 is deprecated and it is RECOMMENDED that any endpoint receiving any certificate signed using any signature algorithm using a SHA-1 hash abort the handshake with a &#8220;bad_certificate&#8221; alert.  All endpoints are RECOMMENDED to transition to SHA-256 or better as soon as possible to maintain interoperability with implementations currently in the process of phasing out SHA-1 support.</p>
 <p id="rfc.section.4.4.1.4.p.5">Note that a certificate containing a key for one signature algorithm MAY be signed using a different signature algorithm (for instance, an RSA key signed with an ECDSA key).</p>
 <h3 id="rfc.section.4.4.2"><a href="#rfc.section.4.4.2">4.4.2.</a> <a href="#certificate-verify" id="certificate-verify">Certificate Verify</a></h3>
-<p id="rfc.section.4.4.2.p.1">This message is used to provide explicit proof that an endpoint possesses the private key corresponding to its certificate and also provides integrity for the handshake up to this point. Servers MUST send this message when authenticating via a certificate.  Clients MUST send this message whenever authenticating via a Certificate (i.e., when the Certificate message is non-empty). When sent, this message MUST appear immediately after the Certificate Message and immediately prior to the Finished message.</p>
+<p id="rfc.section.4.4.2.p.1">This message is used to provide explicit proof that an endpoint possesses the private key corresponding to its certificate and also provides integrity for the handshake up to this point. Servers MUST send this message when authenticating via a certificate.  Clients MUST send this message whenever authenticating via a Certificate (i.e., when the Certificate message is non-empty). When sent, this message MUST appear immediately after the Certificate message and immediately prior to the Finished message.</p>
 <p id="rfc.section.4.4.2.p.2">Structure of this message:</p>
 <pre>
    struct {
@@ -1820,7 +1820,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>64 bytes of octet 32</li>
+  <li>A string that consists of octet 32 (0x20) repeated 64 times</li>
   <li>The context string</li>
   <li>A single 0 byte which serves as the separator</li>
   <li>The content to be signed</li>
