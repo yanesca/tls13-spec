@@ -4634,7 +4634,7 @@ Internet-Draft                     TLS                     November 2016
       appear using the following notation: CH (ClientHello), SH
       (ServerHello), EE (EncryptedExtensions), CT (Certificate), CR
       (CertificateRequest), NST (NewSessionTicket) and HRR
-      (HElloRetryRequest).  This column [shall be/has been] initially
+      (HelloRetryRequest).  This column [shall be/has been] initially
       populated with the values in this document.
 
    +------------------------------------------+-------------+----------+
