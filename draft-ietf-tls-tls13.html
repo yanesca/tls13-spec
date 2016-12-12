@@ -596,6 +596,7 @@ address {
 
 <ul>
   <li>Hash context_value input to Exporters (*).</li>
+  <li>Restructure CertificateRequest to have the selectors in extensions. This also allowed defining a &#8220;certificate_authorities&#8221; extension which can be used by the client instead of trusted_ca_keys.</li>
   <li>Remove spurious requirement to implement &#8220;pre_shared_key&#8221;.</li>
   <li>Clarify location of &#8220;early_data&#8221; from server (it goes in EE, as indicated by the table in S 10).</li>
 </ul>
@@ -1333,6 +1334,8 @@ Subsequent Handshake:
        cookie(44),
        psk_key_exchange_modes(45),
        ticket_early_data_info(46),
+       certificate_authorities(47),
+       oid_filters(48),
        (65535)
    } ExtensionType;
 </pre>
@@ -1344,11 +1347,12 @@ Subsequent Handshake:
   <li>&#8220;extension_data&#8221; contains information specific to the particular extension type.</li>
 </ul>
 <p id="rfc.section.4.2.p.4">The list of extension types is maintained by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
-<p id="rfc.section.4.2.p.5">The client sends its extensions in the ClientHello. The server MAY send extensions in the ServerHello, EncryptedExtensions, Certificate, and HelloRetryRequest messages. The NewSessionTicket also allows the server to send extensions to the client though these are not directly associated with the extensions in the ClientHello.  The table in <a href="#iana-considerations">Section 10</a> indicates where a given extension may appear. If the client receives an extension which is not specified for a given message it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
-<p id="rfc.section.4.2.p.6">The server MUST NOT send any extensions which did not appear in the corresponding ClientHello, with the exception of the NewSessionTicket message and the &#8220;cookie&#8221; extension in the HelloRetryRequest message.  Upon receiving an unexpected extension, it MUST abort the handshake with an &#8220;unsupported_extension&#8221; alert. Server-oriented extensions are supported by having the client send an extension with zero-length extension_data indicating support for that extension type.</p>
-<p id="rfc.section.4.2.p.7">When multiple extensions of different types are present, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension">Section 4.2.6</a> which MUST be the last extension in the ClientHello.  There MUST NOT be more than one extension of the same type.</p>
-<p id="rfc.section.4.2.p.8">In TLS 1.3, unlike TLS 1.2, extensions are renegotiated with each handshake even when in resumption-PSK mode. However, 0-RTT parameters are those negotiated in the previous handshake; mismatches may require rejecting 0-RTT (see <a href="#early-data-indication">Section 4.2.8</a>).</p>
-<p id="rfc.section.4.2.p.9">There are subtle (and not so subtle) interactions that may occur in this protocol between new features and existing features which may result in a significant reduction in overall security. The following considerations should be taken into account when designing new extensions:</p>
+<p id="rfc.section.4.2.p.5">Extensions are generally structured in a request/response fashion, though some extensions are just indications with no corresponding response. The client sends its extension requests in the ClientHello message and the server sends its extension responses in the ServerHello, EncryptedExtensions and HelloRetryRequest messages. The server sends extension requests, in the CertificateRequest message which can be responded to with the client&#8217;s Certificate message. The server can also send unsolicited extensions in the NewSessionTicket, though the client does not respond directly to these.</p>
+<p id="rfc.section.4.2.p.6">Implementations MUST NOT send extension responses if the remote endpoint did not send the corresponding extension requests, with the exception of the &#8220;cookie&#8221; extension in HelloRetryRequest.  Upon receiving such an extension, an endpoint MUST abort the handshake with an &#8220;unsupported_extension&#8221; alert.</p>
+<p id="rfc.section.4.2.p.7">The table in <a href="#iana-considerations">Section 10</a> indicates where a given extension may appear. If the client receives an extension which is not specified for a given message it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.2.p.8">When multiple extensions of different types are present, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension">Section 4.2.6</a> which MUST be the last extension in the ClientHello.  There MUST NOT be more than one extension of the same type.</p>
+<p id="rfc.section.4.2.p.9">In TLS 1.3, unlike TLS 1.2, extensions are renegotiated with each handshake even when in resumption-PSK mode. However, 0-RTT parameters are those negotiated in the previous handshake; mismatches may require rejecting 0-RTT (see <a href="#early-data-indication">Section 4.2.8</a>).</p>
+<p id="rfc.section.4.2.p.10">There are subtle (and not so subtle) interactions that may occur in this protocol between new features and existing features which may result in a significant reduction in overall security. The following considerations should be taken into account when designing new extensions:</p>
 <p/>
 
 <ul>
@@ -1441,6 +1445,24 @@ Subsequent Handshake:
   <li>ECDSA signature schemes align with TLS 1.2&#8217;s ECDSA hash/signature pairs.  However, the old semantics did not constrain the signing curve.  If TLS 1.2 is negotiated, implementations MUST be prepared to accept a signature that uses any curve that they advertised in the &#8220;supported_groups&#8221; extension.</li>
   <li>Implementations that advertise support for RSASSA-PSS (which is mandatory in TLS 1.3), MUST be prepared to accept a signature using that scheme even when TLS 1.2 is negotiated. In TLS 1.2, RSASSA-PSS is used with RSA cipher suites.</li>
 </ul>
+<h4 id="rfc.section.4.2.3.1"><a href="#rfc.section.4.2.3.1">4.2.3.1.</a> <a href="#certificate-authorities" id="certificate-authorities">Certificate Authorities</a></h4>
+<p id="rfc.section.4.2.3.1.p.1">The &#8220;certificate_authorities&#8221; extension is used to indicate the certificate authorities which an endpoint supports and which SHOULD be used by the receiving endpoint to guide certificate selection.</p>
+<p id="rfc.section.4.2.3.1.p.2">The body of the &#8220;certificate_authorities&#8221; extension consists of a CertificateAuthoritiesExtension structure.</p>
+<pre>
+   opaque DistinguishedName&lt;1..2^16-1&gt;;
+
+   struct {
+       DistinguishedName authorities&lt;3..2^16-1&gt;;
+   } CertificateAuthoritiesExtension;
+</pre>
+<p/>
+
+<dl>
+  <dt>authorities</dt>
+  <dd style="margin-left: 8">A list of the distinguished names <a href="#X501">[X501]</a> of acceptable certificate authorities, represented in DER-encoded <a href="#X690">[X690]</a> format.  These distinguished names specify a desired distinguished name for a root CA or for a subordinate CA; thus, this message can be used to describe known roots as well as a desired authorization space.</dd>
+</dl>
+<p id="rfc.section.4.2.3.1.p.4">The client MAY send the &#8220;certificate_authorities&#8221; extension in the ClientHello message. The server MAY send it in the CertificateRequest message.</p>
+<p id="rfc.section.4.2.3.1.p.5">The &#8220;trusted_ca_keys&#8221; extension, which serves a similar purpose <a href="#RFC6066">[RFC6066]</a>, but is more complicated, is not used in TLS 1.3 (although it may appear in ClientHello messages from clients which are offering prior versions of TLS).</p>
 <h3 id="rfc.section.4.2.4"><a href="#rfc.section.4.2.4">4.2.4.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a></h3>
 <p id="rfc.section.4.2.4.p.1">When sent by the client, the &#8220;supported_groups&#8221; extension indicates the named groups which the client supports for key exchange, ordered from most preferred to least preferred.</p>
 <p id="rfc.section.4.2.4.p.2">Note: In versions of TLS prior to TLS 1.3, this extension was named &#8220;elliptic_curves&#8221; and only contained elliptic curve groups. See <a href="#RFC4492">[RFC4492]</a> and <a href="#RFC7919">[RFC7919]</a>. This extension was also used to negotiate ECDSA curves. Signature algorithms are now negotiated independently (see <a href="#signature-algorithms">Section 4.2.3</a>).</p>
@@ -1669,19 +1691,9 @@ Subsequent Handshake:
 <p id="rfc.section.4.3.2.p.1">A server which is authenticating with a certificate can optionally request a certificate from the client. This message, if sent, will follow EncryptedExtensions.</p>
 <p id="rfc.section.4.3.2.p.2">Structure of this message:</p>
 <pre>
-   opaque DistinguishedName&lt;1..2^16-1&gt;;
-
-   struct {
-       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
-       opaque certificate_extension_values&lt;0..2^16-1&gt;;
-   } CertificateExtension;
-
    struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       SignatureScheme
-         supported_signature_algorithms&lt;2..2^16-2&gt;;
-       DistinguishedName certificate_authorities&lt;0..2^16-1&gt;;
-       CertificateExtension certificate_extensions&lt;0..2^16-1&gt;;
+       Extension extensions&lt;2..2^16-1&gt;;
    } CertificateRequest;
 </pre>
 <p/>
@@ -1689,14 +1701,29 @@ Subsequent Handshake:
 <dl>
   <dt>certificate_request_context</dt>
   <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.5.2</a>.</dd>
-  <dt>supported_signature_algorithms</dt>
-  <dd style="margin-left: 8">A list of the signature algorithms that the server is able to verify, listed in descending order of preference. Any certificates provided by the client MUST be signed using a signature algorithm found in supported_signature_algorithms.</dd>
-  <dt>certificate_authorities</dt>
-  <dd style="margin-left: 8">A list of the distinguished names <a href="#X501">[X501]</a> of acceptable certificate_authorities, represented in DER-encoded <a href="#X690">[X690]</a> format.  These distinguished names may specify a desired distinguished name for a root CA or for a subordinate CA; thus, this message can be used to describe known roots as well as a desired authorization space.  If the certificate_authorities list is empty, then the client MAY send any certificate that meets the rest of the selection criteria in the CertificateRequest, unless there is some external arrangement to the contrary.</dd>
-  <dt>certificate_extensions</dt>
+  <dt>extensions</dt>
+  <dd style="margin-left: 8">An optional set of extensions describing the parameters of the certificate being requested. The &#8220;signature_algorithms&#8221; extension MUST be specified.</dd>
+</dl>
+<p id="rfc.section.4.3.2.p.4">In prior versions of TLS, the CertificateRequest message carried a list of signature algorithms and certificate authorities which the server would accept. In TLS 1.3 the former is expressed by sending the &#8220;signature_algorithms&#8221; extension. The latter is expressed by sending the &#8220;certificate_authorities&#8221; extension (see <a href="#certificate-authorities">Section 4.2.3.1</a>).</p>
+<p id="rfc.section.4.3.2.p.5">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message.</p>
+<h4 id="rfc.section.4.3.2.1"><a href="#rfc.section.4.3.2.1">4.3.2.1.</a> <a href="#oid-filters" id="oid-filters">OID Filters</a></h4>
+<p id="rfc.section.4.3.2.1.p.1">The &#8220;oid_filters&#8221; extension allows servers to provide a set of OID/value pairs which it would like the client&#8217;s certificate to match. This extension MUST only be sent in the CertificateRequest message.</p>
+<pre>
+  struct {
+      opaque certificate_extension_oid&lt;1..2^8-1&gt;;
+      opaque certificate_extension_values&lt;0..2^16-1&gt;;
+  } OIDFilter;
+
+  struct {
+      OIDFilter filters&lt;0..2^16-1&gt;;
+  } OIDFilterExtension;
+</pre>
+<p/>
+
+<dl>
+  <dt>filters</dt>
   <dd style="margin-left: 8">A list of certificate extension OIDs <a href="#RFC5280">[RFC5280]</a> with their allowed values, represented in DER-encoded <a href="#X690">[X690]</a> format. Some certificate extension OIDs allow multiple values (e.g. Extended Key Usage).  If the server has included a non-empty certificate_extensions list, the client certificate MUST contain all of the specified extension OIDs that the client recognizes. For each extension OID recognized by the client, all of the specified values MUST be present in the client certificate (but the certificate MAY have other values as well). However, the client MUST ignore and skip any unrecognized certificate extension OIDs. If the client has ignored some of the required certificate extension OIDs, and supplied a certificate that does not satisfy the request, the server MAY at its discretion either continue the session without client authentication, or abort the handshake with an &#8220;unsupported_certificate&#8221; alert.  PKIX RFCs define a variety of certificate extension OIDs and their corresponding value types. Depending on the type, matching certificate extension values are not necessarily bitwise-equal. It is expected that TLS implementations will rely on their PKI libraries to perform certificate selection using certificate extension OIDs.  This document defines matching rules for two standard certificate extensions defined in <a href="#RFC5280">[RFC5280]</a>: <ul><li>The Key Usage extension in a certificate matches the request when all key usage bits asserted in the request are also asserted in the Key Usage certificate extension.</li><li>The Extended Key Usage extension in a certificate matches the request when all key purpose OIDs present in the request are also found in the Extended Key Usage certificate extension. The special anyExtendedKeyUsage OID MUST NOT be used in the request.</li></ul><p> Separate specifications may define matching rules for other certificate extensions.</p></dd>
 </dl>
-<p id="rfc.section.4.3.2.p.4">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message.</p>
 <h2 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#authentication-messages" id="authentication-messages">Authentication Messages</a></h2>
 <p id="rfc.section.4.4.p.1">As discussed in <a href="#protocol-overview">Section 2</a>, TLS uses a common set of messages for authentication, key confirmation, and handshake integrity: Certificate, CertificateVerify, and Finished. These messages are always sent as the last messages in their handshake flight. The Certificate and CertificateVerify messages are only sent under certain circumstances, as defined below. The Finished message is always sent as part of the Authentication block.</p>
 <p id="rfc.section.4.4.p.2">The computations for the Authentication messages all uniformly take the following inputs:</p>
@@ -2425,7 +2452,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     <tr>
       <td class="left">trusted_ca_keys <a href="#RFC6066">[RFC6066]</a></td>
       <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
+      <td class="right">-</td>
     </tr>
     <tr>
       <td class="left">truncated_hmac <a href="#RFC6066">[RFC6066]</a></td>
@@ -2475,7 +2502,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     <tr>
       <td class="left">signature_algorithms <a href="#RFC5246">[RFC5246]</a></td>
       <td class="right">Yes</td>
-      <td class="right">CH</td>
+      <td class="right">CH, CR</td>
     </tr>
     <tr>
       <td class="left">use_srtp <a href="#RFC5764">[RFC5764]</a></td>
@@ -2500,7 +2527,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     <tr>
       <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
       <td class="right">No</td>
-      <td class="right">CH, CT</td>
+      <td class="right">CH, CR, CT</td>
     </tr>
     <tr>
       <td class="left">client_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
@@ -2571,6 +2598,16 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
       <td class="left">ticket_early_data_info [[this document]]</td>
       <td class="right">Yes</td>
       <td class="right">NST</td>
+    </tr>
+    <tr>
+      <td class="left">certificate_authorities [[this document]]</td>
+      <td class="right">Yes</td>
+      <td class="right">CH, CR</td>
+    </tr>
+    <tr>
+      <td class="left">oid_filters [[this document]]</td>
+      <td class="right">No</td>
+      <td class="right">CR</td>
     </tr>
   </tbody>
 </table>
@@ -3204,6 +3241,8 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        cookie(44),
        psk_key_exchange_modes(45),
        ticket_early_data_info(46),
+       certificate_authorities(47),
+       oid_filters(48),
        (65535)
    } ExtensionType;
 
@@ -3334,24 +3373,29 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <p id="rfc.section.A.3.1.4.p.1">Values within &#8220;obsolete_RESERVED&#8221; ranges were used in previous versions of TLS and MUST NOT be offered or negotiated by TLS 1.3 implementations.  The obsolete curves have various known/theoretical weaknesses or have had very little usage, in some cases only due to unintentional server configuration issues. They are no longer considered appropriate for general use and should be assumed to be potentially unsafe. The set of curves specified here is sufficient for interoperability with all currently deployed and properly configured TLS implementations.</p>
 <h3 id="rfc.appendix.A.3.2"><a href="#rfc.appendix.A.3.2">A.3.2.</a> <a href="#server-parameters-messages" id="server-parameters-messages">Server Parameters Messages</a></h3>
 <pre>
+   opaque DistinguishedName&lt;1..2^16-1&gt;;
+
+   struct {
+       DistinguishedName authorities&lt;3..2^16-1&gt;;
+   } CertificateAuthoritiesExtension;
+
    struct {
        Extension extensions&lt;0..2^16-1&gt;;
    } EncryptedExtensions;
 
-   opaque DistinguishedName&lt;1..2^16-1&gt;;
-
-   struct {
-       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
-       opaque certificate_extension_values&lt;0..2^16-1&gt;;
-   } CertificateExtension;
-
    struct {
        opaque certificate_request_context&lt;0..2^8-1&gt;;
-       SignatureScheme
-         supported_signature_algorithms&lt;2..2^16-2&gt;;
-       DistinguishedName certificate_authorities&lt;0..2^16-1&gt;;
-       CertificateExtension certificate_extensions&lt;0..2^16-1&gt;;
+       Extension extensions&lt;2..2^16-1&gt;;
    } CertificateRequest;
+
+  struct {
+      opaque certificate_extension_oid&lt;1..2^8-1&gt;;
+      opaque certificate_extension_values&lt;0..2^16-1&gt;;
+  } OIDFilter;
+
+  struct {
+      OIDFilter filters&lt;0..2^16-1&gt;;
+  } OIDFilterExtension;
 </pre>
 <h3 id="rfc.appendix.A.3.3"><a href="#rfc.appendix.A.3.3">A.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a></h3>
 <pre>
