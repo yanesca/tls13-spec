@@ -1527,9 +1527,10 @@ Subsequent Handshake:
 <h4 id="rfc.section.4.2.5.2"><a href="#rfc.section.4.2.5.2">4.2.5.2.</a> <a href="#ecdhe-param" id="ecdhe-param">ECDHE Parameters</a></h4>
 <p id="rfc.section.4.2.5.2.p.1">ECDHE parameters for both clients and servers are encoded in the the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.</p>
 <p id="rfc.section.4.2.5.2.p.2">For secp256r1, secp384r1 and secp521r1, the contents are the byte string representation of an elliptic curve public value following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.</p>
-<p id="rfc.section.4.2.5.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed).</p>
-<p id="rfc.section.4.2.5.2.p.4">For x25519 and x448, the contents are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748">[RFC7748]</a>, 32 bytes for x25519 and 56 bytes for x448.</p>
-<p id="rfc.section.4.2.5.2.p.5">Note: Versions of TLS prior to 1.3 permitted point format negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
+<p id="rfc.section.4.2.5.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed). Peers MUST validate each other&#8217;s public value Y by ensuring that the point is a valid point on the elliptic curve.</p>
+<p id="rfc.section.4.2.5.2.p.4">For the curves secp256r1, secp384r1 and secp521r1, the appropriate validation procedures are defined in Section 4.3.7 of <a href="#X962">[X962]</a> and alternatively in Section 5.6.2.6  of <a href="#KEYAGREEMENT">[KEYAGREEMENT]</a>.  This process consists of three steps: (1) verify that Y is not the point at infinity (O), (2) verify that for Y = (x, y) both integers are in the correct interval, (3) ensure that (x, y) is a correct solution to the elliptic curve equation.  For these curves, implementers do not need to verify membership in the correct subgroup.</p>
+<p id="rfc.section.4.2.5.2.p.5">For x25519 and x448, the contents of the public value are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748">[RFC7748]</a>, 32 bytes for x25519 and 56 bytes for x448. Peers SHOULD use the approach specified in <a href="#RFC7748">[RFC7748]</a> to calculate the Diffie-Hellman shared secret, and MUST check whether the computed Diffie-Hellman shared secret is the all-zero value and abort if so, as described in Section 6 of <a href="#RFC7748">[RFC7748]</a>. If implementers use an alternative implementation of these elliptic curves, they should perform the additional checks specified in Section 7 of <a href="#RFC7748">[RFC7748]</a>.</p>
+<p id="rfc.section.4.2.5.2.p.6">Note: Versions of TLS prior to 1.3 permitted point format negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
 <h3 id="rfc.section.4.2.6"><a href="#rfc.section.4.2.6">4.2.6.</a> <a href="#pre-shared-key-extension" id="pre-shared-key-extension">Pre-Shared Key Extension</a></h3>
 <p id="rfc.section.4.2.6.p.1">The &#8220;pre_shared_key&#8221; extension is used to indicate the identity of the pre-shared key to be used with a given handshake in association with PSK key establishment.</p>
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of this extension contains a &#8220;PreSharedKeyExtension&#8221; value:</p>
@@ -2793,6 +2794,12 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
         <b id="IEEE1363">[IEEE1363]</b>
       </td>
       <td class="top"><a>IEEE</a>, "<a>Standard Specifications for Public Key Cryptography</a>", IEEE 1363 , 2000.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="KEYAGREEMENT">[KEYAGREEMENT]</b>
+      </td>
+      <td class="top"><a>Barker, E.</a>, <a>Lily Chen, .</a>, <a>Roginsky, A.</a> and <a>M. Smid</a>, "<a>Recommendation for Pair-Wise Key Establishment Schemes Using Discrete Logarithm Cryptography</a>", NIST Special Publication 800-38D, May 2013.</td>
     </tr>
     <tr>
       <td class="reference">
