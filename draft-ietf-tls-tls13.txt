@@ -128,7 +128,6 @@ Internet-Draft                     TLS                     December 2016
        4.5.1.  New Session Ticket Message  . . . . . . . . . . . . .  62
        4.5.2.  Post-Handshake Authentication . . . . . . . . . . . .  63
        4.5.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  64
-     4.6.  Handshake Layer and Key Changes . . . . . . . . . . . . .  65
    5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  65
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  65
      5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  67
@@ -162,6 +161,7 @@ Internet-Draft                     TLS                     December 2016
        A.3.3.  Authentication Messages . . . . . . . . . . . . . . . 102
        A.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 103
        A.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 103
+     A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 103
 
 
 
@@ -170,7 +170,6 @@ Rescorla                  Expires June 15, 2017                 [Page 3]
 Internet-Draft                     TLS                     December 2016
 
 
-     A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 103
    Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 104
      B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 104
      B.2.  Random Number Generation and Seeding  . . . . . . . . . . 104
@@ -217,6 +216,7 @@ Internet-Draft                     TLS                     December 2016
 
    -  Integrity: Data sent over the channel cannot be modified by
       attackers.
+
 
 
 
@@ -3418,11 +3418,6 @@ Rescorla                  Expires June 15, 2017                [Page 61]
 Internet-Draft                     TLS                     December 2016
 
 
-   Handshake messages sent after the handshake MUST NOT be interleaved
-   with other record types.  That is, if a message is split over two or
-   more handshake records, there MUST NOT be any other records between
-   them.
-
 4.5.1.  New Session Ticket Message
 
    At any time after the server has received the client Finished
@@ -3467,6 +3462,11 @@ Internet-Draft                     TLS                     December 2016
       treat a ticket as valid for a shorter period of time than what is
       stated in the ticket_lifetime.
 
+   ticket_age_add  A randomly generated 32-bit value that is used to
+      obscure the age of the ticket that the client includes in the
+      "pre_shared_key" extension.  The client-side ticket age is added
+
+
 
 
 Rescorla                  Expires June 15, 2017                [Page 62]
@@ -3474,9 +3474,6 @@ Rescorla                  Expires June 15, 2017                [Page 62]
 Internet-Draft                     TLS                     December 2016
 
 
-   ticket_age_add  A randomly generated 32-bit value that is used to
-      obscure the age of the ticket that the client includes in the
-      "pre_shared_key" extension.  The client-side ticket age is added
       to this value modulo 2^32 to obtain the value that is transmitted
       by the client.
 
@@ -3521,6 +3518,9 @@ Internet-Draft                     TLS                     December 2016
    CertificateRequest and receiving a response.  In addition, clients
    which receive multiple CertificateRequests in close succession MAY
    respond to them in a different order than they were received (the
+   certificate_request_context value allows the server to disambiguate
+   the responses).
+
 
 
 
@@ -3529,9 +3529,6 @@ Rescorla                  Expires June 15, 2017                [Page 63]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   certificate_request_context value allows the server to disambiguate
-   the responses).
 
 4.5.3.  Key and IV Update
 
@@ -3577,6 +3574,9 @@ Internet-Draft                     TLS                     December 2016
    then each side will also send a response, with the result that each
    side increments by two generations.
 
+   Both sender and receiver MUST encrypt their KeyUpdate messages with
+   the old keys.  Additionally, both sides MUST enforce that a KeyUpdate
+   with the old key is received before accepting any messages encrypted
 
 
 
@@ -3586,19 +3586,8 @@ Rescorla                  Expires June 15, 2017                [Page 64]
 Internet-Draft                     TLS                     December 2016
 
 
-   Both sender and receiver MUST encrypt their KeyUpdate messages with
-   the old keys.  Additionally, both sides MUST enforce that a KeyUpdate
-   with the old key is received before accepting any messages encrypted
    with the new key.  Failure to do so may allow message truncation
    attacks.
-
-4.6.  Handshake Layer and Key Changes
-
-   Handshake messages MUST NOT span key changes.  Because the
-   ServerHello, Finished, and KeyUpdate messages signal a key change,
-   upon receiving these messages a receiver MUST verify that the end of
-   these messages aligns with a record boundary; if not, then it MUST
-   terminate the connection with an "unexpected_message" alert.
 
 5.  Record Protocol
 
@@ -3617,22 +3606,33 @@ Internet-Draft                     TLS                     December 2016
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 10.
 
-   Application Data messages are carried by the record layer and are
-   fragmented and encrypted as described below.  The messages are
-   treated as transparent data to the record layer.
-
 5.1.  Record Layer
-
-   The TLS record layer receives uninterpreted data from higher layers
-   in non-empty blocks of arbitrary size.
 
    The record layer fragments information blocks into TLSPlaintext
    records carrying data in chunks of 2^14 bytes or less.  Message
-   boundaries are not preserved in the record layer (i.e., multiple
-   messages of the same ContentType MAY be coalesced into a single
-   TLSPlaintext record, or a single message MAY be fragmented across
-   several records).  Alert messages (Section 6) MUST NOT be fragmented
-   across records.
+   boundaries are handled differently depending on the underlying
+   ContentType.  Any future content types MUST specify appropriate
+   rules.  Note that these rules are stricter than what was enforced in
+   TLS 1.2.
+
+   Handshake messages MAY be coalesced into a single TLSPlaintext record
+   or fragmented across several records, provided that:
+
+   -  Handshake messages MUST NOT be interleaved with other record
+      types.  That is, if a handshake message is split over two or more
+      records, there MUST NOT be any other records between them.
+
+   -  Handshake messages MUST NOT span key changes.  Because the
+      ServerHello, Finished, and KeyUpdate messages signal a key change,
+      upon receiving these messages a receiver MUST verify that the end
+      of these messages aligns with a record boundary; if not, then it
+      MUST terminate the connection with an "unexpected_message" alert.
+
+   Implementations MUST NOT send zero-length fragments of Handshake
+   types, even if those fragments contain padding.
+
+   Alert messages (Section 6) MUST NOT be fragmented across records and
+   multiple Alert messages MUST NOT be coalesced into a single
 
 
 
@@ -3641,6 +3641,14 @@ Rescorla                  Expires June 15, 2017                [Page 65]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   TLSPlaintext record.  In other words, a record with an Alert type
+   MUST contain exactly one message.
+
+   Application Data messages contain data that is opaque to TLS.
+   Application Data messages are always protected.  Zero-length
+   fragments of Application Data MAY be sent as as they are potentially
+   useful as a traffic analysis countermeasure.
 
    enum {
        alert(21),
@@ -3680,16 +3688,8 @@ Internet-Draft                     TLS                     December 2016
    version to use by following the procedure and requirements in
    Appendix C.
 
-   Implementations MUST NOT send zero-length fragments of Handshake or
-   Alert types, even if those fragments contain padding.  Zero-length
-   fragments of Application Data MAY be sent as they are potentially
-   useful as a traffic analysis countermeasure.
-
    When record protection has not yet been engaged, TLSPlaintext
    structures are written directly onto the wire.  Once record
-   protection has started, TLSPlaintext records are protected and sent
-   as described in the following section.
-
 
 
 
@@ -3697,6 +3697,9 @@ Rescorla                  Expires June 15, 2017                [Page 66]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   protection has started, TLSPlaintext records are protected and sent
+   as described in the following section.
 
 5.2.  Record Payload Protection
 
@@ -3742,9 +3745,6 @@ Internet-Draft                     TLS                     December 2016
    legacy_record_version  The legacy_record_version field is identical
       to TLSPlaintext.legacy_record_version and is always 0x0301.  Note
       that the handshake protocol including the ClientHello and
-      ServerHello messages authenticates the protocol version, so this
-      value is redundant.
-
 
 
 
@@ -3753,6 +3753,9 @@ Rescorla                  Expires June 15, 2017                [Page 67]
 
 Internet-Draft                     TLS                     December 2016
 
+
+      ServerHello messages authenticates the protocol version, so this
+      value is redundant.
 
    length  The length (in bytes) of the following
       TLSCiphertext.encrypted_record, which is the sum of the lengths of
@@ -3798,10 +3801,7 @@ Internet-Draft                     TLS                     December 2016
    If the decryption fails, the receiver MUST terminate the connection
    with a "bad_record_mac" alert.
 
-   An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion
-   greater than 255 octets.  An endpoint that receives a record from its
-   peer with TLSCipherText.length larger than 2^14 + 256 octets MUST
-   terminate the connection with a "record_overflow" alert.  This limit
+
 
 
 
@@ -3810,6 +3810,10 @@ Rescorla                  Expires June 15, 2017                [Page 68]
 Internet-Draft                     TLS                     December 2016
 
 
+   An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion
+   greater than 255 octets.  An endpoint that receives a record from its
+   peer with TLSCipherText.length larger than 2^14 + 256 octets MUST
+   terminate the connection with a "record_overflow" alert.  This limit
    is derived from the maximum TLSPlaintext length of 2^14 octets + 1
    octet for ContentType + the maximum AEAD expansion of 255 octets.
 
@@ -3854,10 +3858,6 @@ Internet-Draft                     TLS                     December 2016
    When generating a TLSCiphertext record, implementations MAY choose to
    pad.  An unpadded record is just a record with a padding length of
    zero.  Padding is a string of zero-valued bytes appended to the
-   ContentType field before encryption.  Implementations MUST set the
-   padding octets to all zeros before encrypting.
-
-
 
 
 
@@ -3865,6 +3865,9 @@ Rescorla                  Expires June 15, 2017                [Page 69]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   ContentType field before encryption.  Implementations MUST set the
+   padding octets to all zeros before encrypting.
 
    Application Data records may contain a zero-length
    TLSInnerPlaintext.content if the sender desires.  This permits
@@ -3911,9 +3914,6 @@ Internet-Draft                     TLS                     December 2016
    Implementations SHOULD do a key update Section 4.5.3 prior to
    reaching these limits.
 
-   For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
-   encrypted on a given connection while keeping a safety margin of
-   approximately 2^-57 for Authenticated Encryption (AE) security.  For
 
 
 
@@ -3922,6 +3922,9 @@ Rescorla                  Expires June 15, 2017                [Page 70]
 Internet-Draft                     TLS                     December 2016
 
 
+   For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
+   encrypted on a given connection while keeping a safety margin of
+   approximately 2^-57 for Authenticated Encryption (AE) security.  For
    ChaCha20/Poly1305, the record sequence number would wrap before the
    safety limit is reached.
 
@@ -3950,9 +3953,6 @@ Internet-Draft                     TLS                     December 2016
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
-
-
-
 
 
 
