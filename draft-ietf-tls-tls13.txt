@@ -1073,14 +1073,14 @@ Internet-Draft                     TLS                     December 2016
             + key_share*
             + psk_key_exchange_modes
             + pre_shared_key
-            (Application Data*)
-            (end_of_early_data)     -------->
+            (Application Data*)     -------->
                                                             ServerHello
                                                        + pre_shared_key
                                                            + key_share*
                                                   {EncryptedExtensions}
                                                              {Finished}
                                     <--------       [Application Data*]
+            (end_of_early_data)
             {Finished}              -------->
 
             [Application Data]      <------->        [Application Data]
@@ -2611,11 +2611,10 @@ Internet-Draft                     TLS                     December 2016
    0-RTT messages sent in the first flight have the same content types
    as their corresponding messages sent in other flights (handshake,
    application_data, and alert respectively) but are protected under
-   different keys.  After all the 0-RTT application data messages (if
-   any) have been sent, an "end_of_early_data" alert of type "warning"
-   is sent to indicate the end of the flight.  0-RTT MUST always be
-   followed by an "end_of_early_data" alert, which will be encrypted
-   with the 0-RTT traffic keys.
+   different keys.  After receiving the server's Finished message, if
+   the server has accepted early data, an "end_of_early_data" alert of
+   type "warning" MUST be sent to indicate the key change.  This message
+   will be encrypted with the 0-RTT traffic keys.
 
    A server which receives an "early_data" extension can behave in one
    of three ways:
@@ -2625,7 +2624,8 @@ Internet-Draft                     TLS                     December 2016
       able to receive the client's second flight and complete an
       ordinary 1-RTT handshake.
 
-
+   -  Request that the client send another ClientHello by responding
+      with a HelloRetryRequest.  A client MUST NOT include the
 
 
 
@@ -2634,8 +2634,6 @@ Rescorla                  Expires June 15, 2017                [Page 47]
 Internet-Draft                     TLS                     December 2016
 
 
-   -  Request that the client send another ClientHello by responding
-      with a HelloRetryRequest.  A client MUST NOT include the
       "early_data" extension in its followup ClientHello.  The server
       then ignores early data by skipping all records with external
       content type of "application_data" (indicating that they are
@@ -2682,6 +2680,8 @@ Internet-Draft                     TLS                     December 2016
    automatically re-send early data unless the negotiated connection
    selects the same ALPN protocol.  An application might need to
    construct different messages if a different protocol is selected.
+   Similarly, if early data assumes anything about the connection state,
+   it might be sent in error after the handshake completes.
 
 
 
@@ -2689,9 +2689,6 @@ Rescorla                  Expires June 15, 2017                [Page 48]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   Similarly, if early data assumes anything about the connection state,
-   it might be sent in error after the handshake completes.
 
 4.2.8.1.  Processing Order
 
@@ -2738,6 +2735,9 @@ Internet-Draft                     TLS                     December 2016
    There are several potential sources of error that make an exact
    measurement of time difficult.  Variations in client and server
    clocks are likely to be minimal, outside of gross time corrections.
+   Network propagation delays are most likely causes of a mismatch in
+   legitimate values for elapsed time.  Both the NewSessionTicket and
+
 
 
 
@@ -2746,8 +2746,6 @@ Rescorla                  Expires June 15, 2017                [Page 49]
 Internet-Draft                     TLS                     December 2016
 
 
-   Network propagation delays are most likely causes of a mismatch in
-   legitimate values for elapsed time.  Both the NewSessionTicket and
    ClientHello messages might be retransmitted and therefore delayed,
    which might be hidden by TCP.
 
@@ -2795,14 +2793,14 @@ Internet-Draft                     TLS                     December 2016
    request a certificate from the client.  This message, if sent, will
    follow EncryptedExtensions.
 
+   Structure of this message:
+
 
 
 Rescorla                  Expires June 15, 2017                [Page 50]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   Structure of this message:
 
       opaque DistinguishedName<1..2^16-1>;
 
@@ -2850,6 +2848,8 @@ Internet-Draft                     TLS                     December 2016
       non-empty certificate_extensions list, the client certificate MUST
       contain all of the specified extension OIDs that the client
       recognizes.  For each extension OID recognized by the client, all
+      of the specified values MUST be present in the client certificate
+      (but the certificate MAY have other values as well).  However, the
 
 
 
@@ -2858,8 +2858,6 @@ Rescorla                  Expires June 15, 2017                [Page 51]
 Internet-Draft                     TLS                     December 2016
 
 
-      of the specified values MUST be present in the client certificate
-      (but the certificate MAY have other values as well).  However, the
       client MUST ignore and skip any unrecognized certificate extension
       OIDs.  If the client has ignored some of the required certificate
       extension OIDs, and supplied a certificate that does not satisfy
@@ -2905,6 +2903,8 @@ Internet-Draft                     TLS                     December 2016
 
    -  The certificate and signing key to be used.
 
+   -  A Handshake Context based on the transcript of the handshake
+      messages
 
 
 
@@ -2913,9 +2913,6 @@ Rescorla                  Expires June 15, 2017                [Page 52]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   -  A Handshake Context based on the transcript of the handshake
-      messages
 
    -  A base key to be used to compute a MAC key.
 
@@ -2960,6 +2957,9 @@ Internet-Draft                     TLS                     December 2016
    In all cases, the handshake context is formed by concatenating the
    indicated handshake messages, including the handshake message type
    and length fields, but not including record layer headers.
+
+
+
 
 
 
@@ -3984,10 +3984,10 @@ Internet-Draft                     TLS                     December 2016
 
    end_of_early_data  This alert is sent by the client to indicate that
       all 0-RTT application_data messages have been transmitted (or none
-      will be sent at all) and that this is the end of the flight.  This
-      alert MUST be at the warning level.  Servers MUST NOT send this
-      alert and clients receiving it MUST terminate the connection with
-      an "unexpected_message" alert.
+      will be sent at all) and that the following records are protected
+      under handshake traffic keys.  This alert MUST be at the warning
+      level.  Servers MUST NOT send this alert and clients receiving it
+      MUST terminate the connection with an "unexpected_message" alert.
 
    user_canceled  This alert notifies the recipient that the sender is
       canceling the handshake for some reason unrelated to a protocol

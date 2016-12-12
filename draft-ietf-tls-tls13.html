@@ -987,14 +987,14 @@ Subsequent Handshake:
          + key_share*
          + psk_key_exchange_modes
          + pre_shared_key
-         (Application Data*)
-         (end_of_early_data)     --------&gt;
+         (Application Data*)     --------&gt;
                                                          ServerHello
                                                     + pre_shared_key
                                                         + key_share*
                                                {EncryptedExtensions}
                                                           {Finished}
                                  &lt;--------       [Application Data*]
+         (end_of_early_data)
          {Finished}              --------&gt;
 
          [Application Data]      &lt;-------&gt;        [Application Data]
@@ -1609,7 +1609,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.4.2.8.p.3">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.8.2</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
 <p id="rfc.section.4.2.8.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.8.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys. After all the 0-RTT application data messages (if any) have been sent, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; is sent to indicate the end of the flight.  0-RTT MUST always be followed by an &#8220;end_of_early_data&#8221; alert, which will be encrypted with the 0-RTT traffic keys.</p>
+<p id="rfc.section.4.2.8.p.5">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys.  After receiving the server&#8217;s Finished message, if the server has accepted early data, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; MUST be sent to indicate the key change. This message will be encrypted with the 0-RTT traffic keys.</p>
 <p id="rfc.section.4.2.8.p.6">A server which receives an &#8220;early_data&#8221; extension can behave in one of three ways:</p>
 <p/>
 
@@ -2109,7 +2109,7 @@ finished_key =
   <dt>close_notify</dt>
   <dd style="margin-left: 8">This alert notifies the recipient that the sender will not send any more messages on this connection. Any data received after a closure MUST be ignored.</dd>
   <dt>end_of_early_data</dt>
-  <dd style="margin-left: 8">This alert is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that this is the end of the flight. This alert MUST be at the warning level. Servers MUST NOT send this alert and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
+  <dd style="margin-left: 8">This alert is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that the following records are protected under handshake traffic keys. This alert MUST be at the warning level. Servers MUST NOT send this alert and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
   <dt>user_canceled</dt>
   <dd style="margin-left: 8">This alert notifies the recipient that the sender is canceling the handshake for some reason unrelated to a protocol failure. If a user cancels an operation after the handshake is complete, just closing the connection by sending a &#8220;close_notify&#8221; is more appropriate. This alert SHOULD be followed by a &#8220;close_notify&#8221;. This alert is generally a warning.</dd>
 </dl>
