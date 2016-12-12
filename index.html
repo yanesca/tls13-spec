@@ -2183,7 +2183,7 @@ finished_key =
 <h2 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#key-schedule" id="key-schedule">Key Schedule</a></h2>
 <p id="rfc.section.7.1.p.1">The TLS handshake establishes one or more input secrets which are combined to create the actual working keying material, as detailed below.  The key derivation process makes use of the HKDF-Extract and HKDF-Expand functions as defined for HKDF <a href="#RFC5869">[RFC5869]</a>, as well as the functions defined below:</p>
 <pre>
-    HKDF-Expand-Label(Secret, Label, Value, Length) =
+    HKDF-Expand-Label(Secret, Label, HashValue, Length) =
          HKDF-Expand(Secret, HkdfLabel, Length)
 
     Where HkdfLabel is specified as:
@@ -2191,14 +2191,14 @@ finished_key =
     struct {
         uint16 length = Length;
         opaque label&lt;10..255&gt; = "TLS 1.3, " + Label;
-        opaque value&lt;0..255&gt; = Value;
+        opaque hash_value&lt;0..255&gt; = HashValue;
     } HkdfLabel;
 
     Derive-Secret(Secret, Label, Messages) =
          HKDF-Expand-Label(Secret, Label,
                            Hash(Messages), Hash.Length)
 </pre>
-<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash algorithm.  Hash.length is its output length. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers.</p>
+<p id="rfc.section.7.1.p.2">The Hash function and the HKDF hash are the cipher suite hash algorithm.  Hash.length is its output length. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers. Note that in some cases a zero-length HashValue (indicated by &#8220;&#8221;) is passed to HKDF-Expand-Label.</p>
 <p id="rfc.section.7.1.p.3">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of zeroes as long as the size of the Hash that is the basis for the HKDF. Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p/>
 
