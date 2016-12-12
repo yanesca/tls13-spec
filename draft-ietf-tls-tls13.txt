@@ -2438,10 +2438,9 @@ Internet-Draft                     TLS                     December 2016
 
       } PreSharedKeyExtension;
 
-   identities  A list of the identities (labels for keys) that the
-      client is willing to negotiate with the server.  If sent alongside
-      the "early_data" extension (see Section 4.2.8), the first identity
-      is the one used for 0-RTT data.
+   identity  A label for a key.  For instance, a ticket defined in
+      Appendix A.3.4, or a label for a pre-shraed key established
+      externally.
 
    obfuscated_ticket_age  For each ticket, the time since the client
       learned about the server configuration that it is using, in
@@ -2454,9 +2453,10 @@ Internet-Draft                     TLS                     December 2016
       tickets SHOULD use an obfuscated_ticket_age of 0; servers MUST
       ignore this value for external tickets.
 
-   binders  A series of HMAC values, one for each PSK offered in the
-      "pre_shared_keys" extension and in the same order, computed as
-      described below.
+   identities  A list of the identities that the client is willing to
+      negotiate with the server.  If sent alongside the "early_data"
+      extension (see Section 4.2.8), the first identity is the one used
+      for 0-RTT data.
 
 
 
@@ -2465,6 +2465,10 @@ Rescorla                  Expires June 15, 2017                [Page 44]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   binders  A series of HMAC values, one for each PSK offered in the
+      "pre_shared_keys" extension and in the same order, computed as
+      described below.
 
    selected_identity  The server's chosen identity expressed as a
       (0-based) index into the identities in the client's list.
@@ -2510,10 +2514,6 @@ Internet-Draft                     TLS                     December 2016
    over the portion of the ClientHello up to and including the
    PreSharedKeyExtension.identities field.  That is, it includes all of
    the ClientHello but not the binder list itself.  The length fields
-   for the message (including the overall length, the length of the
-   extensions block, and the length of the "pre_shared_key" extension)
-   are all set as if the binder were present.
-
 
 
 
@@ -2521,6 +2521,10 @@ Rescorla                  Expires June 15, 2017                [Page 45]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   for the message (including the overall length, the length of the
+   extensions block, and the length of the "pre_shared_key" extension)
+   are all set as if the binder were present.
 
    The binding_value is computed in the same way as the Finished message
    (Section 4.4.3) but with the BaseKey being the binder_key (see
@@ -2567,16 +2571,15 @@ Internet-Draft                     TLS                     December 2016
           PskKeyExchangeMode ke_modes<1..255>;
       } PskKeyExchangeModes;
 
-   psk_ke  PSK-only key establishment.  In this mode, the server MUST
-      NOT supply a "key_share" value.
-
-
 
 
 Rescorla                  Expires June 15, 2017                [Page 46]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   psk_ke  PSK-only key establishment.  In this mode, the server MUST
+      NOT supply a "key_share" value.
 
    psk_dhe_ke  PSK with (EC)DHE key establishment.  In this mode, the
       client and servers MUST supply "key_share" values as described in
@@ -2624,9 +2627,6 @@ Internet-Draft                     TLS                     December 2016
       able to receive the client's second flight and complete an
       ordinary 1-RTT handshake.
 
-   -  Request that the client send another ClientHello by responding
-      with a HelloRetryRequest.  A client MUST NOT include the
-
 
 
 Rescorla                  Expires June 15, 2017                [Page 47]
@@ -2634,6 +2634,8 @@ Rescorla                  Expires June 15, 2017                [Page 47]
 Internet-Draft                     TLS                     December 2016
 
 
+   -  Request that the client send another ClientHello by responding
+      with a HelloRetryRequest.  A client MUST NOT include the
       "early_data" extension in its followup ClientHello.  The server
       then ignores early data by skipping all records with external
       content type of "application_data" (indicating that they are
@@ -2680,8 +2682,6 @@ Internet-Draft                     TLS                     December 2016
    automatically re-send early data unless the negotiated connection
    selects the same ALPN protocol.  An application might need to
    construct different messages if a different protocol is selected.
-   Similarly, if early data assumes anything about the connection state,
-   it might be sent in error after the handshake completes.
 
 
 
@@ -2689,6 +2689,9 @@ Rescorla                  Expires June 15, 2017                [Page 48]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   Similarly, if early data assumes anything about the connection state,
+   it might be sent in error after the handshake completes.
 
 4.2.8.1.  Processing Order
 
@@ -2735,9 +2738,6 @@ Internet-Draft                     TLS                     December 2016
    There are several potential sources of error that make an exact
    measurement of time difficult.  Variations in client and server
    clocks are likely to be minimal, outside of gross time corrections.
-   Network propagation delays are most likely causes of a mismatch in
-   legitimate values for elapsed time.  Both the NewSessionTicket and
-
 
 
 
@@ -2746,6 +2746,8 @@ Rescorla                  Expires June 15, 2017                [Page 49]
 Internet-Draft                     TLS                     December 2016
 
 
+   Network propagation delays are most likely causes of a mismatch in
+   legitimate values for elapsed time.  Both the NewSessionTicket and
    ClientHello messages might be retransmitted and therefore delayed,
    which might be hidden by TCP.
 
@@ -2793,14 +2795,14 @@ Internet-Draft                     TLS                     December 2016
    request a certificate from the client.  This message, if sent, will
    follow EncryptedExtensions.
 
-   Structure of this message:
-
 
 
 Rescorla                  Expires June 15, 2017                [Page 50]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   Structure of this message:
 
       opaque DistinguishedName<1..2^16-1>;
 
@@ -2848,8 +2850,6 @@ Internet-Draft                     TLS                     December 2016
       non-empty certificate_extensions list, the client certificate MUST
       contain all of the specified extension OIDs that the client
       recognizes.  For each extension OID recognized by the client, all
-      of the specified values MUST be present in the client certificate
-      (but the certificate MAY have other values as well).  However, the
 
 
 
@@ -2858,6 +2858,8 @@ Rescorla                  Expires June 15, 2017                [Page 51]
 Internet-Draft                     TLS                     December 2016
 
 
+      of the specified values MUST be present in the client certificate
+      (but the certificate MAY have other values as well).  However, the
       client MUST ignore and skip any unrecognized certificate extension
       OIDs.  If the client has ignored some of the required certificate
       extension OIDs, and supplied a certificate that does not satisfy
@@ -2903,8 +2905,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  The certificate and signing key to be used.
 
-   -  A Handshake Context based on the transcript of the handshake
-      messages
 
 
 
@@ -2913,6 +2913,9 @@ Rescorla                  Expires June 15, 2017                [Page 52]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  A Handshake Context based on the transcript of the handshake
+      messages
 
    -  A base key to be used to compute a MAC key.
 
@@ -2957,9 +2960,6 @@ Internet-Draft                     TLS                     December 2016
    In all cases, the handshake context is formed by concatenating the
    indicated handshake messages, including the handshake message type
    and length fields, but not including record layer headers.
-
-
-
 
 
 

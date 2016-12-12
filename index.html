@@ -1555,10 +1555,12 @@ Subsequent Handshake:
 <p/>
 
 <dl>
-  <dt>identities</dt>
-  <dd style="margin-left: 8">A list of the identities (labels for keys) that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.8</a>), the first identity is the one used for 0-RTT data.</dd>
+  <dt>identity</dt>
+  <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix A.3.4</a>, or a label for a pre-shraed key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
   <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. External tickets SHOULD use an obfuscated_ticket_age of 0; servers MUST ignore this value for external tickets.</dd>
+  <dt>identities</dt>
+  <dd style="margin-left: 8">A list of the identities that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.8</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>binders</dt>
   <dd style="margin-left: 8">A series of HMAC values, one for each PSK offered in the &#8220;pre_shared_keys&#8221; extension and in the same order, computed as described below.</dd>
   <dt>selected_identity</dt>
