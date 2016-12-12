@@ -309,7 +309,10 @@ Internet-Draft                     TLS                     December 2016
    -  Restructure CertificateRequest to have the selectors in
       extensions.  This also allowed defining a
       "certificate_authorities" extension which can be used by the
-      client instead of trusted_ca_keys.
+      client instead of trusted_ca_keys (*).
+
+   -  Tighten record framing requirements and require checking of them
+      (*).
 
    -  Remove spurious requirement to implement "pre_shared_key".
 
@@ -328,15 +331,15 @@ Internet-Draft                     TLS                     December 2016
 
    draft-17
 
-   -  Remove 0-RTT Finished and resumption_context, and replace with a
-      psk_binder field in the PSK itself (*)
-
 
 
 Rescorla                  Expires June 15, 2017                 [Page 6]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Remove 0-RTT Finished and resumption_context, and replace with a
+      psk_binder field in the PSK itself (*)
 
    -  Restructure PSK key exchange negotiation modes (*)
 
@@ -384,15 +387,14 @@ Internet-Draft                     TLS                     December 2016
 
    -  Forbid CertificateRequest with 0-RTT and PSK.
 
-   -  Relax requirement to check SNI for 0-RTT.
-
-
 
 
 Rescorla                  Expires June 15, 2017                 [Page 7]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Relax requirement to check SNI for 0-RTT.
 
    draft-15
 
@@ -441,14 +443,14 @@ Internet-Draft                     TLS                     December 2016
    -  Remove non-closure warning alerts.  Require treating unknown
       alerts as fatal.
 
-   -  Make the rules for accepting 0-RTT less restrictive.
-
 
 
 Rescorla                  Expires June 15, 2017                 [Page 8]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Make the rules for accepting 0-RTT less restrictive.
 
    -  Clarify 0-RTT backward-compatibility rules.
 
@@ -495,8 +497,6 @@ Internet-Draft                     TLS                     December 2016
    -  Clarify that the server can send application data after its first
       flight (0.5 RTT data)
 
-   -  Revise signature algorithm negotiation to group hash, signature
-      algorithm, and curve together.  This is backwards compatible.
 
 
 
@@ -505,6 +505,9 @@ Rescorla                  Expires June 15, 2017                 [Page 9]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Revise signature algorithm negotiation to group hash, signature
+      algorithm, and curve together.  This is backwards compatible.
 
    -  Make ticket lifetime mandatory and limit it to a week.
 
@@ -550,10 +553,7 @@ Internet-Draft                     TLS                     December 2016
 
    -  Remove support for DSA.
 
-   -  Update key schedule per suggestions by Hugo, Hoeteck, and Bjoern
-      Tackmann.
 
-   -  Add support for per-record padding.
 
 
 
@@ -561,6 +561,11 @@ Rescorla                  Expires June 15, 2017                [Page 10]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Update key schedule per suggestions by Hugo, Hoeteck, and Bjoern
+      Tackmann.
+
+   -  Add support for per-record padding.
 
    -  Switch to encrypted record ContentType.
 
@@ -606,17 +611,16 @@ Internet-Draft                     TLS                     December 2016
 
    -  Move ClientKeyShare into an extension.
 
-   -  Move to HKDF.
-
-   draft-06
-
-
 
 
 Rescorla                  Expires June 15, 2017                [Page 11]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Move to HKDF.
+
+   draft-06
 
    -  Prohibit RC4 negotiation for backwards compatibility.
 
@@ -663,16 +667,16 @@ Internet-Draft                     TLS                     December 2016
 
    -  Increment version number.
 
-   -  Rework handshake to provide 1-RTT mode.
-
-   -  Remove custom DHE groups.
-
 
 
 Rescorla                  Expires June 15, 2017                [Page 12]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Rework handshake to provide 1-RTT mode.
+
+   -  Remove custom DHE groups.
 
    -  Remove support for compression.
 
@@ -717,10 +721,6 @@ Internet-Draft                     TLS                     December 2016
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
 
 
 

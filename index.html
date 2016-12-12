@@ -594,7 +594,8 @@ address {
 
 <ul>
   <li>Hash context_value input to Exporters (*).</li>
-  <li>Restructure CertificateRequest to have the selectors in extensions. This also allowed defining a &#8220;certificate_authorities&#8221; extension which can be used by the client instead of trusted_ca_keys.</li>
+  <li>Restructure CertificateRequest to have the selectors in extensions. This also allowed defining a &#8220;certificate_authorities&#8221; extension which can be used by the client instead of trusted_ca_keys (*).</li>
+  <li>Tighten record framing requirements and require checking of them (*).</li>
   <li>Remove spurious requirement to implement &#8220;pre_shared_key&#8221;.</li>
   <li>Clarify location of &#8220;early_data&#8221; from server (it goes in EE, as indicated by the table in S 10).</li>
 </ul>
