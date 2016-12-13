@@ -6516,6 +6516,10 @@ Internet-Draft                     TLS                     December 2016
       Google
       agl@google.com
 
+   -  Olivier Levillain
+      ANSSI
+      olivier.levillain@ssi.gouv.fr
+
    -  Xiaoyin Liu
       University of North Carolina at Chapel Hill
       xiaoyin.l@outlook.com
@@ -6542,10 +6546,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Kazuho Oku
       DeNA Co., Ltd.
-      kazuhooku@gmail.com
-
-   -  Alfredo Pironti (co-author of [RFC7627])
-      INRIA
 
 
 
@@ -6554,6 +6554,10 @@ Rescorla                  Expires June 16, 2017               [Page 117]
 Internet-Draft                     TLS                     December 2016
 
 
+      kazuhooku@gmail.com
+
+   -  Alfredo Pironti (co-author of [RFC7627])
+      INRIA
       alfredo.pironti@inria.fr
 
    -  Andrei Popov
@@ -6598,10 +6602,6 @@ Internet-Draft                     TLS                     December 2016
       Cloudflare Inc.
       filippo@cloudflare.com
 
-   -  Tom Weinstein
-
-   -  Hoeteck Wee
-      Ecole Normale Superieure, Paris
 
 
 
@@ -6610,6 +6610,10 @@ Rescorla                  Expires June 16, 2017               [Page 118]
 Internet-Draft                     TLS                     December 2016
 
 
+   -  Tom Weinstein
+
+   -  Hoeteck Wee
+      Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
 
    -  Tim Wright
@@ -6630,10 +6634,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
