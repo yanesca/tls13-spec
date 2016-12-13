@@ -1579,7 +1579,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>identity</dt>
-  <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix A.3.4</a>, or a label for a pre-shraed key established externally.</dd>
+  <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix A.3.4</a>, or a label for a pre-shared key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
   <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
   <dt>identities</dt>
@@ -3731,6 +3731,6 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
   </address>
 </div>
 
-  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/{SLUG}">Fork me on GitHub</a></div></div>
+  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/tlswg/tls13-spec">Fork me on GitHub</a></div></div>
 </body>
 </html>

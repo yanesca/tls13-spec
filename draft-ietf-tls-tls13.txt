@@ -2495,7 +2495,7 @@ Internet-Draft                     TLS                     December 2016
       } PreSharedKeyExtension;
 
    identity  A label for a key.  For instance, a ticket defined in
-      Appendix A.3.4, or a label for a pre-shraed key established
+      Appendix A.3.4, or a label for a pre-shared key established
       externally.
 
    obfuscated_ticket_age  For each ticket, the time since the client
