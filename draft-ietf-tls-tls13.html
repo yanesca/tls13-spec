@@ -317,10 +317,11 @@ address {
 <link href="#rfc.section.4.4.1" rel="Chapter" title="4.4.1 Certificate"/>
 <link href="#rfc.section.4.4.2" rel="Chapter" title="4.4.2 Certificate Verify"/>
 <link href="#rfc.section.4.4.3" rel="Chapter" title="4.4.3 Finished"/>
-<link href="#rfc.section.4.5" rel="Chapter" title="4.5 Post-Handshake Messages"/>
-<link href="#rfc.section.4.5.1" rel="Chapter" title="4.5.1 New Session Ticket Message"/>
-<link href="#rfc.section.4.5.2" rel="Chapter" title="4.5.2 Post-Handshake Authentication"/>
-<link href="#rfc.section.4.5.3" rel="Chapter" title="4.5.3 Key and IV Update"/>
+<link href="#rfc.section.4.5" rel="Chapter" title="4.5 End of Early Data"/>
+<link href="#rfc.section.4.6" rel="Chapter" title="4.6 Post-Handshake Messages"/>
+<link href="#rfc.section.4.6.1" rel="Chapter" title="4.6.1 New Session Ticket Message"/>
+<link href="#rfc.section.4.6.2" rel="Chapter" title="4.6.2 Post-Handshake Authentication"/>
+<link href="#rfc.section.4.6.3" rel="Chapter" title="4.6.3 Key and IV Update"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Record Protocol"/>
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Record Layer"/>
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Record Payload Protection"/>
@@ -494,10 +495,11 @@ address {
 <ul><li>4.4.1.   <a href="#rfc.section.4.4.1">Certificate</a></li>
 <li>4.4.2.   <a href="#rfc.section.4.4.2">Certificate Verify</a></li>
 <li>4.4.3.   <a href="#rfc.section.4.4.3">Finished</a></li>
-</ul><li>4.5.   <a href="#rfc.section.4.5">Post-Handshake Messages</a></li>
-<ul><li>4.5.1.   <a href="#rfc.section.4.5.1">New Session Ticket Message</a></li>
-<li>4.5.2.   <a href="#rfc.section.4.5.2">Post-Handshake Authentication</a></li>
-<li>4.5.3.   <a href="#rfc.section.4.5.3">Key and IV Update</a></li>
+</ul><li>4.5.   <a href="#rfc.section.4.5">End of Early Data</a></li>
+<li>4.6.   <a href="#rfc.section.4.6">Post-Handshake Messages</a></li>
+<ul><li>4.6.1.   <a href="#rfc.section.4.6.1">New Session Ticket Message</a></li>
+<li>4.6.2.   <a href="#rfc.section.4.6.2">Post-Handshake Authentication</a></li>
+<li>4.6.3.   <a href="#rfc.section.4.6.3">Key and IV Update</a></li>
 </ul></ul><li>5.   <a href="#rfc.section.5">Record Protocol</a></li>
 <ul><li>5.1.   <a href="#rfc.section.5.1">Record Layer</a></li>
 <li>5.2.   <a href="#rfc.section.5.2">Record Payload Protection</a></li>
@@ -597,6 +599,7 @@ address {
   <li>Restructure CertificateRequest to have the selectors in extensions. This also allowed defining a &#8220;certificate_authorities&#8221; extension which can be used by the client instead of trusted_ca_keys (*).</li>
   <li>Tighten record framing requirements and require checking of them (*).</li>
   <li>Consolidate &#8220;ticket_early_data_info&#8221; and &#8220;early_data&#8221; into a single extension (*).</li>
+  <li>Change end_of_early_data to be a handshake message (*).</li>
   <li>Remove spurious requirement to implement &#8220;pre_shared_key&#8221;.</li>
   <li>Clarify location of &#8220;early_data&#8221; from server (it goes in EE, as indicated by the table in S 10).</li>
 </ul>
@@ -924,7 +927,7 @@ Auth | {CertificateVerify*}
 <p id="rfc.section.2.1.p.2">Note: The handshake transcript includes the initial ClientHello/HelloRetryRequest exchange; it is not reset with the new ClientHello.</p>
 <p id="rfc.section.2.1.p.3">TLS also allows several optimized variants of the basic handshake, as described in the following sections.</p>
 <h2 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#resumption-and-psk" id="resumption-and-psk">Resumption and Pre-Shared Key (PSK)</a></h2>
-<p id="rfc.section.2.2.p.1">Although TLS PSKs can be established out of band, PSKs can also be established in a previous session and then reused (&#8220;session resumption&#8221;). Once a handshake has completed, the server can send the client a PSK identity that corresponds to a key derived from the initial handshake (see <a href="#NewSessionTicket">Section 4.5.1</a>). The client can then use that PSK identity in future handshakes to negotiate use of the PSK. If the server accepts it, then the security context of the new connection is tied to the original connection and the key derived from the initial handshake is used to bootstrap the cryptographic state instead of a full hanshake. In TLS 1.2 and below, this functionality was provided by &#8220;session IDs&#8221; and &#8220;session tickets&#8221; <a href="#RFC5077">[RFC5077]</a>. Both mechanisms are obsoleted in TLS 1.3.</p>
+<p id="rfc.section.2.2.p.1">Although TLS PSKs can be established out of band, PSKs can also be established in a previous session and then reused (&#8220;session resumption&#8221;). Once a handshake has completed, the server can send the client a PSK identity that corresponds to a key derived from the initial handshake (see <a href="#NewSessionTicket">Section 4.6.1</a>). The client can then use that PSK identity in future handshakes to negotiate use of the PSK. If the server accepts it, then the security context of the new connection is tied to the original connection and the key derived from the initial handshake is used to bootstrap the cryptographic state instead of a full hanshake. In TLS 1.2 and below, this functionality was provided by &#8220;session IDs&#8221; and &#8220;session tickets&#8221; <a href="#RFC5077">[RFC5077]</a>. Both mechanisms are obsoleted in TLS 1.3.</p>
 <p id="rfc.section.2.2.p.2">PSKs can be used with (EC)DHE key exchange in order to provide forward secrecy in combination with shared keys, or can be used alone, at the cost of losing forward secrecy.</p>
 <p><a href="#tls-resumption-psk">Figure 3</a> shows a pair of handshakes in which the first establishes a PSK and the second uses it:</p>
 <div id="rfc.figure.3"/>
@@ -995,7 +998,7 @@ Subsequent Handshake:
                                                {EncryptedExtensions}
                                                           {Finished}
                                  &lt;--------       [Application Data*]
-         (end_of_early_data)
+         (EndOfEarlyData)
          {Finished}              --------&gt;
 
          [Application Data]      &lt;-------&gt;        [Application Data]
@@ -1162,6 +1165,7 @@ Subsequent Handshake:
        client_hello(1),
        server_hello(2),
        new_session_ticket(4),
+       end_of_early_data(5),
        hello_retry_request(6),
        encrypted_extensions(8),
        certificate(11),
@@ -1178,6 +1182,7 @@ Subsequent Handshake:
        select (Handshake.msg_type) {
            case client_hello:          ClientHello;
            case server_hello:          ServerHello;
+           case end_of_early_data:     EndOfEarlyData;
            case hello_retry_request:   HelloRetryRequest;
            case encrypted_extensions:  EncryptedExtensions;
            case certificate_request:   CertificateRequest;
@@ -1589,7 +1594,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.7.p.3">See <a href="#ticket-establishment">Appendix A.3.4</a> for the use of the max_early_data_size field.</p>
 <p id="rfc.section.4.2.7.p.4">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by un-masking PskIdentity.obfuscated_ticket_age) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.8.3</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
 <p id="rfc.section.4.2.7.p.5">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.7.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys.  After receiving the server&#8217;s Finished message, if the server has accepted early data, an &#8220;end_of_early_data&#8221; alert of type &#8220;warning&#8221; MUST be sent to indicate the key change. This message will be encrypted with the 0-RTT traffic keys.</p>
+<p id="rfc.section.4.2.7.p.6">0-RTT messages sent in the first flight have the same content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys.  After receiving the server&#8217;s Finished message, if the server has accepted early data, an EndOfEarlyData message will be sent to indicate the key change. This message will be encrypted with the 0-RTT traffic keys.</p>
 <p id="rfc.section.4.2.7.p.7">A server which receives an &#8220;early_data&#8221; extension can behave in one of three ways:</p>
 <p/>
 
@@ -1638,7 +1643,7 @@ Subsequent Handshake:
   <dt>identity</dt>
   <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix A.3.4</a>, or a label for a pre-shared key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
-  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.5.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
+  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.6.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
   <dt>identities</dt>
   <dd style="margin-left: 8">A list of the identities that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.7</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>binders</dt>
@@ -1646,7 +1651,7 @@ Subsequent Handshake:
   <dt>selected_identity</dt>
   <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identities in the client&#8217;s list.</dd>
 </dl>
-<p id="rfc.section.4.2.8.p.4">Each PSK is associated with a single Hash algorithm. For PSKs established via the ticket mechanism (<a href="#NewSessionTicket">Section 4.5.1</a>), this is the Hash used for the KDF. For externally established PSKs, the Hash algorithm MUST be set when the PSK is established.</p>
+<p id="rfc.section.4.2.8.p.4">Each PSK is associated with a single Hash algorithm. For PSKs established via the ticket mechanism (<a href="#NewSessionTicket">Section 4.6.1</a>), this is the Hash used for the KDF. For externally established PSKs, the Hash algorithm MUST be set when the PSK is established.</p>
 <p id="rfc.section.4.2.8.p.5">Prior to accepting PSK key establishment, the server MUST validate the corresponding binder value (see <a href="#psk-binder">Section 4.2.8.1</a> below). If this value is not present or does not validate, the server MUST abort the handshake.  Servers SHOULD NOT attempt to validate multiple binders; rather they SHOULD select a single PSK and validate solely the binder that corresponds to that PSK. In order to accept PSK key establishment, the server sends a &#8220;pre_shared_key&#8221; extension indicating the selected identity.</p>
 <p id="rfc.section.4.2.8.p.6">Clients MUST verify that the server&#8217;s selected_identity is within the range supplied by the client, that the server selected a cipher suite containing a Hash associated with the PSK, and that the &#8220;key_share&#8221;, and &#8220;signature_algorithms&#8221; extensions are consistent with the indicated ke_modes and auth_modes values. If these values are not consistent, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.2.8.p.7">If the server supplies an &#8220;early_data&#8221; extension, the client MUST verify that the server&#8217;s selected_identity is 0. If any other value is returned, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
@@ -1664,7 +1669,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.4.2.8.1.p.5">The full ClientHello is included in all other handshake hash computations.</p>
 <h4 id="rfc.section.4.2.8.2"><a href="#rfc.section.4.2.8.2">4.2.8.2.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
-<p id="rfc.section.4.2.8.2.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the &#8220;end_of_early_data&#8221; alert. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s &#8220;end_of_early_data&#8221; alert.</p>
+<p id="rfc.section.4.2.8.2.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the EndOfEarlyData message. In order to avoid deadlock, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s EndOfEarlyData message.</p>
 <h4 id="rfc.section.4.2.8.3"><a href="#rfc.section.4.2.8.3">4.2.8.3.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
 <p id="rfc.section.4.2.8.3.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.</p>
 <p id="rfc.section.4.2.8.3.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a session ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;pre_shared_key&#8221; extension, it can subtract the base value and check to see if the value used by the client matches its expectations.</p>
@@ -1708,7 +1713,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>certificate_request_context</dt>
-  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.5.2</a>.</dd>
+  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.6.2</a>.</dd>
   <dt>extensions</dt>
   <dd style="margin-left: 8">An optional set of extensions describing the parameters of the certificate being requested. The &#8220;signature_algorithms&#8221; extension MUST be specified.</dd>
 </dl>
@@ -1919,13 +1924,18 @@ finished_key =
 <p id="rfc.section.4.4.3.p.7">In previous versions of TLS, the verify_data was always 12 octets long. In the current version of TLS, it is the size of the HMAC output for the Hash used for the handshake.</p>
 <p id="rfc.section.4.4.3.p.8">Note: Alerts and any other record types are not handshake messages and are not included in the hash computations.</p>
 <p id="rfc.section.4.4.3.p.9">Any records following a 1-RTT Finished message MUST be encrypted under the application traffic key. In particular, this includes any alerts sent by the server in response to client Certificate and CertificateVerify messages.</p>
-<h2 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a> <a href="#post-handshake-messages" id="post-handshake-messages">Post-Handshake Messages</a></h2>
-<p id="rfc.section.4.5.p.1">TLS also allows other messages to be sent after the main handshake.  These messages use a handshake content type and are encrypted under the application traffic key.</p>
-<h3 id="rfc.section.4.5.1"><a href="#rfc.section.4.5.1">4.5.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
-<p id="rfc.section.4.5.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the resumption master secret.</p>
-<p id="rfc.section.4.5.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.8</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.</p>
-<p id="rfc.section.4.5.1.p.3">Any ticket MUST only be resumed with a cipher suite that has the same KDF hash as that used to establish the original connection, and if the client provides the same SNI value as described in Section 3 of <a href="#RFC6066">[RFC6066]</a>.</p>
-<p id="rfc.section.4.5.1.p.4">Note: Although the resumption master secret depends on the client&#8217;s second flight, servers which do not request client authentication MAY compute the remainder of the transcript independently and then send a NewSessionTicket immediately upon sending its Finished rather than waiting for the client Finished.</p>
+<h2 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a> <a href="#end-of-early-data" id="end-of-early-data">End of Early Data</a></h2>
+<pre>
+   struct {} EndOfEarlyData;
+</pre>
+<p id="rfc.section.4.5.p.1">The EndOfEarlyData message is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that the following records are protected under handshake traffic keys. Servers MUST NOT send this message and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
+<h2 id="rfc.section.4.6"><a href="#rfc.section.4.6">4.6.</a> <a href="#post-handshake-messages" id="post-handshake-messages">Post-Handshake Messages</a></h2>
+<p id="rfc.section.4.6.p.1">TLS also allows other messages to be sent after the main handshake.  These messages use a handshake content type and are encrypted under the application traffic key.</p>
+<h3 id="rfc.section.4.6.1"><a href="#rfc.section.4.6.1">4.6.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
+<p id="rfc.section.4.6.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the resumption master secret.</p>
+<p id="rfc.section.4.6.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension">Section 4.2.8</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.</p>
+<p id="rfc.section.4.6.1.p.3">Any ticket MUST only be resumed with a cipher suite that has the same KDF hash as that used to establish the original connection, and if the client provides the same SNI value as described in Section 3 of <a href="#RFC6066">[RFC6066]</a>.</p>
+<p id="rfc.section.4.6.1.p.4">Note: Although the resumption master secret depends on the client&#8217;s second flight, servers which do not request client authentication MAY compute the remainder of the transcript independently and then send a NewSessionTicket immediately upon sending its Finished rather than waiting for the client Finished.</p>
 <pre>
    struct {
        uint32 ticket_lifetime;
@@ -1946,17 +1956,17 @@ finished_key =
   <dt>extensions</dt>
   <dd style="margin-left: 8">A set of extension values for the ticket. The &#8220;Extension&#8221; format is defined in <a href="#extensions">Section 4.2</a>. Clients MUST ignore unrecognized extensions.</dd>
 </dl>
-<p id="rfc.section.4.5.1.p.6">The sole extension currently defined for NewSessionTicket is &#8220;early_data&#8221;, indicating that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.7</a>)). It contains the following value:</p>
+<p id="rfc.section.4.6.1.p.6">The sole extension currently defined for NewSessionTicket is &#8220;early_data&#8221;, indicating that the ticket may be used to send 0-RTT data (<a href="#early-data-indication">Section 4.2.7</a>)). It contains the following value:</p>
 <p/>
 
 <dl>
   <dt>max_early_data_size</dt>
   <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
 </dl>
-<h3 id="rfc.section.4.5.2"><a href="#rfc.section.4.5.2">4.5.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h3>
-<p id="rfc.section.4.5.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.</p>
-<p id="rfc.section.4.5.2.p.2">Note: Because client authentication may require prompting the user, servers MUST be prepared for some delay, including receiving an arbitrary number of other messages between sending the CertificateRequest and receiving a response. In addition, clients which receive multiple CertificateRequests in close succession MAY respond to them in a different order than they were received (the certificate_request_context value allows the server to disambiguate the responses).</p>
-<h3 id="rfc.section.4.5.3"><a href="#rfc.section.4.5.3">4.5.3.</a> <a href="#key-update" id="key-update">Key and IV Update</a></h3>
+<h3 id="rfc.section.4.6.2"><a href="#rfc.section.4.6.2">4.6.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h3>
+<p id="rfc.section.4.6.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.</p>
+<p id="rfc.section.4.6.2.p.2">Note: Because client authentication may require prompting the user, servers MUST be prepared for some delay, including receiving an arbitrary number of other messages between sending the CertificateRequest and receiving a response. In addition, clients which receive multiple CertificateRequests in close succession MAY respond to them in a different order than they were received (the certificate_request_context value allows the server to disambiguate the responses).</p>
+<h3 id="rfc.section.4.6.3"><a href="#rfc.section.4.6.3">4.6.3.</a> <a href="#key-update" id="key-update">Key and IV Update</a></h3>
 <pre>
    enum {
        update_not_requested(0), update_requested(1), (255)
@@ -1972,10 +1982,10 @@ finished_key =
   <dt>request_update</dt>
   <dd style="margin-left: 8">Indicates that the recipient of the KeyUpdate should respond with its own KeyUpdate. If an implementation receives any other value, it MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</dd>
 </dl>
-<p id="rfc.section.4.5.3.p.2">The KeyUpdate handshake message is used to indicate that the sender is updating its sending cryptographic keys. This message can be sent by the server after sending its first flight and the client after sending its second flight. Implementations that receive a KeyUpdate message prior to receiving a Finished message as part of the 1-RTT handshake MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.  After sending a KeyUpdate message, the sender SHALL send all its traffic using the next generation of keys, computed as described in <a href="#updating-traffic-keys">Section 7.2</a>. Upon receiving a KeyUpdate, the receiver MUST update its receiving keys.</p>
-<p id="rfc.section.4.5.3.p.3">If the request_update field is set to &#8220;update_requested&#8221; then the receiver MUST send a KeyUpdate of its own with request_update set to &#8220;update_not_requested&#8221; prior to sending its next application data record. This mechanism allows either side to force an update to the entire connection, but causes an implementation which receives multiple KeyUpdates while it is silent to respond with a single update. Note that implementations may receive an arbitrary number of messages between sending a KeyUpdate and receiving the peer&#8217;s KeyUpdate because those messages may already be in flight.  However, because send and receive keys are derived from independent traffic secrets, retaining the receive traffic secret does not threaten the forward secrecy of data sent before the sender changed keys.</p>
-<p id="rfc.section.4.5.3.p.4">If implementations independently send their own KeyUpdates with request_update set to &#8220;update_requested&#8221;, and they cross in flight, then each side will also send a response, with the result that each side increments by two generations.</p>
-<p id="rfc.section.4.5.3.p.5">Both sender and receiver MUST encrypt their KeyUpdate messages with the old keys. Additionally, both sides MUST enforce that a KeyUpdate with the old key is received before accepting any messages encrypted with the new key. Failure to do so may allow message truncation attacks.</p>
+<p id="rfc.section.4.6.3.p.2">The KeyUpdate handshake message is used to indicate that the sender is updating its sending cryptographic keys. This message can be sent by the server after sending its first flight and the client after sending its second flight. Implementations that receive a KeyUpdate message prior to receiving a Finished message as part of the 1-RTT handshake MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.  After sending a KeyUpdate message, the sender SHALL send all its traffic using the next generation of keys, computed as described in <a href="#updating-traffic-keys">Section 7.2</a>. Upon receiving a KeyUpdate, the receiver MUST update its receiving keys.</p>
+<p id="rfc.section.4.6.3.p.3">If the request_update field is set to &#8220;update_requested&#8221; then the receiver MUST send a KeyUpdate of its own with request_update set to &#8220;update_not_requested&#8221; prior to sending its next application data record. This mechanism allows either side to force an update to the entire connection, but causes an implementation which receives multiple KeyUpdates while it is silent to respond with a single update. Note that implementations may receive an arbitrary number of messages between sending a KeyUpdate and receiving the peer&#8217;s KeyUpdate because those messages may already be in flight.  However, because send and receive keys are derived from independent traffic secrets, retaining the receive traffic secret does not threaten the forward secrecy of data sent before the sender changed keys.</p>
+<p id="rfc.section.4.6.3.p.4">If implementations independently send their own KeyUpdates with request_update set to &#8220;update_requested&#8221;, and they cross in flight, then each side will also send a response, with the result that each side increments by two generations.</p>
+<p id="rfc.section.4.6.3.p.5">Both sender and receiver MUST encrypt their KeyUpdate messages with the old keys. Additionally, both sides MUST enforce that a KeyUpdate with the old key is received before accepting any messages encrypted with the new key. Failure to do so may allow message truncation attacks.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#record-protocol" id="record-protocol">Record Protocol</a></h1>
 <p id="rfc.section.5.p.1">The TLS record protocol takes messages to be transmitted, fragments the data into manageable blocks, protects the records, and transmits the result. Received data is decrypted and verified, reassembled, and then delivered to higher-level clients.</p>
 <p id="rfc.section.5.p.2">TLS records are typed, which allows multiple higher level protocols to be multiplexed over the same record layer. This document specifies three content types: handshake, application data, and alert.  Implementations MUST NOT send record types not defined in this document unless negotiated by some extension. If a TLS implementation receives an unexpected record type, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.  New record content type values are assigned by IANA in the TLS Content Type Registry as described in <a href="#iana-considerations">Section 10</a>.</p>
@@ -2071,7 +2081,7 @@ finished_key =
 <h2 id="rfc.section.5.3"><a href="#rfc.section.5.3">5.3.</a> <a href="#nonce" id="nonce">Per-Record Nonce</a></h2>
 <p id="rfc.section.5.3.p.1">A 64-bit sequence number is maintained separately for reading and writing records.  Each sequence number is set to zero at the beginning of a connection and whenever the key is changed.</p>
 <p id="rfc.section.5.3.p.2">The sequence number is incremented by one after reading or writing each record.  The first record transmitted under a particular set of traffic keys MUST use sequence number 0.</p>
-<p id="rfc.section.5.3.p.3">Because the size of sequence numbers is 64-bit, they should not wrap. If a TLS implementation would need to wrap a sequence number, it MUST either rekey (<a href="#key-update">Section 4.5.3</a>) or terminate the connection.</p>
+<p id="rfc.section.5.3.p.3">Because the size of sequence numbers is 64-bit, they should not wrap. If a TLS implementation would need to wrap a sequence number, it MUST either rekey (<a href="#key-update">Section 4.6.3</a>) or terminate the connection.</p>
 <p id="rfc.section.5.3.p.4">The length of the per-record nonce (iv_length) is set to the larger of 8 bytes and N_MIN for the AEAD algorithm (see <a href="#RFC5116">[RFC5116]</a> Section 4). An AEAD algorithm where N_MAX is less than 8 bytes MUST NOT be used with TLS.  The per-record nonce for the AEAD construction is formed as follows:</p>
 <p/>
 
@@ -2090,7 +2100,7 @@ finished_key =
 <p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic, and is beyond the scope of this specification. If the application layer protocol atop TLS has its own padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms, or define a padding policy request mechanism through TLS extensions or some other means.</p>
 <h2 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a></h2>
-<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys.  <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> provides an analysis of these limits under the assumption that the underlying primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD do a key update <a href="#key-update">Section 4.5.3</a> prior to reaching these limits.</p>
+<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys.  <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> provides an analysis of these limits under the assumption that the underlying primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD do a key update <a href="#key-update">Section 4.6.3</a> prior to reaching these limits.</p>
 <p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number would wrap before the safety limit is reached.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
 <p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Like other messages, alert messages are encrypted as specified by the current connection state.</p>
@@ -2102,7 +2112,6 @@ finished_key =
 
    enum {
        close_notify(0),
-       end_of_early_data(1),
        unexpected_message(10),
        bad_record_mac(20),
        record_overflow(22),
@@ -2145,8 +2154,6 @@ finished_key =
 <dl>
   <dt>close_notify</dt>
   <dd style="margin-left: 8">This alert notifies the recipient that the sender will not send any more messages on this connection. Any data received after a closure MUST be ignored.</dd>
-  <dt>end_of_early_data</dt>
-  <dd style="margin-left: 8">This alert is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that the following records are protected under handshake traffic keys. This alert MUST be at the warning level. Servers MUST NOT send this alert and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
   <dt>user_canceled</dt>
   <dd style="margin-left: 8">This alert notifies the recipient that the sender is canceling the handshake for some reason unrelated to a protocol failure. If a user cancels an operation after the handshake is complete, just closing the connection by sending a &#8220;close_notify&#8221; is more appropriate. This alert SHOULD be followed by a &#8220;close_notify&#8221;. This alert is generally a warning.</dd>
 </dl>
@@ -2312,7 +2319,7 @@ finished_key =
 <p id="rfc.section.7.1.p.8">If a given secret is not available, then the 0-value consisting of a string of Hash.length zeroes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0). For the computation of the binder_secret, the label is &#8220;external psk binder key&#8221; for external PSKs (those provisioned outside of TLS) and &#8220;resumption psk binder key&#8221; for resumption PSKs (those provisioned as the resumption master secret of a previous handshake). The different labels prevents the substitution of one type of PSK for the other.</p>
 <p id="rfc.section.7.1.p.9">There are multiple potential Early Secret values depending on which PSK the server ultimately selects. The client will need to compute one for each potential PSK; if no PSK is selected, it will then need to compute the early secret corresponding to the zero PSK.</p>
 <h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
-<p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message defined in <a href="#key-update">Section 4.5.3</a>.  The next generation of traffic keys is computed by generating client_/server_traffic_secret_N+1 from client_/server_traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
+<p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message defined in <a href="#key-update">Section 4.6.3</a>.  The next generation of traffic keys is computed by generating client_/server_traffic_secret_N+1 from client_/server_traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
 <p id="rfc.section.7.2.p.2">The next-generation traffic_secret is computed as:</p>
 <pre>
     traffic_secret_N+1 = HKDF-Expand-Label(
@@ -2422,8 +2429,8 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <ul>
   <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix A.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</a> has been applied.]]</li>
   <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>.</li>
-  <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;end_of_early_data&#8221;, &#8220;missing_extension&#8221;, and &#8220;certificate_required&#8221;.</li>
-  <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request&#8221;, &#8220;encrypted_extensions&#8221;, and &#8220;key_update&#8221; values.</li>
+  <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
+  <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, and &#8220;key_update&#8221; values.</li>
 </ul>
 <p id="rfc.section.10.p.3">This document also uses a registry originally created in <a href="#RFC4366">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
 <p/>
@@ -3121,7 +3128,6 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 
    enum {
        close_notify(0),
-       end_of_early_data(1),
        unexpected_message(10),
        bad_record_mac(20),
        decryption_failed_RESERVED(21),
@@ -3168,7 +3174,9 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        hello_request_RESERVED(0),
        client_hello(1),
        server_hello(2),
+       hello_verify_request_RESERVED(3),
        new_session_ticket(4),
+       end_of_early_data(5),
        hello_retry_request(6),
        encrypted_extensions(8),
        certificate(11),
@@ -3188,6 +3196,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        select (Handshake.msg_type) {
            case client_hello:          ClientHello;
            case server_hello:          ServerHello;
+           case end_of_early_data:     EndOfEarlyData;
            case hello_retry_request:   HelloRetryRequest;
            case encrypted_extensions:  EncryptedExtensions;
            case certificate_request:   CertificateRequest;
@@ -3439,6 +3448,9 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 </pre>
 <h3 id="rfc.appendix.A.3.5"><a href="#rfc.appendix.A.3.5">A.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
 <pre>
+   struct {} EndOfEarlyData;
+   
+
    enum {
        update_not_requested(0), update_requested(1), (255)
    } KeyUpdateRequest;
@@ -3638,7 +3650,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
   <dt>Length concealment.</dt>
   <dd style="margin-left: 8">Given a record with a given external length, the attacker should not be able to determine the amount of the record that is content versus padding.</dd>
   <dt>Forward security after key change.</dt>
-  <dd style="margin-left: 8">If the traffic key update mechanism described in <a href="#key-update">Section 4.5.3</a> has been used and the previous generation key is deleted, an attacker who compromises the endpoint should not be able to decrypt traffic encrypted with the old key.</dd>
+  <dd style="margin-left: 8">If the traffic key update mechanism described in <a href="#key-update">Section 4.6.3</a> has been used and the previous generation key is deleted, an attacker who compromises the endpoint should not be able to decrypt traffic encrypted with the old key.</dd>
 </dl>
 <p id="rfc.section.D.2.p.3">Informally, TLS 1.3 provides these properties by AEAD-protecting the plaintext with a strong key. AEAD encryption <a href="#RFC5116">[RFC5116]</a> provides confidentiality and integrity for the data. Non-replayability is provided by using a separate nonce for each record, with the nonce being derived from the record sequence number (<a href="#nonce">Section 5.3</a>), with the sequence number being maintained independently at both sides thus records which are delivered out of order result in AEAD deprotection failures.</p>
 <p id="rfc.section.D.2.p.4">The plaintext protected by the AEAD function consists of content plus variable-length padding. Because the padding is also encrypted, the attacker cannot directly determine the length of the padding, but may be able to measure it indirectly by the use of timing channels exposed during record processing (i.e., seeing how long it takes to process a record). In general, it is not known how to remove this type of channel because even a constant time padding removal function will then feed the content into data-dependent functions.</p>
