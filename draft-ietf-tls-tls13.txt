@@ -2845,9 +2845,9 @@ Internet-Draft                     TLS                     December 2016
 4.3.  Server Parameters
 
    The next two messages from the server, EncryptedExtensions and
-   CertificateRequest, contain encrypted information from the server
-   that determines the rest of the handshake.
-
+   CertificateRequest, contain information from the server that
+   determines the rest of the handshake.  These messages are encrypted
+   with keys derived from the server_handshake_traffic_secret.
 
 
 
@@ -2993,7 +2993,8 @@ Internet-Draft                     TLS                     December 2016
    in their handshake flight.  The Certificate and CertificateVerify
    messages are only sent under certain circumstances, as defined below.
    The Finished message is always sent as part of the Authentication
-   block.
+   block.  These messages are encrypted under keys derived from
+   [sender]_handshake_traffic_secret.
 
    The computations for the Authentication messages all uniformly take
    the following inputs:
@@ -3016,7 +3017,6 @@ Internet-Draft                     TLS                     December 2016
 
    Finished  A MAC over the value Hash(Handshake Context + Certificate +
       CertificateVerify) using a MAC key derived from the base key.
-
 
 
 
@@ -3455,14 +3455,14 @@ Internet-Draft                     TLS                     December 2016
    be sent at all) and that the following records are protected under
    handshake traffic keys.  Servers MUST NOT send this message and
    clients receiving it MUST terminate the connection with an
-   "unexpected_message" alert.
+   "unexpected_message" alert.  This message is encrypted under keys
+   derived from the client_early_traffic_secret.
 
 4.6.  Post-Handshake Messages
 
    TLS also allows other messages to be sent after the main handshake.
    These messages use a handshake content type and are encrypted under
    the appropriate application traffic key.
-
 
 
 
