@@ -118,7 +118,7 @@ Internet-Draft                     TLS                     December 2016
        4.2.7.  Early Data Indication . . . . . . . . . . . . . . . .  45
        4.2.8.  Pre-Shared Key Extension  . . . . . . . . . . . . . .  48
      4.3.  Server Parameters . . . . . . . . . . . . . . . . . . . .  51
-       4.3.1.  Encrypted Extensions  . . . . . . . . . . . . . . . .  51
+       4.3.1.  Encrypted Extensions  . . . . . . . . . . . . . . . .  52
        4.3.2.  Certificate Request . . . . . . . . . . . . . . . . .  52
      4.4.  Authentication Messages . . . . . . . . . . . . . . . . .  54
        4.4.1.  Certificate . . . . . . . . . . . . . . . . . . . . .  55
@@ -2747,16 +2747,18 @@ Internet-Draft                     TLS                     December 2016
 
 
    it was used.  Each entry in the binders list is computed as an HMAC
-   over the portion of the ClientHello up to and including the
-   PreSharedKeyExtension.identities field.  That is, it includes all of
-   the ClientHello but not the binder list itself.  The length fields
-   for the message (including the overall length, the length of the
-   extensions block, and the length of the "pre_shared_key" extension)
-   are all set as if the binder were present.
+   over the portion of the ClientHello (including the handshake header)
+   up to and including the PreSharedKeyExtension.identities field.  That
+   is, it includes all of the ClientHello but not the binder list
+   itself.  The length fields for the message (including the overall
+   length, the length of the extensions block, and the length of the
+   "pre_shared_key" extension) are all set as if binders of the correct
+   lengths were present.
 
    The binding_value is computed in the same way as the Finished message
-   (Section 4.4.3) but with the BaseKey being the binder_key (see
-   Section 7.1).
+   (Section 4.4.3) but with the BaseKey being the binder_key derived via
+   the key schedule from the corresponding PSK which is being offered
+   (see Section 7.1).
 
    If the handshake includes a HelloRetryRequest, the initial
    ClientHello and HelloRetryRequest are included in the transcript
@@ -2792,8 +2794,6 @@ Internet-Draft                     TLS                     December 2016
    time over which the first flight might be replayed.  A server can
    store the time at which it sends a session ticket to the client, or
    encode the time in the ticket.  Then, each time it receives an
-   "pre_shared_key" extension, it can subtract the base value and check
-   to see if the value used by the client matches its expectations.
 
 
 
@@ -2801,6 +2801,9 @@ Rescorla                  Expires June 20, 2017                [Page 50]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   "pre_shared_key" extension, it can subtract the base value and check
+   to see if the value used by the client matches its expectations.
 
    The ticket age (the value with "ticket_age_add" subtracted) provided
    by the client will be shorter than the actual time elapsed on the
@@ -2845,10 +2848,7 @@ Internet-Draft                     TLS                     December 2016
    CertificateRequest, contain encrypted information from the server
    that determines the rest of the handshake.
 
-4.3.1.  Encrypted Extensions
 
-   In all handshakes, the server MUST send the EncryptedExtensions
-   message immediately after the ServerHello message.  This is the first
 
 
 
@@ -2858,6 +2858,10 @@ Rescorla                  Expires June 20, 2017                [Page 51]
 Internet-Draft                     TLS                     December 2016
 
 
+4.3.1.  Encrypted Extensions
+
+   In all handshakes, the server MUST send the EncryptedExtensions
+   message immediately after the ServerHello message.  This is the first
    message that is encrypted under keys derived from the
    server_handshake_traffic_secret.
 
@@ -2902,10 +2906,6 @@ Internet-Draft                     TLS                     December 2016
       of the certificate being requested.  The "signature_algorithms"
       extension MUST be specified.
 
-   In prior versions of TLS, the CertificateRequest message carried a
-   list of signature algorithms and certificate authorities which the
-   server would accept.  In TLS 1.3 the former is expressed by sending
-   the "signature_algorithms" extension.  The latter is expressed by
 
 
 
@@ -2914,6 +2914,10 @@ Rescorla                  Expires June 20, 2017                [Page 52]
 Internet-Draft                     TLS                     December 2016
 
 
+   In prior versions of TLS, the CertificateRequest message carried a
+   list of signature algorithms and certificate authorities which the
+   server would accept.  In TLS 1.3 the former is expressed by sending
+   the "signature_algorithms" extension.  The latter is expressed by
    sending the "certificate_authorities" extension (see
    Section 4.2.3.1).
 
@@ -2959,16 +2963,16 @@ Internet-Draft                     TLS                     December 2016
       document defines matching rules for two standard certificate
       extensions defined in [RFC5280]:
 
-      o  The Key Usage extension in a certificate matches the request
-         when all key usage bits asserted in the request are also
-         asserted in the Key Usage certificate extension.
-
 
 
 Rescorla                  Expires June 20, 2017                [Page 53]
 
 Internet-Draft                     TLS                     December 2016
 
+
+      o  The Key Usage extension in a certificate matches the request
+         when all key usage bits asserted in the request are also
+         asserted in the Key Usage certificate extension.
 
       o  The Extended Key Usage extension in a certificate matches the
          request when all key purpose OIDs present in the request are
@@ -3013,11 +3017,7 @@ Internet-Draft                     TLS                     December 2016
    Finished  A MAC over the value Hash(Handshake Context + Certificate +
       CertificateVerify) using a MAC key derived from the base key.
 
-   Because the CertificateVerify signs the Handshake Context +
-   Certificate and the Finished MACs the Handshake Context + Certificate
-   + CertificateVerify, this is mostly equivalent to keeping a running
-   hash of the handshake messages (exactly so in the pure 1-RTT cases).
-   Note, however, that subsequent post-handshake authentications do not
+
 
 
 
@@ -3026,6 +3026,11 @@ Rescorla                  Expires June 20, 2017                [Page 54]
 Internet-Draft                     TLS                     December 2016
 
 
+   Because the CertificateVerify signs the Handshake Context +
+   Certificate and the Finished MACs the Handshake Context + Certificate
+   + CertificateVerify, this is mostly equivalent to keeping a running
+   hash of the handshake messages (exactly so in the pure 1-RTT cases).
+   Note, however, that subsequent post-handshake authentications do not
    include each other, just the messages through the end of the main
    handshake.
 
@@ -3067,11 +3072,6 @@ Internet-Draft                     TLS                     December 2016
    field having length 0).
 
    Structure of this message:
-
-
-
-
-
 
 
 
@@ -4428,7 +4428,7 @@ Internet-Draft                     TLS                     December 2016
 
                  +-----> Derive-Secret(., "resumption master secret",
                                        ClientHello...Client Finished)
-                                       = resumption_secret
+                                       = resumption_master_secret
 
    The general pattern here is that the secrets shown down the left side
    of the diagram are just raw entropy without context, whereas the
