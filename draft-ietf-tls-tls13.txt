@@ -146,8 +146,8 @@ Internet-Draft                     TLS                     December 2016
        7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  82
        7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  82
    8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  83
-     8.1.  MTI Cipher Suites . . . . . . . . . . . . . . . . . . . .  83
-     8.2.  MTI Extensions  . . . . . . . . . . . . . . . . . . . . .  83
+     8.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  83
+     8.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  83
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  84
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  84
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  88
@@ -761,7 +761,7 @@ Auth | {CertificateVerify*}
                  messages/extensions that are not always sent.
 
               {} Indicates messages protected using keys
-                 derived from handshake_traffic_secret.
+                 derived from a [sender]_handshake_traffic_secret.
 
               [] Indicates messages protected using keys
                  derived from traffic_secret_N
@@ -940,7 +940,7 @@ Internet-Draft                     TLS                     December 2016
    the server accepts it, then the security context of the new
    connection is tied to the original connection and the key derived
    from the initial handshake is used to bootstrap the cryptographic
-   state instead of a full hanshake.  In TLS 1.2 and below, this
+   state instead of a full handshake.  In TLS 1.2 and below, this
    functionality was provided by "session IDs" and "session tickets"
    [RFC5077].  Both mechanisms are obsoleted in TLS 1.3.
 
@@ -1000,8 +1000,8 @@ Internet-Draft                     TLS                     December 2016
    As the server is authenticating via a PSK, it does not send a
    Certificate or a CertificateVerify message.  When a client offers
    resumption via PSK, it SHOULD also supply a "key_share" extension to
-   the server as well to allow the server to decline resumption and fall
-   back to a full handshake, if needed.  The server responds with a
+   the server to allow the server to decline resumption and fall back to
+   a full handshake, if needed.  The server responds with a
 
 
 
@@ -1011,7 +1011,8 @@ Internet-Draft                     TLS                     December 2016
 
 
    "pre_shared_key" extension to negotiate use of PSK key establishment
-   and can (as shown here) respond with a "key_share" extension to do
+   and can (as shown here) to negotiate use of PSK key establishment and
+   can (as shown here) respond with a "key_share" extension to do
    (EC)DHE key establishment, thus providing forward secrecy.
 
    When PSKs are provisioned out of band, the PSK identity and the KDF
@@ -1037,7 +1038,6 @@ Internet-Draft                     TLS                     December 2016
    As shown in Figure 4, the Zero-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
-
 
 
 
@@ -1092,7 +1092,7 @@ Internet-Draft                     TLS                     December 2016
                      derived from client_early_traffic_secret.
 
                   {} Indicates messages protected using keys
-                     derived from handshake_traffic_secret.
+                     derived from a [sender]_handshake_traffic_secret.
 
                   [] Indicates messages protected using keys
                      derived from traffic_secret_N
@@ -1555,7 +1555,7 @@ Internet-Draft                     TLS                     December 2016
    The server indicates its selected parameters in the ServerHello as
    follows:
 
-   -  If PSK is being used then the server will send a "pre_shared_key"
+   -  If PSK is being used, then the server will send a "pre_shared_key"
       extension indicating the selected key.
 
    -  If PSK is not being used, then (EC)DHE and certificate-based
@@ -1800,8 +1800,9 @@ Internet-Draft                     TLS                     December 2016
    the Finished exchange: because the ServerKeyExchange, a message
    present in TLS 1.2 and below, includes a signature over both random
    values, it is not possible for an active attacker to modify the
-   randoms without detection as long as ephemeral ciphers are used.  It
-   does not provide downgrade protection when static RSA is used.
+   random values without detection as long as ephemeral ciphers are
+   used.  It does not provide downgrade protection when static RSA is
+   used.
 
    Note: This is an update to TLS 1.2 so in practice many TLS 1.2
    clients and servers will not behave as specified above.
@@ -1840,8 +1841,7 @@ Internet-Draft                     TLS                     December 2016
    its ClientHello, with the exception of optionally the "cookie" (see
    Section 4.2.2) extension.
 
-   Upon receipt of a HelloRetryRequest, the client MUST verify that the
-   extensions block is not empty and otherwise MUST abort the handshake
+
 
 
 
@@ -1850,6 +1850,8 @@ Rescorla                  Expires June 20, 2017                [Page 33]
 Internet-Draft                     TLS                     December 2016
 
 
+   Upon receipt of a HelloRetryRequest, the client MUST verify that the
+   extensions block is not empty and otherwise MUST abort the handshake
    with a "decode_error" alert.  Clients MUST abort the handshake with
    an "illegal_parameter" alert if the HelloRetryRequest would not
    result in any change in the ClientHello.  If a client receives a
@@ -1896,8 +1898,6 @@ Internet-Draft                     TLS                     December 2016
    -  "extension_data" contains information specific to the particular
       extension type.
 
-   The list of extension types is maintained by IANA as described in
-   Section 10.
 
 
 
@@ -1905,6 +1905,9 @@ Rescorla                  Expires June 20, 2017                [Page 34]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   The list of extension types is maintained by IANA as described in
+   Section 10.
 
    Extensions are generally structured in a request/response fashion,
    though some extensions are just indications with no corresponding
@@ -1951,9 +1954,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Extensions should, as far as possible, be designed to prevent any
       attack that forces use (or non-use) of a particular feature by
-      manipulation of handshake messages.  This principle should be
-      followed regardless of whether the feature is believed to cause a
-      security problem.  Often the fact that the extension fields are
 
 
 
@@ -1962,6 +1962,9 @@ Rescorla                  Expires June 20, 2017                [Page 35]
 Internet-Draft                     TLS                     December 2016
 
 
+      manipulation of handshake messages.  This principle should be
+      followed regardless of whether the feature is believed to cause a
+      security problem.  Often the fact that the extension fields are
       included in the inputs to the Finished message hashes will be
       sufficient, but extreme care is needed when the extension changes
       the meaning of messages sent in the handshake phase.  Designers
@@ -2007,9 +2010,6 @@ Internet-Draft                     TLS                     December 2016
 
    While the eventual version indicator for the RFC version of TLS 1.3
    will be 0x0304, implementations of draft versions of this
-   specification SHOULD instead advertise 0x7f00 | draft_version in
-   ServerHello.version, and HelloRetryRequest.server_version.  For
-   instance, draft-17 would be encoded as the 0x7f11.  This allows pre-
 
 
 
@@ -2018,6 +2018,9 @@ Rescorla                  Expires June 20, 2017                [Page 36]
 Internet-Draft                     TLS                     December 2016
 
 
+   specification SHOULD instead advertise 0x7f00 | draft_version in
+   ServerHello.version, and HelloRetryRequest.server_version.  For
+   instance, draft-17 would be encoded as the 0x7f11.  This allows pre-
    RFC implementations to safely negotiate with each other, even if they
    would otherwise be incompatible.
 
@@ -2037,8 +2040,8 @@ Internet-Draft                     TLS                     December 2016
 
    -  Allowing the server to offload state to the client, thus allowing
       it to send a HelloRetryRequest without storing any state.  The
-      server does this by pickling that post-ClientHello hash state into
-      the cookie (protected with some suitable integrity algorithm).
+      server does this by storing the serialized hash state in the
+      cookie (protected with some suitable integrity algorithm).
 
    When sending a HelloRetryRequest, the server MAY provide a "cookie"
    extension to the client (this is an exception to the usual rule that
@@ -2054,14 +2057,11 @@ Internet-Draft                     TLS                     December 2016
    signatures.  Clients which desire the server to authenticate itself
    via a certificate MUST send this extension.  If a server is
    authenticating via a certificate and the client has not sent a
-   "signature_algorithms" extension then the server MUST abort the
+   "signature_algorithms" extension, then the server MUST abort the
    handshake with a "missing_extension" alert (see Section 8.2).
 
    The "extension_data" field of this extension in a ClientHello
    contains a SignatureSchemeList value:
-
-
-
 
 
 
@@ -2215,8 +2215,9 @@ Internet-Draft                     TLS                     December 2016
    authorities  A list of the distinguished names [X501] of acceptable
       certificate authorities, represented in DER-encoded [X690] format.
       These distinguished names specify a desired distinguished name for
-      a root CA or for a subordinate CA; thus, this message can be used
-      to describe known roots as well as a desired authorization space.
+      trust anchor or subordinate CA; thus, this message can be used to
+      describe known trust anchors as well as a desired authorization
+      space.
 
    The client MAY send the "certificate_authorities" extension in the
    ClientHello message.  The server MAY send it in the
@@ -2232,7 +2233,6 @@ Internet-Draft                     TLS                     December 2016
    When sent by the client, the "supported_groups" extension indicates
    the named groups which the client supports for key exchange, ordered
    from most preferred to least preferred.
-
 
 
 
@@ -2846,8 +2846,8 @@ Internet-Draft                     TLS                     December 2016
 
    In all handshakes, the server MUST send the EncryptedExtensions
    message immediately after the ServerHello message.  This is the first
-   message that is encrypted under keys derived from
-   handshake_traffic_secret.
+   message that is encrypted under keys derived from the
+   server_handshake_traffic_secret.
 
 
 
@@ -3668,7 +3668,7 @@ Internet-Draft                     TLS                     December 2016
 
    Application Data messages contain data that is opaque to TLS.
    Application Data messages are always protected.  Zero-length
-   fragments of Application Data MAY be sent as as they are potentially
+   fragments of Application Data MAY be sent as they are potentially
    useful as a traffic analysis countermeasure.
 
    enum {
@@ -3905,15 +3905,15 @@ Internet-Draft                     TLS                     December 2016
    generation of plausibly-sized cover traffic in contexts where the
    presence or absence of activity may be sensitive.  Implementations
    MUST NOT send Handshake or Alert records that have a zero-length
-   TLSInnerPlaintext.content.
+   TLSInnerPlaintext.content; if such a message is received, the
+   receiving implementation MUST terminate the connection with an
+   "unexpected_message" alert.
 
    The padding sent is automatically verified by the record protection
    mechanism; upon successful decryption of a
    TLSCiphertext.encrypted_record, the receiving implementation scans
    the field from the end toward the beginning until it finds a non-zero
    octet.  This non-zero octet is the content type of the message.  This
-   padding scheme was selected because it allows padding of any
-   encrypted TLS record by an arbitrary size (from zero up to TLS record
 
 
 
@@ -3922,6 +3922,8 @@ Rescorla                  Expires June 20, 2017                [Page 70]
 Internet-Draft                     TLS                     December 2016
 
 
+   padding scheme was selected because it allows padding of any
+   encrypted TLS record by an arbitrary size (from zero up to TLS record
    size limits) without introducing new content types.  The design also
    enforces all-zero padding octets, which allows for quick detection of
    padding errors.
@@ -3968,8 +3970,6 @@ Internet-Draft                     TLS                     December 2016
    Alert messages convey the severity of the message (warning or fatal)
    and a description of the alert.  Warning-level messages are used to
    indicate orderly closure of the connection or the end of early data
-   (see Section 6.1).  Upon receiving a warning-level alert, the TLS
-
 
 
 
@@ -3978,6 +3978,7 @@ Rescorla                  Expires June 20, 2017                [Page 71]
 Internet-Draft                     TLS                     December 2016
 
 
+   (see Section 6.1).  Upon receiving a warning-level alert, the TLS
    implementation SHOULD indicate end-of-data to the application and, if
    appropriate for the alert type, send a closure alert in response.
 
@@ -3993,7 +3994,6 @@ Internet-Draft                     TLS                     December 2016
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
-
 
 
 
@@ -4204,8 +4204,8 @@ Internet-Draft                     TLS                     December 2016
 
    unknown_ca  A valid certificate chain or partial chain was received,
       but the certificate was not accepted because the CA certificate
-      could not be located or couldn't be matched with a known, trusted
-      CA.
+      could not be located or could not be matched with a known trust
+      anchor.
 
    access_denied  A valid certificate or PSK was received, but when
       access control was applied, the sender decided not to proceed with
@@ -4454,8 +4454,8 @@ Internet-Draft                     TLS                     December 2016
    label is "external psk binder key" for external PSKs (those
    provisioned outside of TLS) and "resumption psk binder key" for
    resumption PSKs (those provisioned as the resumption master secret of
-   a previous handshake).  The different labels prevents the
-   substitution of one type of PSK for the other.
+   a previous handshake).  The different labels prevent the substitution
+   of one type of PSK for the other.
 
    There are multiple potential Early Secret values depending on which
    PSK the server ultimately selects.  The client will need to compute
@@ -4610,7 +4610,7 @@ Internet-Draft                     TLS                     December 2016
 
 8.  Compliance Requirements
 
-8.1.  MTI Cipher Suites
+8.1.  Mandatory-to-Implement Cipher Suites
 
    In the absence of an application profile standard specifying
    otherwise, a TLS-compliant application MUST implement the
@@ -4624,7 +4624,7 @@ Internet-Draft                     TLS                     December 2016
    TLS-compliant application MUST support key exchange with secp256r1
    (NIST P-256) and SHOULD support key exchange with X25519 [RFC7748].
 
-8.2.  MTI Extensions
+8.2.  Mandatory-to-Implement Extensions
 
    In the absence of an application profile standard specifying
    otherwise, a TLS-compliant application MUST implement the following
@@ -5950,12 +5950,12 @@ B.3.  Certificates and Authentication
    certificates and should generally support certificate revocation
    messages.  Certificates should always be verified to ensure proper
    signing by a trusted Certificate Authority (CA).  The selection and
-   addition of trusted CAs should be done very carefully.  Users should
-   be able to view information about the certificate and root CA.
-   Applications SHOULD also enforce minimum and maximum key sizes.  For
-   example, certification paths containing keys or signatures weaker
-   than 2048-bit RSA or 224-bit ECDSA are not appropriate for secure
-   applications.
+   addition of trust anchors should be done very carefully.  Users
+   should be able to view information about the certificate and trust
+   anchor.  Applications SHOULD also enforce minimum and maximum key
+   sizes.  For example, certification paths containing keys or
+   signatures weaker than 2048-bit RSA or 224-bit ECDSA are not
+   appropriate for secure applications.
 
 B.4.  Implementation Pitfalls
 
@@ -5985,7 +5985,7 @@ B.4.  Implementation Pitfalls
       correctly? (see Appendix C)
 
    -  Do you handle TLS extensions in ClientHello correctly, including
-      unknown extensions.
+      unknown extensions?
 
 
 
@@ -6402,7 +6402,7 @@ Internet-Draft                     TLS                     December 2016
 
    The 0-RTT mode of operation generally provides the same security
    properties as 1-RTT data, with the two exceptions that the 0-RTT
-   encryption keys do not provide full forward secrecy and that the the
+   encryption keys do not provide full forward secrecy and that the
    server is not able to guarantee full uniqueness of the handshake
    (non-replayability) without keeping potentially undue amounts of
    state.  See Section 4.2.7 for one mechanism to limit the exposure to
