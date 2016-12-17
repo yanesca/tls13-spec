@@ -4439,6 +4439,14 @@ Internet-Draft                     TLS                     December 2016
    Secret is called with four distinct transcripts; in a 1-RTT only
    exchange with three distinct transcripts.
 
+   The complete transcript passed to Derive-Secret is always taken from
+   the following sequence of handshake messages, starting at the first
+   ClientHello and including only those messages that were sent:
+   ClientHello, HelloRetryRequest, ClientHello, ServerHello,
+   EncryptedExtensions, Server CertificateRequest, Server Certificate,
+   Server CertificateVerify, Server Finished, EndOfEarlyData, Client
+   Certificate, Client CertificateVerify, Client Finished.
+
    If a given secret is not available, then the 0-value consisting of a
    string of Hash.length zeroes is used.  Note that this does not mean
    skipping rounds, so if PSK is not in use Early Secret will still be
@@ -4465,14 +4473,6 @@ Internet-Draft                     TLS                     December 2016
 
    The next-generation traffic_secret is computed as:
 
-    traffic_secret_N+1 = HKDF-Expand-Label(
-                             traffic_secret_N,
-                             "application traffic secret", "", Hash.length)
-
-   Once client/server_traffic_secret_N+1 and its associated traffic keys
-   have been computed, implementations SHOULD delete client_/
-   server_traffic_secret_N and its associated traffic keys.
-
 
 
 
@@ -4481,6 +4481,14 @@ Rescorla                  Expires June 20, 2017                [Page 80]
 
 Internet-Draft                     TLS                     December 2016
 
+
+    traffic_secret_N+1 = HKDF-Expand-Label(
+                             traffic_secret_N,
+                             "application traffic secret", "", Hash.length)
+
+   Once client/server_traffic_secret_N+1 and its associated traffic keys
+   have been computed, implementations SHOULD delete client_/
+   server_traffic_secret_N and its associated traffic keys.
 
 7.3.  Traffic Key Calculation
 
@@ -4521,14 +4529,6 @@ Internet-Draft                     TLS                     December 2016
    A conventional Diffie-Hellman computation is performed.  The
    negotiated key (Z) is converted to byte string by encoding in big-
    endian, padded with zeros up to the size of the prime.  This byte
-   string is used as the shared secret, and is used in the key schedule
-   as specified above.
-
-   Note that this construction differs from previous versions of TLS
-   which remove leading zeros.
-
-
-
 
 
 
@@ -4537,6 +4537,12 @@ Rescorla                  Expires June 20, 2017                [Page 81]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   string is used as the shared secret, and is used in the key schedule
+   as specified above.
+
+   Note that this construction differs from previous versions of TLS
+   which remove leading zeros.
 
 7.3.2.  Elliptic Curve Diffie-Hellman
 
@@ -4579,12 +4585,6 @@ Internet-Draft                     TLS                     December 2016
 
    HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 
-   Where Secret is either the early_exporter_secret or the
-   exporter_secret.  Implementations MUST use the exporter_secret unless
-   explicitly specified by the application.  When adding TLS 1.3 to TLS
-   1.2 stacks, the exporter_secret MUST be for the existing exporter
-   interface.
-
 
 
 
@@ -4593,6 +4593,12 @@ Rescorla                  Expires June 20, 2017                [Page 82]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   Where Secret is either the early_exporter_secret or the
+   exporter_secret.  Implementations MUST use the exporter_secret unless
+   explicitly specified by the application.  When adding TLS 1.3 to TLS
+   1.2 stacks, the exporter_secret MUST be for the existing exporter
+   interface.
 
    If no context is provided, the value is computed as above but with a
    zero-length context_value.  Note that providing no context computes
@@ -4636,12 +4642,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
 
-   All implementations MUST send and use these extensions when offering
-   applicable features:
-
-   -  "supported_versions" is REQUIRED for all ClientHello messages.
-
-   -  "signature_algorithms" is REQUIRED for certificate authentication.
 
 
 
@@ -4649,6 +4649,13 @@ Rescorla                  Expires June 20, 2017                [Page 83]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   All implementations MUST send and use these extensions when offering
+   applicable features:
+
+   -  "supported_versions" is REQUIRED for all ClientHello messages.
+
+   -  "signature_algorithms" is REQUIRED for certificate authentication.
 
    -  "supported_groups" and "key_share" are REQUIRED for DHE or ECDHE
       key exchange.
@@ -4690,14 +4697,7 @@ Internet-Draft                     TLS                     December 2016
    [RFC4346].  IANA has updated these to reference this document.  The
    registries and their allocation policies are below:
 
-   -  TLS Cipher Suite Registry: Values with the first byte in the range
-      0-254 (decimal) are assigned via Specification Required [RFC5226].
-      Values with the first byte 255 (decimal) are reserved for Private
-      Use [RFC5226].
 
-      IANA [SHALL add/has added] the cipher suites listed in
-      Appendix A.4 to the registry.  The "Value" and "Description"
-      columns are taken from the table.  The "DTLS-OK" and "Recommended"
 
 
 
@@ -4706,6 +4706,14 @@ Rescorla                  Expires June 20, 2017                [Page 84]
 Internet-Draft                     TLS                     December 2016
 
 
+   -  TLS Cipher Suite Registry: Values with the first byte in the range
+      0-254 (decimal) are assigned via Specification Required [RFC5226].
+      Values with the first byte 255 (decimal) are reserved for Private
+      Use [RFC5226].
+
+      IANA [SHALL add/has added] the cipher suites listed in
+      Appendix A.4 to the registry.  The "Value" and "Description"
+      columns are taken from the table.  The "DTLS-OK" and "Recommended"
       columns are both marked as "Yes" for each new cipher suite.
       [[This assumes [I-D.sandj-tls-iana-registry-updates] has been
       applied.]]
@@ -4746,14 +4754,6 @@ Internet-Draft                     TLS                     December 2016
       1.3" column which lists the messages in which the extension may
       appear using the following notation: CH (ClientHello), SH
       (ServerHello), EE (EncryptedExtensions), CT (Certificate), CR
-      (CertificateRequest), NST (NewSessionTicket) and HRR
-      (HelloRetryRequest).  This column [shall be/has been] initially
-      populated with the values in this document.
-
-   +------------------------------------------+-------------+----------+
-   | Extension                                | Recommended |  TLS 1.3 |
-   +------------------------------------------+-------------+----------+
-   | server_name [RFC6066]                    |         Yes |   CH, EE |
 
 
 
@@ -4762,6 +4762,14 @@ Rescorla                  Expires June 20, 2017                [Page 85]
 Internet-Draft                     TLS                     December 2016
 
 
+      (CertificateRequest), NST (NewSessionTicket) and HRR
+      (HelloRetryRequest).  This column [shall be/has been] initially
+      populated with the values in this document.
+
+   +------------------------------------------+-------------+----------+
+   | Extension                                | Recommended |  TLS 1.3 |
+   +------------------------------------------+-------------+----------+
+   | server_name [RFC6066]                    |         Yes |   CH, EE |
    |                                          |             |          |
    | max_fragment_length [RFC6066]            |         Yes |   CH, EE |
    |                                          |             |          |
@@ -4802,14 +4810,6 @@ Internet-Draft                     TLS                     December 2016
    |                                          |             |       CT |
    |                                          |             |          |
    | client_certificate_type [RFC7250]        |         Yes |   CH, EE |
-   |                                          |             |          |
-   | server_certificate_type [RFC7250]        |         Yes |   CH, CT |
-   |                                          |             |          |
-   | padding [RFC7685]                        |         Yes |       CH |
-   |                                          |             |          |
-   | encrypt_then_mac [RFC7366]               |         Yes |        - |
-   |                                          |             |          |
-   | extended_master_secret [RFC7627]         |         Yes |        - |
 
 
 
@@ -4818,6 +4818,14 @@ Rescorla                  Expires June 20, 2017                [Page 86]
 Internet-Draft                     TLS                     December 2016
 
 
+   |                                          |             |          |
+   | server_certificate_type [RFC7250]        |         Yes |   CH, CT |
+   |                                          |             |          |
+   | padding [RFC7685]                        |         Yes |       CH |
+   |                                          |             |          |
+   | encrypt_then_mac [RFC7366]               |         Yes |        - |
+   |                                          |             |          |
+   | extended_master_secret [RFC7627]         |         Yes |        - |
    |                                          |             |          |
    | SessionTicket TLS [RFC4507]              |         Yes |        - |
    |                                          |             |          |
@@ -4858,6 +4866,14 @@ Internet-Draft                     TLS                     December 2016
       This registry SHALL have a "Recommended" column.  The registry
       [shall be/ has been] initially populated with the values described
       in Section 4.2.3.  The following values SHALL be marked as
+
+
+
+Rescorla                  Expires June 20, 2017                [Page 87]
+
+Internet-Draft                     TLS                     December 2016
+
+
       "Recommended": ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384,
       rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.
 
@@ -4866,13 +4882,6 @@ Internet-Draft                     TLS                     December 2016
    [RFC5246].  IANA [SHALL update/has updated] the TLS HashAlgorithm
    Registry to list values 7-223 as "Reserved" and the TLS
    SignatureAlgorithm Registry to list values 4-223 as "Reserved".
-
-
-
-Rescorla                  Expires June 20, 2017                [Page 87]
-
-Internet-Draft                     TLS                     December 2016
-
 
 11.  References
 
@@ -4911,15 +4920,6 @@ Internet-Draft                     TLS                     December 2016
               DOI 10.17487/RFC5226, May 2008,
               <http://www.rfc-editor.org/info/rfc5226>.
 
-   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-              Housley, R., and W. Polk, "Internet X.509 Public Key
-              Infrastructure Certificate and Certificate Revocation List
-              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
-              <http://www.rfc-editor.org/info/rfc5280>.
-
-   [RFC5705]  Rescorla, E., "Keying Material Exporters for Transport
-              Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
-              March 2010, <http://www.rfc-editor.org/info/rfc5705>.
 
 
 
@@ -4929,6 +4929,16 @@ Rescorla                  Expires June 20, 2017                [Page 88]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <http://www.rfc-editor.org/info/rfc5280>.
+
+   [RFC5705]  Rescorla, E., "Keying Material Exporters for Transport
+              Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
+              March 2010, <http://www.rfc-editor.org/info/rfc5705>.
 
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
               Key Derivation Function (HKDF)", RFC 5869,
@@ -4967,16 +4977,6 @@ Internet-Draft                     TLS                     December 2016
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
               2016, <http://www.rfc-editor.org/info/rfc7748>.
 
-   [RFC7919]  Gillmor, D., "Negotiated Finite Field Diffie-Hellman
-              Ephemeral Parameters for Transport Layer Security (TLS)",
-              RFC 7919, DOI 10.17487/RFC7919, August 2016,
-              <http://www.rfc-editor.org/info/rfc7919>.
-
-   [SHS]      National Institute of Standards and Technology, U.S.
-              Department of Commerce, "Secure Hash Standard", NIST FIPS
-              PUB 180-4, March 2012.
-
-
 
 
 
@@ -4985,6 +4985,15 @@ Rescorla                  Expires June 20, 2017                [Page 89]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC7919]  Gillmor, D., "Negotiated Finite Field Diffie-Hellman
+              Ephemeral Parameters for Transport Layer Security (TLS)",
+              RFC 7919, DOI 10.17487/RFC7919, August 2016,
+              <http://www.rfc-editor.org/info/rfc7919>.
+
+   [SHS]      National Institute of Standards and Technology, U.S.
+              Department of Commerce, "Secure Hash Standard", NIST FIPS
+              PUB 180-4, March 2012.
 
    [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
@@ -5026,21 +5035,17 @@ Internet-Draft                     TLS                     December 2016
               Department of Commerce, "Digital Signature Standard,
               version 4", NIST FIPS PUB 186-4, 2013.
 
-   [ECDSA]    American National Standards Institute, "Public Key
-              Cryptography for the Financial Services Industry: The
-              Elliptic Curve Digital Signature Algorithm (ECDSA)",
-              ANSI ANS X9.62-2005, November 2005.
-
-
-
-
-
 
 
 Rescorla                  Expires June 20, 2017                [Page 90]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [ECDSA]    American National Standards Institute, "Public Key
+              Cryptography for the Financial Services Industry: The
+              Elliptic Curve Digital Signature Algorithm (ECDSA)",
+              ANSI ANS X9.62-2005, November 2005.
 
    [FGSW16]   Fischlin, M., Guenther, F., Schmidt, B., and B. Warinschi,
               "Key Confirmation in Key Exchange: A Formal Treatment and
@@ -5085,11 +5090,6 @@ Internet-Draft                     TLS                     December 2016
    [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
               Syntax Standard, version 1.5", November 1993.
 
-   [PSK-FINISHED]
-              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
-              "Revision 10: possible attack if client authentication is
-              allowed during PSK", 2015, <https://www.ietf.org/mail-
-              archive/web/tls/current/msg18215.html>.
 
 
 
@@ -5097,6 +5097,12 @@ Rescorla                  Expires June 20, 2017                [Page 91]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [PSK-FINISHED]
+              Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
+              "Revision 10: possible attack if client authentication is
+              allowed during PSK", 2015, <https://www.ietf.org/mail-
+              archive/web/tls/current/msg18215.html>.
 
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
@@ -5138,12 +5144,6 @@ Internet-Draft                     TLS                     December 2016
               Mapping Extension", RFC 4681, DOI 10.17487/RFC4681,
               October 2006, <http://www.rfc-editor.org/info/rfc4681>.
 
-   [RFC5054]  Taylor, D., Wu, T., Mavrogiannopoulos, N., and T. Perrin,
-              "Using the Secure Remote Password (SRP) Protocol for TLS
-              Authentication", RFC 5054, DOI 10.17487/RFC5054, November
-              2007, <http://www.rfc-editor.org/info/rfc5054>.
-
-
 
 
 
@@ -5153,6 +5153,11 @@ Rescorla                  Expires June 20, 2017                [Page 92]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC5054]  Taylor, D., Wu, T., Mavrogiannopoulos, N., and T. Perrin,
+              "Using the Secure Remote Password (SRP) Protocol for TLS
+              Authentication", RFC 5054, DOI 10.17487/RFC5054, November
+              2007, <http://www.rfc-editor.org/info/rfc5054>.
 
    [RFC5077]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
@@ -5197,11 +5202,6 @@ Internet-Draft                     TLS                     December 2016
               RFC 6091, DOI 10.17487/RFC6091, February 2011,
               <http://www.rfc-editor.org/info/rfc6091>.
 
-   [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
-              (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
-              2011, <http://www.rfc-editor.org/info/rfc6176>.
-
-
 
 
 
@@ -5209,6 +5209,10 @@ Rescorla                  Expires June 20, 2017                [Page 93]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
+              (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
+              2011, <http://www.rfc-editor.org/info/rfc6176>.
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
@@ -5250,11 +5254,7 @@ Internet-Draft                     TLS                     December 2016
               DOI 10.17487/RFC7568, June 2015,
               <http://www.rfc-editor.org/info/rfc7568>.
 
-   [RFC7627]  Bhargavan, K., Ed., Delignat-Lavaud, A., Pironti, A.,
-              Langley, A., and M. Ray, "Transport Layer Security (TLS)
-              Session Hash and Extended Master Secret Extension",
-              RFC 7627, DOI 10.17487/RFC7627, September 2015,
-              <http://www.rfc-editor.org/info/rfc7627>.
+
 
 
 
@@ -5265,6 +5265,12 @@ Rescorla                  Expires June 20, 2017                [Page 94]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC7627]  Bhargavan, K., Ed., Delignat-Lavaud, A., Pironti, A.,
+              Langley, A., and M. Ray, "Transport Layer Security (TLS)
+              Session Hash and Extended Master Secret Extension",
+              RFC 7627, DOI 10.17487/RFC7627, September 2015,
+              <http://www.rfc-editor.org/info/rfc7627>.
 
    [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
@@ -5303,12 +5309,6 @@ Internet-Draft                     TLS                     December 2016
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
 
 
 
