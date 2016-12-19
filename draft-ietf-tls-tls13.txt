@@ -6584,6 +6584,10 @@ Internet-Draft                     TLS                     December 2016
    -  David M.  Garrett
       dave@nulldereference.com
 
+   -  Alessandro Ghedini
+      Cloudflare Inc.
+      alessandro@cloudflare.com
+
    -  Vipul Gupta (co-author of [RFC4492])
       Sun Microsystems Laboratories
       vipul.gupta@sun.com
@@ -6598,10 +6602,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  David Hopwood
       Independent Consultant
-      david.hopwood@blueyonder.co.uk
-
-   -  Subodh Iyengar
-      Facebook
 
 
 
@@ -6610,6 +6610,10 @@ Rescorla                  Expires June 22, 2017               [Page 118]
 Internet-Draft                     TLS                     December 2016
 
 
+      david.hopwood@blueyonder.co.uk
+
+   -  Subodh Iyengar
+      Facebook
       subodh@fb.com
 
    -  Benjamin Kaduk
@@ -6654,10 +6658,6 @@ Internet-Draft                     TLS                     December 2016
       USAA
       carl.mehner@usaa.com
 
-   -  Jan Mikkelsen
-      Transactionware
-      janm@transactionware.com
-
 
 
 
@@ -6665,6 +6665,10 @@ Rescorla                  Expires June 22, 2017               [Page 119]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Jan Mikkelsen
+      Transactionware
+      janm@transactionware.com
 
    -  Bodo Moeller (co-author of [RFC4492])
       Google
@@ -6710,10 +6714,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Dan Simon
       Microsoft, Inc.
-      dansimon@microsoft.com
-
-   -  Nick Sullivan
-      Cloudflare Inc.
 
 
 
@@ -6722,6 +6722,10 @@ Rescorla                  Expires June 22, 2017               [Page 120]
 Internet-Draft                     TLS                     December 2016
 
 
+      dansimon@microsoft.com
+
+   -  Nick Sullivan
+      Cloudflare Inc.
       nick@cloudflare.com
 
    -  Bjoern Tackmann
@@ -6753,10 +6757,6 @@ Internet-Draft                     TLS                     December 2016
    -  Kazu Yamamoto
       Internet Initiative Japan Inc.
       kazu@iij.ad.jp
-
-   -  Alessandro Ghedini
-      Cloudflare Inc.
-      alessandro@cloudflare.com
 
 Author's Address
 
