@@ -381,7 +381,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-19" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -402,7 +402,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 18, 2016</td>
+  <td class="right">December 19, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -421,7 +421,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 21, 2017</td>
+  <td class="left">Expires: June 22, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -442,7 +442,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 21, 2017.</p>
+<p>This Internet-Draft will expire on June 22, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2382,7 +2382,7 @@ finished_key =
 </ul>
 <p id="rfc.section.7.3.2.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
 <h3 id="rfc.section.7.3.3"><a href="#rfc.section.7.3.3">7.3.3.</a> <a href="#exporters" id="exporters">Exporters</a></h3>
-<p><a href="#RFC5705">[RFC5705]</a> defines keying material exporters for TLS in terms of the TLS PRF. This document replaces the PRF with HKDF, thus requiring a new construction. The exporter interface remains the same. If context is provided, the value is computed as:</p>
+<p><a href="#RFC5705">[RFC5705]</a> defines keying material exporters for TLS in terms of the TLS pseudorandom function (PRF). This document replaces the PRF with HKDF, thus requiring a new construction. The exporter interface remains the same. If context is provided, the value is computed as:</p>
 <pre>
 HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 </pre>
@@ -3451,7 +3451,6 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <h3 id="rfc.appendix.A.3.5"><a href="#rfc.appendix.A.3.5">A.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
 <pre>
    struct {} EndOfEarlyData;
-   
 
    enum {
        update_not_requested(0), update_requested(1), (255)
