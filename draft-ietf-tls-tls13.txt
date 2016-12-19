@@ -6742,6 +6742,10 @@ Internet-Draft                     TLS                     December 2016
       Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
 
+   -  David Wong
+      NCC Group
+      david.wong@nccgroup.trust
+
    -  Tim Wright
       Vodafone
       timothy.wright@vodafone.com
@@ -6760,10 +6764,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
