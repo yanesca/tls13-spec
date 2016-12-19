@@ -799,16 +799,16 @@ Internet-Draft                     TLS                     December 2016
 
    The server processes the ClientHello and determines the appropriate
    cryptographic parameters for the connection.  It then responds with
-   its own ServerHello, which indicates the negotiated connection
-   parameters.  [Section 4.1.3].  The combination of the ClientHello and
-   the ServerHello determines the shared keys.  If (EC)DHE key
-   establishment is in use, then the ServerHello contains a "key_share"
-   extension with the server's ephemeral Diffie-Hellman share which MUST
-   be in the same group as one of the client's shares.  If PSK key
-   establishment is in use, then the ServerHello contains a
-   "pre_shared_key" extension indicating which of the client's offered
-   PSKs was selected.  Note that implementations can use (EC)DHE and PSK
-   together, in which case both extensions will be supplied.
+   its own ServerHello (Section 4.1.3), which indicates the negotiated
+   connection parameters.  The combination of the ClientHello and the
+   ServerHello determines the shared keys.  If (EC)DHE key establishment
+   is in use, then the ServerHello contains a "key_share" extension with
+   the server's ephemeral Diffie-Hellman share which MUST be in the same
+   group as one of the client's shares.  If PSK key establishment is in
+   use, then the ServerHello contains a "pre_shared_key" extension
+   indicating which of the client's offered PSKs was selected.  Note
+   that implementations can use (EC)DHE and PSK together, in which case
+   both extensions will be supplied.
 
    The server then sends two messages to establish the Server
    Parameters:
@@ -4234,7 +4234,7 @@ Internet-Draft                     TLS                     December 2016
       makes it impossible to continue.
 
    inappropriate_fallback  Sent by a server in response to an invalid
-      connection retry attempt from a client. (see [RFC7507])
+      connection retry attempt from a client [RFC7507].
 
    missing_extension  Sent by endpoints that receive a hello message not
       containing an extension that is mandatory to send for the offered
@@ -4969,14 +4969,14 @@ Internet-Draft                     TLS                     December 2016
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <http://www.rfc-editor.org/info/rfc6979>.
 
+   [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
+              Suite Value (SCSV) for Preventing Protocol Downgrade
+              Attacks", RFC 7507, DOI 10.17487/RFC7507, April 2015,
+              <http://www.rfc-editor.org/info/rfc7507>.
+
    [RFC7539]  Nir, Y. and A. Langley, "ChaCha20 and Poly1305 for IETF
               Protocols", RFC 7539, DOI 10.17487/RFC7539, May 2015,
               <http://www.rfc-editor.org/info/rfc7539>.
-
-   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
-              for Security", RFC 7748, DOI 10.17487/RFC7748, January
-              2016, <http://www.rfc-editor.org/info/rfc7748>.
-
 
 
 
@@ -4985,6 +4985,10 @@ Rescorla                  Expires June 22, 2017                [Page 89]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
+              for Security", RFC 7748, DOI 10.17487/RFC7748, January
+              2016, <http://www.rfc-editor.org/info/rfc7748>.
 
    [RFC7919]  Gillmor, D., "Negotiated Finite Field Diffie-Hellman
               Ephemeral Parameters for Transport Layer Security (TLS)",
@@ -5029,11 +5033,7 @@ Internet-Draft                     TLS                     December 2016
 
    [DOW92]    Diffie, W., van Oorschot, P., and M. Wiener,
               ""Authentication and authenticated key exchanges"",
-              Designs, Codes and Cryptography , n.d..
-
-   [DSS]      National Institute of Standards and Technology, U.S.
-              Department of Commerce, "Digital Signature Standard,
-              version 4", NIST FIPS PUB 186-4, 2013.
+              Designs, Codes and Cryptography , 1992.
 
 
 
@@ -5041,6 +5041,10 @@ Rescorla                  Expires June 22, 2017                [Page 90]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [DSS]      National Institute of Standards and Technology, U.S.
+              Department of Commerce, "Digital Signature Standard,
+              version 4", NIST FIPS PUB 186-4, 2013.
 
    [ECDSA]    American National Standards Institute, "Public Key
               Cryptography for the Financial Services Industry: The
@@ -5087,16 +5091,15 @@ Internet-Draft                     TLS                     December 2016
    [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
               Syntax Standard, version 1.5", November 1993.
 
-   [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
-              Syntax Standard, version 1.5", November 1993.
-
-
 
 
 Rescorla                  Expires June 22, 2017                [Page 91]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [PKCS7]    RSA Laboratories, "PKCS #7: RSA Cryptographic Message
+              Syntax Standard, version 1.5", November 1993.
 
    [PSK-FINISHED]
               Cremers, C., Horvat, M., van der Merwe, T., and S. Scott,
@@ -5143,9 +5146,6 @@ Internet-Draft                     TLS                     December 2016
    [RFC4681]  Santesson, S., Medvinsky, A., and J. Ball, "TLS User
               Mapping Extension", RFC 4681, DOI 10.17487/RFC4681,
               October 2006, <http://www.rfc-editor.org/info/rfc4681>.
-
-
-
 
 
 

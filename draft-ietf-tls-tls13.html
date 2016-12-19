@@ -873,7 +873,7 @@ Auth | {CertificateVerify*}
   <li>Authentication: Authenticate the server (and optionally the client) and provide key confirmation and handshake integrity.</li>
 </ul>
 <p id="rfc.section.2.p.8">In the Key Exchange phase, the client sends the ClientHello (<a href="#client-hello">Section 4.1.2</a>) message, which contains a random nonce (ClientHello.random); its offered protocol versions; a list of symmetric cipher/HKDF hash pairs; some set of Diffie-Hellman key shares (in the &#8220;key_share&#8221; extension <a href="#key-share">Section 4.2.5</a>), a set of pre-shared key labels (in the &#8220;pre_shared_key&#8221; extension <a href="#pre-shared-key-extension">Section 4.2.8</a>) or both; and potentially some other extensions.</p>
-<p id="rfc.section.2.p.9">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello, which indicates the negotiated connection parameters. [<a href="#server-hello">Section 4.1.3</a>]. The combination of the ClientHello and the ServerHello determines the shared keys. If (EC)DHE key establishment is in use, then the ServerHello contains a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the client&#8217;s shares. If PSK key establishment is in use, then the ServerHello contains a &#8220;pre_shared_key&#8221; extension indicating which of the client&#8217;s offered PSKs was selected.  Note that implementations can use (EC)DHE and PSK together, in which case both extensions will be supplied.</p>
+<p id="rfc.section.2.p.9">The server processes the ClientHello and determines the appropriate cryptographic parameters for the connection. It then responds with its own ServerHello (<a href="#server-hello">Section 4.1.3</a>), which indicates the negotiated connection parameters. The combination of the ClientHello and the ServerHello determines the shared keys. If (EC)DHE key establishment is in use, then the ServerHello contains a &#8220;key_share&#8221; extension with the server&#8217;s ephemeral Diffie-Hellman share which MUST be in the same group as one of the client&#8217;s shares. If PSK key establishment is in use, then the ServerHello contains a &#8220;pre_shared_key&#8221; extension indicating which of the client&#8217;s offered PSKs was selected.  Note that implementations can use (EC)DHE and PSK together, in which case both extensions will be supplied.</p>
 <p id="rfc.section.2.p.10">The server then sends two messages to establish the Server Parameters:</p>
 <p/>
 
@@ -2204,7 +2204,7 @@ finished_key =
   <dt>internal_error</dt>
   <dd style="margin-left: 8">An internal error unrelated to the peer or the correctness of the protocol (such as a memory allocation failure) makes it impossible to continue.</dd>
   <dt>inappropriate_fallback</dt>
-  <dd style="margin-left: 8">Sent by a server in response to an invalid connection retry attempt from a client. (see [RFC7507])</dd>
+  <dd style="margin-left: 8">Sent by a server in response to an invalid connection retry attempt from a client <a href="#RFC7507">[RFC7507]</a>.</dd>
   <dt>missing_extension</dt>
   <dd style="margin-left: 8">Sent by endpoints that receive a hello message not containing an extension that is mandatory to send for the offered TLS version or other negotiated parameters.</dd>
   <dt>unsupported_extension</dt>
@@ -2725,6 +2725,12 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC7507">[RFC7507]</b>
+      </td>
+      <td class="top"><a>Moeller, B.</a> and <a>A. Langley</a>, "<a href="http://tools.ietf.org/html/rfc7507">TLS Fallback Signaling Cipher Suite Value (SCSV) for Preventing Protocol Downgrade Attacks</a>", RFC 7507, DOI 10.17487/RFC7507, April 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC7539">[RFC7539]</b>
       </td>
       <td class="top"><a>Nir, Y.</a> and <a>A. Langley</a>, "<a href="http://tools.ietf.org/html/rfc7539">ChaCha20 and Poly1305 for IETF Protocols</a>", RFC 7539, DOI 10.17487/RFC7539, May 2015.</td>
@@ -2792,7 +2798,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
       <td class="reference">
         <b id="DOW92">[DOW92]</b>
       </td>
-      <td class="top"><a>Diffie, W.</a>, <a>van Oorschot, P.</a> and <a>M. Wiener</a>, "<a>&#8220;Authentication and authenticated key exchanges&#8221;</a>", Designs, Codes and Cryptography , n.d..</td>
+      <td class="top"><a>Diffie, W.</a>, <a>van Oorschot, P.</a> and <a>M. Wiener</a>, "<a>&#8220;Authentication and authenticated key exchanges&#8221;</a>", Designs, Codes and Cryptography , 1992.</td>
     </tr>
     <tr>
       <td class="reference">
