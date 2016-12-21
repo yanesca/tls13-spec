@@ -381,7 +381,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-21" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -402,7 +402,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 19, 2016</td>
+  <td class="right">December 21, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -421,7 +421,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 22, 2017</td>
+  <td class="left">Expires: June 24, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -442,7 +442,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 22, 2017.</p>
+<p>This Internet-Draft will expire on June 24, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1353,7 +1353,109 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.p.4">The list of extension types is maintained by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <p id="rfc.section.4.2.p.5">Extensions are generally structured in a request/response fashion, though some extensions are just indications with no corresponding response. The client sends its extension requests in the ClientHello message and the server sends its extension responses in the ServerHello, EncryptedExtensions and HelloRetryRequest messages. The server sends extension requests, in the CertificateRequest message which can be responded to with the client&#8217;s Certificate message. The server can also send unsolicited extensions in the NewSessionTicket, though the client does not respond directly to these.</p>
 <p id="rfc.section.4.2.p.6">Implementations MUST NOT send extension responses if the remote endpoint did not send the corresponding extension requests, with the exception of the &#8220;cookie&#8221; extension in HelloRetryRequest.  Upon receiving such an extension, an endpoint MUST abort the handshake with an &#8220;unsupported_extension&#8221; alert.</p>
-<p id="rfc.section.4.2.p.7">The table in <a href="#iana-considerations">Section 10</a> indicates where a given extension may appear. If the client receives an extension which is not specified for a given message it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.2.p.7">The table below indicates the messages where a given extension may appear, using the following notation: CH (ClientHello), SH (ServerHello), EE (EncryptedExtensions), CT (Certificate), CR (CertificateRequest), NST (NewSessionTicket) and HRR (HelloRetryRequest). If an implementation receives an extension which it recognizes and which is not specified for the message in which it appears it MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <thead>
+    <tr>
+      <th class="left">Extension</th>
+      <th class="right">TLS 1.3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">server_name <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">max_fragment_length <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">client_certificate_url <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">status_request <a href="#RFC6066">[RFC6066]</a></td>
+      <td class="right">CH, CT</td>
+    </tr>
+    <tr>
+      <td class="left">user_mapping <a href="#RFC4681">[RFC4681]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">cert_type <a href="#RFC6091">[RFC6091]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">supported_groups <a href="#RFC7919">[RFC7919]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">signature_algorithms <a href="#RFC5246">[RFC5246]</a></td>
+      <td class="right">CH, CR</td>
+    </tr>
+    <tr>
+      <td class="left">use_srtp <a href="#RFC5764">[RFC5764]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">heartbeat <a href="#RFC6520">[RFC6520]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">application_layer_protocol_negotiation <a href="#RFC7301">[RFC7301]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
+      <td class="right">CH, CR, CT</td>
+    </tr>
+    <tr>
+      <td class="left">client_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
+      <td class="right">CH, EE</td>
+    </tr>
+    <tr>
+      <td class="left">server_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
+      <td class="right">CH, CT</td>
+    </tr>
+    <tr>
+      <td class="left">padding <a href="#RFC7685">[RFC7685]</a></td>
+      <td class="right">CH</td>
+    </tr>
+    <tr>
+      <td class="left">key_share [[this document]]</td>
+      <td class="right">CH, SH, HRR</td>
+    </tr>
+    <tr>
+      <td class="left">pre_shared_key [[this document]]</td>
+      <td class="right">CH, SH</td>
+    </tr>
+    <tr>
+      <td class="left">psk_key_exchange_modes [[this document]]</td>
+      <td class="right">CH</td>
+    </tr>
+    <tr>
+      <td class="left">early_data [[this document]]</td>
+      <td class="right">CH, EE, NST</td>
+    </tr>
+    <tr>
+      <td class="left">cookie [[this document]]</td>
+      <td class="right">CH, HRR</td>
+    </tr>
+    <tr>
+      <td class="left">supported_versions [[this document]]</td>
+      <td class="right">CH</td>
+    </tr>
+    <tr>
+      <td class="left">certificate_authorities [[this document]]</td>
+      <td class="right">CH, CR</td>
+    </tr>
+    <tr>
+      <td class="left">oid_filters [[this document]]</td>
+      <td class="right">CR</td>
+    </tr>
+  </tbody>
+</table>
 <p id="rfc.section.4.2.p.8">When multiple extensions of different types are present, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension">Section 4.2.8</a> which MUST be the last extension in the ClientHello.  There MUST NOT be more than one extension of the same type.</p>
 <p id="rfc.section.4.2.p.9">In TLS 1.3, unlike TLS 1.2, extensions are renegotiated with each handshake even when in resumption-PSK mode. However, 0-RTT parameters are those negotiated in the previous handshake; mismatches may require rejecting 0-RTT (see <a href="#early-data-indication">Section 4.2.7</a>).</p>
 <p id="rfc.section.4.2.p.10">There are subtle (and not so subtle) interactions that may occur in this protocol between new features and existing features which may result in a significant reduction in overall security. The following considerations should be taken into account when designing new extensions:</p>
@@ -2438,197 +2540,16 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <p/>
 
 <ul>
-  <li>TLS ExtensionType Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, and &#8220;early_data&#8221; extensions as defined in this document.  <br/><br/> IANA [shall update/has updated] this registry to add a &#8220;Recommended&#8221; column. IANA [shall/has] initially populated this column with the values in the table below. This table has been generated by marking Standards Track RFCs as &#8220;Yes&#8221; and all others as &#8220;No&#8221;.  <br/><br/> IANA [shall update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column which lists the messages in which the extension may appear using the following notation: CH (ClientHello), SH (ServerHello), EE (EncryptedExtensions), CT (Certificate), CR (CertificateRequest), NST (NewSessionTicket) and HRR (HelloRetryRequest). This column [shall be/has been] initially populated with the values in this document.</li>
+  <li>IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, &#8220;psk_key_exchange_modes&#8221;, &#8220;early_data&#8221;, &#8220;cookie&#8221;, &#8220;supported_versions&#8221;, &#8220;certificate_authorities&#8221;, and &#8220;oid_filters&#8221; extensions with the values defined in this document and the Recommended value of &#8220;Yes&#8221;.</li>
+  <li>IANA [SHALL update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column which lists the messages in which the extension may appear. This column [SHALL be/has been] initially populated from the table in <a href="#extensions">Section 4.2</a> with any extension not listed there marked as &#8220;-&#8220; to indicate that it is not used by TLS 1.3.</li>
 </ul>
-<table cellpadding="3" cellspacing="0" class="tt full center">
-  <thead>
-    <tr>
-      <th class="left">Extension</th>
-      <th class="right">Recommended</th>
-      <th class="right">TLS 1.3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="left">server_name <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">max_fragment_length <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">client_certificate_url <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">trusted_ca_keys <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">truncated_hmac <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">status_request <a href="#RFC6066">[RFC6066]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, CT</td>
-    </tr>
-    <tr>
-      <td class="left">user_mapping <a href="#RFC4681">[RFC4681]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">client_authz <a href="#RFC5878">[RFC5878]</a></td>
-      <td class="right">No</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">server_authz <a href="#RFC5878">[RFC5878]</a></td>
-      <td class="right">No</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">cert_type <a href="#RFC6091">[RFC6091]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">supported_groups <a href="#RFC7919">[RFC7919]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">ec_point_formats <a href="#RFC4492">[RFC4492]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">srp <a href="#RFC5054">[RFC5054]</a></td>
-      <td class="right">No</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">signature_algorithms <a href="#RFC5246">[RFC5246]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, CR</td>
-    </tr>
-    <tr>
-      <td class="left">use_srtp <a href="#RFC5764">[RFC5764]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">heartbeat <a href="#RFC6520">[RFC6520]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">application_layer_protocol_negotiation <a href="#RFC7301">[RFC7301]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">status_request_v2 <a href="#RFC6961">[RFC6961]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">signed_certificate_timestamp <a href="#RFC6962">[RFC6962]</a></td>
-      <td class="right">No</td>
-      <td class="right">CH, CR, CT</td>
-    </tr>
-    <tr>
-      <td class="left">client_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE</td>
-    </tr>
-    <tr>
-      <td class="left">server_certificate_type <a href="#RFC7250">[RFC7250]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH, CT</td>
-    </tr>
-    <tr>
-      <td class="left">padding <a href="#RFC7685">[RFC7685]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">CH</td>
-    </tr>
-    <tr>
-      <td class="left">encrypt_then_mac <a href="#RFC7366">[RFC7366]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">extended_master_secret <a href="#RFC7627">[RFC7627]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">SessionTicket TLS <a href="#RFC4507">[RFC4507]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">renegotiation_info <a href="#RFC5746">[RFC5746]</a></td>
-      <td class="right">Yes</td>
-      <td class="right">-</td>
-    </tr>
-    <tr>
-      <td class="left">key_share [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH, SH, HRR</td>
-    </tr>
-    <tr>
-      <td class="left">pre_shared_key [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH, SH</td>
-    </tr>
-    <tr>
-      <td class="left">psk_key_exchange_modes [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH</td>
-    </tr>
-    <tr>
-      <td class="left">early_data [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH, EE, NST</td>
-    </tr>
-    <tr>
-      <td class="left">cookie [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH, HRR</td>
-    </tr>
-    <tr>
-      <td class="left">supported_versions [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH</td>
-    </tr>
-    <tr>
-      <td class="left">certificate_authorities [[this document]]</td>
-      <td class="right">Yes</td>
-      <td class="right">CH, CR</td>
-    </tr>
-    <tr>
-      <td class="left">oid_filters [[this document]]</td>
-      <td class="right">No</td>
-      <td class="right">CR</td>
-    </tr>
-  </tbody>
-</table>
-<p id="rfc.section.10.p.5">IANA [SHALL update/has updated] this registry to include the values listed above that correspond to this document.</p>
-<p id="rfc.section.10.p.6">In addition, this document defines a new registry to be maintained by IANA:</p>
+<p id="rfc.section.10.p.5">In addition, this document defines a new registry to be maintained by IANA:</p>
 <p/>
 
 <ul>
   <li>TLS SignatureScheme Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>. Values with the first byte in the range 0-6 or with the second byte in the range 0-3 that are not currently allocated are reserved for backwards compatibility.  This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms">Section 4.2.3</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li>
 </ul>
-<p id="rfc.section.10.p.8">Finally, this document obsoletes the TLS HashAlgorithm Registry and the TLS SignatureAlgorithm Registry, both originally created in <a href="#RFC5246">[RFC5246]</a>.  IANA [SHALL update/has updated] the TLS HashAlgorithm Registry to list values 7-223 as &#8220;Reserved&#8221; and the TLS SignatureAlgorithm Registry to list values 4-223 as &#8220;Reserved&#8221;.</p>
+<p id="rfc.section.10.p.7">Finally, this document obsoletes the TLS HashAlgorithm Registry and the TLS SignatureAlgorithm Registry, both originally created in <a href="#RFC5246">[RFC5246]</a>.  IANA [SHALL update/has updated] the TLS HashAlgorithm Registry to list values 7-223 as &#8220;Reserved&#8221; and the TLS SignatureAlgorithm Registry to list values 4-223 as &#8220;Reserved&#8221;.</p>
 <h1 id="rfc.references"><a href="#rfc.references">11.</a> References</h1>
 <h2 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h2>
 <table>
