@@ -170,25 +170,28 @@ Rescorla                  Expires June 24, 2017                 [Page 3]
 Internet-Draft                     TLS                     December 2016
 
 
-     A.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 105
-   Appendix B.  Implementation Notes . . . . . . . . . . . . . . . . 106
-     B.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 106
-     B.2.  Random Number Generation and Seeding  . . . . . . . . . . 106
-     B.3.  Certificates and Authentication . . . . . . . . . . . . . 107
-     B.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 107
-     B.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 108
-     B.6.  Unauthenticated Operation . . . . . . . . . . . . . . . . 109
-   Appendix C.  Backward Compatibility . . . . . . . . . . . . . . . 109
-     C.1.  Negotiating with an older server  . . . . . . . . . . . . 110
-     C.2.  Negotiating with an older client  . . . . . . . . . . . . 111
-     C.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 111
-     C.4.  Backwards Compatibility Security Restrictions . . . . . . 111
-   Appendix D.  Overview of Security Properties  . . . . . . . . . . 112
-     D.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 113
-     D.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 115
-   Appendix E.  Working Group Information  . . . . . . . . . . . . . 117
-   Appendix F.  Contributors . . . . . . . . . . . . . . . . . . . . 117
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 121
+   Appendix B.  State Machine  . . . . . . . . . . . . . . . . . . . 105
+     B.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . . 105
+     B.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . . 106
+     B.3.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 107
+   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 109
+     C.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 109
+     C.2.  Random Number Generation and Seeding  . . . . . . . . . . 109
+     C.3.  Certificates and Authentication . . . . . . . . . . . . . 109
+     C.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 109
+     C.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 111
+     C.6.  Unauthenticated Operation . . . . . . . . . . . . . . . . 111
+   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 112
+     D.1.  Negotiating with an older server  . . . . . . . . . . . . 112
+     D.2.  Negotiating with an older client  . . . . . . . . . . . . 113
+     D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 113
+     D.4.  Backwards Compatibility Security Restrictions . . . . . . 114
+   Appendix E.  Overview of Security Properties  . . . . . . . . . . 115
+     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 115
+     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 118
+   Appendix F.  Working Group Information  . . . . . . . . . . . . . 119
+   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 119
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 124
 
 1.  Introduction
 
@@ -215,9 +218,6 @@ Internet-Draft                     TLS                     December 2016
       endpoints.  TLS does not hide the length of the data it transmits,
       though endpoints are able to pad in order to obscure lengths.
 
-   -  Integrity: Data sent over the channel cannot be modified by
-      attackers.
-
 
 
 
@@ -226,9 +226,12 @@ Rescorla                  Expires June 24, 2017                 [Page 4]
 Internet-Draft                     TLS                     December 2016
 
 
+   -  Integrity: Data sent over the channel cannot be modified by
+      attackers.
+
    These properties should be true even in the face of an attacker who
    has complete control of the network, as described in [RFC3552].  See
-   Appendix D for a more complete statement of the relevant security
+   Appendix E for a more complete statement of the relevant security
    properties.
 
    TLS consists of two primary components:
@@ -272,15 +275,14 @@ Internet-Draft                     TLS                     December 2016
 
    connection: A transport-layer connection between two endpoints.
 
-   endpoint: Either the client or server of the connection.
-
-
 
 
 Rescorla                  Expires June 24, 2017                 [Page 5]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   endpoint: Either the client or server of the connection.
 
    handshake: An initial negotiation between client and server that
    establishes the parameters of their subsequent interactions.
@@ -329,14 +331,14 @@ Internet-Draft                     TLS                     December 2016
    -  Remove unnecessary resumption_psk which is the only thing expanded
       from the resumption master secret. (*).
 
-   -  Fix signature_algorithms entry in extensions table.
-
 
 
 Rescorla                  Expires June 24, 2017                 [Page 6]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Fix signature_algorithms entry in extensions table.
 
    -  Restate rule from RFC 6066 that you can't resume unless SNI is the
       same.
@@ -383,8 +385,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Clarify the behavior of no exporter context and make it the same
       as an empty context.(*)
-
-
 
 
 
@@ -1662,11 +1662,11 @@ Internet-Draft                     TLS                     December 2016
       1.3, the client indicates its version preferences in the
       "supported_versions" extension (Section 4.2.1) and the
       legacy_version field MUST be set to 0x0303, which was the version
-      number for TLS 1.2.  (See Appendix C for details about backward
+      number for TLS 1.2.  (See Appendix D for details about backward
       compatibility.)
 
    random  32 bytes generated by a secure random number generator.  See
-      Appendix B for additional information.
+      Appendix C for additional information.
 
    legacy_session_id  Versions of TLS before TLS 1.3 supported a session
       resumption feature which has been merged with Pre-Shared Keys in
@@ -1689,7 +1689,7 @@ Internet-Draft                     TLS                     December 2016
       contains cipher suites the server does not recognize, support, or
       wish to use, the server MUST ignore those cipher suites, and
       process the remaining ones as usual.  Values are defined in
-      Appendix A.4.  If the client is attempting a PSK key
+      Appendix B.3.  If the client is attempting a PSK key
       establishment, it SHOULD advertise at least one cipher suite
       containing a Hash associated with the PSK.
 
@@ -1760,7 +1760,7 @@ Internet-Draft                     TLS                     December 2016
       ClientHello.supported_versions extension.  A client which receives
       a version that was not offered MUST abort the handshake.  For this
       version of the specification, the version is 0x0304.  (See
-      Appendix C for details about backward compatibility.)
+      Appendix D for details about backward compatibility.)
 
    random  This structure is generated by the server and MUST be
       generated independently of the ClientHello.random.
@@ -3813,7 +3813,7 @@ Internet-Draft                     TLS                     December 2016
    backwards compatibility, the record layer version identifies as
    simply TLS 1.0.  Endpoints supporting multiple versions negotiate the
    version to use by following the procedure and requirements in
-   Appendix C.
+   Appendix D.
 
    When record protection has not yet been engaged, TLSPlaintext
    structures are written directly onto the wire.  Once record
@@ -4279,7 +4279,7 @@ Internet-Draft                     TLS                     December 2016
       Finished message or a PSK binder.
 
    protocol_version  The protocol version the peer has attempted to
-      negotiate is recognized but not supported. (see Appendix C)
+      negotiate is recognized but not supported. (see Appendix D)
 
    insufficient_security  Returned instead of "handshake_failure" when a
       negotiation has failed specifically because the server requires
@@ -4675,7 +4675,7 @@ Internet-Draft                     TLS                     December 2016
    otherwise, a TLS-compliant application MUST implement the
    TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the
    TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher
-   suites. (see Appendix A.4)
+   suites. (see Appendix B.3)
 
    A TLS-compliant application MUST support digital signatures with
    rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for
@@ -4747,7 +4747,7 @@ Internet-Draft                     TLS                     December 2016
 9.  Security Considerations
 
    Security issues are discussed throughout this memo, especially in
-   Appendix B, Appendix C, and Appendix D.
+   Appendix C, Appendix D, and Appendix E.
 
 10.  IANA Considerations
 
@@ -4768,7 +4768,7 @@ Internet-Draft                     TLS                     December 2016
       Use [RFC5226].
 
       IANA [SHALL add/has added] the cipher suites listed in
-      Appendix A.4 to the registry.  The "Value" and "Description"
+      Appendix B.3 to the registry.  The "Value" and "Description"
       columns are taken from the table.  The "DTLS-OK" and "Recommended"
       columns are both marked as "Yes" for each new cipher suite.
       [[This assumes [I-D.sandj-tls-iana-registry-updates] has been
@@ -5847,13 +5847,152 @@ A.3.5.  Updating Keys
           KeyUpdateRequest request_update;
       } KeyUpdate;
 
-A.4.  Cipher Suites
+Appendix B.  State Machine
+
+   This section provides a summary of the legal state transitions for
+   the client and server handshakes.  State names (in all capitals,
+   e.g., START) have no formal meaning but are provided for ease of
+   comprehension.  Messages which are sent only sometimes are indicated
+   in [].
+
+B.1.  Client
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 105]
+
+Internet-Draft                     TLS                     December 2016
+
+
+                              START  <---+
+                                |        |
+              Send ClientHello  |        | Recv HelloRetryRequest
+            /                   v        |
+           |                  WAIT_SH ---+
+           |                    |
+       Can |                    | Recv ServerHello
+      send |                    V
+     early |                 WAIT_EE
+      data |                    | Recv EncryptedExtensions
+           |           +--------+--------+
+           |     Using |                 | Using certificate
+           |       PSK |                 v
+           |           |            WAIT_CERT_CR
+           |           |        Recv |       | Recv CertificateRequest
+           |           | Certificate |       v
+           |           |             |    WAIT_CERT
+           |           |             |       | Recv Certificate
+           |           |             v       v
+           |           |              WAIT_CV
+           |           |                 | Recv CertificateVerify
+           |           +> WAIT_FINISHED <+
+           |                  | Recv Finished
+           \                  |
+                              | [Send EndOfEarlyData]
+                              | [Send Certificate [+ CertificateVerify]]
+                              | Send Finished
+    Can send                  v
+    app data -->          CONNECTED
+    after
+    here
+
+B.2.  Server
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 106]
+
+Internet-Draft                     TLS                     December 2016
+
+
+                              START  <----+
+                                |         |
+               Recv ClientHello |         | Send HelloRetryRequest
+                                v         |
+                             RECVD_CH ----+
+                                |
+                                | Select parameters
+                                v
+                             NEGOTIATED
+                                | Send ServerHello
+                                | Send EncryptedExtensions
+                                | [Send CertificateRequest]
+ Can send                       | [Send Certificate + CertificateVerify]
+ app data -->                   | Send Finished
+ after                 +--------+--------+
+ here         No 0-RTT |                 | 0-RTT
+                       |                 v
+                       |             WAIT_EOED <---+
+                       |            Recv |   |     | Recv
+                       |  EndOfEarlyData |   |     | early data
+                       |                 |   +-----+
+                       +> WAIT_FLIGHT2 <-+
+                                |
+                       +--------+--------+
+               No auth |                 | Client auth
+                       |                 |
+                       |                 v
+                       |             WAIT_CERT
+                       |        Recv |       | Recv Certificate
+                       |       empty |       v
+                       | Certificate |    WAIT_CV
+                       |             |       | Recv
+                       |             v       | CertificateVerify
+                       +-> WAIT_FINISHED <---+
+                                | Recv Finished
+                                v
+                            CONNECTED
+
+B.3.  Cipher Suites
 
    A symmetric cipher suite defines the pair of the AEAD algorithm and
    hash algorithm to be used with HKDF.  Cipher suite names follow the
    naming convention:
 
       CipherSuite TLS_AEAD_HASH = VALUE;
+
+
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 107]
+
+Internet-Draft                     TLS                     December 2016
+
 
       +-----------+------------------------------------------------+
       | Component | Contents                                       |
@@ -5869,18 +6008,6 @@ A.4.  Cipher Suites
 
    This specification defines the following cipher suites for use with
    TLS 1.3.
-
-
-
-
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 105]
-
-Internet-Draft                     TLS                     December 2016
-
 
               +------------------------------+-------------+
               | Description                  | Value       |
@@ -5911,12 +6038,24 @@ Internet-Draft                     TLS                     December 2016
    New cipher suite values are assigned by IANA as described in
    Section 10.
 
-Appendix B.  Implementation Notes
+
+
+
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 108]
+
+Internet-Draft                     TLS                     December 2016
+
+
+Appendix C.  Implementation Notes
 
    The TLS protocol cannot prevent many common security mistakes.  This
    section provides several recommendations to assist implementors.
 
-B.1.  API considerations for 0-RTT
+C.1.  API considerations for 0-RTT
 
    0-RTT data has very different security properties from data
    transmitted after a completed handshake: it can be replayed.
@@ -5925,26 +6064,18 @@ B.1.  API considerations for 0-RTT
    SHOULD NOT automatically resend 0-RTT data if it is rejected by the
    server.
 
-B.2.  Random Number Generation and Seeding
+C.2.  Random Number Generation and Seeding
 
    TLS requires a cryptographically secure pseudorandom number generator
    (PRNG).  In most cases, the operating system provides an appropriate
    facility such as /dev/urandom, which should be used absent other
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 106]
-
-Internet-Draft                     TLS                     December 2016
-
-
    (performance) concerns.  It is generally preferable to use an
    existing PRNG implementation in preference to crafting a new one, and
    many adequate cryptographic libraries are already available under
    favorable license terms.  Should those prove unsatisfactory,
    [RFC4086] provides guidance on the generation of random values.
 
-B.3.  Certificates and Authentication
+C.3.  Certificates and Authentication
 
    Implementations are responsible for verifying the integrity of
    certificates and should generally support certificate revocation
@@ -5957,7 +6088,7 @@ B.3.  Certificates and Authentication
    signatures weaker than 2048-bit RSA or 224-bit ECDSA are not
    appropriate for secure applications.
 
-B.4.  Implementation Pitfalls
+C.4.  Implementation Pitfalls
 
    Implementation experience has shown that certain parts of earlier TLS
    specifications are not easy to understand, and have been a source of
@@ -5968,6 +6099,13 @@ B.4.  Implementation Pitfalls
 
    TLS protocol issues:
 
+
+
+Rescorla                  Expires June 24, 2017               [Page 109]
+
+Internet-Draft                     TLS                     December 2016
+
+
    -  Do you correctly handle handshake messages that are fragmented to
       multiple TLS records (see Section 5.1)?  Including corner cases
       like a ClientHello that is split to several small fragments?  Do
@@ -5976,23 +6114,16 @@ B.4.  Implementation Pitfalls
       handshake messages can be large enough to require fragmentation.
 
    -  Do you ignore the TLS record layer version number in all
-      unencrypted TLS records? (see Appendix C)
+      unencrypted TLS records? (see Appendix D)
 
    -  Have you ensured that all support for SSL, RC4, EXPORT ciphers,
       and MD5 (via the "signature_algorithms" extension) is completely
       removed from all possible configurations that support TLS 1.3 or
       later, and that attempts to use these obsolete capabilities fail
-      correctly? (see Appendix C)
+      correctly? (see Appendix D)
 
    -  Do you handle TLS extensions in ClientHello correctly, including
       unknown extensions?
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 107]
-
-Internet-Draft                     TLS                     December 2016
-
 
    -  When the server has requested a client certificate, but no
       suitable certificate is available, do you correctly send an empty
@@ -6023,8 +6154,16 @@ Internet-Draft                     TLS                     December 2016
    -  Does your TLS client check that the Diffie-Hellman parameters sent
       by the server are acceptable, (see Section 4.2.5.1)?
 
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 110]
+
+Internet-Draft                     TLS                     December 2016
+
+
    -  Do you use a strong and, most importantly, properly seeded random
-      number generator (see Appendix B.2) when generating Diffie-Hellman
+      number generator (see Appendix C.2) when generating Diffie-Hellman
       private values, the ECDSA "k" parameter, and other security-
       critical values?  It is RECOMMENDED that implementations implement
       "deterministic ECDSA" as specified in [RFC6979].
@@ -6035,27 +6174,19 @@ Internet-Draft                     TLS                     December 2016
    -  Do you verify signatures after making them to protect against RSA-
       CRT key leaks?  [FW15]
 
-B.5.  Client Tracking Prevention
+C.5.  Client Tracking Prevention
 
    Clients SHOULD NOT reuse a session ticket for multiple connections.
    Reuse of a session ticket allows passive observers to correlate
    different connections.  Servers that issue session tickets SHOULD
    offer at least as many session tickets as the number of connections
    that a client might use; for example, a web browser using HTTP/1.1
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 108]
-
-Internet-Draft                     TLS                     December 2016
-
-
    [RFC7230] might open six connections to a server.  Servers SHOULD
    issue new session tickets with every connection.  This ensures that
    clients are always able to use a new session ticket when creating a
    new connection.
 
-B.6.  Unauthenticated Operation
+C.6.  Unauthenticated Operation
 
    Previous versions of TLS offered explicitly unauthenticated cipher
    suites based on anonymous Diffie-Hellman.  These modes have been
@@ -6079,7 +6210,15 @@ B.6.  Unauthenticated Operation
    NOT use TLS in such a way absent explicit configuration or a specific
    application profile.
 
-Appendix C.  Backward Compatibility
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 111]
+
+Internet-Draft                     TLS                     December 2016
+
+
+Appendix D.  Backward Compatibility
 
    The TLS protocol provides a built-in mechanism for version
    negotiation between endpoints potentially supporting different
@@ -6098,14 +6237,6 @@ Appendix C.  Backward Compatibility
    TLSCiphertext.legacy_record_version MAY be ignored, or MAY be
    validated to match the fixed constant value.  Version negotiation is
    performed using only the handshake versions.
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 109]
-
-Internet-Draft                     TLS                     December 2016
-
-
    (ClientHello.legacy_version, ClientHello "supported_versions"
    extension, and ServerHello.version) In order to maximize
    interoperability with older endpoints, implementations that negotiate
@@ -6127,7 +6258,7 @@ Internet-Draft                     TLS                     December 2016
    Extended Master Secret extension in their APIs whenever TLS 1.3 is
    used.
 
-C.1.  Negotiating with an older server
+D.1.  Negotiating with an older server
 
    A TLS 1.3 client who wishes to negotiate with servers that do not
    support TLS 1.3 will send a normal TLS 1.3 ClientHello containing
@@ -6135,13 +6266,21 @@ C.1.  Negotiating with an older server
    version in the "supported_versions" extension.  If the server does
    not support TLS 1.3 it will respond with a ServerHello containing an
    older version number.  If the client agrees to use this version, the
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 112]
+
+Internet-Draft                     TLS                     December 2016
+
+
    negotiation will proceed as appropriate for the negotiated protocol.
    A client resuming a session SHOULD initiate the connection using the
    version that was previously negotiated.
 
    Note that 0-RTT data is not compatible with older servers and SHOULD
    NOT be sent absent knowledge that the server supports TLS 1.3.  See
-   Appendix C.3.
+   Appendix D.3.
 
    If the version chosen by the server is not supported by the client
    (or not acceptable), the client MUST abort the handshake with a
@@ -6153,19 +6292,10 @@ C.1.  Negotiating with an older server
    Interoperability with buggy servers is a complex topic beyond the
    scope of this document.  Multiple connection attempts may be required
    in order to negotiate a backwards compatible connection, however,
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 110]
-
-Internet-Draft                     TLS                     December 2016
-
-
    this practice is vulnerable to downgrade attacks and is NOT
    RECOMMENDED.
 
-C.2.  Negotiating with an older client
+D.2.  Negotiating with an older client
 
    A TLS server can also receive a ClientHello indicating a version
    number smaller than its highest supported version.  If the
@@ -6185,13 +6315,21 @@ C.2.  Negotiating with an older client
    TLS 1.x versions in this field, however its value MUST always be
    ignored.
 
-C.3.  Zero-RTT backwards compatibility
+D.3.  Zero-RTT backwards compatibility
 
    0-RTT data is not compatible with older servers.  An older server
    will respond to the ClientHello with an older ServerHello, but it
    will not correctly skip the 0-RTT data and will fail to complete the
    handshake.  This can cause issues when a client attempts to use
    0-RTT, particularly against multi-server deployments.  For example, a
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 113]
+
+Internet-Draft                     TLS                     December 2016
+
+
    deployment could deploy TLS 1.3 gradually with some servers
    implementing TLS 1.3 and some implementing TLS 1.2, or a TLS 1.3
    deployment could be downgraded to TLS 1.2.
@@ -6205,18 +6343,10 @@ C.3.  Zero-RTT backwards compatibility
    a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
    enabling 0-RTT.
 
-C.4.  Backwards Compatibility Security Restrictions
+D.4.  Backwards Compatibility Security Restrictions
 
    Implementations negotiating use of older versions of TLS SHOULD
    prefer forward secure and AEAD cipher suites, when available.
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 111]
-
-Internet-Draft                     TLS                     December 2016
-
 
    The security of RC4 cipher suites is considered insufficient for the
    reasons cited in [RFC7465].  Implementations MUST NOT offer or
@@ -6248,6 +6378,14 @@ Internet-Draft                     TLS                     December 2016
 
    Implementations MUST NOT send any records with a version less than
    0x0300.  Implementations SHOULD NOT accept any records with a version
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 114]
+
+Internet-Draft                     TLS                     December 2016
+
+
    less than 0x0300 (but may inadvertently do so if the record version
    number is ignored completely).
 
@@ -6255,7 +6393,7 @@ Internet-Draft                     TLS                     December 2016
    Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
    and has been shown to be insecure in some scenarios.
 
-Appendix D.  Overview of Security Properties
+Appendix E.  Overview of Security Properties
 
    A complete security analysis of TLS is outside the scope of this
    document.  In this section, we provide an informal description the
@@ -6265,16 +6403,7 @@ Appendix D.  Overview of Security Properties
    We cover properties of the handshake separately from those of the
    record layer.
 
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 112]
-
-Internet-Draft                     TLS                     December 2016
-
-
-D.1.  Handshake
+E.1.  Handshake
 
    The TLS handshake is an Authenticated Key Exchange (AKE) protocol
    which is intended to provide both one-way authenticated (server-only)
@@ -6304,6 +6433,15 @@ D.1.  Handshake
       only to the communicating parties, not to the attacker (See
       [CK01]; defn 1, part 2).  Note that in a unilaterally
       authenticated connection, the attacker can establish its own
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 115]
+
+Internet-Draft                     TLS                     December 2016
+
+
       session keys with the server, but those session keys are distinct
       from those established by the client.
 
@@ -6322,14 +6460,6 @@ D.1.  Handshake
 
    Forward secret  If the long-term keying material (in this case the
       signature keys in certificate-based authentication modes or the
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 113]
-
-Internet-Draft                     TLS                     December 2016
-
-
       external/resumption PSK in PSK with (EC)DHE modes) are compromised
       after the handshake is complete, this does not compromise the
       security of the session key (See [DOW92]).  The forward secrecy
@@ -6360,6 +6490,14 @@ Internet-Draft                     TLS                     December 2016
    connection N+1 is separate from the traffic keys used by connection
    N, thus providing forward secrecy between the connections.
 
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 116]
+
+Internet-Draft                     TLS                     December 2016
+
+
    The PSK binder value forms a binding between a PSK and the current
    handshake, as well as between the session where the PSK was
    established and the session where it was used.  This binding
@@ -6378,14 +6516,6 @@ Internet-Draft                     TLS                     December 2016
    secret (because they are generated from a unique session key).
    Exporters computed with different labels and contexts are
    computationally independent, so it is not feasible to compute one
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 114]
-
-Internet-Draft                     TLS                     December 2016
-
-
    from another or the session secret from the exported value.  Note:
    exporters can produce arbitrary-length values.  If exporters are to
    be used as channel bindings, the exported value MUST be large enough
@@ -6416,13 +6546,21 @@ Internet-Draft                     TLS                     December 2016
    encryption keys do not provide full forward secrecy and that the
    server is not able to guarantee full uniqueness of the handshake
    (non-replayability) without keeping potentially undue amounts of
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 117]
+
+Internet-Draft                     TLS                     December 2016
+
+
    state.  See Section 4.2.7 for one mechanism to limit the exposure to
    replay.
 
    The reader should refer to the following references for analysis of
    the TLS handshake [CHSV16] [FGSW16] [LXZFH16].
 
-D.2.  Record Layer
+E.2.  Record Layer
 
    The record layer depends on the handshake producing a strong session
    key which can be used to derive bidirectional traffic keys and
@@ -6432,15 +6570,6 @@ D.2.  Record Layer
 
    Confidentiality.  An attacker should not be able to determine the
       plaintext contents of a given record.
-
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 115]
-
-Internet-Draft                     TLS                     December 2016
-
 
    Integrity.  An attacker should not be able to craft a new record
       which is different from an existing record which will be accepted
@@ -6473,6 +6602,14 @@ Internet-Draft                     TLS                     December 2016
    The plaintext protected by the AEAD function consists of content plus
    variable-length padding.  Because the padding is also encrypted, the
    attacker cannot directly determine the length of the padding, but may
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 118]
+
+Internet-Draft                     TLS                     December 2016
+
+
    be able to measure it indirectly by the use of timing channels
    exposed during record processing (i.e., seeing how long it takes to
    process a record).  In general, it is not known how to remove this
@@ -6490,21 +6627,13 @@ Internet-Draft                     TLS                     December 2016
    TLS does not provide security for data which is sent after a traffic
    secret is compromised (backward secrecy).  Compromise of a traffic
    secret also compromises future confidentiality and integrity.
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 116]
-
-Internet-Draft                     TLS                     December 2016
-
-
    Systems which want backward secrecy need to do a fresh handshake and
    establish a new session key with an (EC)DHE exchange.
 
    The reader should refer to the following references for analysis of
    the TLS record layer.  [TODO]
 
-Appendix E.  Working Group Information
+Appendix F.  Working Group Information
 
    The discussion list for the IETF TLS working group is located at the
    e-mail address tls@ietf.org [1].  Information on the group and
@@ -6514,7 +6643,7 @@ Appendix E.  Working Group Information
    Archives of the list can be found at: https://www.ietf.org/mail-
    archive/web/tls/current/index.html
 
-Appendix F.  Contributors
+Appendix G.  Contributors
 
    -  Martin Abadi
       University of California, Santa Cruz
@@ -6529,6 +6658,14 @@ Appendix F.  Contributors
       smb@cs.columbia.edu
 
    -  David Benjamin
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 119]
+
+Internet-Draft                     TLS                     December 2016
+
+
       Google
       davidben@google.com
 
@@ -6546,14 +6683,6 @@ Appendix F.  Contributors
 
    -  Nelson Bolyard (co-author of [RFC4492])
       Sun Microsystems, Inc.
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 117]
-
-Internet-Draft                     TLS                     December 2016
-
-
       nelson@bolyard.com
 
    -  Ran Canetti
@@ -6585,6 +6714,14 @@ Internet-Draft                     TLS                     December 2016
       fournet@microsoft.com
 
    -  Anil Gangolli
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 120]
+
+Internet-Draft                     TLS                     December 2016
+
+
       anil@busybuddha.org
 
    -  David M.  Garrett
@@ -6601,14 +6738,6 @@ Internet-Draft                     TLS                     December 2016
    -  Chris Hawk (co-author of [RFC4492])
       Corriente Networks LLC
       chris@corriente.net
-
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 118]
-
-Internet-Draft                     TLS                     December 2016
-
 
    -  Kipp Hickman
 
@@ -6641,6 +6770,14 @@ Internet-Draft                     TLS                     December 2016
       paul@cryptography.com
 
    -  Hugo Krawczyk
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 121]
+
+Internet-Draft                     TLS                     December 2016
+
+
       IBM
       hugo@ee.technion.ac.il
 
@@ -6658,14 +6795,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Ilari Liusvaara
       Independent
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 119]
-
-Internet-Draft                     TLS                     December 2016
-
-
       ilariliusvaara@welho.com
 
    -  Carl Mehner
@@ -6697,6 +6826,14 @@ Internet-Draft                     TLS                     December 2016
       alfredo.pironti@inria.fr
 
    -  Andrei Popov
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 122]
+
+Internet-Draft                     TLS                     December 2016
+
+
       Microsoft
       andrei.popov@microsoft.com
 
@@ -6714,14 +6851,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Jim Roskind
       Netscape Communications
-
-
-
-Rescorla                  Expires June 24, 2017               [Page 120]
-
-Internet-Draft                     TLS                     December 2016
-
-
       jar@netscape.com
 
    -  Michael Sabin
@@ -6753,6 +6882,14 @@ Internet-Draft                     TLS                     December 2016
       hoeteck@alum.mit.edu
 
    -  David Wong
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 123]
+
+Internet-Draft                     TLS                     December 2016
+
+
       NCC Group
       david.wong@nccgroup.trust
 
@@ -6773,4 +6910,35 @@ Author's Address
 
 
 
-Rescorla                  Expires June 24, 2017               [Page 121]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires June 24, 2017               [Page 124]
