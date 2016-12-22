@@ -346,19 +346,19 @@ address {
 <link href="#rfc.references" rel="Chapter" title="11 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="11.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="11.2 Informative References"/>
-<link href="#rfc.appendix.A" rel="Chapter" title="A Protocol Data Structures and Constant Values"/>
-<link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Record Layer"/>
-<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Alert Messages"/>
-<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Handshake Protocol"/>
-<link href="#rfc.appendix.A.3.1" rel="Chapter" title="A.3.1 Key Exchange Messages"/>
-<link href="#rfc.appendix.A.3.2" rel="Chapter" title="A.3.2 Server Parameters Messages"/>
-<link href="#rfc.appendix.A.3.3" rel="Chapter" title="A.3.3 Authentication Messages"/>
-<link href="#rfc.appendix.A.3.4" rel="Chapter" title="A.3.4 Ticket Establishment"/>
-<link href="#rfc.appendix.A.3.5" rel="Chapter" title="A.3.5 Updating Keys"/>
-<link href="#rfc.appendix.B" rel="Chapter" title="B State Machine"/>
-<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Client"/>
-<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Server"/>
-<link href="#rfc.appendix.B.3" rel="Chapter" title="B.3 Cipher Suites"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A State Machine"/>
+<link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Client"/>
+<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Server"/>
+<link href="#rfc.appendix.B" rel="Chapter" title="B Protocol Data Structures and Constant Values"/>
+<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Record Layer"/>
+<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Alert Messages"/>
+<link href="#rfc.appendix.B.3" rel="Chapter" title="B.3 Handshake Protocol"/>
+<link href="#rfc.appendix.B.3.1" rel="Chapter" title="B.3.1 Key Exchange Messages"/>
+<link href="#rfc.appendix.B.3.2" rel="Chapter" title="B.3.2 Server Parameters Messages"/>
+<link href="#rfc.appendix.B.3.3" rel="Chapter" title="B.3.3 Authentication Messages"/>
+<link href="#rfc.appendix.B.3.4" rel="Chapter" title="B.3.4 Ticket Establishment"/>
+<link href="#rfc.appendix.B.3.5" rel="Chapter" title="B.3.5 Updating Keys"/>
+<link href="#rfc.appendix.B.4" rel="Chapter" title="B.4 Cipher Suites"/>
 <link href="#rfc.appendix.C" rel="Chapter" title="C Implementation Notes"/>
 <link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 API considerations for 0-RTT"/>
 <link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Random Number Generation and Seeding"/>
@@ -384,7 +384,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-21" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-22" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -405,7 +405,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 21, 2016</td>
+  <td class="right">December 22, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -424,7 +424,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: June 24, 2017</td>
+  <td class="left">Expires: June 25, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -445,7 +445,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 24, 2017.</p>
+<p>This Internet-Draft will expire on June 25, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -527,19 +527,19 @@ address {
 <li>11.   <a href="#rfc.references">References</a></li>
 <ul><li>11.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>11.2.   <a href="#rfc.references.2">Informative References</a></li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Protocol Data Structures and Constant Values</a></li>
-<ul><li>A.1.   <a href="#rfc.appendix.A.1">Record Layer</a></li>
-<li>A.2.   <a href="#rfc.appendix.A.2">Alert Messages</a></li>
-<li>A.3.   <a href="#rfc.appendix.A.3">Handshake Protocol</a></li>
-<ul><li>A.3.1.   <a href="#rfc.appendix.A.3.1">Key Exchange Messages</a></li>
-<li>A.3.2.   <a href="#rfc.appendix.A.3.2">Server Parameters Messages</a></li>
-<li>A.3.3.   <a href="#rfc.appendix.A.3.3">Authentication Messages</a></li>
-<li>A.3.4.   <a href="#rfc.appendix.A.3.4">Ticket Establishment</a></li>
-<li>A.3.5.   <a href="#rfc.appendix.A.3.5">Updating Keys</a></li>
-</ul></ul><li>Appendix B.   <a href="#rfc.appendix.B">State Machine</a></li>
-<ul><li>B.1.   <a href="#rfc.appendix.B.1">Client</a></li>
-<li>B.2.   <a href="#rfc.appendix.B.2">Server</a></li>
-<li>B.3.   <a href="#rfc.appendix.B.3">Cipher Suites</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">State Machine</a></li>
+<ul><li>A.1.   <a href="#rfc.appendix.A.1">Client</a></li>
+<li>A.2.   <a href="#rfc.appendix.A.2">Server</a></li>
+</ul><li>Appendix B.   <a href="#rfc.appendix.B">Protocol Data Structures and Constant Values</a></li>
+<ul><li>B.1.   <a href="#rfc.appendix.B.1">Record Layer</a></li>
+<li>B.2.   <a href="#rfc.appendix.B.2">Alert Messages</a></li>
+<li>B.3.   <a href="#rfc.appendix.B.3">Handshake Protocol</a></li>
+<ul><li>B.3.1.   <a href="#rfc.appendix.B.3.1">Key Exchange Messages</a></li>
+<li>B.3.2.   <a href="#rfc.appendix.B.3.2">Server Parameters Messages</a></li>
+<li>B.3.3.   <a href="#rfc.appendix.B.3.3">Authentication Messages</a></li>
+<li>B.3.4.   <a href="#rfc.appendix.B.3.4">Ticket Establishment</a></li>
+<li>B.3.5.   <a href="#rfc.appendix.B.3.5">Updating Keys</a></li>
+</ul><li>B.4.   <a href="#rfc.appendix.B.4">Cipher Suites</a></li>
 </ul><li>Appendix C.   <a href="#rfc.appendix.C">Implementation Notes</a></li>
 <ul><li>C.1.   <a href="#rfc.appendix.C.1">API considerations for 0-RTT</a></li>
 <li>C.2.   <a href="#rfc.appendix.C.2">Random Number Generation and Seeding</a></li>
@@ -1265,7 +1265,7 @@ Subsequent Handshake:
   <dt>legacy_session_id</dt>
   <dd style="margin-left: 8">Versions of TLS before TLS 1.3 supported a session resumption feature which has been merged with Pre-Shared Keys in this version (see <a href="#resumption-and-psk">Section 2.2</a>).  This field MUST be ignored by a server negotiating TLS 1.3 and MUST be set as a zero length vector (i.e., a single zero byte length field) by clients which do not have a cached session ID set by a pre-TLS 1.3 server.</dd>
   <dt>cipher_suites</dt>
-  <dd style="margin-left: 8">This is a list of the symmetric cipher options supported by the client, specifically the record protection algorithm (including secret key length) and a hash to be used with HKDF, in descending order of client preference. If the list contains cipher suites the server does not recognize, support, or wish to use, the server MUST ignore those cipher suites, and process the remaining ones as usual. Values are defined in <a href="#cipher-suites">Appendix B.3</a>. If the client is attempting a PSK key establishment, it SHOULD advertise at least one cipher suite containing a Hash associated with the PSK.</dd>
+  <dd style="margin-left: 8">This is a list of the symmetric cipher options supported by the client, specifically the record protection algorithm (including secret key length) and a hash to be used with HKDF, in descending order of client preference. If the list contains cipher suites the server does not recognize, support, or wish to use, the server MUST ignore those cipher suites, and process the remaining ones as usual. Values are defined in <a href="#cipher-suites">Appendix B.4</a>. If the client is attempting a PSK key establishment, it SHOULD advertise at least one cipher suite containing a Hash associated with the PSK.</dd>
   <dt>legacy_compression_methods</dt>
   <dd style="margin-left: 8">Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. For every TLS 1.3 ClientHello, this vector MUST contain exactly one byte set to zero, which corresponds to the &#8220;null&#8221; compression method in prior versions of TLS. If a TLS 1.3 ClientHello is received with any other value in this field, the server MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert. Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and MUST follow the procedures for the appropriate prior version of TLS.</dd>
   <dt>extensions</dt>
@@ -1699,7 +1699,7 @@ Subsequent Handshake:
        };
    } EarlyDataIndication;
 </pre>
-<p id="rfc.section.4.2.7.p.3">See <a href="#ticket-establishment">Appendix A.3.4</a> for the use of the max_early_data_size field.</p>
+<p id="rfc.section.4.2.7.p.3">See <a href="#ticket-establishment">Appendix B.3.4</a> for the use of the max_early_data_size field.</p>
 <p id="rfc.section.4.2.7.p.4">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by subtracting ticket_age_add from PskIdentity.obfuscated_ticket_age modulo 2^32) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.8.3</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
 <p id="rfc.section.4.2.7.p.5">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.4.2.7.p.6">0-RTT messages sent in the first flight have the same (encrypted) content types as their corresponding messages sent in other flights (handshake, application_data, and alert respectively) but are protected under different keys.  After receiving the server&#8217;s Finished message, if the server has accepted early data, an EndOfEarlyData message will be sent to indicate the key change. This message will be encrypted with the 0-RTT traffic keys.</p>
@@ -1749,7 +1749,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>identity</dt>
-  <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix A.3.4</a>, or a label for a pre-shared key established externally.</dd>
+  <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix B.3.4</a>, or a label for a pre-shared key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
   <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.6.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
   <dt>identities</dt>
@@ -2499,7 +2499,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <p id="rfc.section.7.3.3.p.4">If no context is provided, the context_value is zero-length. Consequently, providing no context computes the same value as providing an empty context. This is a change from previous versions of TLS where an empty context produced a different output to an absent context. As of this document&#8217;s publication, no allocated exporter label is used both with and without a context. Future specifications MUST NOT define a use of exporters that permit both an empty context and no context with the same label. New uses of exporters SHOULD provide a context in all exporter computations, though the value could be empty.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mandatory-to-implement-cipher-suites" id="mandatory-to-implement-cipher-suites">Mandatory-to-Implement Cipher Suites</a></h2>
-<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites. (see <a href="#cipher-suites">Appendix B.3</a>)</p>
+<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites. (see <a href="#cipher-suites">Appendix B.4</a>)</p>
 <p id="rfc.section.8.1.p.2">A TLS-compliant application MUST support digital signatures with rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for CertificateVerify and certificates), and ecdsa_secp256r1_sha256. A TLS-compliant application MUST support key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748">[RFC7748]</a>.</p>
 <h2 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#mti-extensions" id="mti-extensions">Mandatory-to-Implement Extensions</a></h2>
 <p id="rfc.section.8.2.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following TLS extensions:</p>
@@ -2538,7 +2538,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <p/>
 
 <ul>
-  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix B.3</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</a> has been applied.]]</li>
+  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</a> has been applied.]]</li>
   <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>.</li>
   <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
   <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, and &#8220;key_update&#8221; values.</li>
@@ -3031,9 +3031,85 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     <tr><td class="reference"><b id="X501">[X501]</b></td><td class="top"><a>Information Technology - Open Systems Interconnection - The Directory: Models</a>", ITU-T X.501, 1993.</td>, "</tr>
   </tbody>
 </table>
-<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#protocol-data-structures-and-constant-values" id="protocol-data-structures-and-constant-values">Protocol Data Structures and Constant Values</a></h1>
-<p id="rfc.section.A.p.1">This section describes protocol types and constants. Values listed as _RESERVED were used in previous versions of TLS and are listed here for completeness. TLS 1.3 implementations MUST NOT send them but might receive them from older TLS implementations.</p>
-<h2 id="rfc.appendix.A.1"><a href="#rfc.appendix.A.1">A.1.</a> <a href="#record-layer-1" id="record-layer-1">Record Layer</a></h2>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#state-machine" id="state-machine">State Machine</a></h1>
+<p id="rfc.section.A.p.1">This section provides a summary of the legal state transitions for the client and server handshakes.  State names (in all capitals, e.g., START) have no formal meaning but are provided for ease of comprehension.  Messages which are sent only sometimes are indicated in [].</p>
+<h2 id="rfc.appendix.A.1"><a href="#rfc.appendix.A.1">A.1.</a> <a href="#client" id="client">Client</a></h2>
+<pre>
+                           START  &lt;---+
+                             |        |
+           Send ClientHello  |        | Recv HelloRetryRequest
+         /                   v        |
+        |                  WAIT_SH ---+ 
+        |                    |
+    Can |                    | Recv ServerHello
+   send |                    V
+  early |                 WAIT_EE
+   data |                    | Recv EncryptedExtensions
+        |           +--------+--------+
+        |     Using |                 | Using certificate
+        |       PSK |                 v
+        |           |            WAIT_CERT_CR
+        |           |        Recv |       | Recv CertificateRequest
+        |           | Certificate |       v
+        |           |             |    WAIT_CERT
+        |           |             |       | Recv Certificate
+        |           |             v       v
+        |           |              WAIT_CV
+        |           |                 | Recv CertificateVerify
+        |           +&gt; WAIT_FINISHED &lt;+
+        |                  | Recv Finished
+        \                  |
+                           | [Send EndOfEarlyData]
+                           | [Send Certificate [+ CertificateVerify]]
+                           | Send Finished
+ Can send                  v
+ app data --&gt;          CONNECTED
+ after
+ here
+</pre>
+<h2 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#server" id="server">Server</a></h2>
+<pre>
+                             START  &lt;----+
+                               |         |
+              Recv ClientHello |         | Send HelloRetryRequest
+                               v         |
+                            RECVD_CH ----+
+                               |
+                               | Select parameters
+                               v
+                            NEGOTIATED
+                               | Send ServerHello
+                               | Send EncryptedExtensions
+                               | [Send CertificateRequest]
+Can send                       | [Send Certificate + CertificateVerify]
+app data --&gt;                   | Send Finished
+after                 +--------+--------+
+here         No 0-RTT |                 | 0-RTT
+                      |                 v
+                      |             WAIT_EOED &lt;---+
+                      |            Recv |   |     | Recv
+                      |  EndOfEarlyData |   |     | early data
+                      |                 |   +-----+
+                      +&gt; WAIT_FLIGHT2 &lt;-+
+                               |
+                      +--------+--------+
+              No auth |                 | Client auth
+                      |                 | 
+                      |                 v
+                      |             WAIT_CERT
+                      |        Recv |       | Recv Certificate
+                      |       empty |       v
+                      | Certificate |    WAIT_CV
+                      |             |       | Recv
+                      |             v       | CertificateVerify
+                      +-&gt; WAIT_FINISHED &lt;---+
+                               | Recv Finished
+                               v
+                           CONNECTED
+</pre>
+<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#protocol-data-structures-and-constant-values" id="protocol-data-structures-and-constant-values">Protocol Data Structures and Constant Values</a></h1>
+<p id="rfc.section.B.p.1">This section describes protocol types and constants. Values listed as _RESERVED were used in previous versions of TLS and are listed here for completeness. TLS 1.3 implementations MUST NOT send them but might receive them from older TLS implementations.</p>
+<h2 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#record-layer-1" id="record-layer-1">Record Layer</a></h2>
 <pre>
    enum {
        invalid_RESERVED(0),
@@ -3064,7 +3140,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        opaque encrypted_record[length];
    } TLSCiphertext;
 </pre>
-<h2 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#alert-messages" id="alert-messages">Alert Messages</a></h2>
+<h2 id="rfc.appendix.B.2"><a href="#rfc.appendix.B.2">B.2.</a> <a href="#alert-messages" id="alert-messages">Alert Messages</a></h2>
 <pre>
    enum { warning(1), fatal(2), (255) } AlertLevel;
 
@@ -3110,7 +3186,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        AlertDescription description;
    } Alert;
 </pre>
-<h2 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#handshake-protocol-1" id="handshake-protocol-1">Handshake Protocol</a></h2>
+<h2 id="rfc.appendix.B.3"><a href="#rfc.appendix.B.3">B.3.</a> <a href="#handshake-protocol-1" id="handshake-protocol-1">Handshake Protocol</a></h2>
 <pre>
    enum {
        hello_request_RESERVED(0),
@@ -3150,7 +3226,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        } body;
    } Handshake;
 </pre>
-<h3 id="rfc.appendix.A.3.1"><a href="#rfc.appendix.A.3.1">A.3.1.</a> <a href="#key-exchange-messages-1" id="key-exchange-messages-1">Key Exchange Messages</a></h3>
+<h3 id="rfc.appendix.B.3.1"><a href="#rfc.appendix.B.3.1">B.3.1.</a> <a href="#key-exchange-messages-1" id="key-exchange-messages-1">Key Exchange Messages</a></h3>
 <pre>
    uint16 ProtocolVersion;
    opaque Random[32];
@@ -3251,19 +3327,19 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 
    } PreSharedKeyExtension;
 </pre>
-<h4 id="rfc.appendix.A.3.1.1"><a href="#rfc.appendix.A.3.1.1">A.3.1.1.</a> <a href="#version-extension" id="version-extension">Version Extension</a></h4>
+<h4 id="rfc.appendix.B.3.1.1"><a href="#rfc.appendix.B.3.1.1">B.3.1.1.</a> <a href="#version-extension" id="version-extension">Version Extension</a></h4>
 <pre>
    struct {
        ProtocolVersion versions&lt;2..254&gt;;
    } SupportedVersions;
 </pre>
-<h4 id="rfc.appendix.A.3.1.2"><a href="#rfc.appendix.A.3.1.2">A.3.1.2.</a> <a href="#cookie-extension" id="cookie-extension">Cookie Extension</a></h4>
+<h4 id="rfc.appendix.B.3.1.2"><a href="#rfc.appendix.B.3.1.2">B.3.1.2.</a> <a href="#cookie-extension" id="cookie-extension">Cookie Extension</a></h4>
 <pre>
    struct {
        opaque cookie&lt;1..2^16-1&gt;;
    } Cookie;
 </pre>
-<h4 id="rfc.appendix.A.3.1.3"><a href="#rfc.appendix.A.3.1.3">A.3.1.3.</a> <a href="#signature-algorithm-extension" id="signature-algorithm-extension">Signature Algorithm Extension</a></h4>
+<h4 id="rfc.appendix.B.3.1.3"><a href="#rfc.appendix.B.3.1.3">B.3.1.3.</a> <a href="#signature-algorithm-extension" id="signature-algorithm-extension">Signature Algorithm Extension</a></h4>
 <pre>
    enum {
        /* RSASSA-PKCS1-v1_5 algorithms */
@@ -3305,7 +3381,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
    } SignatureSchemeList;
 </pre>
-<h4 id="rfc.appendix.A.3.1.4"><a href="#rfc.appendix.A.3.1.4">A.3.1.4.</a> <a href="#supported-groups-extension" id="supported-groups-extension">Supported Groups Extension</a></h4>
+<h4 id="rfc.appendix.B.3.1.4"><a href="#rfc.appendix.B.3.1.4">B.3.1.4.</a> <a href="#supported-groups-extension" id="supported-groups-extension">Supported Groups Extension</a></h4>
 <pre>
    enum {
        /* Elliptic Curve Groups (ECDHE) */
@@ -3329,8 +3405,8 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        NamedGroup named_group_list&lt;2..2^16-1&gt;;
    } NamedGroupList;
 </pre>
-<p id="rfc.section.A.3.1.4.p.1">Values within &#8220;obsolete_RESERVED&#8221; ranges were used in previous versions of TLS and MUST NOT be offered or negotiated by TLS 1.3 implementations.  The obsolete curves have various known/theoretical weaknesses or have had very little usage, in some cases only due to unintentional server configuration issues. They are no longer considered appropriate for general use and should be assumed to be potentially unsafe. The set of curves specified here is sufficient for interoperability with all currently deployed and properly configured TLS implementations.</p>
-<h3 id="rfc.appendix.A.3.2"><a href="#rfc.appendix.A.3.2">A.3.2.</a> <a href="#server-parameters-messages" id="server-parameters-messages">Server Parameters Messages</a></h3>
+<p id="rfc.section.B.3.1.4.p.1">Values within &#8220;obsolete_RESERVED&#8221; ranges were used in previous versions of TLS and MUST NOT be offered or negotiated by TLS 1.3 implementations.  The obsolete curves have various known/theoretical weaknesses or have had very little usage, in some cases only due to unintentional server configuration issues. They are no longer considered appropriate for general use and should be assumed to be potentially unsafe. The set of curves specified here is sufficient for interoperability with all currently deployed and properly configured TLS implementations.</p>
+<h3 id="rfc.appendix.B.3.2"><a href="#rfc.appendix.B.3.2">B.3.2.</a> <a href="#server-parameters-messages" id="server-parameters-messages">Server Parameters Messages</a></h3>
 <pre>
    opaque DistinguishedName&lt;1..2^16-1&gt;;
 
@@ -3356,7 +3432,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
       OIDFilter filters&lt;0..2^16-1&gt;;
   } OIDFilterExtension;
 </pre>
-<h3 id="rfc.appendix.A.3.3"><a href="#rfc.appendix.A.3.3">A.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a></h3>
+<h3 id="rfc.appendix.B.3.3"><a href="#rfc.appendix.B.3.3">B.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a></h3>
 <pre>
    opaque ASN1Cert&lt;1..2^24-1&gt;;
 
@@ -3379,7 +3455,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        opaque verify_data[Hash.length];
    } Finished;
 </pre>
-<h3 id="rfc.appendix.A.3.4"><a href="#rfc.appendix.A.3.4">A.3.4.</a> <a href="#ticket-establishment" id="ticket-establishment">Ticket Establishment</a></h3>
+<h3 id="rfc.appendix.B.3.4"><a href="#rfc.appendix.B.3.4">B.3.4.</a> <a href="#ticket-establishment" id="ticket-establishment">Ticket Establishment</a></h3>
 <pre>
    struct {
        uint32 ticket_lifetime;
@@ -3388,7 +3464,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        Extension extensions&lt;0..2^16-2&gt;;
    } NewSessionTicket;
 </pre>
-<h3 id="rfc.appendix.A.3.5"><a href="#rfc.appendix.A.3.5">A.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
+<h3 id="rfc.appendix.B.3.5"><a href="#rfc.appendix.B.3.5">B.3.5.</a> <a href="#updating-keys" id="updating-keys">Updating Keys</a></h3>
 <pre>
    struct {} EndOfEarlyData;
 
@@ -3400,84 +3476,8 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
        KeyUpdateRequest request_update;
    } KeyUpdate;
 </pre>
-<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#state-machine" id="state-machine">State Machine</a></h1>
-<p id="rfc.section.B.p.1">This section provides a summary of the legal state transitions for the client and server handshakes.  State names (in all capitals, e.g., START) have no formal meaning but are provided for ease of comprehension.  Messages which are sent only sometimes are indicated in [].</p>
-<h2 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#client" id="client">Client</a></h2>
-<pre>
-                           START  &lt;---+
-                             |        |
-           Send ClientHello  |        | Recv HelloRetryRequest
-         /                   v        |
-        |                  WAIT_SH ---+ 
-        |                    |
-    Can |                    | Recv ServerHello
-   send |                    V
-  early |                 WAIT_EE
-   data |                    | Recv EncryptedExtensions
-        |           +--------+--------+
-        |     Using |                 | Using certificate
-        |       PSK |                 v
-        |           |            WAIT_CERT_CR
-        |           |        Recv |       | Recv CertificateRequest
-        |           | Certificate |       v
-        |           |             |    WAIT_CERT
-        |           |             |       | Recv Certificate
-        |           |             v       v
-        |           |              WAIT_CV
-        |           |                 | Recv CertificateVerify
-        |           +&gt; WAIT_FINISHED &lt;+
-        |                  | Recv Finished
-        \                  |
-                           | [Send EndOfEarlyData]
-                           | [Send Certificate [+ CertificateVerify]]
-                           | Send Finished
- Can send                  v
- app data --&gt;          CONNECTED
- after
- here
-</pre>
-<h2 id="rfc.appendix.B.2"><a href="#rfc.appendix.B.2">B.2.</a> <a href="#server" id="server">Server</a></h2>
-<pre>
-                             START  &lt;----+
-                               |         |
-              Recv ClientHello |         | Send HelloRetryRequest
-                               v         |
-                            RECVD_CH ----+
-                               |
-                               | Select parameters
-                               v
-                            NEGOTIATED
-                               | Send ServerHello
-                               | Send EncryptedExtensions
-                               | [Send CertificateRequest]
-Can send                       | [Send Certificate + CertificateVerify]
-app data --&gt;                   | Send Finished
-after                 +--------+--------+
-here         No 0-RTT |                 | 0-RTT
-                      |                 v
-                      |             WAIT_EOED &lt;---+
-                      |            Recv |   |     | Recv
-                      |  EndOfEarlyData |   |     | early data
-                      |                 |   +-----+
-                      +&gt; WAIT_FLIGHT2 &lt;-+
-                               |
-                      +--------+--------+
-              No auth |                 | Client auth
-                      |                 | 
-                      |                 v
-                      |             WAIT_CERT
-                      |        Recv |       | Recv Certificate
-                      |       empty |       v
-                      | Certificate |    WAIT_CV
-                      |             |       | Recv
-                      |             v       | CertificateVerify
-                      +-&gt; WAIT_FINISHED &lt;---+
-                               | Recv Finished
-                               v
-                           CONNECTED
-</pre>
-<h2 id="rfc.appendix.B.3"><a href="#rfc.appendix.B.3">B.3.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
-<p id="rfc.section.B.3.p.1">A symmetric cipher suite defines the pair of the AEAD algorithm and hash algorithm to be used with HKDF.  Cipher suite names follow the naming convention:</p>
+<h2 id="rfc.appendix.B.4"><a href="#rfc.appendix.B.4">B.4.</a> <a href="#cipher-suites" id="cipher-suites">Cipher Suites</a></h2>
+<p id="rfc.section.B.4.p.1">A symmetric cipher suite defines the pair of the AEAD algorithm and hash algorithm to be used with HKDF.  Cipher suite names follow the naming convention:</p>
 <pre>
    CipherSuite TLS_AEAD_HASH = VALUE;
 </pre>
@@ -3507,7 +3507,7 @@ here         No 0-RTT |                 | 0-RTT
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.B.3.p.2">This specification defines the following cipher suites for use with TLS 1.3.</p>
+<p id="rfc.section.B.4.p.2">This specification defines the following cipher suites for use with TLS 1.3.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -3538,9 +3538,9 @@ here         No 0-RTT |                 | 0-RTT
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.B.3.p.3">The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and AEAD_AES_128_CCM are defined in <a href="#RFC5116">[RFC5116]</a>. AEAD_CHACHA20_POLY1305 is defined in <a href="#RFC7539">[RFC7539]</a>. AEAD_AES_128_CCM_8 is defined in <a href="#RFC6655">[RFC6655]</a>. The corresponding hash algorithms are defined in <a href="#SHS">[SHS]</a>.</p>
-<p id="rfc.section.B.3.p.4">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
-<p id="rfc.section.B.3.p.5">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
+<p id="rfc.section.B.4.p.3">The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and AEAD_AES_128_CCM are defined in <a href="#RFC5116">[RFC5116]</a>. AEAD_CHACHA20_POLY1305 is defined in <a href="#RFC7539">[RFC7539]</a>. AEAD_AES_128_CCM_8 is defined in <a href="#RFC6655">[RFC6655]</a>. The corresponding hash algorithms are defined in <a href="#SHS">[SHS]</a>.</p>
+<p id="rfc.section.B.4.p.4">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
+<p id="rfc.section.B.4.p.5">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#implementation-notes" id="implementation-notes">Implementation Notes</a></h1>
 <p id="rfc.section.C.p.1">The TLS protocol cannot prevent many common security mistakes. This section provides several recommendations to assist implementors.</p>
 <h2 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#api-considerations-for-0-rtt" id="api-considerations-for-0-rtt">API considerations for 0-RTT</a></h2>
