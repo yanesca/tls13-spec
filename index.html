@@ -2022,12 +2022,9 @@ finished_key =
 <p id="rfc.section.4.4.3.p.5">The verify_data value is computed as follows:</p>
 <pre>
    verify_data =
-       HMAC(finished_key, Hash(
-                               Handshake Context +
+       HMAC(finished_key, Hash(Handshake Context +
                                Certificate* +
-                               CertificateVerify*
-                          )
-       )
+                               CertificateVerify*))
 
    * Only included if present.
 </pre>

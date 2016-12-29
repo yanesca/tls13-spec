@@ -3490,12 +3490,9 @@ Internet-Draft                     TLS                     December 2016
    The verify_data value is computed as follows:
 
       verify_data =
-          HMAC(finished_key, Hash(
-                                  Handshake Context +
+          HMAC(finished_key, Hash(Handshake Context +
                                   Certificate* +
-                                  CertificateVerify*
-                             )
-          )
+                                  CertificateVerify*))
 
       * Only included if present.
 
@@ -3522,6 +3519,9 @@ Internet-Draft                     TLS                     December 2016
    The EndOfEarlyData message is sent by the client to indicate that all
    0-RTT application_data messages have been transmitted (or none will
    be sent at all) and that the following records are protected under
+   handshake traffic keys.  Servers MUST NOT send this message and
+   clients receiving it MUST terminate the connection with an
+
 
 
 
@@ -3530,8 +3530,6 @@ Rescorla                  Expires July 2, 2017                 [Page 63]
 Internet-Draft                     TLS                     December 2016
 
 
-   handshake traffic keys.  Servers MUST NOT send this message and
-   clients receiving it MUST terminate the connection with an
    "unexpected_message" alert.  This message is encrypted under keys
    derived from the client_early_traffic_secret.
 
@@ -3578,6 +3576,8 @@ Internet-Draft                     TLS                     December 2016
           Extension extensions<0..2^16-2>;
       } NewSessionTicket;
 
+   ticket_lifetime  Indicates the lifetime in seconds as a 32-bit
+      unsigned integer in network byte order from the time of ticket
 
 
 
@@ -3586,8 +3586,6 @@ Rescorla                  Expires July 2, 2017                 [Page 64]
 Internet-Draft                     TLS                     December 2016
 
 
-   ticket_lifetime  Indicates the lifetime in seconds as a 32-bit
-      unsigned integer in network byte order from the time of ticket
       issuance.  Servers MUST NOT use any value more than 604800 seconds
       (7 days).  The value of zero indicates that the ticket should be
       discarded immediately.  Clients MUST NOT cache session tickets for
@@ -3634,6 +3632,8 @@ Internet-Draft                     TLS                     December 2016
 
    Note: Because client authentication may require prompting the user,
    servers MUST be prepared for some delay, including receiving an
+   arbitrary number of other messages between sending the
+   CertificateRequest and receiving a response.  In addition, clients
 
 
 
@@ -3642,8 +3642,6 @@ Rescorla                  Expires July 2, 2017                 [Page 65]
 Internet-Draft                     TLS                     December 2016
 
 
-   arbitrary number of other messages between sending the
-   CertificateRequest and receiving a response.  In addition, clients
    which receive multiple CertificateRequests in close succession MAY
    respond to them in a different order than they were received (the
    certificate_request_context value allows the server to disambiguate
@@ -3690,6 +3688,8 @@ Internet-Draft                     TLS                     December 2016
 
    If implementations independently send their own KeyUpdates with
    request_update set to "update_requested", and they cross in flight,
+   then each side will also send a response, with the result that each
+   side increments by two generations.
 
 
 
@@ -3697,9 +3697,6 @@ Rescorla                  Expires July 2, 2017                 [Page 66]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   then each side will also send a response, with the result that each
-   side increments by two generations.
 
    Both sender and receiver MUST encrypt their KeyUpdate messages with
    the old keys.  Additionally, both sides MUST enforce that a KeyUpdate
@@ -3746,6 +3743,9 @@ Internet-Draft                     TLS                     December 2016
       of these messages aligns with a record boundary; if not, then it
       MUST terminate the connection with an "unexpected_message" alert.
 
+   Implementations MUST NOT send zero-length fragments of Handshake
+   types, even if those fragments contain padding.
+
 
 
 
@@ -3753,9 +3753,6 @@ Rescorla                  Expires July 2, 2017                 [Page 67]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   Implementations MUST NOT send zero-length fragments of Handshake
-   types, even if those fragments contain padding.
 
    Alert messages (Section 6) MUST NOT be fragmented across records and
    multiple Alert messages MUST NOT be coalesced into a single
@@ -3802,6 +3799,9 @@ Internet-Draft                     TLS                     December 2016
    This document describes TLS Version 1.3, which uses the version
    0x0304.  This version value is historical, deriving from the use of
    0x0301 for TLS 1.0 and 0x0300 for SSL 3.0.  In order to maximize
+   backwards compatibility, the record layer version identifies as
+   simply TLS 1.0.  Endpoints supporting multiple versions negotiate the
+
 
 
 
@@ -3810,8 +3810,6 @@ Rescorla                  Expires July 2, 2017                 [Page 68]
 Internet-Draft                     TLS                     December 2016
 
 
-   backwards compatibility, the record layer version identifies as
-   simply TLS 1.0.  Endpoints supporting multiple versions negotiate the
    version to use by following the procedure and requirements in
    Appendix D.
 
@@ -3858,6 +3856,8 @@ Internet-Draft                     TLS                     December 2016
 
    opaque_type  The outer opaque_type field of a TLSCiphertext record is
       always set to the value 23 (application_data) for outward
+      compatibility with middleboxes accustomed to parsing previous
+
 
 
 
@@ -3866,7 +3866,6 @@ Rescorla                  Expires July 2, 2017                 [Page 69]
 Internet-Draft                     TLS                     December 2016
 
 
-      compatibility with middleboxes accustomed to parsing previous
       versions of TLS.  The actual content type of the record is found
       in TLSInnerPlaintext.type after decryption.
 
@@ -3913,7 +3912,8 @@ Internet-Draft                     TLS                     December 2016
       AEADEncrypted =
           AEAD-Encrypt(write_key, nonce, plaintext of fragment)
 
-
+   In order to decrypt and verify, the cipher takes as input the key,
+   nonce, and the AEADEncrypted value.  The output is either the
 
 
 
@@ -3922,8 +3922,6 @@ Rescorla                  Expires July 2, 2017                 [Page 70]
 Internet-Draft                     TLS                     December 2016
 
 
-   In order to decrypt and verify, the cipher takes as input the key,
-   nonce, and the AEADEncrypted value.  The output is either the
    plaintext or an error indicating that the decryption failed.  There
    is no separate integrity check.  That is:
 
@@ -3970,6 +3968,8 @@ Internet-Draft                     TLS                     December 2016
 
    The resulting quantity (of length iv_length) is used as the per-
    record nonce.
+
+
 
 
 
