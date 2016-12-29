@@ -142,14 +142,15 @@ Internet-Draft                     TLS                     December 2016
      7.1.  Key Schedule  . . . . . . . . . . . . . . . . . . . . . .  78
      7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  81
      7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  82
-       7.3.1.  Diffie-Hellman  . . . . . . . . . . . . . . . . . . .  82
-       7.3.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  83
-       7.3.3.  Exporters . . . . . . . . . . . . . . . . . . . . . .  83
+     7.4.  (EC)DHE Shared Secret Calculation . . . . . . . . . . . .  82
+       7.4.1.  Finite Field Diffie-Hellman . . . . . . . . . . . . .  83
+       7.4.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  83
+     7.5.  Exporters . . . . . . . . . . . . . . . . . . . . . . . .  83
    8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  84
      8.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  84
      8.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  84
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  85
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  85
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  86
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  86
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  87
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  87
      11.2.  Informative References . . . . . . . . . . . . . . . . .  89
@@ -161,7 +162,6 @@ Internet-Draft                     TLS                     December 2016
      B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . .  98
      B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 100
        B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 100
-       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 105
 
 
 
@@ -170,6 +170,7 @@ Rescorla                  Expires July 2, 2017                  [Page 3]
 Internet-Draft                     TLS                     December 2016
 
 
+       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 105
        B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 106
        B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 107
        B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 107
@@ -217,7 +218,6 @@ Internet-Draft                     TLS                     December 2016
    -  Confidentiality: Data sent over the channel is only visible to the
       endpoints.  TLS does not hide the length of the data it transmits,
       though endpoints are able to pad in order to obscure lengths.
-
 
 
 
@@ -4401,7 +4401,7 @@ Internet-Draft                     TLS                     December 2016
    -  PSK (a pre-shared key established externally or a
       resumption_master_secret value from a previous connection)
 
-   -  (EC)DHE shared secret
+   -  (EC)DHE shared secret (Section 7.4)
 
    This produces a full key derivation schedule shown in the diagram
    below.  In this diagram, the following formatting conventions apply:
@@ -4580,11 +4580,11 @@ Internet-Draft                     TLS                     December 2016
    Secret changes (e.g., when changing from the handshake to application
    data keys or upon a key update).
 
-7.3.1.  Diffie-Hellman
+7.4.  (EC)DHE Shared Secret Calculation
 
-   A conventional Diffie-Hellman computation is performed.  The
-   negotiated key (Z) is converted to byte string by encoding in big-
-   endian, padded with zeros up to the size of the prime.  This byte
+
+
+
 
 
 
@@ -4594,13 +4594,18 @@ Rescorla                  Expires July 2, 2017                 [Page 82]
 Internet-Draft                     TLS                     December 2016
 
 
-   string is used as the shared secret, and is used in the key schedule
-   as specified above.
+7.4.1.  Finite Field Diffie-Hellman
+
+   For finite field groups, a conventional Diffie-Hellman computation is
+   performed.  The negotiated key (Z) is converted to byte string by
+   encoding in big-endian, padded with zeros up to the size of the
+   prime.  This byte string is used as the shared secret, and is used in
+   the key schedule as specified above.
 
    Note that this construction differs from previous versions of TLS
    which remove leading zeros.
 
-7.3.2.  Elliptic Curve Diffie-Hellman
+7.4.2.  Elliptic Curve Diffie-Hellman
 
    For secp256r1, secp384r1 and secp521r1, ECDH calculations (including
    parameter and key generation as well as the shared secret
@@ -4632,16 +4637,11 @@ Internet-Draft                     TLS                     December 2016
 
    For X25519 and X448, see [RFC7748].
 
-7.3.3.  Exporters
+7.5.  Exporters
 
    [RFC5705] defines keying material exporters for TLS in terms of the
    TLS pseudorandom function (PRF).  This document replaces the PRF with
-   HKDF, thus requiring a new construction.  The exporter interface
-   remains the same.
 
-   The exporter value is computed as:
-
-   HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 
 
 
@@ -4649,6 +4649,13 @@ Rescorla                  Expires July 2, 2017                 [Page 83]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   HKDF, thus requiring a new construction.  The exporter interface
+   remains the same.
+
+   The exporter value is computed as:
+
+   HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 
    Where Secret is either the early_exporter_secret or the
    exporter_secret.  Implementations MUST use the exporter_secret unless
@@ -4691,13 +4698,6 @@ Internet-Draft                     TLS                     December 2016
 
    -  Supported Versions ("supported_versions"; Section 4.2.1)
 
-   -  Cookie ("cookie"; Section 4.2.2)
-
-   -  Signature Algorithms ("signature_algorithms"; Section 4.2.3)
-
-   -  Negotiated Groups ("supported_groups"; Section 4.2.4)
-
-   -  Key Share ("key_share"; Section 4.2.5)
 
 
 
@@ -4705,6 +4705,14 @@ Rescorla                  Expires July 2, 2017                 [Page 84]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   -  Cookie ("cookie"; Section 4.2.2)
+
+   -  Signature Algorithms ("signature_algorithms"; Section 4.2.3)
+
+   -  Negotiated Groups ("supported_groups"; Section 4.2.4)
+
+   -  Key Share ("key_share"; Section 4.2.5)
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
 
@@ -4744,6 +4752,16 @@ Internet-Draft                     TLS                     December 2016
    lacking a "server_name" extension by terminating the connection with
    a "missing_extension" alert.
 
+
+
+
+
+
+Rescorla                  Expires July 2, 2017                 [Page 85]
+
+Internet-Draft                     TLS                     December 2016
+
+
 9.  Security Considerations
 
    Security issues are discussed throughout this memo, especially in
@@ -4754,13 +4772,6 @@ Internet-Draft                     TLS                     December 2016
    This document uses several registries that were originally created in
    [RFC4346].  IANA has updated these to reference this document.  The
    registries and their allocation policies are below:
-
-
-
-Rescorla                  Expires July 2, 2017                 [Page 85]
-
-Internet-Draft                     TLS                     December 2016
-
 
    -  TLS Cipher Suite Registry: Values with the first byte in the range
       0-254 (decimal) are assigned via Specification Required [RFC5226].
@@ -4800,6 +4811,13 @@ Internet-Draft                     TLS                     December 2016
       values defined in this document and the Recommended value of
       "Yes".
 
+
+
+Rescorla                  Expires July 2, 2017                 [Page 86]
+
+Internet-Draft                     TLS                     December 2016
+
+
    -  IANA [SHALL update/has updated] this registry to include a "TLS
       1.3" column which lists the messages in which the extension may
       appear.  This column [SHALL be/has been] initially populated from
@@ -4808,15 +4826,6 @@ Internet-Draft                     TLS                     December 2016
 
    In addition, this document defines a new registry to be maintained by
    IANA:
-
-
-
-
-
-Rescorla                  Expires July 2, 2017                 [Page 86]
-
-Internet-Draft                     TLS                     December 2016
-
 
    -  TLS SignatureScheme Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
@@ -4858,21 +4867,17 @@ Internet-Draft                     TLS                     December 2016
               DOI 10.17487/RFC2104, February 1997,
               <http://www.rfc-editor.org/info/rfc2104>.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
 
 
 Rescorla                  Expires July 2, 2017                 [Page 87]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
 
    [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
               Standards (PKCS) #1: RSA Cryptography Specifications
@@ -4918,17 +4923,17 @@ Internet-Draft                     TLS                     December 2016
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
-   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
-              Algorithm (DSA) and Elliptic Curve Digital Signature
-              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
-              2013, <http://www.rfc-editor.org/info/rfc6979>.
-
 
 
 Rescorla                  Expires July 2, 2017                 [Page 88]
 
 Internet-Draft                     TLS                     December 2016
 
+
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <http://www.rfc-editor.org/info/rfc6979>.
 
    [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
               Suite Value (SCSV) for Preventing Protocol Downgrade
@@ -4973,11 +4978,6 @@ Internet-Draft                     TLS                     December 2016
               Zanella-Beguelin, S., and M. Green, "Downgrade Resilience
               in Key-Exchange Protocols", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
-
-
-
-
-
 
 
 
@@ -6130,7 +6130,7 @@ Internet-Draft                     TLS                     December 2016
       additional data after the hash value?  [FI06]
 
    -  When using Diffie-Hellman key exchange, do you correctly preserve
-      leading zero bytes in the negotiated key (see Section 7.3.1)?
+      leading zero bytes in the negotiated key (see Section 7.4.1)?
 
    -  Does your TLS client check that the Diffie-Hellman parameters sent
       by the server are acceptable, (see Section 4.2.5.1)?
