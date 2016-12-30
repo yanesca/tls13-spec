@@ -188,7 +188,7 @@ Internet-Draft                     TLS                     December 2016
      D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 113
      D.4.  Backwards Compatibility Security Restrictions . . . . . . 113
    Appendix E.  Overview of Security Properties  . . . . . . . . . . 114
-     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 115
+     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 114
      E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 117
    Appendix F.  Working Group Information  . . . . . . . . . . . . . 119
    Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 119
@@ -5014,11 +5014,6 @@ Internet-Draft                     TLS                     December 2016
               Implications for TLS 1.3", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
 
-   [FI06]     Finney, H., "Bleichenbacher's RSA signature forgery based
-              on implementation error", August 2006,
-              <https://www.ietf.org/mail-archive/web/openpgp/current/
-              msg00999.html>.
-
    [FW15]     Florian Weimer, ., "Factoring RSA Keys With TLS Perfect
               Forward Secrecy", September 2015.
 
@@ -5034,6 +5029,11 @@ Internet-Draft                     TLS                     December 2016
    [IEEE1363]
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
+
+
+
+
+
 
 
 
@@ -6125,10 +6125,6 @@ Internet-Draft                     TLS                     December 2016
    -  What countermeasures do you use to prevent timing attacks
       [TIMING]?
 
-   -  When verifying RSA signatures, do you accept both NULL and missing
-      parameters?  Do you verify that the RSA padding doesn't have
-      additional data after the hash value?  [FI06]
-
    -  When using Diffie-Hellman key exchange, do you correctly preserve
       leading zero bytes in the negotiated key (see Section 7.4.1)?
 
@@ -6154,6 +6150,10 @@ C.5.  Client Tracking Prevention
    different connections.  Servers that issue session tickets SHOULD
    offer at least as many session tickets as the number of connections
    that a client might use; for example, a web browser using HTTP/1.1
+   [RFC7230] might open six connections to a server.  Servers SHOULD
+   issue new session tickets with every connection.  This ensures that
+   clients are always able to use a new session ticket when creating a
+   new connection.
 
 
 
@@ -6161,11 +6161,6 @@ Rescorla                  Expires July 3, 2017                [Page 110]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   [RFC7230] might open six connections to a server.  Servers SHOULD
-   issue new session tickets with every connection.  This ensures that
-   clients are always able to use a new session ticket when creating a
-   new connection.
 
 C.6.  Unauthenticated Operation
 
@@ -6210,6 +6205,11 @@ Appendix D.  Backward Compatibility
    TLSCiphertext.legacy_record_version MAY be ignored, or MAY be
    validated to match the fixed constant value.  Version negotiation is
    performed using only the handshake versions.
+   (ClientHello.legacy_version, ClientHello "supported_versions"
+   extension, and ServerHello.version) In order to maximize
+   interoperability with older endpoints, implementations that negotiate
+   the use of TLS 1.0-1.2 SHOULD set the record layer version number to
+
 
 
 
@@ -6218,10 +6218,6 @@ Rescorla                  Expires July 3, 2017                [Page 111]
 Internet-Draft                     TLS                     December 2016
 
 
-   (ClientHello.legacy_version, ClientHello "supported_versions"
-   extension, and ServerHello.version) In order to maximize
-   interoperability with older endpoints, implementations that negotiate
-   the use of TLS 1.0-1.2 SHOULD set the record layer version number to
    the negotiated version for the ServerHello and all records
    thereafter.
 
@@ -6265,6 +6261,10 @@ D.1.  Negotiating with an older server
    Interoperability with buggy servers is a complex topic beyond the
    scope of this document.  Multiple connection attempts may be required
    in order to negotiate a backwards compatible connection, however,
+   this practice is vulnerable to downgrade attacks and is NOT
+   RECOMMENDED.
+
+
 
 
 
@@ -6273,9 +6273,6 @@ Rescorla                  Expires July 3, 2017                [Page 112]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   this practice is vulnerable to downgrade attacks and is NOT
-   RECOMMENDED.
 
 D.2.  Negotiating with an older client
 
@@ -6322,6 +6319,9 @@ D.4.  Backwards Compatibility Security Restrictions
    Implementations negotiating use of older versions of TLS SHOULD
    prefer forward secure and AEAD cipher suites, when available.
 
+   The security of RC4 cipher suites is considered insufficient for the
+   reasons cited in [RFC7465].  Implementations MUST NOT offer or
+   negotiate RC4 cipher suites for any version of TLS for any reason.
 
 
 
@@ -6329,10 +6329,6 @@ Rescorla                  Expires July 3, 2017                [Page 113]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   The security of RC4 cipher suites is considered insufficient for the
-   reasons cited in [RFC7465].  Implementations MUST NOT offer or
-   negotiate RC4 cipher suites for any version of TLS for any reason.
 
    Old versions of TLS permitted the use of very low strength ciphers.
    Ciphers with a strength less than 112 bits MUST NOT be offered or
@@ -6377,7 +6373,11 @@ Appendix E.  Overview of Security Properties
    We cover properties of the handshake separately from those of the
    record layer.
 
+E.1.  Handshake
 
+   The TLS handshake is an Authenticated Key Exchange (AKE) protocol
+   which is intended to provide both one-way authenticated (server-only)
+   and mutually authenticated (client and server) functionality.  At the
 
 
 
@@ -6386,11 +6386,6 @@ Rescorla                  Expires July 3, 2017                [Page 114]
 Internet-Draft                     TLS                     December 2016
 
 
-E.1.  Handshake
-
-   The TLS handshake is an Authenticated Key Exchange (AKE) protocol
-   which is intended to provide both one-way authenticated (server-only)
-   and mutually authenticated (client and server) functionality.  At the
    completion of the handshake, each side outputs its view of the
    following values:
 
@@ -6434,6 +6429,11 @@ E.1.  Handshake
 
    Forward secret  If the long-term keying material (in this case the
       signature keys in certificate-based authentication modes or the
+      external/resumption PSK in PSK with (EC)DHE modes) are compromised
+      after the handshake is complete, this does not compromise the
+      security of the session key (See [DOW92]).  The forward secrecy
+      property is not satisfied when PSK is used in the "psk_ke"
+      PskKeyExchangeMode.
 
 
 
@@ -6441,12 +6441,6 @@ Rescorla                  Expires July 3, 2017                [Page 115]
 
 Internet-Draft                     TLS                     December 2016
 
-
-      external/resumption PSK in PSK with (EC)DHE modes) are compromised
-      after the handshake is complete, this does not compromise the
-      security of the session key (See [DOW92]).  The forward secrecy
-      property is not satisfied when PSK is used in the "psk_ke"
-      PskKeyExchangeMode.
 
    Protection of endpoint identities.  The server's identity
       (certificate) should be protected against passive attackers.  The
@@ -6490,6 +6484,12 @@ Internet-Draft                     TLS                     December 2016
    secret (because they are generated from a unique session key).
    Exporters computed with different labels and contexts are
    computationally independent, so it is not feasible to compute one
+   from another or the session secret from the exported value.  Note:
+   exporters can produce arbitrary-length values.  If exporters are to
+   be used as channel bindings, the exported value MUST be large enough
+   to provide collision resistance.  The exporters provided in TLS 1.3
+   are derived from the same handshake contexts as the early traffic
+   keys and the application traffic keys respectively, and thus have
 
 
 
@@ -6498,12 +6498,6 @@ Rescorla                  Expires July 3, 2017                [Page 116]
 Internet-Draft                     TLS                     December 2016
 
 
-   from another or the session secret from the exported value.  Note:
-   exporters can produce arbitrary-length values.  If exporters are to
-   be used as channel bindings, the exported value MUST be large enough
-   to provide collision resistance.  The exporters provided in TLS 1.3
-   are derived from the same handshake contexts as the early traffic
-   keys and the application traffic keys respectively, and thus have
    similar security properties.  Note that they do not include the
    client's certificate; future applications which wish to bind to the
    client's certificate may need to define a new exporter that includes
@@ -6545,6 +6539,12 @@ E.2.  Record Layer
    Confidentiality.  An attacker should not be able to determine the
       plaintext contents of a given record.
 
+   Integrity.  An attacker should not be able to craft a new record
+      which is different from an existing record which will be accepted
+      by the receiver.
+
+   Order protection/non-replayability  An attacker should not be able to
+      cause the receiver to accept a record which it has already
 
 
 
@@ -6554,12 +6554,6 @@ Rescorla                  Expires July 3, 2017                [Page 117]
 Internet-Draft                     TLS                     December 2016
 
 
-   Integrity.  An attacker should not be able to craft a new record
-      which is different from an existing record which will be accepted
-      by the receiver.
-
-   Order protection/non-replayability  An attacker should not be able to
-      cause the receiver to accept a record which it has already
       accepted or cause the receiver to accept record N+1 without having
       first processed record N.
 
@@ -6602,6 +6596,12 @@ Internet-Draft                     TLS                     December 2016
    TLS does not provide security for data which is sent after a traffic
    secret is compromised (backward secrecy).  Compromise of a traffic
    secret also compromises future confidentiality and integrity.
+   Systems which want backward secrecy need to do a fresh handshake and
+   establish a new session key with an (EC)DHE exchange.
+
+   The reader should refer to the following references for analysis of
+   the TLS record layer.  [TODO]
+
 
 
 
@@ -6609,12 +6609,6 @@ Rescorla                  Expires July 3, 2017                [Page 118]
 
 Internet-Draft                     TLS                     December 2016
 
-
-   Systems which want backward secrecy need to do a fresh handshake and
-   establish a new session key with an (EC)DHE exchange.
-
-   The reader should refer to the following references for analysis of
-   the TLS record layer.  [TODO]
 
 Appendix F.  Working Group Information
 
@@ -6658,6 +6652,12 @@ Appendix G.  Contributors
 
    -  Nelson Bolyard (co-author of [RFC4492])
       Sun Microsystems, Inc.
+      nelson@bolyard.com
+
+   -  Ran Canetti
+      IBM
+      canetti@watson.ibm.com
+
 
 
 
@@ -6665,12 +6665,6 @@ Rescorla                  Expires July 3, 2017                [Page 119]
 
 Internet-Draft                     TLS                     December 2016
 
-
-      nelson@bolyard.com
-
-   -  Ran Canetti
-      IBM
-      canetti@watson.ibm.com
 
    -  Pete Chown
       Skygate Technology Ltd
@@ -6714,6 +6708,12 @@ Internet-Draft                     TLS                     December 2016
       Corriente Networks LLC
       chris@corriente.net
 
+   -  Kipp Hickman
+
+   -  Alfred Hoenes
+
+   -  David Hopwood
+      Independent Consultant
 
 
 
@@ -6722,12 +6722,6 @@ Rescorla                  Expires July 3, 2017                [Page 120]
 Internet-Draft                     TLS                     December 2016
 
 
-   -  Kipp Hickman
-
-   -  Alfred Hoenes
-
-   -  David Hopwood
-      Independent Consultant
       david.hopwood@blueyonder.co.uk
 
    -  Subodh Iyengar
@@ -6770,6 +6764,12 @@ Internet-Draft                     TLS                     December 2016
 
    -  Ilari Liusvaara
       Independent
+      ilariliusvaara@welho.com
+
+   -  Carl Mehner
+      USAA
+      carl.mehner@usaa.com
+
 
 
 
@@ -6777,12 +6777,6 @@ Rescorla                  Expires July 3, 2017                [Page 121]
 
 Internet-Draft                     TLS                     December 2016
 
-
-      ilariliusvaara@welho.com
-
-   -  Carl Mehner
-      USAA
-      carl.mehner@usaa.com
 
    -  Jan Mikkelsen
       Transactionware
@@ -6826,6 +6820,12 @@ Internet-Draft                     TLS                     December 2016
 
    -  Jim Roskind
       Netscape Communications
+      jar@netscape.com
+
+   -  Michael Sabin
+
+   -  Dan Simon
+      Microsoft, Inc.
 
 
 
@@ -6834,12 +6834,6 @@ Rescorla                  Expires July 3, 2017                [Page 122]
 Internet-Draft                     TLS                     December 2016
 
 
-      jar@netscape.com
-
-   -  Michael Sabin
-
-   -  Dan Simon
-      Microsoft, Inc.
       dansimon@microsoft.com
 
    -  Nick Sullivan
@@ -6882,6 +6876,12 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
+
+
+
+
+
+
 
 
 

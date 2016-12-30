@@ -2748,12 +2748,6 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     </tr>
     <tr>
       <td class="reference">
-        <b id="FI06">[FI06]</b>
-      </td>
-      <td class="top"><a>Finney, H.</a>, "<a href="https://www.ietf.org/mail-archive/web/openpgp/current/msg00999.html">Bleichenbacher's RSA signature forgery based on implementation error</a>", August 2006.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="FW15">[FW15]</b>
       </td>
       <td class="top"><a title="Red Hat Product Security">Florian Weimer, .</a>, "<a>Factoring RSA Keys With TLS Perfect Forward Secrecy</a>", September 2015.</td>
@@ -3564,7 +3558,6 @@ here         No 0-RTT |                 | 0-RTT
 
 <ul>
   <li>What countermeasures do you use to prevent timing attacks <a href="#TIMING">[TIMING]</a>?</li>
-  <li>When verifying RSA signatures, do you accept both NULL and missing parameters? Do you verify that the RSA padding doesn&#8217;t have additional data after the hash value? <a href="#FI06">[FI06]</a></li>
   <li>When using Diffie-Hellman key exchange, do you correctly preserve leading zero bytes in the negotiated key (see <a href="#finite-field-diffie-hellman">Section 7.4.1</a>)?</li>
   <li>Does your TLS client check that the Diffie-Hellman parameters sent by the server are acceptable, (see <a href="#ffdhe-param">Section 4.2.5.1</a>)?</li>
   <li>Do you use a strong and, most importantly, properly seeded random number generator (see <a href="#random-number-generation-and-seeding">Appendix C.2</a>) when generating Diffie-Hellman private values, the ECDSA &#8220;k&#8221; parameter, and other security-critical values? It is RECOMMENDED that implementations implement &#8220;deterministic ECDSA&#8221; as specified in <a href="#RFC6979">[RFC6979]</a>.</li>
