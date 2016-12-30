@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-30" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 29, 2016</td>
+  <td class="right">December 30, 2016</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: July 2, 2017</td>
+  <td class="left">Expires: July 3, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 2, 2017.</p>
+<p>This Internet-Draft will expire on July 3, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1647,7 +1647,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>client_shares</dt>
-  <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  The ordering of values here SHOULD match that of the ordering of offered support in the &#8220;supported_groups&#8221; extension.</dd>
+  <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a group offered in the &#8220;supported_groups&#8221; extension and MUST appear in the same order.  However, the values MAY be a non-contiguous subset of the &#8220;supported_groups&#8221; extension and MAY omit the most preferred groups.</dd>
   <dt>selected_group</dt>
   <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
   <dt>server_share</dt>
