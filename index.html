@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-30" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-1-02" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">December 30, 2016</td>
+  <td class="right">January 02, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: July 3, 2017</td>
+  <td class="left">Expires: July 6, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,11 +446,11 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 3, 2017.</p>
+<p>This Internet-Draft will expire on July 6, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
-<p>Copyright (c) 2016 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <p>This document may contain material from IETF Documents or IETF Contributions published or made publicly available before November 10, 2008.  The person(s) controlling the copyright in some of this material may not have granted the IETF Trust the right to allow modifications of such material outside the IETF Standards Process. Without obtaining an adequate license from the person(s) controlling the copyright in such materials, this document may not be modified outside the IETF Standards Process, and derivative works of it may not be created outside the IETF Standards Process, except to format it for publication as an RFC or to translate it into languages other than English.</p>
 
@@ -2209,8 +2209,17 @@ finished_key =
 <p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic, and is beyond the scope of this specification. If the application layer protocol atop TLS has its own padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms, or define a padding policy request mechanism through TLS extensions or some other means.</p>
 <h2 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a></h2>
-<p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys.  <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> provides an analysis of these limits under the assumption that the underlying primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD do a key update <a href="#key-update">Section 4.6.3</a> prior to reaching these limits.</p>
-<p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number would wrap before the safety limit is reached.</p>
+<p id="rfc.section.5.5.p.1">To use AES-GCM to provide authenticity of authenticated data, content of the plaintext and information leakage [0] protection for the plaintext safely, the limit of total ciphertext under a single key is ( (TLSCipherText.length / 16) / ceiling (TLSCipherText.length / 16) ) times 2^48 128-bit blocks.</p>
+<p id="rfc.section.5.5.p.2">When the data limit is reached, the chance of having a collision among 128-bit blocks of the ciphertext is below 2^(-32) which is negligible.</p>
+<p id="rfc.section.5.5.p.3">Since the block size of AES is 128 bits, there will be collisions among different sets of ciphertext from multiple sessions using GCM (or any other modes of AES) when the total amount of the ciphertext of all considered sessions is more than 2^64 128-bit blocks. This fact does not seem to create a practical security weakness of using AES GCM.</p>
+<p id="rfc.section.5.5.p.4">For ChaCha20/Poly1305, the record sequence number would wrap before the safety limit is reached. See <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> for further analysis.</p>
+<p id="rfc.section.5.5.p.5">NOTE: Information leakage in the context of TLS is a chosen-plaintext distinguishing attack where the attacker provides 2 128-bit plaintext blocks to a GCM encryption engine, after seeing one encrypted block for one of the 2 plaintext blocks, the attacker knows which plaintext block was encrypted. Or, it means that there is a collision among 128-bit blocks of the ciphertext.</p>
+<p/>
+
+<ul>
+  <li>The text above uses blocks instead of bytes or records of ciphertext.</li>
+  <li>The partial block situation is taken into account.</li>
+</ul>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
 <p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Like other messages, alert messages are encrypted as specified by the current connection state.</p>
 <p id="rfc.section.6.p.2">Alert messages convey a description of the alert and a legacy field that conveyed the severity of the message in previous versions of TLS.  In TLS 1.3, the severity is implicit in the type of alert being sent, and can safely be ignored.  Some alerts are sent to indicate orderly closure of the connection or the end of early data (see <a href="#closure-alerts">Section 6.1</a>).  Upon receiving such an alert, the TLS implementation SHOULD indicate end-of-data to the application and, if appropriate for the alert type, send a closure alert in response.</p>
