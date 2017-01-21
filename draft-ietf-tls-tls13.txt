@@ -1011,8 +1011,7 @@ Internet-Draft                     TLS                      January 2017
 
 
    "pre_shared_key" extension to negotiate use of PSK key establishment
-   and can (as shown here) to negotiate use of PSK key establishment and
-   can (as shown here) respond with a "key_share" extension to do
+   and can (as shown here) respond with a "key_share" extension to do
    (EC)DHE key establishment, thus providing forward secrecy.
 
    When PSKs are provisioned out of band, the PSK identity and the KDF
@@ -1035,9 +1034,10 @@ Internet-Draft                     TLS                      January 2017
 
    -  The Server Name Indication (SNI), if any is to be used
 
-   As shown in Figure 4, the Zero-RTT data is just added to the 1-RTT
+   As shown in Figure 4, the 0-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
+
 
 
 
@@ -1261,7 +1261,7 @@ Internet-Draft                     TLS                      January 2017
 
       enum { e1(v1), e2(v2), ... , en(vn) [[, (n)]] } Te;
 
-   Future extension or additions to the protocol may define new values.
+   Future extensions or additions to the protocol may define new values.
    Implementations need to be able to parse and ignore unknown values
    unless the definition of the field states otherwise.
 
@@ -1772,7 +1772,8 @@ Internet-Draft                     TLS                      January 2017
       extensions which are required to establish the cryptographic
       context.  Currently the only such extensions are "key_share" and
       "pre_shared_key".  All current TLS 1.3 ServerHello messages will
-      contain one of these two extensions.
+      contain one of these two extensions, or both when using a PSK with
+      (EC)DHE key establishment.
 
    TLS 1.3 has a downgrade protection mechanism embedded in the server's
    random value.  TLS 1.3 servers which negotiate TLS 1.2 or below in
@@ -1784,8 +1785,7 @@ Internet-Draft                     TLS                      January 2017
 
      44 4F 57 4E 47 52 44 01
 
-   If negotiating TLS 1.1, TLS 1.3 servers MUST and TLS 1.2 servers
-   SHOULD set the last eight bytes of their Random value to the bytes:
+
 
 
 
@@ -1793,6 +1793,9 @@ Rescorla                  Expires July 25, 2017                [Page 32]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   If negotiating TLS 1.1, TLS 1.3 servers MUST and TLS 1.2 servers
+   SHOULD set the last eight bytes of their Random value to the bytes:
 
      44 4F 57 4E 47 52 44 00
 
@@ -1839,9 +1842,6 @@ Internet-Draft                     TLS                      January 2017
 
    The version and extensions fields have the same meanings as their
    corresponding values in the ServerHello.  The server SHOULD send only
-   the extensions necessary for the client to generate a correct
-   ClientHello pair.  As with ServerHello, a HelloRetryRequest MUST NOT
-   contain any extensions that were not first offered by the client in
 
 
 
@@ -1850,6 +1850,9 @@ Rescorla                  Expires July 25, 2017                [Page 33]
 Internet-Draft                     TLS                      January 2017
 
 
+   the extensions necessary for the client to generate a correct
+   ClientHello pair.  As with ServerHello, a HelloRetryRequest MUST NOT
+   contain any extensions that were not first offered by the client in
    its ClientHello, with the exception of optionally the "cookie" (see
    Section 4.2.2) extension.
 
@@ -1896,15 +1899,14 @@ Internet-Draft                     TLS                      January 2017
 
    Here:
 
-   -  "extension_type" identifies the particular extension type.
-
-
 
 
 Rescorla                  Expires July 25, 2017                [Page 34]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   -  "extension_type" identifies the particular extension type.
 
    -  "extension_data" contains information specific to the particular
       extension type.
@@ -1952,8 +1954,6 @@ Internet-Draft                     TLS                      January 2017
     |                                                  |             |
     | cert_type [RFC6091]                              |      CH, EE |
     |                                                  |             |
-    | supported_groups [RFC7919]                       |      CH, EE |
-    |                                                  |             |
 
 
 
@@ -1962,6 +1962,8 @@ Rescorla                  Expires July 25, 2017                [Page 35]
 Internet-Draft                     TLS                      January 2017
 
 
+    | supported_groups [RFC7919]                       |      CH, EE |
+    |                                                  |             |
     | signature_algorithms [RFC5246]                   |      CH, CR |
     |                                                  |             |
     | use_srtp [RFC5764]                               |      CH, EE |
@@ -2008,8 +2010,6 @@ Internet-Draft                     TLS                      January 2017
 
    There are subtle (and not so subtle) interactions that may occur in
    this protocol between new features and existing features which may
-   result in a significant reduction in overall security.  The following
-
 
 
 
@@ -2018,6 +2018,7 @@ Rescorla                  Expires July 25, 2017                [Page 36]
 Internet-Draft                     TLS                      January 2017
 
 
+   result in a significant reduction in overall security.  The following
    considerations should be taken into account when designing new
    extensions:
 
@@ -2065,7 +2066,6 @@ Internet-Draft                     TLS                      January 2017
    it possible to negotiate a version prior to TLS 1.2 if one side
    supports a sparse range.  Implementations of TLS 1.3 which choose to
    support prior versions of TLS SHOULD support TLS 1.2.
-
 
 
 

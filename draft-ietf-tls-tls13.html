@@ -976,7 +976,7 @@ Subsequent Handshake:
        [Application Data]        &lt;-------&gt;      [Application Data]
 </pre>
 <p class="figure">Figure 3: Message flow for resumption and PSK</p>
-<p id="rfc.section.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify message. When a client offers resumption via PSK, it SHOULD also supply a &#8220;key_share&#8221; extension to the server to allow the server to decline resumption and fall back to a full handshake, if needed. The server responds with a &#8220;pre_shared_key&#8221; extension to negotiate use of PSK key establishment and can (as shown here) to negotiate use of PSK key establishment and can (as shown here) respond with a &#8220;key_share&#8221; extension to do (EC)DHE key establishment, thus providing forward secrecy.</p>
+<p id="rfc.section.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify message. When a client offers resumption via PSK, it SHOULD also supply a &#8220;key_share&#8221; extension to the server to allow the server to decline resumption and fall back to a full handshake, if needed. The server responds with a &#8220;pre_shared_key&#8221; extension to negotiate use of PSK key establishment and can (as shown here) respond with a &#8220;key_share&#8221; extension to do (EC)DHE key establishment, thus providing forward secrecy.</p>
 <p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF to be used with the PSK MUST also be provisioned.</p>
 <h2 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a></h2>
 <p id="rfc.section.2.3.p.1">When clients and servers share a PSK (either obtained externally or via a previous handshake), TLS 1.3 allows clients to send data on the first flight (&#8220;early data&#8221;). The client uses the PSK to authenticate the server and to encrypt the early data.</p>
@@ -988,7 +988,7 @@ Subsequent Handshake:
   <li>The Application-Layer Protocol Negotiation (ALPN) protocol, if any is to be used</li>
   <li>The Server Name Indication (SNI), if any is to be used</li>
 </ul>
-<p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt">Figure 4</a>, the Zero-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
+<p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt">Figure 4</a>, the 0-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
 <div id="rfc.figure.4"/>
 <div id="tls-0-rtt"/>
 <pre>
@@ -1083,7 +1083,7 @@ Subsequent Handshake:
 <pre>
    enum { e1(v1), e2(v2), ... , en(vn) [[, (n)]] } Te;
 </pre>
-<p id="rfc.section.3.5.p.2">Future extension or additions to the protocol may define new values.  Implementations need to be able to parse and ignore unknown values unless the definition of the field states otherwise.</p>
+<p id="rfc.section.3.5.p.2">Future extensions or additions to the protocol may define new values.  Implementations need to be able to parse and ignore unknown values unless the definition of the field states otherwise.</p>
 <p id="rfc.section.3.5.p.3">An enumerated occupies as much space in the byte stream as would its maximal defined ordinal value. The following definition would cause one byte to be used to carry fields of type Color.</p>
 <pre>
    enum { red(3), blue(5), white(7) } Color;
@@ -1297,7 +1297,7 @@ Subsequent Handshake:
   <dt>cipher_suite</dt>
   <dd style="margin-left: 8">The single cipher suite selected by the server from the list in ClientHello.cipher_suites. A client which receives a cipher suite that was not offered MUST abort the handshake.</dd>
   <dt>extensions</dt>
-  <dd style="margin-left: 8">A list of extensions.  The ServerHello MUST only include extensions which are required to establish the cryptographic context. Currently the only such extensions are &#8220;key_share&#8221; and &#8220;pre_shared_key&#8221;.  All current TLS 1.3 ServerHello messages will contain one of these two extensions.</dd>
+  <dd style="margin-left: 8">A list of extensions.  The ServerHello MUST only include extensions which are required to establish the cryptographic context. Currently the only such extensions are &#8220;key_share&#8221; and &#8220;pre_shared_key&#8221;.  All current TLS 1.3 ServerHello messages will contain one of these two extensions, or both when using a PSK with (EC)DHE key establishment.</dd>
 </dl>
 <p id="rfc.section.4.1.3.p.4">TLS 1.3 has a downgrade protection mechanism embedded in the server&#8217;s random value. TLS 1.3 servers which negotiate TLS 1.2 or below in response to a ClientHello MUST set the last eight bytes of their Random value specially.</p>
 <p id="rfc.section.4.1.3.p.5">If negotiating TLS 1.2, servers MUST set the last eight bytes of their Random value to the bytes:</p>
