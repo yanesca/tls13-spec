@@ -132,10 +132,10 @@ Internet-Draft                     TLS                      January 2017
    5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  67
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  67
      5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  69
-     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  71
+     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  72
      5.4.  Record Padding  . . . . . . . . . . . . . . . . . . . . .  72
      5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  73
-   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  73
+   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  74
      6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  75
      6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  76
    7.  Cryptographic Computations  . . . . . . . . . . . . . . . . .  79
@@ -3389,7 +3389,8 @@ Internet-Draft                     TLS                      January 2017
    This structure is intended to prevent an attack on previous versions
    of TLS in which the ServerKeyExchange format meant that attackers
    could obtain a signature of a message with a chosen 32-byte prefix
-   (ClientHello.random).  The initial 64 byte pad clears that prefix.
+   (ClientHello.random).  The initial 64 byte pad clears that prefix
+   along with the server-controlled ServerHello.random.
 
    The context string for a server signature is "TLS 1.3, server
    CertificateVerify" and for a client signature is "TLS 1.3, client
@@ -3408,8 +3409,7 @@ Internet-Draft                     TLS                      January 2017
       00
       0101010101010101010101010101010101010101010101010101010101010101
 
-   On the sender side the process for computing the signature field of
-   the CertificateVerify message takes as input:
+
 
 
 
@@ -3417,6 +3417,9 @@ Rescorla                  Expires July 25, 2017                [Page 61]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   On the sender side the process for computing the signature field of
+   the CertificateVerify message takes as input:
 
    -  The content covered by the digital signature
 
@@ -3462,9 +3465,6 @@ Internet-Draft                     TLS                      January 2017
    on constructions that do not bind to the server's certificate.  It is
    unsafe to use certificate-based client authentication when the client
    might potentially share the same PSK/key-id pair with two different
-   endpoints and implementations MUST NOT combine external PSKs with
-   certificate-based authentication.
-
 
 
 
@@ -3473,6 +3473,9 @@ Rescorla                  Expires July 25, 2017                [Page 62]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   endpoints and implementations MUST NOT combine external PSKs with
+   certificate-based authentication.
 
 4.4.3.  Finished
 
@@ -3519,9 +3522,6 @@ Internet-Draft                     TLS                      January 2017
    long.  In the current version of TLS, it is the size of the HMAC
    output for the Hash used for the handshake.
 
-   Note: Alerts and any other record types are not handshake messages
-   and are not included in the hash computations.
-
 
 
 
@@ -3529,6 +3529,9 @@ Rescorla                  Expires July 25, 2017                [Page 63]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   Note: Alerts and any other record types are not handshake messages
+   and are not included in the hash computations.
 
    Any records following a 1-RTT Finished message MUST be encrypted
    under the appropriate application traffic key Section 7.2.  In
@@ -3574,10 +3577,7 @@ Internet-Draft                     TLS                      January 2017
    if the client provides the same SNI value as in the original
    connection, as described in Section 3 of [RFC6066].
 
-   Note: Although the resumption master secret depends on the client's
-   second flight, servers which do not request client authentication MAY
-   compute the remainder of the transcript independently and then send a
-   NewSessionTicket immediately upon sending its Finished rather than
+
 
 
 
@@ -3586,6 +3586,10 @@ Rescorla                  Expires July 25, 2017                [Page 64]
 Internet-Draft                     TLS                      January 2017
 
 
+   Note: Although the resumption master secret depends on the client's
+   second flight, servers which do not request client authentication MAY
+   compute the remainder of the transcript independently and then send a
+   NewSessionTicket immediately upon sending its Finished rather than
    waiting for the client Finished.  This might be appropriate in cases
    where the client is expected to open multiple TLS connections in
    parallel and would benefit from the reduced overhead of a resumption
@@ -3630,10 +3634,6 @@ Internet-Draft                     TLS                      January 2017
 
    max_early_data_size  The maximum amount of 0-RTT data that the client
       is allowed to send when using this ticket, in bytes.  Only
-      Application Data payload is counted.  A server receiving more than
-      max_early_data_size bytes of 0-RTT data SHOULD terminate the
-      connection with an "unexpected_message" alert.
-
 
 
 
@@ -3641,6 +3641,10 @@ Rescorla                  Expires July 25, 2017                [Page 65]
 
 Internet-Draft                     TLS                      January 2017
 
+
+      Application Data payload is counted.  A server receiving more than
+      max_early_data_size bytes of 0-RTT data SHOULD terminate the
+      connection with an "unexpected_message" alert.
 
 4.6.2.  Post-Handshake Authentication
 
@@ -3686,10 +3690,6 @@ Internet-Draft                     TLS                      January 2017
    in Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
    its receiving keys.
 
-   If the request_update field is set to "update_requested" then the
-   receiver MUST send a KeyUpdate of its own with request_update set to
-   "update_not_requested" prior to sending its next application data
-   record.  This mechanism allows either side to force an update to the
 
 
 
@@ -3698,6 +3698,10 @@ Rescorla                  Expires July 25, 2017                [Page 66]
 Internet-Draft                     TLS                      January 2017
 
 
+   If the request_update field is set to "update_requested" then the
+   receiver MUST send a KeyUpdate of its own with request_update set to
+   "update_not_requested" prior to sending its next application data
+   record.  This mechanism allows either side to force an update to the
    entire connection, but causes an implementation which receives
    multiple KeyUpdates while it is silent to respond with a single
    update.  Note that implementations may receive an arbitrary number of
@@ -3742,10 +3746,6 @@ Internet-Draft                     TLS                      January 2017
    records carrying data in chunks of 2^14 bytes or less.  Message
    boundaries are handled differently depending on the underlying
    ContentType.  Any future content types MUST specify appropriate
-   rules.  Note that these rules are stricter than what was enforced in
-   TLS 1.2.
-
-
 
 
 
@@ -3753,6 +3753,9 @@ Rescorla                  Expires July 25, 2017                [Page 67]
 
 Internet-Draft                     TLS                      January 2017
 
+
+   rules.  Note that these rules are stricter than what was enforced in
+   TLS 1.2.
 
    Handshake messages MAY be coalesced into a single TLSPlaintext record
    or fragmented across several records, provided that:
@@ -3799,9 +3802,6 @@ Internet-Draft                     TLS                      January 2017
 
    legacy_record_version  This value MUST be set to 0x0301 for all
       records generated by a TLS 1.3 implementation.  This field is
-      deprecated and MUST be ignored for all purposes.  Previous
-      versions of TLS would use other values in this field under some
-      circumstances.
 
 
 
@@ -3809,6 +3809,10 @@ Rescorla                  Expires July 25, 2017                [Page 68]
 
 Internet-Draft                     TLS                      January 2017
 
+
+      deprecated and MUST be ignored for all purposes.  Previous
+      versions of TLS would use other values in this field under some
+      circumstances.
 
    length  The length (in bytes) of the following TLSPlaintext.fragment.
       The length MUST NOT exceed 2^14.  An endpoint that receives a
@@ -3844,6 +3848,24 @@ Internet-Draft                     TLS                      January 2017
    plaintext header followed by an encrypted body, which itself contains
    a type and optional padding.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires July 25, 2017                [Page 69]
+
+Internet-Draft                     TLS                      January 2017
+
+
       struct {
           opaque content[TLSPlaintext.length];
           ContentType type;
@@ -3856,15 +3878,6 @@ Internet-Draft                     TLS                      January 2017
           uint16 length;
           opaque encrypted_record[length];
       } TLSCiphertext;
-
-
-
-
-
-Rescorla                  Expires July 25, 2017                [Page 69]
-
-Internet-Draft                     TLS                      January 2017
-
 
    content  The byte encoding of a handshake or an alert message, or the
       the raw bytes of the application's data to send.
@@ -3900,6 +3913,15 @@ Internet-Draft                     TLS                      January 2017
       exceeds this length MUST terminate the connection with a
       "record_overflow" alert.
 
+
+
+
+
+Rescorla                  Expires July 25, 2017                [Page 70]
+
+Internet-Draft                     TLS                      January 2017
+
+
    encrypted_record  The AEAD encrypted form of the serialized
       TLSInnerPlaintext structure.
 
@@ -3913,14 +3935,6 @@ Internet-Draft                     TLS                      January 2017
 
    The plaintext is the concatenation of TLSInnerPlaintext.fragment,
    TLSInnerPlaintext.type, and any padding bytes (zeros).
-
-
-
-
-Rescorla                  Expires July 25, 2017                [Page 70]
-
-Internet-Draft                     TLS                      January 2017
-
 
    The AEAD output consists of the ciphertext output from the AEAD
    encryption operation.  The length of the plaintext is greater than
@@ -3952,6 +3966,18 @@ Internet-Draft                     TLS                      January 2017
    is derived from the maximum TLSPlaintext length of 2^14 octets + 1
    octet for ContentType + the maximum AEAD expansion of 255 octets.
 
+
+
+
+
+
+
+
+Rescorla                  Expires July 25, 2017                [Page 71]
+
+Internet-Draft                     TLS                      January 2017
+
+
 5.3.  Per-Record Nonce
 
    A 64-bit sequence number is maintained separately for reading and
@@ -3970,14 +3996,6 @@ Internet-Draft                     TLS                      January 2017
    per-record nonce, from N_MIN bytes to N_MAX bytes of input
    ([RFC5116]).  The length of the TLS per-record nonce (iv_length) is
    set to the larger of 8 bytes and N_MIN for the AEAD algorithm (see
-
-
-
-Rescorla                  Expires July 25, 2017                [Page 71]
-
-Internet-Draft                     TLS                      January 2017
-
-
    [RFC5116] Section 4).  An AEAD algorithm where N_MAX is less than 8
    bytes MUST NOT be used with TLS.  The per-record nonce for the AEAD
    construction is formed as follows:
@@ -4008,6 +4026,14 @@ Internet-Draft                     TLS                      January 2017
 
    Application Data records may contain a zero-length
    TLSInnerPlaintext.content if the sender desires.  This permits
+
+
+
+Rescorla                  Expires July 25, 2017                [Page 72]
+
+Internet-Draft                     TLS                      January 2017
+
+
    generation of plausibly-sized cover traffic in contexts where the
    presence or absence of activity may be sensitive.  Implementations
    MUST NOT send Handshake or Alert records that have a zero-length
@@ -4025,14 +4051,6 @@ Internet-Draft                     TLS                      January 2017
    size limits) without introducing new content types.  The design also
    enforces all-zero padding octets, which allows for quick detection of
    padding errors.
-
-
-
-
-Rescorla                  Expires July 25, 2017                [Page 72]
-
-Internet-Draft                     TLS                      January 2017
-
 
    Implementations MUST limit their scanning to the cleartext returned
    from the AEAD decryption.  If a receiving implementation does not
@@ -4064,6 +4082,14 @@ Internet-Draft                     TLS                      January 2017
    For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
    encrypted on a given connection while keeping a safety margin of
    approximately 2^-57 for Authenticated Encryption (AE) security.  For
+
+
+
+Rescorla                  Expires July 25, 2017                [Page 73]
+
+Internet-Draft                     TLS                      January 2017
+
+
    ChaCha20/Poly1305, the record sequence number would wrap before the
    safety limit is reached.
 
@@ -4082,14 +4108,6 @@ Internet-Draft                     TLS                      January 2017
    SHOULD indicate end-of-data to the application and, if appropriate
    for the alert type, send a closure alert in response.
 
-
-
-
-Rescorla                  Expires July 25, 2017                [Page 73]
-
-Internet-Draft                     TLS                      January 2017
-
-
    Error alerts indicate abortive closure of the connection (See
    Section 6.2).  Upon receiving an error alert, the TLS implementation
    SHOULD indicate an error to the application and MUST NOT allow any
@@ -4101,24 +4119,6 @@ Internet-Draft                     TLS                      January 2017
    All the alerts listed in Section 6.2 MUST be sent as fatal and MUST
    be treated as fatal regardless of the AlertLevel in the message.
    Unknown alert types MUST be treated as fatal.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
