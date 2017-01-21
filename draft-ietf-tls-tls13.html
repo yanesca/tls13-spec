@@ -2009,14 +2009,14 @@ Subsequent Handshake:
 
 <ul>
   <li>The content covered by the digital signature</li>
-  <li>The public key received with the previous Certificate message</li>
+  <li>The public key contained in the end-entity certificate found in the associated Certificate message.</li>
   <li>The digital signature received in the signature field of the CertificateVerify message</li>
 </ul>
-<p id="rfc.section.4.4.2.p.16">If the verification fails, the connection MUST be terminated with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.4.2.p.16">If the verification fails, the receiver MUST terminate the handshake with a &#8220;decrypt_error&#8221; alert.</p>
 <p id="rfc.section.4.4.2.p.17">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly.  When the PSK was established through a NewSessionTicket, the client&#8217;s signature transitively covers the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints and implementations MUST NOT combine external PSKs with certificate-based authentication.</p>
 <h3 id="rfc.section.4.4.3"><a href="#rfc.section.4.4.3">4.4.3.</a> <a href="#finished" id="finished">Finished</a></h3>
 <p id="rfc.section.4.4.3.p.1">The Finished message is the final message in the authentication block. It is essential for providing authentication of the handshake and of the computed keys.</p>
-<p id="rfc.section.4.4.3.p.2">Recipients of Finished messages MUST verify that the contents are correct. If the verification fails, the connection MUST be terminated with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.4.3.p.2">Recipients of Finished messages MUST verify that the contents are correct and if incorrect MUST terminate the connection with a &#8220;decrypt_error&#8221; alert.</p>
 <p id="rfc.section.4.4.3.p.3">Once a side has sent its Finished message and received and validated the Finished message from its peer, it may begin to send and receive application data over the connection.  Early data may be sent prior to the receipt of the peer&#8217;s Finished message, per <a href="#early-data-indication">Section 4.2.7</a>.</p>
 <p id="rfc.section.4.4.3.p.4">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages">Section 4.4</a> using HKDF (see <a href="#key-schedule">Section 7.1</a>). Specifically:</p>
 <pre>
