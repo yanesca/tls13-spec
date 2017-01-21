@@ -1970,19 +1970,11 @@ Subsequent Handshake:
        opaque signature&lt;0..2^16-1&gt;;
    } CertificateVerify;
 </pre>
-<p id="rfc.section.4.4.2.p.3">The algorithm field specifies the signature algorithm used (see <a href="#signature-algorithms">Section 4.2.3</a> for the definition of this field). The signature is a digital signature using that algorithm that covers the hash output described in <a href="#authentication-messages">Section 4.4</a> namely:</p>
+<p id="rfc.section.4.4.2.p.3">The algorithm field specifies the signature algorithm used (see <a href="#signature-algorithms">Section 4.2.3</a> for the definition of this field). The signature is a digital signature using that algorithm. The content to be signed is the hash output as described in <a href="#authentication-messages">Section 4.4</a> namely:</p>
 <pre>
    Hash(Handshake Context + Certificate)
 </pre>
-<p id="rfc.section.4.4.2.p.4">In TLS 1.3, the digital signature process takes as input:</p>
-<p/>
-
-<ul>
-  <li>A signing key</li>
-  <li>A context string</li>
-  <li>The actual content to be signed</li>
-</ul>
-<p id="rfc.section.4.4.2.p.6">The digital signature is then computed using the signing key over the concatenation of:</p>
+<p id="rfc.section.4.4.2.p.4">The digital signature is then computed over the concatenation of:</p>
 <p/>
 
 <ul>
@@ -1991,9 +1983,9 @@ Subsequent Handshake:
   <li>A single 0 byte which serves as the separator</li>
   <li>The content to be signed</li>
 </ul>
-<p id="rfc.section.4.4.2.p.8">This structure is intended to prevent an attack on previous versions of TLS in which the ServerKeyExchange format meant that attackers could obtain a signature of a message with a chosen, 32-byte prefix. The initial 64 byte pad clears that prefix.</p>
-<p id="rfc.section.4.4.2.p.9">The context string for a server signature is &#8220;TLS 1.3, server CertificateVerify&#8221; and for a client signature is &#8220;TLS 1.3, client CertificateVerify&#8221;.</p>
-<p id="rfc.section.4.4.2.p.10">For example, if Hash(Handshake Context + Certificate) was 32 bytes of 01 (this length would make sense for SHA-256), the input to the final signing process for a server CertificateVerify would be:</p>
+<p id="rfc.section.4.4.2.p.6">This structure is intended to prevent an attack on previous versions of TLS in which the ServerKeyExchange format meant that attackers could obtain a signature of a message with a chosen, 32-byte prefix. The initial 64 byte pad clears that prefix.</p>
+<p id="rfc.section.4.4.2.p.7">The context string for a server signature is &#8220;TLS 1.3, server CertificateVerify&#8221; and for a client signature is &#8220;TLS 1.3, client CertificateVerify&#8221;.</p>
+<p id="rfc.section.4.4.2.p.8">For example, if Hash(Handshake Context + Certificate) was 32 bytes of 01 (this length would make sense for SHA-256), the content covered by the digital signature for a server CertificateVerify would be:</p>
 <pre>
    2020202020202020202020202020202020202020202020202020202020202020
    2020202020202020202020202020202020202020202020202020202020202020
@@ -2002,25 +1994,42 @@ Subsequent Handshake:
    00
    0101010101010101010101010101010101010101010101010101010101010101
 </pre>
-<p id="rfc.section.4.4.2.p.11">If sent by a server, the signature algorithm MUST be one offered in the client&#8217;s &#8220;signature_algorithms&#8221; extension unless no valid certificate chain can be produced without unsupported algorithms (see <a href="#signature-algorithms">Section 4.2.3</a>).</p>
+<p id="rfc.section.4.4.2.p.9">On the sender side the process for computing the signature field of the CertificateVerify message takes as input:</p>
+<p/>
+
+<ul>
+  <li>The content covered by the digital signature</li>
+  <li>The private signing key corresponding to the certificate sent in the previous message</li>
+</ul>
+<p id="rfc.section.4.4.2.p.11">If the CertificateVerify message is sent by a server, the signature algorithm MUST be one offered in the client&#8217;s &#8220;signature_algorithms&#8221; extension unless no valid certificate chain can be produced without unsupported algorithms (see <a href="#signature-algorithms">Section 4.2.3</a>).</p>
 <p id="rfc.section.4.4.2.p.12">If sent by a client, the signature algorithm used in the signature MUST be one of those present in the supported_signature_algorithms field of the CertificateRequest message.</p>
 <p id="rfc.section.4.4.2.p.13">In addition, the signature algorithm MUST be compatible with the key in the sender&#8217;s end-entity certificate. RSA signatures MUST use an RSASSA-PSS algorithm, regardless of whether RSASSA-PKCS1-v1_5 algorithms appear in &#8220;signature_algorithms&#8221;. SHA-1 MUST NOT be used in any signatures in CertificateVerify. All SHA-1 signature algorithms in this specification are defined solely for use in legacy certificates, and are not valid for CertificateVerify signatures.</p>
-<p id="rfc.section.4.4.2.p.14">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly.  When the PSK was established through a NewSessionTicket, the client&#8217;s signature transitively covers the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints and implementations MUST NOT combine external PSKs with certificate-based authentication.</p>
+<p id="rfc.section.4.4.2.p.14">The receiver of a CertificateVerify MUST verify the signature field. The verification process takes as input:</p>
+<p/>
+
+<ul>
+  <li>The content covered by the digital signature</li>
+  <li>The public key received with the previous Certificate message</li>
+  <li>The digital signature received in the signature field of the CertificateVerify message</li>
+</ul>
+<p id="rfc.section.4.4.2.p.16">If the verification fails, the connection MUST be terminated with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.4.2.p.17">Note: When used with non-certificate-based handshakes (e.g., PSK), the client&#8217;s signature does not cover the server&#8217;s certificate directly.  When the PSK was established through a NewSessionTicket, the client&#8217;s signature transitively covers the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints and implementations MUST NOT combine external PSKs with certificate-based authentication.</p>
 <h3 id="rfc.section.4.4.3"><a href="#rfc.section.4.4.3">4.4.3.</a> <a href="#finished" id="finished">Finished</a></h3>
 <p id="rfc.section.4.4.3.p.1">The Finished message is the final message in the authentication block. It is essential for providing authentication of the handshake and of the computed keys.</p>
-<p id="rfc.section.4.4.3.p.2">Recipients of Finished messages MUST verify that the contents are correct. Once a side has sent its Finished message and received and validated the Finished message from its peer, it may begin to send and receive application data over the connection.  Early data may be sent prior to the receipt of the peer&#8217;s Finished message, per <a href="#early-data-indication">Section 4.2.7</a>.</p>
-<p id="rfc.section.4.4.3.p.3">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages">Section 4.4</a> using HKDF (see <a href="#key-schedule">Section 7.1</a>). Specifically:</p>
+<p id="rfc.section.4.4.3.p.2">Recipients of Finished messages MUST verify that the contents are correct. If the verification fails, the connection MUST be terminated with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.4.3.p.3">Once a side has sent its Finished message and received and validated the Finished message from its peer, it may begin to send and receive application data over the connection.  Early data may be sent prior to the receipt of the peer&#8217;s Finished message, per <a href="#early-data-indication">Section 4.2.7</a>.</p>
+<p id="rfc.section.4.4.3.p.4">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages">Section 4.4</a> using HKDF (see <a href="#key-schedule">Section 7.1</a>). Specifically:</p>
 <pre>
 finished_key =
     HKDF-Expand-Label(BaseKey, "finished", "", Hash.length)
 </pre>
-<p id="rfc.section.4.4.3.p.4">Structure of this message:</p>
+<p id="rfc.section.4.4.3.p.5">Structure of this message:</p>
 <pre>
    struct {
        opaque verify_data[Hash.length];
    } Finished;
 </pre>
-<p id="rfc.section.4.4.3.p.5">The verify_data value is computed as follows:</p>
+<p id="rfc.section.4.4.3.p.6">The verify_data value is computed as follows:</p>
 <pre>
    verify_data =
        HMAC(finished_key, Hash(Handshake Context +
@@ -2029,10 +2038,10 @@ finished_key =
 
    * Only included if present.
 </pre>
-<p id="rfc.section.4.4.3.p.6">Where HMAC <a href="#RFC2104">[RFC2104]</a> uses the Hash algorithm for the handshake.  As noted above, the HMAC input can generally be implemented by a running hash, i.e., just the handshake hash at this point.</p>
-<p id="rfc.section.4.4.3.p.7">In previous versions of TLS, the verify_data was always 12 octets long. In the current version of TLS, it is the size of the HMAC output for the Hash used for the handshake.</p>
-<p id="rfc.section.4.4.3.p.8">Note: Alerts and any other record types are not handshake messages and are not included in the hash computations.</p>
-<p id="rfc.section.4.4.3.p.9">Any records following a 1-RTT Finished message MUST be encrypted under the appropriate application traffic key <a href="#updating-traffic-keys">Section 7.2</a>.  In particular, this includes any alerts sent by the server in response to client Certificate and CertificateVerify messages.</p>
+<p id="rfc.section.4.4.3.p.7">Where HMAC <a href="#RFC2104">[RFC2104]</a> uses the Hash algorithm for the handshake.  As noted above, the HMAC input can generally be implemented by a running hash, i.e., just the handshake hash at this point.</p>
+<p id="rfc.section.4.4.3.p.8">In previous versions of TLS, the verify_data was always 12 octets long. In the current version of TLS, it is the size of the HMAC output for the Hash used for the handshake.</p>
+<p id="rfc.section.4.4.3.p.9">Note: Alerts and any other record types are not handshake messages and are not included in the hash computations.</p>
+<p id="rfc.section.4.4.3.p.10">Any records following a 1-RTT Finished message MUST be encrypted under the appropriate application traffic key <a href="#updating-traffic-keys">Section 7.2</a>.  In particular, this includes any alerts sent by the server in response to client Certificate and CertificateVerify messages.</p>
 <h2 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a> <a href="#end-of-early-data" id="end-of-early-data">End of Early Data</a></h2>
 <pre>
    struct {} EndOfEarlyData;
