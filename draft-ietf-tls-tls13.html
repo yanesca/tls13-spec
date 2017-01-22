@@ -1810,7 +1810,7 @@ Subsequent Handshake:
 
 <dl>
   <dt>extensions</dt>
-  <dd style="margin-left: 8">A list of extensions. For more information, see the table in <a href="#iana-considerations">Section 10</a>.</dd>
+  <dd style="margin-left: 8">A list of extensions. For more information, see the table in <a href="#extensions">Section 4.2</a>.</dd>
 </dl>
 <h3 id="rfc.section.4.3.2"><a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#certificate-request" id="certificate-request">Certificate Request</a></h3>
 <p id="rfc.section.4.3.2.p.1">A server which is authenticating with a certificate can optionally request a certificate from the client. This message, if sent, will follow EncryptedExtensions.</p>
@@ -2486,7 +2486,7 @@ finished_key =
 <p id="rfc.section.7.3.p.5">All the traffic keying material is recomputed whenever the underlying Secret changes (e.g., when changing from the handshake to application data keys or upon a key update).</p>
 <h2 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#ecdhe-shared-secret-calculation" id="ecdhe-shared-secret-calculation">(EC)DHE Shared Secret Calculation</a></h2>
 <h3 id="rfc.section.7.4.1"><a href="#rfc.section.7.4.1">7.4.1.</a> <a href="#finite-field-diffie-hellman" id="finite-field-diffie-hellman">Finite Field Diffie-Hellman</a></h3>
-<p id="rfc.section.7.4.1.p.1">For finite field groups, a conventional Diffie-Hellman computation is performed.  The negotiated key (Z) is converted to byte string by encoding in big-endian, padded with zeros up to the size of the prime. This byte string is used as the shared secret, and is used in the key schedule as specified above.</p>
+<p id="rfc.section.7.4.1.p.1">For finite field groups, a conventional Diffie-Hellman computation is performed.  The negotiated key (Z) is converted to a byte string by encoding in big-endian, padded with zeros up to the size of the prime. This byte string is used as the shared secret, and is used in the key schedule as specified above.</p>
 <p id="rfc.section.7.4.1.p.2">Note that this construction differs from previous versions of TLS which remove leading zeros.</p>
 <h3 id="rfc.section.7.4.2"><a href="#rfc.section.7.4.2">7.4.2.</a> <a href="#elliptic-curve-diffie-hellman" id="elliptic-curve-diffie-hellman">Elliptic Curve Diffie-Hellman</a></h3>
 <p id="rfc.section.7.4.2.p.1">For secp256r1, secp384r1 and secp521r1, ECDH calculations (including parameter and key generation as well as the shared secret calculation) are performed according to <a href="#IEEE1363">[IEEE1363]</a> using the ECKAS-DH1 scheme with the identity map as key derivation function (KDF), so that the shared secret is the x-coordinate of the ECDH shared secret elliptic curve point represented as an octet string.  Note that this octet string (Z in IEEE 1363 terminology) as output by FE2OSP, the Field Element to Octet String Conversion Primitive, has constant length for any given field; leading zeros found in this octet string MUST NOT be truncated.</p>
@@ -2496,7 +2496,7 @@ finished_key =
 
 <ul>
   <li>The public key to put into the KeyShareEntry.key_exchange structure is the result of applying the ECDH function to the secret key of appropriate length (into scalar input) and the standard public basepoint (into u-coordinate point input).</li>
-  <li>The ECDH shared secret is the result of applying ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
+  <li>The ECDH shared secret is the result of applying the ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
 </ul>
 <p id="rfc.section.7.4.2.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
 <h2 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#exporters" id="exporters">Exporters</a></h2>
@@ -3745,6 +3745,7 @@ here         No 0-RTT |                 | 0-RTT
   <li>David Wong <br/> NCC Group <br/> david.wong@nccgroup.trust</li>
   <li>Tim Wright <br/> Vodafone <br/> timothy.wright@vodafone.com</li>
   <li>Kazu Yamamoto <br/> Internet Initiative Japan Inc. <br/> kazu@iij.ad.jp</li>
+  <li>Tim Taubert <br/> Mozilla <br/> ttaubert@mozilla.com</li>
 </ul>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Author's Address</a>
