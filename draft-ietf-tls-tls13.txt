@@ -6910,6 +6910,10 @@ Internet-Draft                     TLS                      January 2017
       University of California, San Diego
       btackmann@eng.ucsd.edu
 
+   -  Tim Taubert
+      Mozilla
+      ttaubert@mozilla.com
+
    -  Martin Thomson
       Mozilla
       mt@mozilla.com
@@ -6934,10 +6938,6 @@ Internet-Draft                     TLS                      January 2017
 
    -  Kazu Yamamoto
       Internet Initiative Japan Inc.
-      kazu@iij.ad.jp
-
-   -  Tim Taubert
-      Mozilla
 
 
 
@@ -6946,7 +6946,7 @@ Rescorla                  Expires July 26, 2017               [Page 124]
 Internet-Draft                     TLS                      January 2017
 
 
-      ttaubert@mozilla.com
+      kazu@iij.ad.jp
 
 Author's Address
 
