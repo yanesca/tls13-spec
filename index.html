@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-1-22" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-1-25" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">January 22, 2017</td>
+  <td class="right">January 25, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: July 26, 2017</td>
+  <td class="left">Expires: July 29, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 26, 2017.</p>
+<p>This Internet-Draft will expire on July 29, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1547,7 +1547,7 @@ Subsequent Handshake:
   <dt>RSASSA-PSS algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC3447">[RFC3447]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. When used in signed TLS handshake messages, the length of the salt MUST be equal to the length of the digest output.  This codepoint is also defined for use with TLS 1.2.</dd>
   <dt>EdDSA algorithms</dt>
-  <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
+  <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#RFC8032">[RFC8032]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
 <p id="rfc.section.4.2.3.p.6">rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered. Clients offering these values for backwards compatibility MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection">Section 4.4.1.2</a>).</p>
 <p id="rfc.section.4.2.3.p.7">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
@@ -2548,7 +2548,7 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
 <p/>
 
 <ul>
-  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</a> has been applied.]]</li>
+  <li>TLS Cipher Suite Registry: Values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226">[RFC5226]</a>.  <br/><br/> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.ietf-tls-iana-registry-updates">[I-D.ietf-tls-iana-registry-updates]</a> has been applied.]]</li>
   <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>.</li>
   <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
   <li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, and &#8220;key_update&#8221; values.</li>
@@ -2582,12 +2582,6 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
         <b id="DH">[DH]</b>
       </td>
       <td class="top"><a>Diffie, W.</a> and <a>M. Hellman</a>, "<a>New Directions in Cryptography</a>", IEEE Transactions on Information Theory, V.IT-22 n.6 , June 1977.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="I-D.irtf-cfrg-eddsa">[I-D.irtf-cfrg-eddsa]</b>
-      </td>
-      <td class="top"><a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="http://tools.ietf.org/html/draft-irtf-cfrg-eddsa-08">Edwards-curve Digital Signature Algorithm (EdDSA)</a>", Internet-Draft draft-irtf-cfrg-eddsa-08, August 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -2687,6 +2681,12 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC8032">[RFC8032]</b>
+      </td>
+      <td class="top"><a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="http://tools.ietf.org/html/rfc8032">Edwards-Curve Digital Signature Algorithm (EdDSA)</a>", RFC 8032, DOI 10.17487/RFC8032, January 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="SHS">[SHS]</b>
       </td>
       <td class="top"><a>National Institute of Standards and Technology, U.S. Department of Commerce</a>, "<a>Secure Hash Standard</a>", NIST FIPS PUB 180-4, March 2012.</td>
@@ -2770,9 +2770,9 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     </tr>
     <tr>
       <td class="reference">
-        <b id="I-D.sandj-tls-iana-registry-updates">[I-D.sandj-tls-iana-registry-updates]</b>
+        <b id="I-D.ietf-tls-iana-registry-updates">[I-D.ietf-tls-iana-registry-updates]</b>
       </td>
-      <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-sandj-tls-iana-registry-updates-01">D/TLS IANA Registry Updates</a>", Internet-Draft draft-sandj-tls-iana-registry-updates-01, October 2016.</td>
+      <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-00">D/TLS IANA Registry Updates</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-00, January 2017.</td>
     </tr>
     <tr>
       <td class="reference">
