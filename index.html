@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-1-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-1-26" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">January 25, 2017</td>
+  <td class="right">January 26, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: July 29, 2017</td>
+  <td class="left">Expires: July 30, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 29, 2017.</p>
+<p>This Internet-Draft will expire on July 30, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1754,7 +1754,7 @@ Subsequent Handshake:
   <dt>identity</dt>
   <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix B.3.4</a>, or a label for a pre-shared key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
-  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to with the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.6.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
+  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NewSessionTicket">Section 4.6.1</a>.  This addition prevents passive observers from correlating sessions unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
   <dt>identities</dt>
   <dd style="margin-left: 8">A list of the identities that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.7</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>binders</dt>
