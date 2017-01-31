@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-1-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-1-31" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">January 26, 2017</td>
+  <td class="right">January 31, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: July 30, 2017</td>
+  <td class="left">Expires: August 4, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 30, 2017.</p>
+<p>This Internet-Draft will expire on August 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1272,7 +1272,7 @@ Subsequent Handshake:
   <dt>legacy_compression_methods</dt>
   <dd style="margin-left: 8">Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. For every TLS 1.3 ClientHello, this vector MUST contain exactly one byte set to zero, which corresponds to the &#8220;null&#8221; compression method in prior versions of TLS. If a TLS 1.3 ClientHello is received with any other value in this field, the server MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert. Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and MUST follow the procedures for the appropriate prior version of TLS.</dd>
   <dt>extensions</dt>
-  <dd style="margin-left: 8">Clients request extended functionality from servers by sending data in the extensions field.  The actual &#8220;Extension&#8221; format is defined in <a href="#extensions">Section 4.2</a>.  In TLS 1.3, use of certain extensions is mandatory, as functionality is moved into extensions to preserve ClientHello compatibility with previous versions of TLS.</dd>
+  <dd style="margin-left: 8">Clients request extended functionality from servers by sending data in the extensions field.  The actual &#8220;Extension&#8221; format is defined in <a href="#extensions">Section 4.2</a>.  In TLS 1.3, use of certain extensions is mandatory, as functionality is moved into extensions to preserve ClientHello compatibility with previous versions of TLS.  Servers MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.1.2.p.8">In the event that a client requests additional functionality using extensions, and this functionality is not supplied by the server, the client MAY abort the handshake. Note that TLS 1.3 ClientHello messages always contain extensions (minimally they must contain &#8220;supported_versions&#8221; or they will be interpreted as TLS 1.2 ClientHello messages). TLS 1.3 servers might receive ClientHello messages from versions of TLS prior to 1.3 that do not contain extensions.  If negotiating a version of TLS prior to 1.3, a server MUST check that the message either contains no data after legacy_compression_methods or that it contains a valid extensions block with no data following.  If not, then it MUST abort the handshake with a &#8220;decode_error&#8221; alert.</p>
 <p id="rfc.section.4.1.2.p.9">After sending the ClientHello message, the client waits for a ServerHello or HelloRetryRequest message.</p>
@@ -1827,7 +1827,7 @@ Subsequent Handshake:
   <dt>certificate_request_context</dt>
   <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.6.2</a>.</dd>
   <dt>extensions</dt>
-  <dd style="margin-left: 8">An optional set of extensions describing the parameters of the certificate being requested. The &#8220;signature_algorithms&#8221; extension MUST be specified.</dd>
+  <dd style="margin-left: 8">An optional set of extensions describing the parameters of the certificate being requested. The &#8220;signature_algorithms&#8221; extension MUST be specified.  Clients MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.3.2.p.4">In prior versions of TLS, the CertificateRequest message carried a list of signature algorithms and certificate authorities which the server would accept. In TLS 1.3 the former is expressed by sending the &#8220;signature_algorithms&#8221; extension. The latter is expressed by sending the &#8220;certificate_authorities&#8221; extension (see <a href="#certificate-authorities">Section 4.2.3.1</a>).</p>
 <p id="rfc.section.4.3.2.p.5">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message.</p>
