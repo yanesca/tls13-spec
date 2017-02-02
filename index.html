@@ -1225,7 +1225,7 @@ Subsequent Handshake:
 <ul>
   <li>If PSK is not being used, then (EC)DHE and certificate-based authentication are always used, and the server will:  <br/><br/> &#8211;  provide a &#8220;key_share&#8221; extension; and  <br/><br/> &#8211;  send the Certificate (Section 4.4.1) and CertificateVerify (Section 4.4.2) messages.</li>
   <li>If PSK (without DH or ECDH) is being used, then the server sends a &#8220;pre_shared_key&#8221; extension to indicate the selected key.</li>
-  <li>If PSK and (EC)DH are being used together, then the server will:  <br/><br/> &#8211;  sends a &#8220;pre_shared_key&#8221; extension to indicate the selected key;  <br/><br/> &#8211;  provide a &#8220;key_share&#8221; extension; and  <br/><br/> &#8211;  send the Certificate (Section 4.4.1) and CertificateVerify (Section 4.4.2) messages.</li>
+  <li>If PSK and (EC)DH are being used together, then the server will:  <br/><br/> &#8211;  send a &#8220;pre_shared_key&#8221; extension to indicate the selected key;  <br/><br/> &#8211;  provide a &#8220;key_share&#8221; extension; and  <br/><br/> &#8211;  send the Certificate (Section 4.4.1) and CertificateVerify (Section 4.4.2) messages.</li>
 </ul>
 <p id="rfc.section.4.1.1.p.8">If the server is unable to negotiate a supported set of parameters (i.e., there is no overlap between the client and server parameters), it MUST abort the handshake with either a &#8220;handshake_failure&#8221; or &#8220;insufficient_security&#8221; fatal alert (see <a href="#alert-protocol">Section 6</a>).</p>
 <h3 id="rfc.section.4.1.2"><a href="#rfc.section.4.1.2">4.1.2.</a> <a href="#client-hello" id="client-hello">Client Hello</a></h3>
