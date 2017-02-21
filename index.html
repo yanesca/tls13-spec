@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-2-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-2-21" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">February 02, 2017</td>
+  <td class="right">February 21, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: August 6, 2017</td>
+  <td class="left">Expires: August 25, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 6, 2017.</p>
+<p>This Internet-Draft will expire on August 25, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1223,9 +1223,10 @@ Subsequent Handshake:
 <p/>
 
 <ul>
-  <li>If PSK is not being used, then (EC)DHE and certificate-based authentication are always used, and the server will:  <br/><br/> &#8211;  provide a &#8220;key_share&#8221; extension; and  <br/><br/> &#8211;  send the Certificate (Section 4.4.1) and CertificateVerify (Section 4.4.2) messages.</li>
-  <li>If PSK (without DH or ECDH) is being used, then the server sends a &#8220;pre_shared_key&#8221; extension to indicate the selected key.</li>
-  <li>If PSK and (EC)DH are being used together, then the server will:  <br/><br/> &#8211;  send a &#8220;pre_shared_key&#8221; extension to indicate the selected key;  <br/><br/> &#8211;  provide a &#8220;key_share&#8221; extension; and  <br/><br/> &#8211;  send the Certificate (Section 4.4.1) and CertificateVerify (Section 4.4.2) messages.</li>
+  <li>If PSK is being used, then the server will send a &#8220;pre_shared_key&#8221; extension indicating the selected key.</li>
+  <li>If PSK is not being used, then (EC)DHE and certificate-based authentication are always used.</li>
+  <li>When (EC)DHE is in use, the server will also provide a &#8220;key_share&#8221; extension.</li>
+  <li>When authenticating via a certificate (i.e., when a PSK is not in use), the server will send the Certificate (<a href="#certificate">Section 4.4.1</a>) and CertificateVerify (<a href="#certificate-verify">Section 4.4.2</a>) messages.</li>
 </ul>
 <p id="rfc.section.4.1.1.p.8">If the server is unable to negotiate a supported set of parameters (i.e., there is no overlap between the client and server parameters), it MUST abort the handshake with either a &#8220;handshake_failure&#8221; or &#8220;insufficient_security&#8221; fatal alert (see <a href="#alert-protocol">Section 6</a>).</p>
 <h3 id="rfc.section.4.1.2"><a href="#rfc.section.4.1.2">4.1.2.</a> <a href="#client-hello" id="client-hello">Client Hello</a></h3>
@@ -2721,6 +2722,12 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
     </tr>
     <tr>
       <td class="reference">
+        <b id="CHHSV17">[CHHSV17]</b>
+      </td>
+      <td class="top"><a>Cremers, C.</a>, <a>Horvat, M.</a>, <a>Hoyland, J.</a>, <a>van der Merwe, T.</a> and <a>S. Scott</a>, "<a href="https://www.ietf.org/mail-archive/web/tls/current/msg22382.html">Awkward Handshake: Possible mismatch of client/server view on client authentication in post-handshake mode in Revision 18</a>", 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="CHSV16">[CHSV16]</b>
       </td>
       <td class="top"><a>Cremers, C.</a>, <a>Horvat, M.</a>, <a>Scott, S.</a> and <a>T. van der Merwe</a>, "<a>Automated Analysis and Verification of TLS 1.3: 0-RTT, Resumption and Delayed Authentication</a>", Proceedings of IEEE Symposium on Security and Privacy (Oakland) 2016 , 2016.</td>
@@ -3656,8 +3663,9 @@ here         No 0-RTT |                 | 0-RTT
 <p id="rfc.section.E.1.p.8">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
 <p id="rfc.section.E.1.p.9">For all handshake modes, the Finished MAC (and where present, the signature), prevents downgrade attacks. In addition, the use of certain bytes in the random nonces as described in <a href="#server-hello">Section 4.1.3</a> allows the detection of downgrade to previous TLS versions.</p>
 <p id="rfc.section.E.1.p.10">As soon as the client and the server have exchanged enough information to establish shared keys, the remainder of the handshake is encrypted, thus providing protection against passive attackers. Because the server authenticates before the client, the client can ensure that it only reveals its identity to an authenticated server. Note that implementations must use the provided record padding mechanism during the handshake to avoid leaking information about the identities due to length.</p>
-<p id="rfc.section.E.1.p.11">The 0-RTT mode of operation generally provides the same security properties as 1-RTT data, with the two exceptions that the 0-RTT encryption keys do not provide full forward secrecy and that the server is not able to guarantee full uniqueness of the handshake (non-replayability) without keeping potentially undue amounts of state. See <a href="#early-data-indication">Section 4.2.7</a> for one mechanism to limit the exposure to replay.</p>
-<p id="rfc.section.E.1.p.12">The reader should refer to the following references for analysis of the TLS handshake <a href="#CHSV16">[CHSV16]</a> <a href="#FGSW16">[FGSW16]</a> <a href="#LXZFH16">[LXZFH16]</a>.</p>
+<p id="rfc.section.E.1.p.11">A client that has sent authentication data to a server, either in the main handshake or in post-handshake authentication, cannot be sure if the server afterwards considers the client to be authenticated or not.  If the client needs to determine if the server considers the connection to be unilaterally or mutually authenticated, this has to be provisioned by the application layer. See <a href="#CHHSV17">[CHHSV17]</a> for details.</p>
+<p id="rfc.section.E.1.p.12">The 0-RTT mode of operation generally provides the same security properties as 1-RTT data, with the two exceptions that the 0-RTT encryption keys do not provide full forward secrecy and that the server is not able to guarantee full uniqueness of the handshake (non-replayability) without keeping potentially undue amounts of state. See <a href="#early-data-indication">Section 4.2.7</a> for one mechanism to limit the exposure to replay.</p>
+<p id="rfc.section.E.1.p.13">The reader should refer to the following references for analysis of the TLS handshake <a href="#CHSV16">[CHSV16]</a> <a href="#FGSW16">[FGSW16]</a> <a href="#LXZFH16">[LXZFH16]</a>.</p>
 <h2 id="rfc.appendix.E.2"><a href="#rfc.appendix.E.2">E.2.</a> <a href="#security-record-layer" id="security-record-layer">Record Layer</a></h2>
 <p id="rfc.section.E.2.p.1">The record layer depends on the handshake producing a strong session key which can be used to derive bidirectional traffic keys and nonces.  Assuming that is true, and the keys are used for no more data than indicated in <a href="#limits-on-key-usage">Section 5.5</a> then the record layer should provide the following guarantees:</p>
 <p/>
