@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-04" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">March 02, 2017</td>
+  <td class="right">March 04, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: September 3, 2017</td>
+  <td class="left">Expires: September 5, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 3, 2017.</p>
+<p>This Internet-Draft will expire on September 5, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1660,7 +1660,7 @@ Subsequent Handshake:
 <h4 id="rfc.section.4.2.5.1"><a href="#rfc.section.4.2.5.1">4.2.5.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
 <p id="rfc.section.4.2.5.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (Y = g^X mod p) for the specified group (see <a href="#RFC7919">[RFC7919]</a> for group definitions) encoded as a big-endian integer, padded with zeros to the size of p in bytes.</p>
 <p id="rfc.section.4.2.5.1.p.2">Note: For a given Diffie-Hellman group, the padding results in all public keys having the same length.</p>
-<p id="rfc.section.4.2.5.1.p.3">Peers SHOULD validate each other&#8217;s public key Y by ensuring that 1 &lt; Y &lt; p-1. This check ensures that the remote peer is properly behaved and isn&#8217;t forcing the local system into a small subgroup.</p>
+<p id="rfc.section.4.2.5.1.p.3">Peers MUST validate each other&#8217;s public key Y by ensuring that 1 &lt; Y &lt; p-1. This check ensures that the remote peer is properly behaved and isn&#8217;t forcing the local system into a small subgroup.</p>
 <h4 id="rfc.section.4.2.5.2"><a href="#rfc.section.4.2.5.2">4.2.5.2.</a> <a href="#ecdhe-param" id="ecdhe-param">ECDHE Parameters</a></h4>
 <p id="rfc.section.4.2.5.2.p.1">ECDHE parameters for both clients and servers are encoded in the the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.</p>
 <p id="rfc.section.4.2.5.2.p.2">For secp256r1, secp384r1 and secp521r1, the contents are the byte string representation of an elliptic curve public value following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.</p>
@@ -2205,7 +2205,7 @@ finished_key =
 <p/>
 
 <ol>
-  <li>The 64-bit record sequence number is encoded in network byte order and padded to the left with zeroes to iv_length.</li>
+  <li>The 64-bit record sequence number is encoded in network byte order and padded to the left with zeros to iv_length.</li>
   <li>The padded sequence number is XORed with the static client_write_iv or server_write_iv, depending on the role.</li>
 </ol>
 <p id="rfc.section.5.3.p.6">The resulting quantity (of length iv_length) is used as the per-record nonce.</p>
