@@ -1122,8 +1122,7 @@ Subsequent Handshake:
    } T;
 </pre>
 <h2 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> <a href="#variants" id="variants">Variants</a></h2>
-<p id="rfc.section.3.8.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. There must be a case arm for every element of the enumeration declared in the select. Case arms have limited fall-through: if two case arms follow in immediate succession with no fields in between, then they both contain the same fields. Thus, in the example below, &#8220;orange&#8221; and &#8220;banana&#8221; both contain V2. Note that this piece of syntax was added in TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. Each case arm can have one or more fields.</p>
-<p id="rfc.section.3.8.p.2">The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
+<p id="rfc.section.3.8.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines.  The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
        T1 f1;
@@ -1132,17 +1131,15 @@ Subsequent Handshake:
        Tn fn;
        select (E) {
            case e1: Te1;
-           case e2: Te21;
-                    Te22;
-           case e3: case e4: Te3;
+           case e2: Te2;
            ....
            case en: Ten;
        } [[fv]];
    } [[Tv]];
 </pre>
-<p id="rfc.section.3.8.p.3">For example:</p>
+<p id="rfc.section.3.8.p.2">For example:</p>
 <pre>
-   enum { apple(0), orange(1), banana(2) } VariantTag;
+   enum { apple(0), orange(1) } VariantTag;
 
    struct {
        uint16 number;
@@ -1155,13 +1152,11 @@ Subsequent Handshake:
    } V2;
 
    struct {
-       select (VariantTag) {
-           case apple:
-             V1;   /* VariantBody, tag = apple */
-           case orange:
-           case banana:
-             V2;   /* VariantBody, tag = orange or banana */
-       } variant_body;       /* optional label on variant */
+       VariantTag type;
+       select (VariantRecord.type) {
+           case apple:  V1;
+           case orange: V2;
+       };
    } VariantRecord;
 </pre>
 <h2 id="rfc.section.3.9"><a href="#rfc.section.3.9">3.9.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
@@ -1691,14 +1686,13 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.7.p.1">When a PSK is used, the client can send application data in its first flight of messages. If the client opts to do so, it MUST supply an &#8220;early_data&#8221; extension as well as the &#8220;pre_shared_key&#8221; extension.</p>
 <p id="rfc.section.4.2.7.p.2">The &#8220;extension_data&#8221; field of this extension contains an &#8220;EarlyDataIndication&#8221; value.</p>
 <pre>
+   struct {} Empty;
+
    struct {
        select (Handshake.msg_type) {
-           case new_session_ticket:
-              uint32 max_early_data_size;
-
-           case client_hello:
-           case encrypted_extensions:
-              // empty
+           case new_session_ticket:   uint32 max_early_data_size;
+           case client_hello:         Empty;
+           case encrypted_extensions: Empty;
        };
    } EarlyDataIndication;
 </pre>
@@ -2069,7 +2063,7 @@ finished_key =
   <dt>ticket_lifetime</dt>
   <dd style="margin-left: 8">Indicates the lifetime in seconds as a 32-bit unsigned integer in network byte order from the time of ticket issuance.  Servers MUST NOT use any value more than 604800 seconds (7 days).  The value of zero indicates that the ticket should be discarded immediately. Clients MUST NOT cache session tickets for longer than 7 days, regardless of the ticket_lifetime, and MAY delete the ticket earlier based on local policy. A server MAY treat a ticket as valid for a shorter period of time than what is stated in the ticket_lifetime.</dd>
   <dt>ticket_age_add</dt>
-  <dd style="margin-left: 8">A randomly generated 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;pre_shared_key&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.</dd>
+  <dd style="margin-left: 8">A securely generated, random 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;pre_shared_key&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.</dd>
   <dt>ticket</dt>
   <dd style="margin-left: 8">The value of the ticket to be used as the PSK identity.  The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
   <dt>extensions</dt>
@@ -3311,14 +3305,13 @@ here         No 0-RTT |                 | 0-RTT
        PskKeyExchangeMode ke_modes&lt;1..255&gt;;
    } PskKeyExchangeModes;
 
+   struct {} Empty;
+
    struct {
        select (Handshake.msg_type) {
-           case new_session_ticket:
-              uint32 max_early_data_size;
-
-           case client_hello:
-           case encrypted_extensions:
-              // empty
+           case new_session_ticket:   uint32 max_early_data_size;
+           case client_hello:         Empty;
+           case encrypted_extensions: Empty;
        };
    } EarlyDataIndication;
 
