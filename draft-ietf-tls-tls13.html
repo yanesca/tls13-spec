@@ -1661,7 +1661,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.5.2.p.2">For secp256r1, secp384r1 and secp521r1, the contents are the byte string representation of an elliptic curve public value following the conversion routine in Section 4.3.6 of ANSI X9.62 <a href="#X962">[X962]</a>.</p>
 <p id="rfc.section.4.2.5.2.p.3">Although X9.62 supports multiple point formats, any given curve MUST specify only a single point format. All curves currently specified in this document MUST only be used with the uncompressed point format (the format for all ECDH functions is considered uncompressed). Peers MUST validate each other&#8217;s public value Y by ensuring that the point is a valid point on the elliptic curve.</p>
 <p id="rfc.section.4.2.5.2.p.4">For the curves secp256r1, secp384r1 and secp521r1, the appropriate validation procedures are defined in Section 4.3.7 of <a href="#X962">[X962]</a> and alternatively in Section 5.6.2.6  of <a href="#KEYAGREEMENT">[KEYAGREEMENT]</a>.  This process consists of three steps: (1) verify that Y is not the point at infinity (O), (2) verify that for Y = (x, y) both integers are in the correct interval, (3) ensure that (x, y) is a correct solution to the elliptic curve equation.  For these curves, implementers do not need to verify membership in the correct subgroup.</p>
-<p id="rfc.section.4.2.5.2.p.5">For x25519 and x448, the contents of the public value are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748">[RFC7748]</a>, 32 bytes for x25519 and 56 bytes for x448. Peers SHOULD use the approach specified in <a href="#RFC7748">[RFC7748]</a> to calculate the Diffie-Hellman shared secret, and MUST check whether the computed Diffie-Hellman shared secret is the all-zero value and abort if so, as described in Section 6 of <a href="#RFC7748">[RFC7748]</a>. If implementers use an alternative implementation of these elliptic curves, they should perform the additional checks specified in Section 7 of <a href="#RFC7748">[RFC7748]</a>.</p>
+<p id="rfc.section.4.2.5.2.p.5">For x25519 and x448, the contents of the public value are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748">[RFC7748]</a>, 32 bytes for x25519 and 56 bytes for x448.</p>
 <p id="rfc.section.4.2.5.2.p.6">Note: Versions of TLS prior to 1.3 permitted point format negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
 <h3 id="rfc.section.4.2.6"><a href="#rfc.section.4.2.6">4.2.6.</a> <a href="#pre-shared-key-exchange-modes" id="pre-shared-key-exchange-modes">Pre-Shared Key Exchange Modes</a></h3>
 <p id="rfc.section.4.2.6.p.1">In order to use PSKs, clients MUST also send a &#8220;psk_key_exchange_modes&#8221; extension. The semantics of this extension are that the client only supports the use of PSKs with these modes, which restricts both the use of PSKs offered in this ClientHello and those which the server might supply via NewSessionTicket.</p>
@@ -2493,7 +2493,7 @@ finished_key =
   <li>The public key to put into the KeyShareEntry.key_exchange structure is the result of applying the ECDH function to the secret key of appropriate length (into scalar input) and the standard public basepoint (into u-coordinate point input).</li>
   <li>The ECDH shared secret is the result of applying the ECDH function to the secret key (into scalar input) and the peer&#8217;s public key (into u-coordinate point input). The output is used raw, with no processing.</li>
 </ul>
-<p id="rfc.section.7.4.2.p.5">For X25519 and X448, see <a href="#RFC7748">[RFC7748]</a>.</p>
+<p id="rfc.section.7.4.2.p.5">For X25519 and X448, implementations SHOULD use the approach specified in <a href="#RFC7748">[RFC7748]</a> to calculate the Diffie-Hellman shared secret. Implementations MUST check whether the computed Diffie-Hellman shared secret is the all-zero value and abort if so, as described in Section 6 of <a href="#RFC7748">[RFC7748]</a>. If implementers use an alternative implementation of these elliptic curves, they should perform the additional checks specified in Section 7 of <a href="#RFC7748">[RFC7748]</a>.</p>
 <h2 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#exporters" id="exporters">Exporters</a></h2>
 <p><a href="#RFC5705">[RFC5705]</a> defines keying material exporters for TLS in terms of the TLS pseudorandom function (PRF). This document replaces the PRF with HKDF, thus requiring a new construction. The exporter interface remains the same.</p>
 <p id="rfc.section.7.5.p.2">The exporter value is computed as:</p>
@@ -2775,6 +2775,12 @@ HKDF-Expand-Label(Secret, label, Hash(context_value), key_length)
         <b id="I-D.ietf-tls-iana-registry-updates">[I-D.ietf-tls-iana-registry-updates]</b>
       </td>
       <td class="top"><a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-00">D/TLS IANA Registry Updates</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-00, January 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-tls-tls13-vectors">[I-D.ietf-tls-tls13-vectors]</b>
+      </td>
+      <td class="top"><a>Thomson, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-tls13-vectors-00">Example Handshake Traces for TLS 1.3</a>", Internet-Draft draft-ietf-tls-tls13-vectors-00, January 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -3549,7 +3555,7 @@ here         No 0-RTT |                 | 0-RTT
 <p id="rfc.section.B.4.p.4">Although TLS 1.3 uses the same cipher suite space as previous versions of TLS, TLS 1.3 cipher suites are defined differently, only specifying the symmetric ciphers, and cannot be used for TLS 1.2. Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS 1.3.</p>
 <p id="rfc.section.B.4.p.5">New cipher suite values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#implementation-notes" id="implementation-notes">Implementation Notes</a></h1>
-<p id="rfc.section.C.p.1">The TLS protocol cannot prevent many common security mistakes. This section provides several recommendations to assist implementors.</p>
+<p id="rfc.section.C.p.1">The TLS protocol cannot prevent many common security mistakes. This section provides several recommendations to assist implementors.  <a href="#I-D.ietf-tls-tls13-vectors">[I-D.ietf-tls-tls13-vectors]</a> provides test vectors for TLS 1.3 handshakes.</p>
 <h2 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#api-considerations-for-0-rtt" id="api-considerations-for-0-rtt">API considerations for 0-RTT</a></h2>
 <p id="rfc.section.C.1.p.1">0-RTT data has very different security properties from data transmitted after a completed handshake: it can be replayed. Implementations SHOULD provide different functions for reading and writing 0-RTT data and data transmitted after the handshake, and SHOULD NOT automatically resend 0-RTT data if it is rejected by the server.</p>
 <h2 id="rfc.appendix.C.2"><a href="#rfc.appendix.C.2">C.2.</a> <a href="#random-number-generation-and-seeding" id="random-number-generation-and-seeding">Random Number Generation and Seeding</a></h2>
