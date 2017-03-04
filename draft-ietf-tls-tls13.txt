@@ -1558,8 +1558,8 @@ Internet-Draft                     TLS                        March 2017
    -  Including a "cookie" extension if one was provided in the
       HelloRetryRequest.
 
-   -  Updating the PSK binder values if the "pre_shared_key" extension
-      was present.
+   -  Updating the "obfuscated_ticket_age" and PSK binder values if the
+      "pre_shared_key" extension was present.
 
 
 
