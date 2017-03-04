@@ -1828,14 +1828,14 @@ Subsequent Handshake:
 <h4 id="rfc.section.4.3.2.1"><a href="#rfc.section.4.3.2.1">4.3.2.1.</a> <a href="#oid-filters" id="oid-filters">OID Filters</a></h4>
 <p id="rfc.section.4.3.2.1.p.1">The &#8220;oid_filters&#8221; extension allows servers to provide a set of OID/value pairs which it would like the client&#8217;s certificate to match. This extension MUST only be sent in the CertificateRequest message.</p>
 <pre>
-  struct {
-      opaque certificate_extension_oid&lt;1..2^8-1&gt;;
-      opaque certificate_extension_values&lt;0..2^16-1&gt;;
-  } OIDFilter;
+   struct {
+       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
+       opaque certificate_extension_values&lt;0..2^16-1&gt;;
+   } OIDFilter;
 
-  struct {
-      OIDFilter filters&lt;0..2^16-1&gt;;
-  } OIDFilterExtension;
+   struct {
+       OIDFilter filters&lt;0..2^16-1&gt;;
+   } OIDFilterExtension;
 </pre>
 <p/>
 
@@ -3430,14 +3430,14 @@ here         No 0-RTT |                 | 0-RTT
        Extension extensions&lt;2..2^16-1&gt;;
    } CertificateRequest;
 
-  struct {
-      opaque certificate_extension_oid&lt;1..2^8-1&gt;;
-      opaque certificate_extension_values&lt;0..2^16-1&gt;;
-  } OIDFilter;
+   struct {
+       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
+       opaque certificate_extension_values&lt;0..2^16-1&gt;;
+   } OIDFilter;
 
-  struct {
-      OIDFilter filters&lt;0..2^16-1&gt;;
-  } OIDFilterExtension;
+   struct {
+       OIDFilter filters&lt;0..2^16-1&gt;;
+   } OIDFilterExtension;
 </pre>
 <h3 id="rfc.appendix.B.3.3"><a href="#rfc.appendix.B.3.3">B.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a></h3>
 <pre>

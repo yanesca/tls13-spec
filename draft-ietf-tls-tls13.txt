@@ -2986,14 +2986,14 @@ Internet-Draft                     TLS                        March 2017
    value pairs which it would like the client's certificate to match.
    This extension MUST only be sent in the CertificateRequest message.
 
-     struct {
-         opaque certificate_extension_oid<1..2^8-1>;
-         opaque certificate_extension_values<0..2^16-1>;
-     } OIDFilter;
+      struct {
+          opaque certificate_extension_oid<1..2^8-1>;
+          opaque certificate_extension_values<0..2^16-1>;
+      } OIDFilter;
 
-     struct {
-         OIDFilter filters<0..2^16-1>;
-     } OIDFilterExtension;
+      struct {
+          OIDFilter filters<0..2^16-1>;
+      } OIDFilterExtension;
 
    filters  A list of certificate extension OIDs [RFC5280] with their
       allowed values, represented in DER-encoded [X690] format.  Some
@@ -5841,14 +5841,14 @@ Internet-Draft                     TLS                        March 2017
           Extension extensions<2..2^16-1>;
       } CertificateRequest;
 
-     struct {
-         opaque certificate_extension_oid<1..2^8-1>;
-         opaque certificate_extension_values<0..2^16-1>;
-     } OIDFilter;
+      struct {
+          opaque certificate_extension_oid<1..2^8-1>;
+          opaque certificate_extension_values<0..2^16-1>;
+      } OIDFilter;
 
-     struct {
-         OIDFilter filters<0..2^16-1>;
-     } OIDFilterExtension;
+      struct {
+          OIDFilter filters<0..2^16-1>;
+      } OIDFilterExtension;
 
 B.3.3.  Authentication Messages
 
