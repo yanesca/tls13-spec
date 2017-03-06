@@ -6764,12 +6764,12 @@ Appendix G.  Contributors
       Skygate Technology Ltd
       pc@skygate.co.uk
 
+   -  Katriel Cohn-Gordon
+      University of Oxford
+      me@katriel.co.uk
+
    -  Cas Cremers
       University of Oxford
-      cas.cremers@cs.ox.ac.uk
-
-   -  Antoine Delignat-Lavaud (co-author of [RFC7627])
-      INRIA
 
 
 
@@ -6778,6 +6778,10 @@ Rescorla                Expires September 7, 2017             [Page 121]
 Internet-Draft                     TLS                        March 2017
 
 
+      cas.cremers@cs.ox.ac.uk
+
+   -  Antoine Delignat-Lavaud (co-author of [RFC7627])
+      INRIA
       antoine.delignat-lavaud@inria.fr
 
    -  Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2)
@@ -6822,10 +6826,6 @@ Internet-Draft                     TLS                        March 2017
 
    -  Alfred Hoenes
 
-   -  David Hopwood
-      Independent Consultant
-      david.hopwood@blueyonder.co.uk
-
 
 
 
@@ -6833,6 +6833,10 @@ Rescorla                Expires September 7, 2017             [Page 122]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  David Hopwood
+      Independent Consultant
+      david.hopwood@blueyonder.co.uk
 
    -  Marko Horvat
       MPI-SWS
@@ -6879,16 +6883,16 @@ Internet-Draft                     TLS                        March 2017
       ANSSI
       olivier.levillain@ssi.gouv.fr
 
-   -  Xiaoyin Liu
-      University of North Carolina at Chapel Hill
-      xiaoyin.l@outlook.com
-
 
 
 Rescorla                Expires September 7, 2017             [Page 123]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Xiaoyin Liu
+      University of North Carolina at Chapel Hill
+      xiaoyin.l@outlook.com
 
    -  Ilari Liusvaara
       Independent
@@ -6934,10 +6938,6 @@ Internet-Draft                     TLS                        March 2017
       Microsoft
       andrei.popov@microsoft.com
 
-   -  Marsh Ray (co-author of [RFC7627])
-      Microsoft
-      maray@microsoft.com
-
 
 
 
@@ -6945,6 +6945,10 @@ Rescorla                Expires September 7, 2017             [Page 124]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Marsh Ray (co-author of [RFC7627])
+      Microsoft
+      maray@microsoft.com
 
    -  Robert Relyea
       Netscape Communications
@@ -6990,10 +6994,6 @@ Internet-Draft                     TLS                        March 2017
 
    -  Filippo Valsorda
       Cloudflare Inc.
-      filippo@cloudflare.com
-
-   -  Thyla van der Merwe
-      Royal Holloway, University of London
 
 
 
@@ -7002,6 +7002,10 @@ Rescorla                Expires September 7, 2017             [Page 125]
 Internet-Draft                     TLS                        March 2017
 
 
+      filippo@cloudflare.com
+
+   -  Thyla van der Merwe
+      Royal Holloway, University of London
       tjvdmerwe@gmail.com
 
    -  Tom Weinstein
@@ -7028,10 +7032,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
