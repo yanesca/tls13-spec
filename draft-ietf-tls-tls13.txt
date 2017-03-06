@@ -1884,10 +1884,10 @@ Internet-Draft                     TLS                        March 2017
    response.  The client sends its extension requests in the ClientHello
    message and the server sends its extension responses in the
    ServerHello, EncryptedExtensions and HelloRetryRequest messages.  The
-   server sends extension requests, in the CertificateRequest message
-   which can be responded to with the client's Certificate message.  The
-   server can also send unsolicited extensions in the NewSessionTicket,
-   though the client does not respond directly to these.
+   server sends extension requests in the CertificateRequest message
+   which a client MAY respond to with a Certificate message.  The server
+   MAY also send unsolicited extensions in the NewSessionTicket, though
+   the client does not respond directly to these.
 
    Implementations MUST NOT send extension responses if the remote
    endpoint did not send the corresponding extension requests, with the
@@ -2612,7 +2612,7 @@ Internet-Draft                     TLS                        March 2017
    EndOfEarlyData message will be sent to indicate the key change.  This
    message will be encrypted with the 0-RTT traffic keys.
 
-   A server which receives an "early_data" extension can behave in one
+   A server which receives an "early_data" extension MUST behave in one
    of three ways:
 
    -  Ignore the extension and return a regular 1-RTT response.  The
@@ -2946,8 +2946,8 @@ Internet-Draft                     TLS                        March 2017
 
 4.3.2.  Certificate Request
 
-   A server which is authenticating with a certificate can optionally
-   request a certificate from the client.  This message, if sent, will
+   A server which is authenticating with a certificate MAY optionally
+   request a certificate from the client.  This message, if sent, MUST
    follow EncryptedExtensions.
 
    Structure of this message:
@@ -3219,8 +3219,8 @@ Internet-Draft                     TLS                        March 2017
    "status_request" extension from the server MUST be a
    CertificateStatus structure as defined in [RFC6066].
 
-   A server may also request that a client present OCSP response with
-   its certificate by sending a "status_request" extension in its
+   A server MAY request that a client present an OCSP response with its
+   certificate by sending a "status_request" extension in its
    CertificateRequest message.  If the client opts to send an OCSP
    response, the body of its "status_request" extension MUST be a
    CertificateStatus structure as defined in [RFC6066].
@@ -4210,9 +4210,10 @@ Internet-Draft                     TLS                        March 2017
       "close_notify".  This alert is generally a warning.
 
    Either party MAY initiate a close by sending a "close_notify" alert.
-   Any data received after a closure alert is ignored.  If a transport-
-   level close is received prior to a "close_notify", the receiver
-   cannot know that all the data that was sent has been received.
+   Any data received after a closure alert MUST be ignored.  If a
+   transport-level close is received prior to a "close_notify", the
+   receiver cannot know that all the data that was sent has been
+   received.
 
    Each party MUST send a "close_notify" alert before closing the write
    side of the connection, unless some other fatal alert has been
@@ -4224,7 +4225,7 @@ Internet-Draft                     TLS                        March 2017
 
    If the application protocol using TLS provides that any data may be
    carried over the underlying transport after the TLS connection is
-   closed, the TLS implementation must receive the responding
+   closed, the TLS implementation MUST receive the responding
    "close_notify" alert before indicating to the application layer that
    the TLS connection has ended.  If the application protocol will not
    transfer any additional data, but will only close the underlying
@@ -4242,14 +4243,13 @@ Internet-Draft                     TLS                        March 2017
    Error handling in the TLS Handshake Protocol is very simple.  When an
    error is detected, the detecting party sends a message to its peer.
    Upon transmission or receipt of a fatal alert message, both parties
-   immediately close the connection.
+   MUST immediately close the connection.
 
    Whenever an implementation encounters a fatal error condition, it
    SHOULD send an appropriate fatal alert and MUST close the connection
    without sending or receiving any additional data.  In the rest of
    this specification, when the phrases "terminate the connection" and
    "abort the handshake" are used without a specific alert it means that
-   the implementation SHOULD send the alert indicated by the
 
 
 
@@ -4258,6 +4258,7 @@ Rescorla                Expires September 7, 2017              [Page 76]
 Internet-Draft                     TLS                        March 2017
 
 
+   the implementation SHOULD send the alert indicated by the
    descriptions below.  The phrases "terminate the connection with a X
    alert" and "abort the handshake with a X alert" mean that the
    implementation MUST send alert X if it sends any alert.  All alerts
@@ -4305,7 +4306,6 @@ Internet-Draft                     TLS                        March 2017
       inconsistent with other fields.  This alert is used for errors
       which conform to the formal protocol syntax but are otherwise
       incorrect.
-
 
 
 
@@ -4696,7 +4696,7 @@ Internet-Draft                     TLS                        March 2017
    Implementations MUST check whether the computed Diffie-Hellman shared
    secret is the all-zero value and abort if so, as described in
    Section 6 of [RFC7748].  If implementers use an alternative
-   implementation of these elliptic curves, they should perform the
+   implementation of these elliptic curves, they SHOULD perform the
    additional checks specified in Section 7 of [RFC7748].
 
 
