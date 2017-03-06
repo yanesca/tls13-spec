@@ -1108,7 +1108,7 @@ Internet-Draft                     TLS                        March 2017
    2.  There are no guarantees of non-replay between connections.
        Unless the server takes special measures outside those provided
        by TLS, the server has no guarantee that the same 0-RTT data was
-       not transmitted on multiple 0-RTT connections (See
+       not transmitted on multiple 0-RTT connections (see
        Section 4.2.8.3 for more details).  This is especially relevant
        if the data is authenticated either with TLS client
        authentication or inside the application layer protocol.
@@ -1134,7 +1134,7 @@ Internet-Draft                     TLS                        March 2017
    0-RTT data to ensure that an application is always aware that it is
    sending or receiving data that might be replayed.
 
-   The same warnings apply to any use of the early exporter secret.
+   The same warnings apply to any use of the early_exporter_secret.
 
    The remainder of this document provides a detailed description of
    TLS.
@@ -1198,7 +1198,7 @@ Internet-Draft                     TLS                        March 2017
    consecutive Datum, consuming a total of nine bytes.
 
       opaque Datum[3];      /* three uninterpreted bytes */
-      Datum Data[9];        /* 3 consecutive 3 byte vectors */
+      Datum Data[9];        /* 3 consecutive 3-byte vectors */
 
    Variable-length vectors are defined by specifying a subrange of legal
    lengths, inclusively, using the notation <floor..ceiling>.  When
@@ -1275,8 +1275,8 @@ Internet-Draft                     TLS                        March 2017
    force the width definition without defining a superfluous element.
 
    In the following example, Taste will consume two bytes in the data
-   stream but can only assume the values 1, 2, or 4 in current version
-   of protocol.
+   stream but can only assume the values 1, 2, or 4 in the current
+   version of the protocol.
 
       enum { sweet(1), sour(2), bitter(4), (32000) } Taste;
 
@@ -1754,7 +1754,7 @@ Internet-Draft                     TLS                        March 2017
      44 4F 57 4E 47 52 44 00
 
    TLS 1.3 clients receiving a TLS 1.2 or below ServerHello MUST check
-   that the last eight octets are not equal to either of these values.
+   that the last eight bytes are not equal to either of these values.
    TLS 1.2 clients SHOULD also check that the last eight bytes are not
    equal to the second value if the ServerHello indicates TLS 1.1 or
    below.  If a match is found, the client MUST abort the handshake with
@@ -1801,13 +1801,13 @@ Internet-Draft                     TLS                        March 2017
           Extension extensions<2..2^16-1>;
       } HelloRetryRequest;
 
-   The version and extensions fields have the same meanings as their
-   corresponding values in the ServerHello.  The server SHOULD send only
-   the extensions necessary for the client to generate a correct
-   ClientHello pair.  As with ServerHello, a HelloRetryRequest MUST NOT
-   contain any extensions that were not first offered by the client in
-   its ClientHello, with the exception of optionally the "cookie" (see
-   Section 4.2.2) extension.
+   The server_version and extensions fields have the same meanings as
+   their corresponding values in the ServerHello.  The server SHOULD
+   send only the extensions necessary for the client to generate a
+   correct ClientHello pair.  As with ServerHello, a HelloRetryRequest
+   MUST NOT contain any extensions that were not first offered by the
+   client in its ClientHello, with the exception of optionally the
+   "cookie" (see Section 4.2.2) extension.
 
    Upon receipt of a HelloRetryRequest, the client MUST verify that the
    extensions block is not empty and otherwise MUST abort the handshake
@@ -2467,8 +2467,8 @@ Internet-Draft                     TLS                        March 2017
 
 
    public value (Y = g^X mod p) for the specified group (see [RFC7919]
-   for group definitions) encoded as a big-endian integer, padded with
-   zeros to the size of p in bytes.
+   for group definitions) encoded as a big-endian integer and padded
+   with zeros to the size of p in bytes.
 
    Note: For a given Diffie-Hellman group, the padding results in all
    public keys having the same length.
@@ -2502,9 +2502,9 @@ Internet-Draft                     TLS                        March 2017
    elliptic curve equation.  For these curves, implementers do not need
    to verify membership in the correct subgroup.
 
-   For x25519 and x448, the contents of the public value are the byte
+   For X25519 and X448, the contents of the public value are the byte
    string inputs and outputs of the corresponding functions defined in
-   [RFC7748], 32 bytes for x25519 and 56 bytes for x448.
+   [RFC7748], 32 bytes for X25519 and 56 bytes for X448.
 
    Note: Versions of TLS prior to 1.3 permitted point format
    negotiation; TLS 1.3 removes this feature in favor of a single point
@@ -2810,7 +2810,7 @@ Internet-Draft                     TLS                        March 2017
    it was used.  Each entry in the binders list is computed as an HMAC
    over the portion of the ClientHello (including the handshake header)
    up to and including the PreSharedKeyExtension.identities field.  That
-   is, it includes all of the ClientHello but not the binder list
+   is, it includes all of the ClientHello but not the binders list
    itself.  The length fields for the message (including the overall
    length, the length of the extensions block, and the length of the
    "pre_shared_key" extension) are all set as if binders of the correct
@@ -2840,7 +2840,7 @@ Internet-Draft                     TLS                        March 2017
 
    Clients are permitted to "stream" 0-RTT data until they receive the
    server's Finished, only then sending the EndOfEarlyData message.  In
-   order to avoid deadlock, when accepting "early_data", servers MUST
+   order to avoid deadlocks, when accepting "early_data", servers MUST
    process the client's ClientHello and then immediately send the
    ServerHello, rather than waiting for the client's EndOfEarlyData
    message.
@@ -3289,7 +3289,7 @@ Internet-Draft                     TLS                        March 2017
    -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
       negotiated otherwise (e.g., [RFC5081]).
 
-   -  If the certificate_authorities list in the certificate request
+   -  If the certificate_authorities list in the CertificateRequest
       message was non-empty, at least one of the certificates in the
       certificate chain SHOULD be issued by one of the listed CAs.
 
@@ -3306,7 +3306,7 @@ Rescorla                Expires September 7, 2017              [Page 59]
 Internet-Draft                     TLS                        March 2017
 
 
-   -  If the certificate_extensions list in the certificate request
+   -  If the certificate_extensions list in the CertificateRequest
       message was non-empty, the end-entity certificate MUST match the
       extension OIDs recognized by the client, as described in
       Section 4.3.2.
@@ -3352,7 +3352,7 @@ Internet-Draft                     TLS                        March 2017
    possesses the private key corresponding to its certificate and also
    provides integrity for the handshake up to this point.  Servers MUST
    send this message when authenticating via a certificate.  Clients
-   MUST send this message whenever authenticating via a Certificate
+   MUST send this message whenever authenticating via a certificate
    (i.e., when the Certificate message is non-empty).  When sent, this
 
 
@@ -3392,7 +3392,7 @@ Internet-Draft                     TLS                        March 2017
    This structure is intended to prevent an attack on previous versions
    of TLS in which the ServerKeyExchange format meant that attackers
    could obtain a signature of a message with a chosen 32-byte prefix
-   (ClientHello.random).  The initial 64 byte pad clears that prefix
+   (ClientHello.random).  The initial 64-byte pad clears that prefix
    along with the server-controlled ServerHello.random.
 
    The context string for a server signature is "TLS 1.3, server
@@ -3535,16 +3535,17 @@ Internet-Draft                     TLS                        March 2017
    hash, i.e., just the handshake hash at this point.
 
    In previous versions of TLS, the verify_data was always 12 octets
-   long.  In the current version of TLS, it is the size of the HMAC
-   output for the Hash used for the handshake.
+   long.  In TLS 1.3, it is the size of the HMAC output for the Hash
+   used for the handshake.
 
    Note: Alerts and any other record types are not handshake messages
    and are not included in the hash computations.
 
    Any records following a 1-RTT Finished message MUST be encrypted
-   under the appropriate application traffic key Section 7.2.  In
-   particular, this includes any alerts sent by the server in response
-   to client Certificate and CertificateVerify messages.
+   under the appropriate application traffic key as described in
+   Section 7.2.  In particular, this includes any alerts sent by the
+   server in response to client Certificate and CertificateVerify
+   messages.
 
 4.5.  End of Early Data
 
@@ -3577,7 +3578,6 @@ Internet-Draft                     TLS                        March 2017
    connection, either immediately after each other or after specific
    events.  For instance, the server might send a new ticket after post-
    handshake authentication in order to encapsulate the additional
-
 
 
 
@@ -3740,7 +3740,7 @@ Internet-Draft                     TLS                        March 2017
    the result.  Received data is verified and decrypted, reassembled,
    and then delivered to higher-level clients.
 
-   TLS records are typed, which allows multiple higher level protocols
+   TLS records are typed, which allows multiple higher-level protocols
    to be multiplexed over the same record layer.  This document
    specifies three content types: handshake, application data, and
    alert.  Implementations MUST NOT send record types not defined in
@@ -3834,26 +3834,26 @@ Internet-Draft                     TLS                        March 2017
       circumstances.
 
    length  The length (in bytes) of the following TLSPlaintext.fragment.
-      The length MUST NOT exceed 2^14.  An endpoint that receives a
-      record that exceeds this length MUST terminate the connection with
-      a "record_overflow" alert.
+      The length MUST NOT exceed 2^14 bytes.  An endpoint that receives
+      a record that exceeds this length MUST terminate the connection
+      with a "record_overflow" alert.
 
    fragment  The data being transmitted.  This value is transparent and
       is treated as an independent block to be dealt with by the higher-
       level protocol specified by the type field.
 
-   This document describes TLS Version 1.3, which uses the version
-   0x0304.  This version value is historical, deriving from the use of
-   0x0301 for TLS 1.0 and 0x0300 for SSL 3.0.  In order to maximize
-   backwards compatibility, the record layer version identifies as
-   simply TLS 1.0.  Endpoints supporting multiple versions negotiate the
-   version to use by following the procedure and requirements in
-   Appendix D.
+   This document describes TLS 1.3, which uses the version 0x0304.  This
+   version value is historical, deriving from the use of 0x0301 for TLS
+   1.0 and 0x0300 for SSL 3.0.  In order to maximize backwards
+   compatibility, the record layer version identifies as simply TLS 1.0.
+   Endpoints supporting multiple versions negotiate the version to use
+   by following the procedure and requirements in Appendix D.
 
    When record protection has not yet been engaged, TLSPlaintext
    structures are written directly onto the wire.  Once record
    protection has started, TLSPlaintext records are protected and sent
    as described in the following section.
+
 
 
 
@@ -3870,9 +3870,9 @@ Internet-Draft                     TLS                        March 2017
 
    The record protection functions translate a TLSPlaintext structure
    into a TLSCiphertext.  The deprotection functions reverse the
-   process.  In TLS 1.3 as opposed to previous versions of TLS, all
+   process.  In TLS 1.3, as opposed to previous versions of TLS, all
    ciphers are modeled as "Authenticated Encryption with Additional
-   Data" (AEAD) [RFC5116].  AEAD functions provide a unified encryption
+   Data" (AEAD) [RFC5116].  AEAD functions provide an unified encryption
    and authentication operation which turns plaintext into authenticated
    ciphertext and back again.  Each encrypted record consists of a
    plaintext header followed by an encrypted body, which itself contains
@@ -3929,11 +3929,11 @@ Internet-Draft                     TLS                        March 2017
       TLSCiphertext.encrypted_record, which is the sum of the lengths of
       the content and the padding, plus one for the inner content type,
       plus any expansion added by the AEAD algorithm.  The length MUST
-      NOT exceed 2^14 + 256.  An endpoint that receives a record that
-      exceeds this length MUST terminate the connection with a
+      NOT exceed 2^14 + 256 bytes.  An endpoint that receives a record
+      that exceeds this length MUST terminate the connection with a
       "record_overflow" alert.
 
-   encrypted_record  The AEAD encrypted form of the serialized
+   encrypted_record  The AEAD-encrypted form of the serialized
       TLSInnerPlaintext structure.
 
    AEAD algorithms take as input a single key, a nonce, a plaintext, and
@@ -3997,7 +3997,7 @@ Internet-Draft                     TLS                        March 2017
 
    Because the size of sequence numbers is 64-bit, they should not wrap.
    If a TLS implementation would need to wrap a sequence number, it MUST
-   either rekey (Section 4.6.3) or terminate the connection.
+   either re-key (Section 4.6.3) or terminate the connection.
 
    Each AEAD algorithm will specify a range of possible lengths for the
    per-record nonce, from N_MIN bytes to N_MAX bytes of input
@@ -4096,8 +4096,8 @@ Internet-Draft                     TLS                        March 2017
    be safely encrypted under a given set of keys.  [AEAD-LIMITS]
    provides an analysis of these limits under the assumption that the
    underlying primitive (AES or ChaCha20) has no weaknesses.
-   Implementations SHOULD do a key update Section 4.6.3 prior to
-   reaching these limits.
+   Implementations SHOULD do a key update as described in Section 4.6.3
+   prior to reaching these limits.
 
    For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be
    encrypted on a given connection while keeping a safety margin of
@@ -4117,10 +4117,10 @@ Internet-Draft                     TLS                        March 2017
    sent, and can safely be ignored.  Some alerts are sent to indicate
    orderly closure of the connection or the end of early data (see
    Section 6.1).  Upon receiving such an alert, the TLS implementation
-   SHOULD indicate end-of-data to the application and, if appropriate
+   SHOULD indicate end-of-data to the application, and if appropriate
    for the alert type, send a closure alert in response.
 
-   Error alerts indicate abortive closure of the connection (See
+   Error alerts indicate abortive closure of the connection (see
    Section 6.2).  Upon receiving an error alert, the TLS implementation
    SHOULD indicate an error to the application and MUST NOT allow any
    further data to be sent or received on the connection.  Servers and
@@ -4346,7 +4346,7 @@ Internet-Draft                     TLS                        March 2017
       makes it impossible to continue.
 
    inappropriate_fallback  Sent by a server in response to an invalid
-      connection retry attempt from a client [RFC7507].
+      connection retry attempt from a client (see [RFC7507]).
 
    missing_extension  Sent by endpoints that receive a hello message not
       containing an extension that is mandatory to send for the offered
@@ -4359,7 +4359,7 @@ Internet-Draft                     TLS                        March 2017
 
    certificate_unobtainable  Sent by servers when unable to obtain a
       certificate from a URL provided by the client via the
-      "client_certificate_url" extension [RFC6066].
+      "client_certificate_url" extension (see [RFC6066]).
 
 
 
@@ -4372,15 +4372,15 @@ Internet-Draft                     TLS                        March 2017
 
    unrecognized_name  Sent by servers when no server exists identified
       by the name provided by the client via the "server_name" extension
-      [RFC6066].
+      (see [RFC6066]).
 
    bad_certificate_status_response  Sent by clients when an invalid or
       unacceptable OCSP response is provided by the server via the
-      "status_request" extension [RFC6066].
+      "status_request" extension (see [RFC6066]).
 
    bad_certificate_hash_value  Sent by servers when a retrieved object
       does not have the correct hash provided by the client via the
-      "client_certificate_url" extension [RFC6066].
+      "client_certificate_url" extension (see [RFC6066]).
 
    unknown_psk_identity  Sent by servers when PSK key establishment is
       desired but no acceptable PSK identity is provided by the client.
@@ -4439,7 +4439,7 @@ Internet-Draft                     TLS                        March 2017
 
        Derive-Secret(Secret, Label, Messages) =
             HKDF-Expand-Label(Secret, Label,
-                              Hash(Messages), Hash.Length)
+                              Hash(Messages), Hash.length)
 
    The Hash function and the HKDF hash are the cipher suite hash
    algorithm.  Hash.length is its output length in bytes.  Messages are
@@ -4654,7 +4654,7 @@ Internet-Draft                     TLS                        March 2017
 
    For finite field groups, a conventional Diffie-Hellman computation is
    performed.  The negotiated key (Z) is converted to a byte string by
-   encoding in big-endian, padded with zeros up to the size of the
+   encoding in big-endian and padded with zeros up to the size of the
    prime.  This byte string is used as the shared secret, and is used in
    the key schedule as specified above.
 
@@ -6145,7 +6145,7 @@ C.4.  Implementation Pitfalls
       multiple TLS records (see Section 5.1)?  Including corner cases
       like a ClientHello that is split to several small fragments?  Do
       you fragment handshake messages that exceed the maximum fragment
-      size?  In particular, the certificate and certificate request
+      size?  In particular, the Certificate and CertificateRequest
       handshake messages can be large enough to require fragmentation.
 
    -  Do you ignore the TLS record layer version number in all
