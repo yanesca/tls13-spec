@@ -2074,7 +2074,7 @@ finished_key =
 
 <dl>
   <dt>max_early_data_size</dt>
-  <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
+  <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload (i.e., plaintext but not padding or the inner content type byte) is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
 </dl>
 <h3 id="rfc.section.4.6.2"><a href="#rfc.section.4.6.2">4.6.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h3>
 <p id="rfc.section.4.6.2.p.1">The server is permitted to request client authentication at any time after the handshake has completed by sending a CertificateRequest message. The client SHOULD respond with the appropriate Authentication messages. If the client chooses to authenticate, it MUST send Certificate, CertificateVerify, and Finished. If it declines, it MUST send a Certificate message containing no certificates followed by Finished.</p>

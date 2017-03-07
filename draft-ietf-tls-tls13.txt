@@ -3652,7 +3652,8 @@ Internet-Draft                     TLS                        March 2017
 
    max_early_data_size  The maximum amount of 0-RTT data that the client
       is allowed to send when using this ticket, in bytes.  Only
-      Application Data payload is counted.  A server receiving more than
+      Application Data payload (i.e., plaintext but not padding or the
+      inner content type byte) is counted.  A server receiving more than
       max_early_data_size bytes of 0-RTT data SHOULD terminate the
       connection with an "unexpected_message" alert.
 
@@ -3689,7 +3690,6 @@ Internet-Draft                     TLS                        March 2017
       should respond with its own KeyUpdate.  If an implementation
       receives any other value, it MUST terminate the connection with an
       "illegal_parameter" alert.
-
 
 
 
