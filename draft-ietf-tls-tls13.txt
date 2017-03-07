@@ -6453,8 +6453,8 @@ E.1.  Handshake
    completion of the handshake, each side outputs its view of the
    following values:
 
-   -  A "session key" (the master secret) from which can be derived a
-      set of working keys.
+   -  A "session key" (collectively the various secrets derived from the
+      master secret) from which can be derived a set of working keys.
 
    -  A set of cryptographic parameters (algorithms, etc.)
 
