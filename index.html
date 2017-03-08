@@ -2109,7 +2109,7 @@ finished_key =
 
 <ul>
   <li>Handshake messages MUST NOT be interleaved with other record types. That is, if a handshake message is split over two or more records, there MUST NOT be any other records between them.</li>
-  <li>Handshake messages MUST NOT span key changes. Because the ServerHello, Finished, and KeyUpdate messages signal a key change, upon receiving these messages a receiver MUST verify that the end of these messages aligns with a record boundary; if not, then it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</li>
+  <li>Handshake messages MUST NOT span key changes. Because the ClientHello, EndOfEarlyData, ServerHello, Finished, and KeyUpdate messages can arrive immediately prior to a key change, upon receiving these messages a receiver MUST verify that the end of these messages aligns with a record boundary; if not, then it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</li>
 </ul>
 <p id="rfc.section.5.1.p.4">Implementations MUST NOT send zero-length fragments of Handshake types, even if those fragments contain padding.</p>
 <p id="rfc.section.5.1.p.5">Alert messages (<a href="#alert-protocol">Section 6</a>) MUST NOT be fragmented across records and multiple Alert messages MUST NOT be coalesced into a single TLSPlaintext record. In other words, a record with an Alert type MUST contain exactly one message.</p>
