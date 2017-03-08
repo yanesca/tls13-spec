@@ -385,7 +385,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-07" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-08" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -406,7 +406,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">March 07, 2017</td>
+  <td class="right">March 08, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: September 8, 2017</td>
+  <td class="left">Expires: September 9, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 8, 2017.</p>
+<p>This Internet-Draft will expire on September 9, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2368,17 +2368,15 @@ finished_key =
 
 <ul>
   <li>HKDF-Extract is drawn as taking the Salt argument from the top and the IKM argument from the left.</li>
-  <li>Derive-Secret&#8217;s Secret argument is indicated by the arrow coming in from the left. For instance, the Early Secret is the Secret for generating the client_early_traffic_secret.</li>
+  <li>Derive-Secret&#8217;s Secret argument is indicated by the incoming arrow. For instance, the Early Secret is the Secret for generating the client_early_traffic_secret.</li>
 </ul>
 <pre>
                  0
                  |
                  v
-   PSK -&gt;  HKDF-Extract
+   PSK -&gt;  HKDF-Extract = Early Secret
                  |
                  v
-           Early Secret
-                 |
                  +-----&gt; Derive-Secret(.,
                  |                     "external psk binder key" |
                  |                     "resumption psk binder key",
@@ -2398,6 +2396,7 @@ finished_key =
                  v
 (EC)DHE -&gt; HKDF-Extract = Handshake Secret
                  |
+                 v
                  +-----&gt; Derive-Secret(., "client handshake traffic secret",
                  |                     ClientHello...ServerHello)
                  |                     = client_handshake_traffic_secret
@@ -2405,12 +2404,13 @@ finished_key =
                  +-----&gt; Derive-Secret(., "server handshake traffic secret",
                  |                     ClientHello...ServerHello)
                  |                     = server_handshake_traffic_secret
-                 |
+                 v
            Derive-Secret(., "derived secret", "")
                  |
                  v
       0 -&gt; HKDF-Extract = Master Secret
                  |
+                     v
                  +-----&gt; Derive-Secret(., "client application traffic secret",
                  |                     ClientHello...Server Finished)
                  |                     = client_traffic_secret_0
