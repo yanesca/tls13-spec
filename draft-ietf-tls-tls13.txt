@@ -129,7 +129,7 @@ Internet-Draft                     TLS                        March 2017
        4.6.1.  New Session Ticket Message  . . . . . . . . . . . . .  64
        4.6.2.  Post-Handshake Authentication . . . . . . . . . . . .  66
        4.6.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  66
-   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  67
+   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  68
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  68
      5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  70
      5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  72
@@ -3657,6 +3657,15 @@ Internet-Draft                     TLS                        March 2017
       max_early_data_size bytes of 0-RTT data SHOULD terminate the
       connection with an "unexpected_message" alert.
 
+   Note that in principle it is possible to continue issuing new tickets
+   which continue to indefinitely extend the lifetime of the keying
+   material originally derived from an initial non-PSK handshake (which
+   was most likely tied to the peer's certificate).  It is RECOMMENDED
+   that implementations place limits on the total lifetime of such
+   keying material; these limits should take into account the lifetime
+   of the peer's certificate, the likelihood of intervening revocation,
+   and the time since the peer's online CertificateVerify signature.
+
 4.6.2.  Post-Handshake Authentication
 
    The server is permitted to request client authentication at any time
@@ -3678,6 +3687,17 @@ Internet-Draft                     TLS                        March 2017
 
 4.6.3.  Key and IV Update
 
+
+
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 66]
+
+Internet-Draft                     TLS                        March 2017
+
+
       enum {
           update_not_requested(0), update_requested(1), (255)
       } KeyUpdateRequest;
@@ -3690,13 +3710,6 @@ Internet-Draft                     TLS                        March 2017
       should respond with its own KeyUpdate.  If an implementation
       receives any other value, it MUST terminate the connection with an
       "illegal_parameter" alert.
-
-
-
-Rescorla                Expires September 9, 2017              [Page 66]
-
-Internet-Draft                     TLS                        March 2017
-
 
    The KeyUpdate handshake message is used to indicate that the sender
    is updating its sending cryptographic keys.  This message can be sent
@@ -3733,6 +3746,14 @@ Internet-Draft                     TLS                        March 2017
    with the new key.  Failure to do so may allow message truncation
    attacks.
 
+
+
+
+Rescorla                Expires September 9, 2017              [Page 67]
+
+Internet-Draft                     TLS                        March 2017
+
+
 5.  Record Protocol
 
    The TLS record protocol takes messages to be transmitted, fragments
@@ -3746,14 +3767,6 @@ Internet-Draft                     TLS                        March 2017
    alert.  Implementations MUST NOT send record types not defined in
    this document unless negotiated by some extension.  If a TLS
    implementation receives an unexpected record type, it MUST terminate
-
-
-
-Rescorla                Expires September 9, 2017              [Page 67]
-
-Internet-Draft                     TLS                        March 2017
-
-
    the connection with an "unexpected_message" alert.  New record
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 10.
@@ -3789,19 +3802,6 @@ Internet-Draft                     TLS                        March 2017
    TLSPlaintext record.  In other words, a record with an Alert type
    MUST contain exactly one message.
 
-   Application Data messages contain data that is opaque to TLS.
-   Application Data messages are always protected.  Zero-length
-   fragments of Application Data MAY be sent as they are potentially
-   useful as a traffic analysis countermeasure.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3809,6 +3809,11 @@ Rescorla                Expires September 9, 2017              [Page 68]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   Application Data messages contain data that is opaque to TLS.
+   Application Data messages are always protected.  Zero-length
+   fragments of Application Data MAY be sent as they are potentially
+   useful as a traffic analysis countermeasure.
 
       enum {
           alert(21),
@@ -3853,11 +3858,6 @@ Internet-Draft                     TLS                        March 2017
    structures are written directly onto the wire.  Once record
    protection has started, TLSPlaintext records are protected and sent
    as described in the following section.
-
-
-
-
-
 
 
 
