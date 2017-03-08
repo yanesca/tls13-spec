@@ -3644,7 +3644,7 @@ here         No 0-RTT |                 | 0-RTT
 <p/>
 
 <ul>
-  <li>A &#8220;session key&#8221; (collectively the various secrets derived from the master secret) from which can be derived a set of working keys.</li>
+  <li>A set of &#8220;session keys&#8221; (the various secrets derived from the master secret) from which can be derived a set of working keys.</li>
   <li>A set of cryptographic parameters (algorithms, etc.)</li>
   <li>The identities of the communicating parties.</li>
 </ul>
@@ -3652,14 +3652,14 @@ here         No 0-RTT |                 | 0-RTT
 <p/>
 
 <dl>
-  <dt>Establishing the same session key.</dt>
-  <dd style="margin-left: 8">The handshake needs to output the same session key on both sides of the handshake, provided that it completes successfully on each endpoint (See <a href="#CK01">[CK01]</a>; defn 1, part 1).</dd>
-  <dt>Secrecy of the session key.</dt>
-  <dd style="margin-left: 8">The shared session key should be known only to the communicating parties, not to the attacker (See <a href="#CK01">[CK01]</a>; defn 1, part 2).  Note that in a unilaterally authenticated connection, the attacker can establish its own session keys with the server, but those session keys are distinct from those established by the client.</dd>
+  <dt>Establishing the same session keys.</dt>
+  <dd style="margin-left: 8">The handshake needs to output the same set of session keys on both sides of the handshake, provided that it completes successfully on each endpoint (See <a href="#CK01">[CK01]</a>; defn 1, part 1).</dd>
+  <dt>Secrecy of the session keys.</dt>
+  <dd style="margin-left: 8">The shared session keys should be known only to the communicating parties, not to the attacker (See <a href="#CK01">[CK01]</a>; defn 1, part 2).  Note that in a unilaterally authenticated connection, the attacker can establish its own session keys with the server, but those session keys are distinct from those established by the client.</dd>
   <dt>Peer Authentication.</dt>
   <dd style="margin-left: 8">The client&#8217;s view of the peer identity should reflect the server&#8217;s identity. If the client is authenticated, the server&#8217;s view of the peer identity should match the client&#8217;s identity.</dd>
-  <dt>Uniqueness of the session key:</dt>
-  <dd style="margin-left: 8">Any two distinct handshakes should produce distinct, unrelated session keys.</dd>
+  <dt>Uniqueness of the session keys:</dt>
+  <dd style="margin-left: 8">Any two distinct handshakes should produce distinct, unrelated session keys. Individual session keys produced by a handshake should also be distinct and unrelated.</dd>
   <dt>Downgrade protection.</dt>
   <dd style="margin-left: 8">The cryptographic parameters should be the same on both sides and should be the same as if the peers had been communicating in the absence of an attack (See <a href="#BBFKZG16">[BBFKZG16]</a>; defns 8 and 9}).</dd>
   <dt>Forward secret with respect to long-term keys</dt>
@@ -3670,7 +3670,7 @@ here         No 0-RTT |                 | 0-RTT
   <dd style="margin-left: 8">The server&#8217;s identity (certificate) should be protected against passive attackers. The client&#8217;s identity should be protected against both passive and active attackers.</dd>
 </dl>
 <p id="rfc.section.E.1.p.5">Informally, the signature-based modes of TLS 1.3 provide for the establishment of a unique, secret, shared, key established by an (EC)DHE key exchange and authenticated by the server&#8217;s signature over the handshake transcript, as well as tied to the server&#8217;s identity by a MAC. If the client is authenticated by a certificate, it also signs over the handshake transcript and provides a MAC tied to both identities. <a href="#SIGMA">[SIGMA]</a> describes the analysis of this type of key exchange protocol. If fresh (EC)DHE keys are used for each connection, then the output keys are forward secret.</p>
-<p id="rfc.section.E.1.p.6">The external PSK and resumption PSK bootstrap from a long-term shared secret into a unique per-connection short-term session key. This secret may have been established in a previous handshake. If PSK with (EC)DHE key establishment is used, this session key will also be forward secret. The resumption PSK has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.</p>
+<p id="rfc.section.E.1.p.6">The external PSK and resumption PSK bootstrap from a long-term shared secret into a unique per-connection set of short-term session keys. This secret may have been established in a previous handshake. If PSK with (EC)DHE key establishment is used, these session keys will also be forward secret. The resumption PSK has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.</p>
 <p id="rfc.section.E.1.p.7">The PSK binder value forms a binding between a PSK and the current handshake, as well as between the session where the PSK was established and the session where it was used. This binding transitively includes the original handshake transcript, because that transcript is digested into the values which produce the Resumption Master Secret. This requires that both the KDF used to produce the resumption master secret and the MAC used to compute the binder be collision resistant. These are properties of HKDF and HMAC respectively when used with collision resistant hash functions and producing output of at least 256 bits.  Any future replacement of these functions MUST also provide collision resistance.  Note: The binder does not cover the binder values from other PSKs, though they are included in the Finished MAC.</p>
 <p id="rfc.section.E.1.p.8">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
 <p id="rfc.section.E.1.p.9">For all handshake modes, the Finished MAC (and where present, the signature), prevents downgrade attacks. In addition, the use of certain bytes in the random nonces as described in <a href="#server-hello">Section 4.1.3</a> allows the detection of downgrade to previous TLS versions.</p>
@@ -3680,7 +3680,7 @@ here         No 0-RTT |                 | 0-RTT
 <p id="rfc.section.E.1.p.13">TLS does not provide security for handshakes which take place after the peer&#8217;s long-term secret (signature key or external PSK) is compromised. It therefore does not provide post-compromise security <a href="#CCG16">[CCG16]</a>, sometimes also referred to as backwards or future security. This is in contrast to KCI resistance, which describes the security guarantees that a party has after its own long-term secret has been compromised.</p>
 <p id="rfc.section.E.1.p.14">The reader should refer to the following references for analysis of the TLS handshake <a href="#CHSV16">[CHSV16]</a> <a href="#FGSW16">[FGSW16]</a> <a href="#LXZFH16">[LXZFH16]</a>.</p>
 <h2 id="rfc.appendix.E.2"><a href="#rfc.appendix.E.2">E.2.</a> <a href="#security-record-layer" id="security-record-layer">Record Layer</a></h2>
-<p id="rfc.section.E.2.p.1">The record layer depends on the handshake producing a strong session key which can be used to derive bidirectional traffic keys and nonces.  Assuming that is true, and the keys are used for no more data than indicated in <a href="#limits-on-key-usage">Section 5.5</a> then the record layer should provide the following guarantees:</p>
+<p id="rfc.section.E.2.p.1">The record layer depends on the handshake producing strong traffic secrets which can be used to derive bidirectional encryption keys and nonces.  Assuming that is true, and the keys are used for no more data than indicated in <a href="#limits-on-key-usage">Section 5.5</a> then the record layer should provide the following guarantees:</p>
 <p/>
 
 <dl>
