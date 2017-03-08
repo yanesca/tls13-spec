@@ -2376,7 +2376,6 @@ finished_key =
                  v
    PSK -&gt;  HKDF-Extract = Early Secret
                  |
-                 v
                  +-----&gt; Derive-Secret(.,
                  |                     "external psk binder key" |
                  |                     "resumption psk binder key",
@@ -2396,7 +2395,6 @@ finished_key =
                  v
 (EC)DHE -&gt; HKDF-Extract = Handshake Secret
                  |
-                 v
                  +-----&gt; Derive-Secret(., "client handshake traffic secret",
                  |                     ClientHello...ServerHello)
                  |                     = client_handshake_traffic_secret
@@ -2410,7 +2408,6 @@ finished_key =
                  v
       0 -&gt; HKDF-Extract = Master Secret
                  |
-                     v
                  +-----&gt; Derive-Secret(., "client application traffic secret",
                  |                     ClientHello...Server Finished)
                  |                     = client_traffic_secret_0

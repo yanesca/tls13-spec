@@ -143,25 +143,25 @@ Internet-Draft                     TLS                        March 2017
      7.2.  Updating Traffic Keys and IVs . . . . . . . . . . . . . .  82
      7.3.  Traffic Key Calculation . . . . . . . . . . . . . . . . .  83
      7.4.  (EC)DHE Shared Secret Calculation . . . . . . . . . . . .  83
-       7.4.1.  Finite Field Diffie-Hellman . . . . . . . . . . . . .  84
+       7.4.1.  Finite Field Diffie-Hellman . . . . . . . . . . . . .  83
        7.4.2.  Elliptic Curve Diffie-Hellman . . . . . . . . . . . .  84
-     7.5.  Exporters . . . . . . . . . . . . . . . . . . . . . . . .  85
+     7.5.  Exporters . . . . . . . . . . . . . . . . . . . . . . . .  84
    8.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  85
      8.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  85
-     8.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  86
+     8.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  85
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  87
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  87
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  88
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  88
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  91
-   Appendix A.  State Machine  . . . . . . . . . . . . . . . . . . .  98
-     A.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . .  98
-     A.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . .  98
-   Appendix B.  Protocol Data Structures and Constant Values . . . .  99
-     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  99
-     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . . 100
-     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 102
-       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 102
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  90
+   Appendix A.  State Machine  . . . . . . . . . . . . . . . . . . .  97
+     A.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . .  97
+     A.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . .  97
+   Appendix B.  Protocol Data Structures and Constant Values . . . .  98
+     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  98
+     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . .  99
+     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 101
+       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 101
 
 
 
@@ -170,29 +170,29 @@ Rescorla                Expires September 9, 2017               [Page 3]
 Internet-Draft                     TLS                        March 2017
 
 
-       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 106
-       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 107
-       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 108
-       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 108
-     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 108
-   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 109
-     C.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 109
-     C.2.  Random Number Generation and Seeding  . . . . . . . . . . 110
-     C.3.  Certificates and Authentication . . . . . . . . . . . . . 110
-     C.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 110
-     C.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 112
-     C.6.  Unauthenticated Operation . . . . . . . . . . . . . . . . 112
-   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 112
-     D.1.  Negotiating with an older server  . . . . . . . . . . . . 113
-     D.2.  Negotiating with an older client  . . . . . . . . . . . . 114
-     D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 114
-     D.4.  Backwards Compatibility Security Restrictions . . . . . . 115
-   Appendix E.  Overview of Security Properties  . . . . . . . . . . 115
-     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 116
-     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 119
-   Appendix F.  Working Group Information  . . . . . . . . . . . . . 120
-   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 121
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 126
+       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 105
+       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 106
+       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 107
+       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 107
+     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 107
+   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 108
+     C.1.  API considerations for 0-RTT  . . . . . . . . . . . . . . 108
+     C.2.  Random Number Generation and Seeding  . . . . . . . . . . 109
+     C.3.  Certificates and Authentication . . . . . . . . . . . . . 109
+     C.4.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 109
+     C.5.  Client Tracking Prevention  . . . . . . . . . . . . . . . 111
+     C.6.  Unauthenticated Operation . . . . . . . . . . . . . . . . 111
+   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 111
+     D.1.  Negotiating with an older server  . . . . . . . . . . . . 112
+     D.2.  Negotiating with an older client  . . . . . . . . . . . . 113
+     D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 113
+     D.4.  Backwards Compatibility Security Restrictions . . . . . . 114
+   Appendix E.  Overview of Security Properties  . . . . . . . . . . 114
+     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 115
+     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 118
+   Appendix F.  Working Group Information  . . . . . . . . . . . . . 119
+   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 120
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 125
 
 1.  Introduction
 
@@ -4482,7 +4482,6 @@ Rescorla                Expires September 9, 2017              [Page 80]
 Internet-Draft                     TLS                        March 2017
 
 
-                 v
                  +-----> Derive-Secret(.,
                  |                     "external psk binder key" |
                  |                     "resumption psk binder key",
@@ -4502,7 +4501,6 @@ Internet-Draft                     TLS                        March 2017
                  v
 (EC)DHE -> HKDF-Extract = Handshake Secret
                  |
-                 v
                  +-----> Derive-Secret(., "client handshake traffic secret",
                  |                     ClientHello...ServerHello)
                  |                     = client_handshake_traffic_secret
@@ -4516,7 +4514,6 @@ Internet-Draft                     TLS                        March 2017
                  v
       0 -> HKDF-Extract = Master Secret
                  |
-                     v
                  +-----> Derive-Secret(., "client application traffic secret",
                  |                     ClientHello...Server Finished)
                  |                     = client_traffic_secret_0
@@ -4530,6 +4527,9 @@ Internet-Draft                     TLS                        March 2017
                  |                     = exporter_secret
                  |
                  +-----> Derive-Secret(., "resumption master secret",
+                                       ClientHello...Client Finished)
+                                       = resumption_master_secret
+
 
 
 
@@ -4537,9 +4537,6 @@ Rescorla                Expires September 9, 2017              [Page 81]
 
 Internet-Draft                     TLS                        March 2017
 
-
-                                       ClientHello...Client Finished)
-                                       = resumption_master_secret
 
    The general pattern here is that the secrets shown down the left side
    of the diagram are just raw entropy without context, whereas the
@@ -4584,6 +4581,9 @@ Internet-Draft                     TLS                        March 2017
 
    The next-generation traffic_secret is computed as:
 
+    traffic_secret_N+1 = HKDF-Expand-Label(
+                             traffic_secret_N,
+                             "application traffic secret", "", Hash.length)
 
 
 
@@ -4593,10 +4593,6 @@ Rescorla                Expires September 9, 2017              [Page 82]
 
 Internet-Draft                     TLS                        March 2017
 
-
-    traffic_secret_N+1 = HKDF-Expand-Label(
-                             traffic_secret_N,
-                             "application traffic secret", "", Hash.length)
 
    Once client/server_traffic_secret_N+1 and its associated traffic keys
    have been computed, implementations SHOULD delete client_/
@@ -4638,9 +4634,13 @@ Internet-Draft                     TLS                        March 2017
 
 7.4.  (EC)DHE Shared Secret Calculation
 
+7.4.1.  Finite Field Diffie-Hellman
 
-
-
+   For finite field groups, a conventional Diffie-Hellman computation is
+   performed.  The negotiated key (Z) is converted to a byte string by
+   encoding in big-endian and padded with zeros up to the size of the
+   prime.  This byte string is used as the shared secret, and is used in
+   the key schedule as specified above.
 
 
 
@@ -4649,14 +4649,6 @@ Rescorla                Expires September 9, 2017              [Page 83]
 
 Internet-Draft                     TLS                        March 2017
 
-
-7.4.1.  Finite Field Diffie-Hellman
-
-   For finite field groups, a conventional Diffie-Hellman computation is
-   performed.  The negotiated key (Z) is converted to a byte string by
-   encoding in big-endian and padded with zeros up to the size of the
-   prime.  This byte string is used as the shared secret, and is used in
-   the key schedule as specified above.
 
    Note that this construction differs from previous versions of TLS
    which remove leading zeros.
@@ -4699,19 +4691,20 @@ Internet-Draft                     TLS                        March 2017
    implementation of these elliptic curves, they SHOULD perform the
    additional checks specified in Section 7 of [RFC7748].
 
-
-
-Rescorla                Expires September 9, 2017              [Page 84]
-
-Internet-Draft                     TLS                        March 2017
-
-
 7.5.  Exporters
 
    [RFC5705] defines keying material exporters for TLS in terms of the
    TLS pseudorandom function (PRF).  This document replaces the PRF with
    HKDF, thus requiring a new construction.  The exporter interface
    remains the same.
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 84]
+
+Internet-Draft                     TLS                        March 2017
+
 
    The exporter value is computed as:
 
@@ -4754,14 +4747,6 @@ Internet-Draft                     TLS                        March 2017
    TLS-compliant application MUST support key exchange with secp256r1
    (NIST P-256) and SHOULD support key exchange with X25519 [RFC7748].
 
-
-
-
-Rescorla                Expires September 9, 2017              [Page 85]
-
-Internet-Draft                     TLS                        March 2017
-
-
 8.2.  Mandatory-to-Implement Extensions
 
    In the absence of an application profile standard specifying
@@ -4769,6 +4754,13 @@ Internet-Draft                     TLS                        March 2017
    TLS extensions:
 
    -  Supported Versions ("supported_versions"; Section 4.2.1)
+
+
+
+Rescorla                Expires September 9, 2017              [Page 85]
+
+Internet-Draft                     TLS                        March 2017
+
 
    -  Cookie ("cookie"; Section 4.2.2)
 
@@ -4809,6 +4801,14 @@ Internet-Draft                     TLS                        March 2017
    requirements MUST abort the handshake with a "missing_extension"
    alert.
 
+   Additionally, all implementations MUST support use of the
+   "server_name" extension with applications capable of using it.
+   Servers MAY require clients to send a valid "server_name" extension.
+   Servers requiring this extension SHOULD respond to a ClientHello
+   lacking a "server_name" extension by terminating the connection with
+   a "missing_extension" alert.
+
+
 
 
 
@@ -4817,13 +4817,6 @@ Rescorla                Expires September 9, 2017              [Page 86]
 
 Internet-Draft                     TLS                        March 2017
 
-
-   Additionally, all implementations MUST support use of the
-   "server_name" extension with applications capable of using it.
-   Servers MAY require clients to send a valid "server_name" extension.
-   Servers requiring this extension SHOULD respond to a ClientHello
-   lacking a "server_name" extension by terminating the connection with
-   a "missing_extension" alert.
 
 9.  Security Considerations
 
@@ -4867,19 +4860,19 @@ Internet-Draft                     TLS                        March 2017
    IANA has updated it to reference this document.  The registry and its
    allocation policy is listed below:
 
-
-
-Rescorla                Expires September 9, 2017              [Page 87]
-
-Internet-Draft                     TLS                        March 2017
-
-
    -  IANA [SHALL update/has updated] this registry to include the
       "key_share", "pre_shared_key", "psk_key_exchange_modes",
       "early_data", "cookie", "supported_versions",
       "certificate_authorities", and "oid_filters" extensions with the
       values defined in this document and the Recommended value of
       "Yes".
+
+
+
+Rescorla                Expires September 9, 2017              [Page 87]
+
+Internet-Draft                     TLS                        March 2017
+
 
    -  IANA [SHALL update/has updated] this registry to include a "TLS
       1.3" column which lists the messages in which the extension may
@@ -4920,16 +4913,6 @@ Internet-Draft                     TLS                        March 2017
               Cryptography", IEEE Transactions on Information Theory,
               V.IT-22 n.6 , June 1977.
 
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 88]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
@@ -4939,6 +4922,13 @@ Internet-Draft                     TLS                        March 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+Rescorla                Expires September 9, 2017              [Page 88]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
               Standards (PKCS) #1: RSA Cryptography Specifications
@@ -4975,17 +4965,6 @@ Internet-Draft                     TLS                        March 2017
               DOI 10.17487/RFC6655, July 2012,
               <http://www.rfc-editor.org/info/rfc6655>.
 
-
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 89]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [RFC6961]  Pettersen, Y., "The Transport Layer Security (TLS)
               Multiple Certificate Status Request Extension", RFC 6961,
               DOI 10.17487/RFC6961, June 2013,
@@ -4999,6 +4978,13 @@ Internet-Draft                     TLS                        March 2017
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <http://www.rfc-editor.org/info/rfc6979>.
+
+
+
+Rescorla                Expires September 9, 2017              [Page 89]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
               Suite Value (SCSV) for Preventing Protocol Downgrade
@@ -5032,16 +5018,6 @@ Internet-Draft                     TLS                        March 2017
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2002, 2002.
 
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 90]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [X962]     ANSI, "Public Key Cryptography For The Financial Services
               Industry: The Elliptic Curve Digital Signature Algorithm
               (ECDSA)", ANSI X9.62, 1998.
@@ -5058,6 +5034,13 @@ Internet-Draft                     TLS                        March 2017
               Zanella-Beguelin, S., and M. Green, "Downgrade Resilience
               in Key-Exchange Protocols", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
+
+
+
+Rescorla                Expires September 9, 2017              [Page 90]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
               Compromise Security", IEEE Computer Security Foundations
@@ -5088,16 +5071,6 @@ Internet-Draft                     TLS                        March 2017
               Department of Commerce, "Digital Signature Standard,
               version 4", NIST FIPS PUB 186-4, 2013.
 
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 91]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [ECDSA]    American National Standards Institute, "Public Key
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
@@ -5114,6 +5087,16 @@ Internet-Draft                     TLS                        March 2017
    [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
+
+
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 91]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [HGFS15]   Hlauschek, C., Gruber, M., Fankhauser, F., and C. Schanes,
               "Prying Open Pandora's Box: KCI Attacks against TLS",
@@ -5145,15 +5128,6 @@ Internet-Draft                     TLS                        March 2017
               IEEE Symposium on Security and Privacy (Oakland) 2016 ,
               2016.
 
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 92]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [PKCS6]    RSA Laboratories, "PKCS #6: RSA Extended Certificate
               Syntax Standard, version 1.5", November 1993.
 
@@ -5171,6 +5145,14 @@ Internet-Draft                     TLS                        March 2017
               N., Zanella-Beguelin, S., and J. Zinzindohoue,
               "Implementing and Proving the TLS 1.3 Record Layer",
               December 2016, <http://eprint.iacr.org/2016/1178>.
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 92]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
               Key: A Comparative Analysis of the Security of Re-keying
@@ -5201,15 +5183,6 @@ Internet-Draft                     TLS                        March 2017
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
 
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 93]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
               Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
               for Transport Layer Security (TLS)", RFC 4492,
@@ -5229,6 +5202,13 @@ Internet-Draft                     TLS                        March 2017
               "Using the Secure Remote Password (SRP) Protocol for TLS
               Authentication", RFC 5054, DOI 10.17487/RFC5054, November
               2007, <http://www.rfc-editor.org/info/rfc5054>.
+
+
+
+Rescorla                Expires September 9, 2017              [Page 93]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [RFC5077]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
@@ -5254,18 +5234,6 @@ Internet-Draft                     TLS                        March 2017
               Extension", RFC 5746, DOI 10.17487/RFC5746, February 2010,
               <http://www.rfc-editor.org/info/rfc5746>.
 
-
-
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 94]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [RFC5764]  McGrew, D. and E. Rescorla, "Datagram Transport Layer
               Security (DTLS) Extension to Establish Keys for the Secure
               Real-time Transport Protocol (SRTP)", RFC 5764,
@@ -5288,6 +5256,15 @@ Internet-Draft                     TLS                        March 2017
    [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
               (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
               2011, <http://www.rfc-editor.org/info/rfc6176>.
+
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 94]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
@@ -5315,13 +5292,6 @@ Internet-Draft                     TLS                        March 2017
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <http://www.rfc-editor.org/info/rfc7301>.
 
-
-
-Rescorla                Expires September 9, 2017              [Page 95]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [RFC7366]  Gutmann, P., "Encrypt-then-MAC for Transport Layer
               Security (TLS) and Datagram Transport Layer Security
               (DTLS)", RFC 7366, DOI 10.17487/RFC7366, September 2014,
@@ -5341,6 +5311,16 @@ Internet-Draft                     TLS                        March 2017
               Session Hash and Extended Master Secret Extension",
               RFC 7627, DOI 10.17487/RFC7627, September 2015,
               <http://www.rfc-editor.org/info/rfc7627>.
+
+
+
+
+
+
+Rescorla                Expires September 9, 2017              [Page 95]
+
+Internet-Draft                     TLS                        March 2017
+
 
    [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
@@ -5370,14 +5350,6 @@ Internet-Draft                     TLS                        March 2017
    [SSL3]     Freier, A., Karlton, P., and P. Kocher, "The SSL 3.0
               Protocol", November 1996.
 
-
-
-
-Rescorla                Expires September 9, 2017              [Page 96]
-
-Internet-Draft                     TLS                        March 2017
-
-
    [TIMING]   Boneh, D. and D. Brumley, "Remote timing attacks are
               practical", USENIX Security Symposium, 2003.
 
@@ -5401,35 +5373,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                Expires September 9, 2017              [Page 97]
+Rescorla                Expires September 9, 2017              [Page 96]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5485,7 +5429,7 @@ A.2.  Server
 
 
 
-Rescorla                Expires September 9, 2017              [Page 98]
+Rescorla                Expires September 9, 2017              [Page 97]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5541,7 +5485,7 @@ B.1.  Record Layer
 
 
 
-Rescorla                Expires September 9, 2017              [Page 99]
+Rescorla                Expires September 9, 2017              [Page 98]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5597,7 +5541,7 @@ B.2.  Alert Messages
 
 
 
-Rescorla                Expires September 9, 2017             [Page 100]
+Rescorla                Expires September 9, 2017              [Page 99]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5653,7 +5597,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 101]
+Rescorla                Expires September 9, 2017             [Page 100]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5709,7 +5653,7 @@ B.3.1.  Key Exchange Messages
 
 
 
-Rescorla                Expires September 9, 2017             [Page 102]
+Rescorla                Expires September 9, 2017             [Page 101]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5765,7 +5709,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 103]
+Rescorla                Expires September 9, 2017             [Page 102]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5821,7 +5765,7 @@ B.3.1.1.  Version Extension
 
 
 
-Rescorla                Expires September 9, 2017             [Page 104]
+Rescorla                Expires September 9, 2017             [Page 103]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5877,7 +5821,7 @@ B.3.1.3.  Signature Algorithm Extension
 
 
 
-Rescorla                Expires September 9, 2017             [Page 105]
+Rescorla                Expires September 9, 2017             [Page 104]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5933,7 +5877,7 @@ B.3.2.  Server Parameters Messages
 
 
 
-Rescorla                Expires September 9, 2017             [Page 106]
+Rescorla                Expires September 9, 2017             [Page 105]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -5989,7 +5933,7 @@ B.3.3.  Authentication Messages
 
 
 
-Rescorla                Expires September 9, 2017             [Page 107]
+Rescorla                Expires September 9, 2017             [Page 106]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6045,7 +5989,7 @@ B.4.  Cipher Suites
 
 
 
-Rescorla                Expires September 9, 2017             [Page 108]
+Rescorla                Expires September 9, 2017             [Page 107]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6101,7 +6045,7 @@ C.1.  API considerations for 0-RTT
 
 
 
-Rescorla                Expires September 9, 2017             [Page 109]
+Rescorla                Expires September 9, 2017             [Page 108]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6157,7 +6101,7 @@ C.4.  Implementation Pitfalls
 
 
 
-Rescorla                Expires September 9, 2017             [Page 110]
+Rescorla                Expires September 9, 2017             [Page 109]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6213,7 +6157,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 111]
+Rescorla                Expires September 9, 2017             [Page 110]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6269,7 +6213,7 @@ Appendix D.  Backward Compatibility
 
 
 
-Rescorla                Expires September 9, 2017             [Page 112]
+Rescorla                Expires September 9, 2017             [Page 111]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6325,7 +6269,7 @@ D.1.  Negotiating with an older server
 
 
 
-Rescorla                Expires September 9, 2017             [Page 113]
+Rescorla                Expires September 9, 2017             [Page 112]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6381,7 +6325,7 @@ D.3.  Zero-RTT backwards compatibility
 
 
 
-Rescorla                Expires September 9, 2017             [Page 114]
+Rescorla                Expires September 9, 2017             [Page 113]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6437,7 +6381,7 @@ Appendix E.  Overview of Security Properties
 
 
 
-Rescorla                Expires September 9, 2017             [Page 115]
+Rescorla                Expires September 9, 2017             [Page 114]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6493,7 +6437,7 @@ E.1.  Handshake
 
 
 
-Rescorla                Expires September 9, 2017             [Page 116]
+Rescorla                Expires September 9, 2017             [Page 115]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6549,7 +6493,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 117]
+Rescorla                Expires September 9, 2017             [Page 116]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6605,7 +6549,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 118]
+Rescorla                Expires September 9, 2017             [Page 117]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6661,7 +6605,7 @@ E.2.  Record Layer
 
 
 
-Rescorla                Expires September 9, 2017             [Page 119]
+Rescorla                Expires September 9, 2017             [Page 118]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6717,7 +6661,7 @@ Appendix F.  Working Group Information
 
 
 
-Rescorla                Expires September 9, 2017             [Page 120]
+Rescorla                Expires September 9, 2017             [Page 119]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6773,7 +6717,7 @@ Appendix G.  Contributors
 
 
 
-Rescorla                Expires September 9, 2017             [Page 121]
+Rescorla                Expires September 9, 2017             [Page 120]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6829,7 +6773,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 122]
+Rescorla                Expires September 9, 2017             [Page 121]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6885,7 +6829,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 123]
+Rescorla                Expires September 9, 2017             [Page 122]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6941,7 +6885,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 124]
+Rescorla                Expires September 9, 2017             [Page 123]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -6997,7 +6941,7 @@ Internet-Draft                     TLS                        March 2017
 
 
 
-Rescorla                Expires September 9, 2017             [Page 125]
+Rescorla                Expires September 9, 2017             [Page 124]
 
 Internet-Draft                     TLS                        March 2017
 
@@ -7053,4 +6997,4 @@ Author's Address
 
 
 
-Rescorla                Expires September 9, 2017             [Page 126]
+Rescorla                Expires September 9, 2017             [Page 125]
