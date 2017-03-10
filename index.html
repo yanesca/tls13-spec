@@ -1238,7 +1238,7 @@ Subsequent Handshake:
   <li>If a &#8220;key_share&#8221; extension was supplied in the HelloRetryRequest, replacing the list of shares with a list containing a single KeyShareEntry from the indicated group.</li>
   <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication">Section 4.2.7</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
   <li>Including a &#8220;cookie&#8221; extension if one was provided in the HelloRetryRequest.</li>
-  <li>Updating the &#8220;obfuscated_ticket_age&#8221; and PSK binder values if the &#8220;pre_shared_key&#8221; extension was present.</li>
+  <li>Updating the &#8220;pre_shared_key&#8221; extension if present by recomputing the &#8220;obfuscated_ticket_age&#8221; and binder values and (optionally) removing any PSKs which are incompatible with the server&#8217;s indicated cipher suite.</li>
 </ul>
 <p id="rfc.section.4.1.2.p.3">Because TLS 1.3 forbids renegotiation, if a server receives a ClientHello at any other time, it MUST terminate the connection.</p>
 <p id="rfc.section.4.1.2.p.4">If a server established a TLS connection with a previous version of TLS and receives a TLS 1.3 ClientHello in a renegotiation, it MUST retain the previous protocol version. In particular, it MUST NOT negotiate TLS 1.3.</p>
