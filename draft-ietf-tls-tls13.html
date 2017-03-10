@@ -1316,10 +1316,11 @@ Subsequent Handshake:
 <pre>
    struct {
        ProtocolVersion server_version;
+       CipherSuite cipher_suite;
        Extension extensions&lt;2..2^16-1&gt;;
    } HelloRetryRequest;
 </pre>
-<p id="rfc.section.4.1.4.p.3">The server_version and extensions fields have the same meanings as their corresponding values in the ServerHello.  The server SHOULD send only the extensions necessary for the client to generate a correct ClientHello pair. As with ServerHello, a HelloRetryRequest MUST NOT contain any extensions that were not first offered by the client in its ClientHello, with the exception of optionally the &#8220;cookie&#8221; (see <a href="#cookie">Section 4.2.2</a>) extension.</p>
+<p id="rfc.section.4.1.4.p.3">The version, cipher_suite, and extensions fields have the same meanings as their corresponding values in the ServerHello.  The server SHOULD send only the extensions necessary for the client to generate a correct ClientHello pair. As with ServerHello, a HelloRetryRequest MUST NOT contain any extensions that were not first offered by the client in its ClientHello, with the exception of optionally the &#8220;cookie&#8221; (see <a href="#cookie">Section 4.2.2</a>) extension.</p>
 <p id="rfc.section.4.1.4.p.4">Upon receipt of a HelloRetryRequest, the client MUST verify that the extensions block is not empty and otherwise MUST abort the handshake with a &#8220;decode_error&#8221; alert. Clients MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert if the HelloRetryRequest would not result in any change in the ClientHello. If a client receives a second HelloRetryRequest in the same connection (i.e., where the ClientHello was itself in response to a HelloRetryRequest), it MUST abort the handshake with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.4.1.4.p.5">Otherwise, the client MUST process all extensions in the HelloRetryRequest and send a second updated ClientHello. The HelloRetryRequest extensions defined in this specification are:</p>
 <p/>
@@ -1328,6 +1329,7 @@ Subsequent Handshake:
   <li>cookie (see <a href="#cookie">Section 4.2.2</a>)</li>
   <li>key_share (see <a href="#key-share">Section 4.2.5</a>)</li>
 </ul>
+<p id="rfc.section.4.1.4.p.7">In addition, in its updated ClientHello, the client SHOULD NOT offer any pre-shared keys associated with a hash other than that of the selected cipher suite. This allows the client to avoid having to compute partial hash transcripts for multiple hashes in the second ClientHello.  A client which receives a cipher suite that was not offered MUST abort the handshake.  Servers MUST ensure that they negotiate the same cipher suite when receiving a conformant updated ClientHello (if the server selects the cipher suite as the first step in the negotiation, then this will happen automatically). Upon receiving the ServerHello, clients MUST check that the cipher suite supplied in the ServerHello is the same as that in the HelloRetryRequest and otherwise abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <h2 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#extensions" id="extensions">Extensions</a></h2>
 <p id="rfc.section.4.2.p.1">A number of TLS messages contain tag-length-value encoded extensions structures.</p>
 <pre>
@@ -1654,7 +1656,7 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.4.2.5.p.6">Clients offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and abort the handshake with an &#8220;illegal_parameter&#8221; alert if one is violated.</p>
 <p id="rfc.section.4.2.5.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello; and (2) the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field of the triggering HelloRetryRequest.</p>
-<p id="rfc.section.4.2.5.p.8">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension and MUST NOT send a KeyShareEntry when using the &#8220;psk_ke&#8221; PskKeyExchangeMode.  If a HelloRetryRequest was received by the client, the client MUST verify that the selected NamedGroup matches one that the client sent in its supported_groups extension and MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert otherwise.</p>
+<p id="rfc.section.4.2.5.p.8">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST correspond to the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension and MUST NOT send a KeyShareEntry when using the &#8220;psk_ke&#8221; PskKeyExchangeMode.  If a HelloRetryRequest was received by the client, the client MUST verify that the selected NamedGroup in the ServerHello is the same as that in the HelloRetryRequest. If this check fails, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <h4 id="rfc.section.4.2.5.1"><a href="#rfc.section.4.2.5.1">4.2.5.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a></h4>
 <p id="rfc.section.4.2.5.1.p.1">Diffie-Hellman <a href="#DH">[DH]</a> parameters for both clients and servers are encoded in the opaque key_exchange field of a KeyShareEntry in a KeyShare structure.  The opaque value contains the Diffie-Hellman public value (Y = g^X mod p) for the specified group (see <a href="#RFC7919">[RFC7919]</a> for group definitions) encoded as a big-endian integer and padded with zeros to the size of p in bytes.</p>
 <p id="rfc.section.4.2.5.1.p.2">Note: For a given Diffie-Hellman group, the padding results in all public keys having the same length.</p>
@@ -3294,6 +3296,7 @@ here         No 0-RTT |                 | 0-RTT
 
    struct {
        ProtocolVersion server_version;
+       CipherSuite cipher_suite;
        Extension extensions&lt;2..2^16-1&gt;;
    } HelloRetryRequest;
 
