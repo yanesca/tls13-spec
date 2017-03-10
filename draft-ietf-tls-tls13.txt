@@ -80,7 +80,7 @@ Table of Contents
      1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   5
      1.2.  Major Differences from TLS 1.2  . . . . . . . . . . . . .   6
      1.3.  Updates Affecting TLS 1.2 . . . . . . . . . . . . . . . .  13
-   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  13
+   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  14
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  17
      2.2.  Resumption and Pre-Shared Key (PSK) . . . . . . . . . . .  18
      2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  20
@@ -343,6 +343,8 @@ Internet-Draft                     TLS                        March 2017
 
    -  Require peer public key validation
 
+   -  Add state machine diagram.
+
    draft-18
 
    -  Remove unnecessary resumption_psk which is the only thing expanded
@@ -384,8 +386,6 @@ Internet-Draft                     TLS                        March 2017
 
    -  Clarify conditions for allowing 0-RTT with PSK
 
-   draft-16
-
 
 
 
@@ -393,6 +393,8 @@ Rescorla               Expires September 11, 2017               [Page 7]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   draft-16
 
    -  Revise version negotiation (*)
 
@@ -441,14 +443,14 @@ Internet-Draft                     TLS                        March 2017
 
    draft-14
 
-   -  Allow cookies to be longer (*)
-
 
 
 Rescorla               Expires September 11, 2017               [Page 8]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Allow cookies to be longer (*)
 
    -  Remove the "context" from EarlyDataIndication as it was undefined
       and nobody used it (*)
@@ -496,8 +498,6 @@ Internet-Draft                     TLS                        March 2017
 
    -  Extra fields in NewSessionTicket.
 
-   -  Restructure key schedule and add a resumption_context value.
-
 
 
 
@@ -505,6 +505,8 @@ Rescorla               Expires September 11, 2017               [Page 9]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Restructure key schedule and add a resumption_context value.
 
    -  Require DH public keys and secrets to be zero-padded to the size
       of the group.
@@ -551,8 +553,6 @@ Internet-Draft                     TLS                        March 2017
    -  Unify authentication modes.  Add post-handshake client
       authentication.
 
-   -  Remove early_handshake content type.  Terminate 0-RTT data with an
-      alert.
 
 
 
@@ -561,6 +561,9 @@ Rescorla               Expires September 11, 2017              [Page 10]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Remove early_handshake content type.  Terminate 0-RTT data with an
+      alert.
 
    -  Reset sequence number upon key change (as proposed by Fournet et
       al.)
@@ -606,10 +609,7 @@ Internet-Draft                     TLS                        March 2017
    -  Reduce maximum permitted record expansion for AEAD from 2048 to
       256 octets.
 
-   -  Require digital signatures even when a previous configuration is
-      used.
 
-   -  Merge EarlyDataIndication and KnownConfiguration.
 
 
 
@@ -617,6 +617,11 @@ Rescorla               Expires September 11, 2017              [Page 11]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Require digital signatures even when a previous configuration is
+      used.
+
+   -  Merge EarlyDataIndication and KnownConfiguration.
 
    -  Change code point for server_configuration to avoid collision with
       server_hello_done.
@@ -661,11 +666,6 @@ Internet-Draft                     TLS                        March 2017
    -  Renumber the new handshake messages to be somewhat more consistent
       with existing convention and to remove a duplicate registration.
 
-   -  Remove renegotiation.
-
-   -  Remove point format negotiation.
-
-   draft-03
 
 
 
@@ -673,6 +673,12 @@ Rescorla               Expires September 11, 2017              [Page 12]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Remove renegotiation.
+
+   -  Remove point format negotiation.
+
+   draft-03
 
    -  Remove GMT time.
 
@@ -714,13 +720,7 @@ Internet-Draft                     TLS                        March 2017
    include changes to support these changes even when TLS 1.3 is not in
    use.  See the referenced sections for more details.
 
-2.  Protocol Overview
 
-   The cryptographic parameters of the connection state are produced by
-   the TLS handshake protocol, which a TLS client and server use when
-   first communicating to agree on a protocol version, select
-   cryptographic algorithms, optionally authenticate each other, and
-   establish shared secret keying material.  Once the handshake is
 
 
 
@@ -730,6 +730,13 @@ Rescorla               Expires September 11, 2017              [Page 13]
 Internet-Draft                     TLS                        March 2017
 
 
+2.  Protocol Overview
+
+   The cryptographic parameters of the connection state are produced by
+   the TLS handshake protocol, which a TLS client and server use when
+   first communicating to agree on a protocol version, select
+   cryptographic algorithms, optionally authenticate each other, and
+   establish shared secret keying material.  Once the handshake is
    complete, the peers use the established keys to protect application
    layer traffic.
 
@@ -747,13 +754,6 @@ Internet-Draft                     TLS                        March 2017
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-
-
 
 
 
