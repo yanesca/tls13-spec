@@ -386,7 +386,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-10" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-14" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -407,7 +407,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">March 10, 2017</td>
+  <td class="right">March 14, 2017</td>
 </tr>
 <tr>
   <td class="left">           approved)</td>
@@ -426,7 +426,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: September 11, 2017</td>
+  <td class="left">Expires: September 15, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -447,7 +447,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 11, 2017.</p>
+<p>This Internet-Draft will expire on September 15, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2235,7 +2235,7 @@ finished_key =
 <p id="rfc.section.5.4.p.3">Application Data records may contain a zero-length TLSInnerPlaintext.content if the sender desires.  This permits generation of plausibly-sized cover traffic in contexts where the presence or absence of activity may be sensitive.  Implementations MUST NOT send Handshake or Alert records that have a zero-length TLSInnerPlaintext.content; if such a message is received, the receiving implementation MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.5.4.p.4">The padding sent is automatically verified by the record protection mechanism; upon successful decryption of a TLSCiphertext.encrypted_record, the receiving implementation scans the field from the end toward the beginning until it finds a non-zero octet. This non-zero octet is the content type of the message.  This padding scheme was selected because it allows padding of any encrypted TLS record by an arbitrary size (from zero up to TLS record size limits) without introducing new content types.  The design also enforces all-zero padding octets, which allows for quick detection of padding errors.</p>
 <p id="rfc.section.5.4.p.5">Implementations MUST limit their scanning to the cleartext returned from the AEAD decryption.  If a receiving implementation does not find a non-zero octet in the cleartext, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
-<p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations &#8211; the full fragment plaintext may not exceed 2^14 octets.</p>
+<p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations - the full fragment plaintext MUST not exceed 2^14 octets. If the maximum fragment length is reduced, such as by the max_fragment_length extension from <a href="#RFC6066">[RFC6066]</a>, then the reduced limit applies to the full plaintext, including the padding.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic, and is beyond the scope of this specification. If the application layer protocol atop TLS has its own padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms, or define a padding policy request mechanism through TLS extensions or some other means.</p>
 <h2 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a></h2>
 <p id="rfc.section.5.5.p.1">There are cryptographic limits on the amount of plaintext which can be safely encrypted under a given set of keys.  <a href="#AEAD-LIMITS">[AEAD-LIMITS]</a> provides an analysis of these limits under the assumption that the underlying primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD do a key update as described in <a href="#key-update">Section 4.6.3</a> prior to reaching these limits.</p>
