@@ -387,7 +387,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-26" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -407,12 +407,8 @@ address {
   <td class="right">RTFM, Inc.</td>
 </tr>
 <tr>
-  <td class="left">Obsoletes: 5077, 5246, 5746 (if</td>
-  <td class="right">March 25, 2017</td>
-</tr>
-<tr>
-  <td class="left">           approved)</td>
-  <td class="right"></td>
+  <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
+  <td class="right">March 26, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -427,7 +423,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: September 26, 2017</td>
+  <td class="left">Expires: September 27, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -448,7 +444,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 26, 2017.</p>
+<p>This Internet-Draft will expire on September 27, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2067,7 +2063,7 @@ finished_key =
 <pre>
    struct {} EndOfEarlyData;
 </pre>
-<p id="rfc.section.4.5.p.1">The EndOfEarlyData message is sent by the client to indicate that all 0-RTT application_data messages have been transmitted (or none will be sent at all) and that the following records are protected under handshake traffic keys. Servers MUST NOT send this message and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert. This message is encrypted under keys derived from the client_early_traffic_secret.</p>
+<p id="rfc.section.4.5.p.1">If the server sent an &#8220;early_data&#8221; extension, the client MUST send an EndOfEarlyData after receiving the server Finished. This indicates that all 0-RTT application_data messages, if any, have been transmitted and that the following records are protected under handshake traffic keys. Servers MUST NOT send this message and clients receiving it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert. This message is encrypted under keys derived from the client_early_traffic_secret.</p>
 <h2 id="rfc.section.4.6"><a href="#rfc.section.4.6">4.6.</a> <a href="#post-handshake-messages" id="post-handshake-messages">Post-Handshake Messages</a></h2>
 <p id="rfc.section.4.6.p.1">TLS also allows other messages to be sent after the main handshake.  These messages use a handshake content type and are encrypted under the appropriate application traffic key.</p>
 <h3 id="rfc.section.4.6.1"><a href="#rfc.section.4.6.1">4.6.1.</a> <a href="#NewSessionTicket" id="NewSessionTicket">New Session Ticket Message</a></h3>
@@ -2943,12 +2939,6 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
         <b id="RFC5246">[RFC5246]</b>
       </td>
       <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC5746">[RFC5746]</b>
-      </td>
-      <td class="top"><a>Rescorla, E.</a>, <a>Ray, M.</a>, <a>Dispensa, S.</a> and <a>N. Oskov</a>, "<a href="http://tools.ietf.org/html/rfc5746">Transport Layer Security (TLS) Renegotiation Indication Extension</a>", RFC 5746, DOI 10.17487/RFC5746, February 2010.</td>
     </tr>
     <tr>
       <td class="reference">
