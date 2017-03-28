@@ -387,7 +387,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-28" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">March 26, 2017</td>
+  <td class="right">March 28, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -423,7 +423,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: September 27, 2017</td>
+  <td class="left">Expires: September 29, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -444,7 +444,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 27, 2017.</p>
+<p>This Internet-Draft will expire on September 29, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1890,7 +1890,7 @@ Subsequent Handshake:
     </tr>
     <tr>
       <td class="left">Client</td>
-      <td class="left">ClientHello &#8230; ServerFinished</td>
+      <td class="left">ClientHello &#8230; later of ServerFinished/EndOfEarlyData</td>
       <td class="left">client_handshake_traffic_secret</td>
     </tr>
     <tr>
@@ -1914,7 +1914,8 @@ Subsequent Handshake:
           HelloRetryRequest ... MN)
 </pre>
 <p id="rfc.section.4.4.1.p.3">The reason for this construction is to allow the server to do a stateless HelloRetryRequest by storing just the hash of ClientHello1 in the cookie, rather than requiring it to export the entire intermediate hash state (see <a href="#cookie">Section 4.2.2</a>).</p>
-<p id="rfc.section.4.4.1.p.4">In general, implementations can implement the transcript by keeping a running transcript hash value based on the negotiated hash. Note, however, that subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
+<p id="rfc.section.4.4.1.p.4">For concreteness, the transcript hash is always taken from the following sequence of handshake messages, starting at the first ClientHello and including only those messages that were sent: ClientHello, HelloRetryRequest, ClientHello, ServerHello, EncryptedExtensions, Server CertificateRequest, Server Certificate, Server CertificateVerify, Server Finished, EndOfEarlyData, Client Certificate, Client CertificateVerify, Client Finished.</p>
+<p id="rfc.section.4.4.1.p.5">In general, implementations can implement the transcript by keeping a running transcript hash value based on the negotiated hash. Note, however, that subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
 <h3 id="rfc.section.4.4.2"><a href="#rfc.section.4.4.2">4.4.2.</a> <a href="#certificate" id="certificate">Certificate</a></h3>
 <p id="rfc.section.4.4.2.p.1">The server MUST send a Certificate message whenever the agreed-upon key exchange method uses certificates for authentication (this includes all key exchange methods defined in this document except PSK).  This message conveys the endpoint&#8217;s certificate chain to the peer.</p>
 <p id="rfc.section.4.4.2.p.2">The client MUST send a Certificate message if and only if the server has requested client authentication via a CertificateRequest message (<a href="#certificate-request">Section 4.3.2</a>). If the server requests client authentication but no suitable certificate is available, the client MUST send a Certificate message containing no certificates (i.e., with the &#8220;certificate_list&#8221; field having length 0).</p>
@@ -2448,9 +2449,8 @@ finished_key =
                                        = resumption_master_secret
 </pre>
 <p id="rfc.section.7.1.p.7">The general pattern here is that the secrets shown down the left side of the diagram are just raw entropy without context, whereas the secrets down the right side include handshake context and therefore can be used to derive working keys without additional context.  Note that the different calls to Derive-Secret may take different Messages arguments, even with the same secret. In a 0-RTT exchange, Derive-Secret is called with four distinct transcripts; in a 1-RTT-only exchange with three distinct transcripts.</p>
-<p id="rfc.section.7.1.p.8">The complete transcript passed to Derive-Secret is always taken from the following sequence of handshake messages, starting at the first ClientHello and including only those messages that were sent: ClientHello, HelloRetryRequest, ClientHello, ServerHello, EncryptedExtensions, Server CertificateRequest, Server Certificate, Server CertificateVerify, Server Finished, EndOfEarlyData, Client Certificate, Client CertificateVerify, Client Finished.</p>
-<p id="rfc.section.7.1.p.9">If a given secret is not available, then the 0-value consisting of a string of Hash.length zero bytes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0). For the computation of the binder_secret, the label is &#8220;external psk binder key&#8221; for external PSKs (those provisioned outside of TLS) and &#8220;resumption psk binder key&#8221; for resumption PSKs (those provisioned as the resumption master secret of a previous handshake). The different labels prevent the substitution of one type of PSK for the other.</p>
-<p id="rfc.section.7.1.p.10">There are multiple potential Early Secret values depending on which PSK the server ultimately selects. The client will need to compute one for each potential PSK; if no PSK is selected, it will then need to compute the early secret corresponding to the zero PSK.</p>
+<p id="rfc.section.7.1.p.8">If a given secret is not available, then the 0-value consisting of a string of Hash.length zero bytes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0). For the computation of the binder_secret, the label is &#8220;external psk binder key&#8221; for external PSKs (those provisioned outside of TLS) and &#8220;resumption psk binder key&#8221; for resumption PSKs (those provisioned as the resumption master secret of a previous handshake). The different labels prevent the substitution of one type of PSK for the other.</p>
+<p id="rfc.section.7.1.p.9">There are multiple potential Early Secret values depending on which PSK the server ultimately selects. The client will need to compute one for each potential PSK; if no PSK is selected, it will then need to compute the early secret corresponding to the zero PSK.</p>
 <h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
 <p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message defined in <a href="#key-update">Section 4.6.3</a>.  The next generation of traffic keys is computed by generating client_/server_traffic_secret_N+1 from client_/server_traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
 <p id="rfc.section.7.2.p.2">The next-generation traffic_secret is computed as:</p>
@@ -3746,6 +3746,7 @@ here         No 0-RTT |                 | 0-RTT
   <li>Anil Gangolli <br/> anil@busybuddha.org</li>
   <li>David M. Garrett <br/> dave@nulldereference.com</li>
   <li>Alessandro Ghedini <br/> Cloudflare Inc. <br/> alessandro@cloudflare.com</li>
+  <li>Daniel Kahn Gillmor <br/> ACLU <br/> dkg@fifthhorseman.net</li>
   <li>Jens Guballa <br/> ETAS <br/> jens.guballa@etas.com</li>
   <li>Vipul Gupta (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Sun Microsystems Laboratories <br/> vipul.gupta@sun.com</li>
   <li>Chris Hawk (co-author of <a href="#RFC4492">[RFC4492]</a>) <br/> Corriente Networks LLC <br/> chris@corriente.net</li>
@@ -3756,7 +3757,6 @@ here         No 0-RTT |                 | 0-RTT
   <li>Jonathan Hoyland <br/> Royal Holloway, University of London</li>
   <li>Subodh Iyengar <br/> Facebook <br/> subodh@fb.com</li>
   <li>Benjamin Kaduk <br/> Akamai <br/> kaduk@mit.edu</li>
-  <li>Daniel Kahn Gillmor <br/> ACLU <br/> dkg@fifthhorseman.net</li>
   <li>Hubert Kario <br/> Red Hat Inc. <br/> hkario@redhat.com</li>
   <li>Phil Karlton (co-author of SSL 3.0)</li>
   <li>Leon Klingele <br/> Independent <br/> mail@leonklingele.de</li>
