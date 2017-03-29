@@ -7026,6 +7026,10 @@ Internet-Draft                     TLS                        March 2017
       Google
       bodo@openssl.org
 
+   -  Kyle Nekritz
+      Facebook
+      knekritz@fb.com
+
    -  Erik Nygren
       Akamai Technologies
       erik+ietf@nygren.org
@@ -7046,10 +7050,6 @@ Internet-Draft                     TLS                        March 2017
       INRIA
       alfredo.pironti@inria.fr
 
-   -  Andrei Popov
-      Microsoft
-      andrei.popov@microsoft.com
-
 
 
 
@@ -7057,6 +7057,10 @@ Rescorla               Expires September 30, 2017             [Page 126]
 
 Internet-Draft                     TLS                        March 2017
 
+
+   -  Andrei Popov
+      Microsoft
+      andrei.popov@microsoft.com
 
    -  Marsh Ray (co-author of [RFC7627])
       Microsoft
@@ -7102,10 +7106,6 @@ Internet-Draft                     TLS                        March 2017
 
    -  Tim Taubert
       Mozilla
-      ttaubert@mozilla.com
-
-   -  Martin Thomson
-      Mozilla
 
 
 
@@ -7114,6 +7114,10 @@ Rescorla               Expires September 30, 2017             [Page 127]
 Internet-Draft                     TLS                        March 2017
 
 
+      ttaubert@mozilla.com
+
+   -  Martin Thomson
+      Mozilla
       mt@mozilla.com
 
    -  Filippo Valsorda
@@ -7148,10 +7152,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
