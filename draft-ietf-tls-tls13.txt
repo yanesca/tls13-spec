@@ -382,7 +382,7 @@ Internet-Draft                     TLS                        April 2017
 
    -  Explicitly allow non-offered extensions in NewSessionTicket
 
-   -  Explicitly allow predicting ClientFinished for NST
+   -  Explicitly allow predicting client Finished for NST
 
    -  Clarify conditions for allowing 0-RTT with PSK
 
@@ -3159,11 +3159,12 @@ Internet-Draft                     TLS                        April 2017
    |            | cryptedExtensions/Certifica | ic_secret              |
    |            | teRequest                   |                        |
    |            |                             |                        |
-   | Client     | ClientHello ... later of Se | client_handshake_traff |
-   |            | rverFinished/EndOfEarlyData | ic_secret              |
+   | Client     | ClientHello ... later of    | client_handshake_traff |
+   |            | server                      | ic_secret              |
+   |            | Finished/EndOfEarlyData     |                        |
    |            |                             |                        |
-   | Post-      | ClientHello ...             | client_traffic_secret_ |
-   | Handshake  | ClientFinished +            | N                      |
+   | Post-      | ClientHello ... client      | client_traffic_secret_ |
+   | Handshake  | Finished +                  | N                      |
    |            | CertificateRequest          |                        |
    +------------+-----------------------------+------------------------+
 
@@ -3181,7 +3182,6 @@ Internet-Draft                     TLS                        April 2017
    ClientHello with a HelloRetryRequest, the value of ClientHello1 is
    replaced with a special synthetic handshake message of handshake type
    "message_hash" containing Hash(ClientHello1).  I.e.,
-
 
 
 
@@ -3210,8 +3210,8 @@ Internet-Draft                     TLS                        April 2017
    ClientHello and including only those messages that were sent:
    ClientHello, HelloRetryRequest, ClientHello, ServerHello,
    EncryptedExtensions, Server CertificateRequest, Server Certificate,
-   Server CertificateVerify, Server Finished, EndOfEarlyData, Client
-   Certificate, Client CertificateVerify, Client Finished.
+   Server CertificateVerify, server Finished, EndOfEarlyData, Client
+   Certificate, Client CertificateVerify, client Finished.
 
    In general, implementations can implement the transcript by keeping a
    running transcript hash value based on the negotiated hash.  Note,
@@ -4627,19 +4627,19 @@ Internet-Draft                     TLS                        April 2017
       0 -> HKDF-Extract = Master Secret
                  |
                  +-----> Derive-Secret(., "client application traffic secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = client_traffic_secret_0
                  |
                  +-----> Derive-Secret(., "server application traffic secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = server_traffic_secret_0
                  |
                  +-----> Derive-Secret(., "exporter master secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = exporter_secret
                  |
                  +-----> Derive-Secret(., "resumption master secret",
-                                       ClientHello...Client Finished)
+                                       ClientHello...client Finished)
                                        = resumption_master_secret
 
 

@@ -637,7 +637,7 @@ address {
   <li>Harmonize requirements about cipher suite matching: for resumption you need to match KDF but for 0-RTT you need whole cipher suite. This allows PSKs to actually negotiate cipher suites. (*)</li>
   <li>Move SCT and OCSP into Certificate.extensions (*)</li>
   <li>Explicitly allow non-offered extensions in NewSessionTicket</li>
-  <li>Explicitly allow predicting ClientFinished for NST</li>
+  <li>Explicitly allow predicting client Finished for NST</li>
   <li>Clarify conditions for allowing 0-RTT with PSK</li>
 </ul>
 <p id="rfc.section.1.2.p.8">draft-16</p>
@@ -1890,12 +1890,12 @@ Subsequent Handshake:
     </tr>
     <tr>
       <td class="left">Client</td>
-      <td class="left">ClientHello &#8230; later of ServerFinished/EndOfEarlyData</td>
+      <td class="left">ClientHello &#8230; later of server Finished/EndOfEarlyData</td>
       <td class="left">client_handshake_traffic_secret</td>
     </tr>
     <tr>
       <td class="left">Post-Handshake</td>
-      <td class="left">ClientHello &#8230; ClientFinished + CertificateRequest</td>
+      <td class="left">ClientHello &#8230; client Finished + CertificateRequest</td>
       <td class="left">client_traffic_secret_N</td>
     </tr>
   </tbody>
@@ -1914,7 +1914,7 @@ Subsequent Handshake:
           HelloRetryRequest ... MN)
 </pre>
 <p id="rfc.section.4.4.1.p.3">The reason for this construction is to allow the server to do a stateless HelloRetryRequest by storing just the hash of ClientHello1 in the cookie, rather than requiring it to export the entire intermediate hash state (see <a href="#cookie">Section 4.2.2</a>).</p>
-<p id="rfc.section.4.4.1.p.4">For concreteness, the transcript hash is always taken from the following sequence of handshake messages, starting at the first ClientHello and including only those messages that were sent: ClientHello, HelloRetryRequest, ClientHello, ServerHello, EncryptedExtensions, Server CertificateRequest, Server Certificate, Server CertificateVerify, Server Finished, EndOfEarlyData, Client Certificate, Client CertificateVerify, Client Finished.</p>
+<p id="rfc.section.4.4.1.p.4">For concreteness, the transcript hash is always taken from the following sequence of handshake messages, starting at the first ClientHello and including only those messages that were sent: ClientHello, HelloRetryRequest, ClientHello, ServerHello, EncryptedExtensions, Server CertificateRequest, Server Certificate, Server CertificateVerify, server Finished, EndOfEarlyData, Client Certificate, Client CertificateVerify, client Finished.</p>
 <p id="rfc.section.4.4.1.p.5">In general, implementations can implement the transcript by keeping a running transcript hash value based on the negotiated hash. Note, however, that subsequent post-handshake authentications do not include each other, just the messages through the end of the main handshake.</p>
 <h3 id="rfc.section.4.4.2"><a href="#rfc.section.4.4.2">4.4.2.</a> <a href="#certificate" id="certificate">Certificate</a></h3>
 <p id="rfc.section.4.4.2.p.1">The server MUST send a Certificate message whenever the agreed-upon key exchange method uses certificates for authentication (this includes all key exchange methods defined in this document except PSK).  This message conveys the endpoint&#8217;s certificate chain to the peer.</p>
@@ -2433,19 +2433,19 @@ finished_key =
       0 -&gt; HKDF-Extract = Master Secret
                  |
                  +-----&gt; Derive-Secret(., "client application traffic secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = client_traffic_secret_0
                  |
                  +-----&gt; Derive-Secret(., "server application traffic secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = server_traffic_secret_0
                  |
                  +-----&gt; Derive-Secret(., "exporter master secret",
-                 |                     ClientHello...Server Finished)
+                 |                     ClientHello...server Finished)
                  |                     = exporter_secret
                  |
                  +-----&gt; Derive-Secret(., "resumption master secret",
-                                       ClientHello...Client Finished)
+                                       ClientHello...client Finished)
                                        = resumption_master_secret
 </pre>
 <p id="rfc.section.7.1.p.7">The general pattern here is that the secrets shown down the left side of the diagram are just raw entropy without context, whereas the secrets down the right side include handshake context and therefore can be used to derive working keys without additional context.  Note that the different calls to Derive-Secret may take different Messages arguments, even with the same secret. In a 0-RTT exchange, Derive-Secret is called with four distinct transcripts; in a 1-RTT-only exchange with three distinct transcripts.</p>
