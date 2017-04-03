@@ -98,7 +98,7 @@ Table of Contents
        4.1.1.  Cryptographic Negotiation . . . . . . . . . . . . . .  28
        4.1.2.  Client Hello  . . . . . . . . . . . . . . . . . . . .  29
        4.1.3.  Server Hello  . . . . . . . . . . . . . . . . . . . .  32
-       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  34
+       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  33
      4.2.  Extensions  . . . . . . . . . . . . . . . . . . . . . . .  35
        4.2.1.  Supported Versions  . . . . . . . . . . . . . . . . .  38
        4.2.2.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  39
@@ -1653,19 +1653,6 @@ Internet-Draft                     TLS                        April 2017
           Extension extensions<8..2^16-1>;
       } ClientHello;
 
-   All versions of TLS allow extensions to optionally follow the
-   compression_methods field as an extensions field.  TLS 1.3
-   ClientHellos will contain at least two extensions,
-   "supported_versions" and either "key_share" or "pre_shared_key".  The
-   presence of extensions can be detected by determining whether there
-   are bytes following the compression_methods at the end of the
-   ClientHello.  Note that this method of detecting optional data
-   differs from the normal TLS method of having a variable-length field,
-   but it is used for compatibility with TLS before extensions were
-   defined.  TLS 1.3 servers will need to perform this check first and
-   only attempt to negotiate TLS 1.3 if a "supported_version" extension
-   is present.
-
    legacy_version  In previous versions of TLS, this field was used for
       version negotiation and represented the highest version number
       supported by the client.  Experience has shown that many servers
@@ -1674,14 +1661,6 @@ Internet-Draft                     TLS                        April 2017
       ClientHello with a version number higher than it supports.  In TLS
       1.3, the client indicates its version preferences in the
       "supported_versions" extension (Section 4.2.1) and the
-
-
-
-Rescorla                 Expires October 5, 2017               [Page 30]
-
-Internet-Draft                     TLS                        April 2017
-
-
       legacy_version field MUST be set to 0x0303, which was the version
       number for TLS 1.2.  (See Appendix D for details about backward
       compatibility.)
@@ -1695,6 +1674,13 @@ Internet-Draft                     TLS                        April 2017
       ignored by a server negotiating TLS 1.3 and MUST be set as a zero
       length vector (i.e., a single zero byte length field) by clients
       which do not have a cached session ID set by a pre-TLS 1.3 server.
+
+
+
+Rescorla                 Expires October 5, 2017               [Page 30]
+
+Internet-Draft                     TLS                        April 2017
+
 
    cipher_suites  This is a list of the symmetric cipher options
       supported by the client, specifically the record protection
@@ -1725,11 +1711,25 @@ Internet-Draft                     TLS                        April 2017
       to preserve ClientHello compatibility with previous versions of
       TLS.  Servers MUST ignore unrecognized extensions.
 
-   In the event that a client requests additional functionality using
-   extensions, and this functionality is not supplied by the server, the
-   client MAY abort the handshake.  Note that TLS 1.3 ClientHello
-   messages always contain extensions (minimally they must contain
+   All versions of TLS allow extensions to optionally follow the
+   compression_methods field as an extensions field.  TLS 1.3
+   ClientHello messages always contain extensions (minimally,
    "supported_versions" or they will be interpreted as TLS 1.2
+   ClientHello messages), however TLS 1.3 servers might receive
+   ClientHello messages without an extensions field from prior versions
+   of TLS.  The presence of extensions can be detected by determining
+   whether there are bytes following the compression_methods field at
+   the end of the ClientHello.  Note that this method of detecting
+   optional data differs from the normal TLS method of having a
+   variable-length field, but it is used for compatibility with TLS
+   before extensions were defined.  TLS 1.3 servers will need to perform
+   this check first and only attempt to negotiate TLS 1.3 if a
+   "supported_version" extension is present.  If negotiating a version
+   of TLS prior to 1.3, a server MUST check that the message either
+   contains no data after legacy_compression_methods or that it contains
+   a valid extensions block with no data following.  If not, then it
+   MUST abort the handshake with a "decode_error" alert.
+
 
 
 
@@ -1738,13 +1738,9 @@ Rescorla                 Expires October 5, 2017               [Page 31]
 Internet-Draft                     TLS                        April 2017
 
 
-   ClientHello messages).  TLS 1.3 servers might receive ClientHello
-   messages from versions of TLS prior to 1.3 that do not contain
-   extensions.  If negotiating a version of TLS prior to 1.3, a server
-   MUST check that the message either contains no data after
-   legacy_compression_methods or that it contains a valid extensions
-   block with no data following.  If not, then it MUST abort the
-   handshake with a "decode_error" alert.
+   In the event that a client requests additional functionality using
+   extensions, and this functionality is not supplied by the server, the
+   client MAY abort the handshake.
 
    After sending the ClientHello message, the client waits for a
    ServerHello or HelloRetryRequest message.
@@ -1786,6 +1782,10 @@ Internet-Draft                     TLS                        April 2017
       extensions which are required to establish the cryptographic
       context.  Currently the only such extensions are "key_share" and
       "pre_shared_key".  All current TLS 1.3 ServerHello messages will
+      contain one of these two extensions, or both when using a PSK with
+      (EC)DHE key establishment.
+
+
 
 
 
@@ -1793,9 +1793,6 @@ Rescorla                 Expires October 5, 2017               [Page 32]
 
 Internet-Draft                     TLS                        April 2017
 
-
-      contain one of these two extensions, or both when using a PSK with
-      (EC)DHE key establishment.
 
    TLS 1.3 has a downgrade protection mechanism embedded in the server's
    random value.  TLS 1.3 servers which negotiate TLS 1.2 or below in
@@ -1839,9 +1836,12 @@ Internet-Draft                     TLS                        April 2017
    downgrade to TLS 1.2.  With the mechanism enabled, this will cause an
    interoperability failure.
 
+4.1.4.  Hello Retry Request
 
-
-
+   The server will send this message in response to a ClientHello
+   message if it is able to find an acceptable set of parameters but the
+   ClientHello does not contain sufficient information to proceed with
+   the handshake.
 
 
 
@@ -1849,13 +1849,6 @@ Rescorla                 Expires October 5, 2017               [Page 33]
 
 Internet-Draft                     TLS                        April 2017
 
-
-4.1.4.  Hello Retry Request
-
-   The server will send this message in response to a ClientHello
-   message if it is able to find an acceptable set of parameters but the
-   ClientHello does not contain sufficient information to proceed with
-   the handshake.
 
    Structure of this message:
 
@@ -1898,6 +1891,13 @@ Internet-Draft                     TLS                        April 2017
    offered MUST abort the handshake.  Servers MUST ensure that they
    negotiate the same cipher suite when receiving a conformant updated
    ClientHello (if the server selects the cipher suite as the first step
+   in the negotiation, then this will happen automatically).  Upon
+   receiving the ServerHello, clients MUST check that the cipher suite
+   supplied in the ServerHello is the same as that in the
+   HelloRetryRequest and otherwise abort the handshake with an
+   "illegal_parameter" alert.
+
+
 
 
 
@@ -1905,12 +1905,6 @@ Rescorla                 Expires October 5, 2017               [Page 34]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   in the negotiation, then this will happen automatically).  Upon
-   receiving the ServerHello, clients MUST check that the cipher suite
-   supplied in the ServerHello is the same as that in the
-   HelloRetryRequest and otherwise abort the handshake with an
-   "illegal_parameter" alert.
 
 4.2.  Extensions
 
@@ -1953,6 +1947,12 @@ Internet-Draft                     TLS                        April 2017
    ServerHello, EncryptedExtensions and HelloRetryRequest messages.  The
    server sends extension requests in the CertificateRequest message
    which a client MAY respond to with a Certificate message.  The server
+   MAY also send unsolicited extensions in the NewSessionTicket, though
+   the client does not respond directly to these.
+
+   Implementations MUST NOT send extension responses if the remote
+   endpoint did not send the corresponding extension requests, with the
+   exception of the "cookie" extension in HelloRetryRequest.  Upon
 
 
 
@@ -1962,12 +1962,6 @@ Rescorla                 Expires October 5, 2017               [Page 35]
 Internet-Draft                     TLS                        April 2017
 
 
-   MAY also send unsolicited extensions in the NewSessionTicket, though
-   the client does not respond directly to these.
-
-   Implementations MUST NOT send extension responses if the remote
-   endpoint did not send the corresponding extension requests, with the
-   exception of the "cookie" extension in HelloRetryRequest.  Upon
    receiving such an extension, an endpoint MUST abort the handshake
    with an "unsupported_extension" alert.
 
@@ -2010,6 +2004,12 @@ Internet-Draft                     TLS                        April 2017
     | client_certificate_type [RFC7250]                |      CH, EE |
     |                                                  |             |
     | server_certificate_type [RFC7250]                |      CH, CT |
+    |                                                  |             |
+    | padding [RFC7685]                                |          CH |
+    |                                                  |             |
+    | key_share [[this document]]                      | CH, SH, HRR |
+    |                                                  |             |
+    | pre_shared_key [[this document]]                 |      CH, SH |
 
 
 
@@ -2018,12 +2018,6 @@ Rescorla                 Expires October 5, 2017               [Page 36]
 Internet-Draft                     TLS                        April 2017
 
 
-    |                                                  |             |
-    | padding [RFC7685]                                |          CH |
-    |                                                  |             |
-    | key_share [[this document]]                      | CH, SH, HRR |
-    |                                                  |             |
-    | pre_shared_key [[this document]]                 |      CH, SH |
     |                                                  |             |
     | psk_key_exchange_modes [[this document]]         |          CH |
     |                                                  |             |
@@ -2066,6 +2060,12 @@ Internet-Draft                     TLS                        April 2017
       followed regardless of whether the feature is believed to cause a
       security problem.  Often the fact that the extension fields are
       included in the inputs to the Finished message hashes will be
+      sufficient, but extreme care is needed when the extension changes
+      the meaning of messages sent in the handshake phase.  Designers
+      and implementors should be aware of the fact that until the
+      handshake has been authenticated, active attackers can modify
+      messages and insert, remove, or replace extensions.
+
 
 
 
@@ -2073,12 +2073,6 @@ Rescorla                 Expires October 5, 2017               [Page 37]
 
 Internet-Draft                     TLS                        April 2017
 
-
-      sufficient, but extreme care is needed when the extension changes
-      the meaning of messages sent in the handshake phase.  Designers
-      and implementors should be aware of the fact that until the
-      handshake has been authenticated, active attackers can modify
-      messages and insert, remove, or replace extensions.
 
 4.2.1.  Supported Versions
 
@@ -2121,6 +2115,12 @@ Internet-Draft                     TLS                        April 2017
    specification SHOULD instead advertise 0x7f00 | draft_version in
    ServerHello.version, and HelloRetryRequest.server_version.  For
    instance, draft-17 would be encoded as the 0x7f11.  This allows pre-
+   RFC implementations to safely negotiate with each other, even if they
+   would otherwise be incompatible.
+
+
+
+
 
 
 
@@ -2129,9 +2129,6 @@ Rescorla                 Expires October 5, 2017               [Page 38]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   RFC implementations to safely negotiate with each other, even if they
-   would otherwise be incompatible.
 
 4.2.2.  Cookie
 
@@ -2172,6 +2169,9 @@ Internet-Draft                     TLS                        April 2017
 
    The "extension_data" field of this extension in a ClientHello
    contains a SignatureSchemeList value:
+
+
+
 
 
 
