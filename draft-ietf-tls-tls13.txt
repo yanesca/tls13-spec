@@ -6926,6 +6926,10 @@ Internet-Draft                     TLS                        April 2017
       ACLU
       dkg@fifthhorseman.net
 
+   -  Matthew Green
+      Johns Hopkins University
+      mgreen@cs.jhu.edu
+
    -  Jens Guballa
       ETAS
       jens.guballa@etas.com
@@ -6934,10 +6938,6 @@ Internet-Draft                     TLS                        April 2017
       Sun Microsystems Laboratories
       vipul.gupta@sun.com
 
-   -  Chris Hawk (co-author of [RFC4492])
-      Corriente Networks LLC
-      chris@corriente.net
-
 
 
 
@@ -6945,6 +6945,10 @@ Rescorla                 Expires October 6, 2017              [Page 124]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Chris Hawk (co-author of [RFC4492])
+      Corriente Networks LLC
+      chris@corriente.net
 
    -  Kipp Hickman
 
@@ -6991,16 +6995,16 @@ Internet-Draft                     TLS                        April 2017
       Google
       agl@google.com
 
-   -  Olivier Levillain
-      ANSSI
-      olivier.levillain@ssi.gouv.fr
-
 
 
 Rescorla                 Expires October 6, 2017              [Page 125]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Olivier Levillain
+      ANSSI
+      olivier.levillain@ssi.gouv.fr
 
    -  Xiaoyin Liu
       University of North Carolina at Chapel Hill
@@ -7046,10 +7050,6 @@ Internet-Draft                     TLS                        April 2017
       Royal Holloway, University of London
       kenny.paterson@rhul.ac.uk
 
-   -  Alfredo Pironti (co-author of [RFC7627])
-      INRIA
-      alfredo.pironti@inria.fr
-
 
 
 
@@ -7057,6 +7057,10 @@ Rescorla                 Expires October 6, 2017              [Page 126]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Alfredo Pironti (co-author of [RFC7627])
+      INRIA
+      alfredo.pironti@inria.fr
 
    -  Andrei Popov
       Microsoft
@@ -7102,10 +7106,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Bjoern Tackmann
       University of California, San Diego
-      btackmann@eng.ucsd.edu
-
-   -  Tim Taubert
-      Mozilla
 
 
 
@@ -7114,6 +7114,10 @@ Rescorla                 Expires October 6, 2017              [Page 127]
 Internet-Draft                     TLS                        April 2017
 
 
+      btackmann@eng.ucsd.edu
+
+   -  Tim Taubert
+      Mozilla
       ttaubert@mozilla.com
 
    -  Martin Thomson
@@ -7152,10 +7156,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
