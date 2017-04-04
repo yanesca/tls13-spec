@@ -387,7 +387,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-03" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-04" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">April 03, 2017</td>
+  <td class="right">April 04, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -423,7 +423,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: October 5, 2017</td>
+  <td class="left">Expires: October 6, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -444,7 +444,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 5, 2017.</p>
+<p>This Internet-Draft will expire on October 6, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2241,7 +2241,7 @@ finished_key =
 <p id="rfc.section.5.5.p.2">For AES-GCM, up to 2^24.5 full-size records (about 24 million) may be encrypted on a given connection while keeping a safety margin of approximately 2^-57 for Authenticated Encryption (AE) security. For ChaCha20/Poly1305, the record sequence number would wrap before the safety limit is reached.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#alert-protocol" id="alert-protocol">Alert Protocol</a></h1>
 <p id="rfc.section.6.p.1">One of the content types supported by the TLS record layer is the alert type.  Like other messages, alert messages are encrypted as specified by the current connection state.</p>
-<p id="rfc.section.6.p.2">Alert messages convey a description of the alert and a legacy field that conveyed the severity of the message in previous versions of TLS.  In TLS 1.3, the severity is implicit in the type of alert being sent, and can safely be ignored.  Some alerts are sent to indicate orderly closure of the connection or the end of early data (see <a href="#closure-alerts">Section 6.1</a>).  Upon receiving such an alert, the TLS implementation SHOULD indicate end-of-data to the application, and if appropriate for the alert type, send a closure alert in response.</p>
+<p id="rfc.section.6.p.2">Alert messages convey a description of the alert and a legacy field that conveyed the severity of the message in previous versions of TLS.  In TLS 1.3, the severity is implicit in the type of alert being sent, and can safely be ignored. The &#8220;close_notify&#8221; alert is used to indicate orderly closure of the connection.  Upon receiving such an alert, the TLS implementation SHOULD indicate end-of-data to the application.</p>
 <p id="rfc.section.6.p.3">Error alerts indicate abortive closure of the connection (see <a href="#error-alerts">Section 6.2</a>). Upon receiving an error alert, the TLS implementation SHOULD indicate an error to the application and MUST NOT allow any further data to be sent or received on the connection.  Servers and clients MUST forget keys and secrets associated with a failed connection. Stateful implementations of tickets (as in many clients) SHOULD discard tickets associated with failed connections.</p>
 <p id="rfc.section.6.p.4">All the alerts listed in <a href="#error-alerts">Section 6.2</a> MUST be sent as fatal and MUST be treated as fatal regardless of the AlertLevel in the message. Unknown alert types MUST be treated as fatal.</p>
 <pre>
