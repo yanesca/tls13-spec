@@ -3719,7 +3719,8 @@ Internet-Draft                     TLS                        April 2017
       used to obscure the age of the ticket that the client includes in
       the "pre_shared_key" extension.  The client-side ticket age is
       added to this value modulo 2^32 to obtain the value that is
-      transmitted by the client.
+      transmitted by the client.  The server MUST generate a fresh value
+      for each ticket it sends.
 
    ticket  The value of the ticket to be used as the PSK identity.  The
       ticket itself is an opaque label.  It MAY either be a database
@@ -3745,7 +3746,6 @@ Internet-Draft                     TLS                        April 2017
    Note that in principle it is possible to continue issuing new tickets
    which continue to indefinitely extend the lifetime of the keying
    material originally derived from an initial non-PSK handshake (which
-   was most likely tied to the peer's certificate).  It is RECOMMENDED
 
 
 
@@ -3754,6 +3754,7 @@ Rescorla                 Expires October 6, 2017               [Page 67]
 Internet-Draft                     TLS                        April 2017
 
 
+   was most likely tied to the peer's certificate).  It is RECOMMENDED
    that implementations place limits on the total lifetime of such
    keying material; these limits should take into account the lifetime
    of the peer's certificate, the likelihood of intervening revocation,
@@ -3801,7 +3802,6 @@ Internet-Draft                     TLS                        April 2017
    that receive a KeyUpdate message prior to receiving a Finished
    message MUST terminate the connection with an "unexpected_message"
    alert.  After sending a KeyUpdate message, the sender SHALL send all
-   its traffic using the next generation of keys, computed as described
 
 
 
@@ -3810,6 +3810,7 @@ Rescorla                 Expires October 6, 2017               [Page 68]
 Internet-Draft                     TLS                        April 2017
 
 
+   its traffic using the next generation of keys, computed as described
    in Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
    its receiving keys.
 
@@ -3854,7 +3855,6 @@ Internet-Draft                     TLS                        April 2017
    the connection with an "unexpected_message" alert.  New record
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 10.
-
 
 
 
