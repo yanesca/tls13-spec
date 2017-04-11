@@ -152,7 +152,7 @@ Internet-Draft                     TLS                        April 2017
      8.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  90
      8.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  90
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  91
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  91
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  92
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  93
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  93
      11.2.  Informative References . . . . . . . . . . . . . . . . .  95
@@ -191,7 +191,7 @@ Internet-Draft                     TLS                        April 2017
      D.4.  Backwards Compatibility Security Restrictions . . . . . . 120
    Appendix E.  Overview of Security Properties  . . . . . . . . . . 121
      E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 121
-     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 124
+     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 125
    Appendix F.  Working Group Information  . . . . . . . . . . . . . 126
    Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 126
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 132
@@ -2941,8 +2941,9 @@ Internet-Draft                     TLS                        April 2017
    established via the ticket mechanism (Section 4.6.1), this is the
    Hash used for the KDF on the connection where the ticket was
    established.  For externally established PSKs, the Hash algorithm
-   MUST be set when the PSK is established.  The server must ensure that
-   it selects a compatible PSK (if any) and cipher suite.
+   MUST be set when the PSK is established, or default to SHA-256 if no
+   such algorithm is defined.  The server must ensure that it selects a
+   compatible PSK (if any) and cipher suite.
 
    Implementor's note: the most straightforward way to implement the
    PSK/cipher suite matching requirements is to negotiate the cipher
@@ -2960,8 +2961,7 @@ Internet-Draft                     TLS                        April 2017
    establishment, the server sends a "pre_shared_key" extension
    indicating the selected identity.
 
-   Clients MUST verify that the server's selected_identity is within the
-   range supplied by the client, that the server selected a cipher suite
+
 
 
 
@@ -2970,6 +2970,8 @@ Rescorla                Expires October 13, 2017               [Page 53]
 Internet-Draft                     TLS                        April 2017
 
 
+   Clients MUST verify that the server's selected_identity is within the
+   range supplied by the client, that the server selected a cipher suite
    indicating a Hash associated with the PSK and that a server
    "key_share" extension is present if required by the ClientHello
    "psk_key_exchange_modes".  If these values are not consistent the
@@ -3014,9 +3016,7 @@ Internet-Draft                     TLS                        April 2017
    If the server responds with HelloRetryRequest, and the client then
    sends ClientHello2, its binder will be computed over:
 
-      Transcript-Hash(ClientHello1,
-                      HelloRetryRequest,
-                      ClientHello2[truncated])
+
 
 
 
@@ -3025,6 +3025,10 @@ Rescorla                Expires October 13, 2017               [Page 54]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      Transcript-Hash(ClientHello1,
+                      HelloRetryRequest,
+                      ClientHello2[truncated])
 
    The full ClientHello1 is included in all other handshake hash
    computations.  Note that in the first flight, ClientHello1[truncated]
@@ -3068,10 +3072,6 @@ Internet-Draft                     TLS                        April 2017
    To properly validate the ticket age, a server needs to save at least
    two items:
 
-   -  The time that the server generated the session ticket and the
-      estimated round trip time can be added together to form a baseline
-      time.
-
 
 
 
@@ -3081,6 +3081,10 @@ Rescorla                Expires October 13, 2017               [Page 55]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  The time that the server generated the session ticket and the
+      estimated round trip time can be added together to form a baseline
+      time.
 
    -  The "ticket_age_add" parameter from the NewSessionTicket is needed
       to recover the ticket age from the "obfuscated_ticket_age"
@@ -3126,10 +3130,6 @@ Internet-Draft                     TLS                        April 2017
 
    Structure of this message:
 
-      struct {
-          Extension extensions<0..2^16-1>;
-      } EncryptedExtensions;
-
 
 
 
@@ -3137,6 +3137,10 @@ Rescorla                Expires October 13, 2017               [Page 56]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      struct {
+          Extension extensions<0..2^16-1>;
+      } EncryptedExtensions;
 
    extensions  A list of extensions.  For more information, see the
       table in Section 4.2.
@@ -3182,10 +3186,6 @@ Internet-Draft                     TLS                        April 2017
    The "oid_filters" extension allows servers to provide a set of OID/
    value pairs which it would like the client's certificate to match.
    This extension MUST only be sent in the CertificateRequest message.
-
-
-
-
 
 
 
@@ -3502,7 +3502,7 @@ Internet-Draft                     TLS                        April 2017
    The following rules apply to the certificates sent by the server:
 
    -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
-      negotiated otherwise (e.g., [RFC5081]).
+      negotiated otherwise (e.g., [RFC7250]).
 
    -  The server's end-entity certificate's public key (and associated
       restrictions) MUST be compatible with the selected authentication
@@ -3553,7 +3553,7 @@ Internet-Draft                     TLS                        April 2017
    The following rules apply to certificates sent by the client:
 
    -  The certificate type MUST be X.509v3 [RFC5280], unless explicitly
-      negotiated otherwise (e.g., [RFC5081]).
+      negotiated otherwise (e.g., [RFC7250]).
 
    -  If the "certificate_authorities" extension in the
       CertificateRequest message was present, at least one of the
@@ -4976,8 +4976,8 @@ Internet-Draft                     TLS                        April 2017
 
    Where Secret is either the early_exporter_secret or the
    exporter_secret.  Implementations MUST use the exporter_secret unless
-   explicitly specified by the application.  A separate interface for
-
+   explicitly specified by the application.  The early_exporter_secret
+   is define for use in settings where an exporter is needed for 0-RTT
 
 
 
@@ -4986,8 +4986,9 @@ Rescorla                Expires October 13, 2017               [Page 89]
 Internet-Draft                     TLS                        April 2017
 
 
-   the early exporter is RECOMMENDED, especially on a server where a
-   single interface can make the early exporter inaccessible.
+   data.  A separate interface for the early exporter is RECOMMENDED,
+   especially on a server where a single interface can make the early
+   exporter inaccessible.
 
    If no context is provided, the context_value is zero-length.
    Consequently, providing no context computes the same value as
@@ -5033,7 +5034,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Negotiated Groups ("supported_groups"; Section 4.2.6)
 
-   -  Key Share ("key_share"; Section 4.2.7)
 
 
 
@@ -5041,6 +5041,8 @@ Rescorla                Expires October 13, 2017               [Page 90]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Key Share ("key_share"; Section 4.2.7)
 
    -  Server Name Indication ("server_name"; Section 3 of [RFC6066])
 
@@ -5085,11 +5087,9 @@ Internet-Draft                     TLS                        April 2017
    Security issues are discussed throughout this memo, especially in
    Appendix C, Appendix D, and Appendix E.
 
-10.  IANA Considerations
 
-   This document uses several registries that were originally created in
-   [RFC4346].  IANA has updated these to reference this document.  The
-   registries and their allocation policies are below:
+
+
 
 
 
@@ -5097,6 +5097,12 @@ Rescorla                Expires October 13, 2017               [Page 91]
 
 Internet-Draft                     TLS                        April 2017
 
+
+10.  IANA Considerations
+
+   This document uses several registries that were originally created in
+   [RFC4346].  IANA has updated these to reference this document.  The
+   registries and their allocation policies are below:
 
    -  TLS Cipher Suite Registry: Values with the first byte in the range
       0-254 (decimal) are assigned via Specification Required [RFC5226].
@@ -5139,12 +5145,6 @@ Internet-Draft                     TLS                        April 2017
    -  IANA [SHALL update/has updated] this registry to include a "TLS
       1.3" column which lists the messages in which the extension may
       appear.  This column [SHALL be/has been] initially populated from
-      the table in Section 4.2 with any extension not listed there
-      marked as "-" to indicate that it is not used by TLS 1.3.
-
-   In addition, this document defines a new registry to be maintained by
-   IANA:
-
 
 
 
@@ -5153,6 +5153,12 @@ Rescorla                Expires October 13, 2017               [Page 92]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      the table in Section 4.2 with any extension not listed there
+      marked as "-" to indicate that it is not used by TLS 1.3.
+
+   In addition, this document defines a new registry to be maintained by
+   IANA:
 
    -  TLS SignatureScheme Registry: Values with the first byte in the
       range 0-254 (decimal) are assigned via Specification Required
@@ -5194,12 +5200,6 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
-              Standards (PKCS) #1: RSA Cryptography Specifications
-              Version 2.1", RFC 3447, DOI 10.17487/RFC3447, February
-              2003, <http://www.rfc-editor.org/info/rfc3447>.
-
-
 
 
 
@@ -5209,6 +5209,11 @@ Rescorla                Expires October 13, 2017               [Page 93]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
+              Standards (PKCS) #1: RSA Cryptography Specifications
+              Version 2.1", RFC 3447, DOI 10.17487/RFC3447, February
+              2003, <http://www.rfc-editor.org/info/rfc3447>.
 
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
@@ -5254,17 +5259,17 @@ Internet-Draft                     TLS                        April 2017
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <http://www.rfc-editor.org/info/rfc6979>.
 
-   [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
-              Suite Value (SCSV) for Preventing Protocol Downgrade
-              Attacks", RFC 7507, DOI 10.17487/RFC7507, April 2015,
-              <http://www.rfc-editor.org/info/rfc7507>.
-
 
 
 Rescorla                Expires October 13, 2017               [Page 94]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
+              Suite Value (SCSV) for Preventing Protocol Downgrade
+              Attacks", RFC 7507, DOI 10.17487/RFC7507, April 2015,
+              <http://www.rfc-editor.org/info/rfc7507>.
 
    [RFC7539]  Nir, Y. and A. Langley, "ChaCha20 and Poly1305 for IETF
               Protocols", RFC 7539, DOI 10.17487/RFC7539, May 2015,
@@ -5310,17 +5315,16 @@ Internet-Draft                     TLS                        April 2017
               in Key-Exchange Protocols", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016.
 
-   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
-              Compromise Security", IEEE Computer Security Foundations
-              Symposium , 2015.
-
-
 
 
 Rescorla                Expires October 13, 2017               [Page 95]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
+              Compromise Security", IEEE Computer Security Foundations
+              Symposium , 2015.
 
    [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
               and S. Scott, "Awkward Handshake: Possible mismatch of
@@ -5364,10 +5368,6 @@ Internet-Draft                     TLS                        April 2017
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D, November 2007.
 
-   [HGFS15]   Hlauschek, C., Gruber, M., Fankhauser, F., and C. Schanes,
-              "Prying Open Pandora's Box: KCI Attacks against TLS",
-              Proceedings of USENIX Workshop on Offensive Technologies ,
-              2015.
 
 
 
@@ -5377,6 +5377,11 @@ Rescorla                Expires October 13, 2017               [Page 96]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [HGFS15]   Hlauschek, C., Gruber, M., Fankhauser, F., and C. Schanes,
+              "Prying Open Pandora's Box: KCI Attacks against TLS",
+              Proceedings of USENIX Workshop on Offensive Technologies ,
+              2015.
 
    [I-D.ietf-tls-iana-registry-updates]
               Salowey, J. and S. Turner, "D/TLS IANA Registry Updates",
@@ -5421,11 +5426,6 @@ Internet-Draft                     TLS                        April 2017
               "Implementing and Proving the TLS 1.3 Record Layer",
               December 2016, <http://eprint.iacr.org/2016/1178>.
 
-   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
-              Key: A Comparative Analysis of the Security of Re-keying
-              Techniques", ASIACRYPT2000 , October 2000.
-
-
 
 
 
@@ -5433,6 +5433,10 @@ Rescorla                Expires October 13, 2017               [Page 97]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
+              Key: A Comparative Analysis of the Security of Re-keying
+              Techniques", ASIACRYPT2000 , October 2000.
 
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
@@ -5481,10 +5485,6 @@ Internet-Draft                     TLS                        April 2017
 
 
 
-
-
-
-
 Rescorla                Expires October 13, 2017               [Page 98]
 
 Internet-Draft                     TLS                        April 2017
@@ -5494,11 +5494,6 @@ Internet-Draft                     TLS                        April 2017
               "Transport Layer Security (TLS) Session Resumption without
               Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
               January 2008, <http://www.rfc-editor.org/info/rfc5077>.
-
-   [RFC5081]  Mavrogiannopoulos, N., "Using OpenPGP Keys for Transport
-              Layer Security (TLS) Authentication", RFC 5081,
-              DOI 10.17487/RFC5081, November 2007,
-              <http://www.rfc-editor.org/info/rfc5081>.
 
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
@@ -5536,6 +5531,11 @@ Internet-Draft                     TLS                        April 2017
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <http://www.rfc-editor.org/info/rfc6347>.
 
+   [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
+              Layer Security (TLS) and Datagram Transport Layer Security
+              (DTLS) Heartbeat Extension", RFC 6520,
+              DOI 10.17487/RFC6520, February 2012,
+              <http://www.rfc-editor.org/info/rfc6520>.
 
 
 
@@ -5545,12 +5545,6 @@ Rescorla                Expires October 13, 2017               [Page 99]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
-              Layer Security (TLS) and Datagram Transport Layer Security
-              (DTLS) Heartbeat Extension", RFC 6520,
-              DOI 10.17487/RFC6520, February 2012,
-              <http://www.rfc-editor.org/info/rfc6520>.
 
    [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Message Syntax and Routing",
@@ -5592,6 +5586,12 @@ Internet-Draft                     TLS                        April 2017
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
               October 2015, <http://www.rfc-editor.org/info/rfc7685>.
 
+   [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
+              (TLS) Cached Information Extension", RFC 7924,
+              DOI 10.17487/RFC7924, July 2016,
+              <http://www.rfc-editor.org/info/rfc7924>.
+
+
 
 
 
@@ -5601,11 +5601,6 @@ Rescorla                Expires October 13, 2017              [Page 100]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
-              (TLS) Cached Information Extension", RFC 7924,
-              DOI 10.17487/RFC7924, July 2016,
-              <http://www.rfc-editor.org/info/rfc7924>.
 
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
@@ -5635,6 +5630,11 @@ Internet-Draft                     TLS                        April 2017
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
+
+
+
+
+
 
 
 
@@ -6905,7 +6905,8 @@ Internet-Draft                     TLS                        April 2017
    ensure that it only reveals its identity to an authenticated server.
    Note that implementations must use the provided record padding
    mechanism during the handshake to avoid leaking information about the
-   identities due to length.
+   identities due to length.  The client's proposed PSK identities are
+   not encrypted, nor is the one that the server selects.
 
    A client that has sent authentication data to a server, either during
    the handshake or in post-handshake authentication, cannot be sure if
@@ -6933,11 +6934,10 @@ Internet-Draft                     TLS                        April 2017
    The reader should refer to the following references for analysis of
    the TLS handshake [CHSV16] [FGSW16] [LXZFH16].
 
-E.2.  Record Layer
 
-   The record layer depends on the handshake producing strong traffic
-   secrets which can be used to derive bidirectional encryption keys and
-   nonces.  Assuming that is true, and the keys are used for no more
+
+
+
 
 
 
@@ -6946,6 +6946,11 @@ Rescorla                Expires October 13, 2017              [Page 124]
 Internet-Draft                     TLS                        April 2017
 
 
+E.2.  Record Layer
+
+   The record layer depends on the handshake producing strong traffic
+   secrets which can be used to derive bidirectional encryption keys and
+   nonces.  Assuming that is true, and the keys are used for no more
    data than indicated in Section 5.5 then the record layer should
    provide the following guarantees:
 
@@ -6989,11 +6994,6 @@ Internet-Draft                     TLS                        April 2017
    type of channel because even a constant time padding removal function
    will then feed the content into data-dependent functions.
 
-   The re-keying technique in TLS 1.3 (see Section 7.2) follows the
-   construction of the serial generator in [REKEY], which shows that re-
-   keying can allow keys to be used for a larger number of encryptions
-   than without re-keying.  This relies on the security of the HKDF-
-   Expand-Label function as a pseudorandom function (PRF).  In addition,
 
 
 
@@ -7002,6 +7002,11 @@ Rescorla                Expires October 13, 2017              [Page 125]
 Internet-Draft                     TLS                        April 2017
 
 
+   The re-keying technique in TLS 1.3 (see Section 7.2) follows the
+   construction of the serial generator in [REKEY], which shows that re-
+   keying can allow keys to be used for a larger number of encryptions
+   than without re-keying.  This relies on the security of the HKDF-
+   Expand-Label function as a pseudorandom function (PRF).  In addition,
    as long as this function is truly one way, it is not possible to
    compute traffic keys from prior to a key change (forward secrecy).
 
@@ -7045,11 +7050,6 @@ Appendix G.  Contributors
       Google
       davidben@google.com
 
-   -  Benjamin Beurdouche
-      INRIA & Microsoft Research - Joint Center
-      benjamin.beurdouche@ens.fr
-
-   -  Karthikeyan Bhargavan (co-author of [RFC7627])
 
 
 
@@ -7058,6 +7058,11 @@ Rescorla                Expires October 13, 2017              [Page 126]
 Internet-Draft                     TLS                        April 2017
 
 
+   -  Benjamin Beurdouche
+      INRIA & Microsoft Research - Joint Center
+      benjamin.beurdouche@ens.fr
+
+   -  Karthikeyan Bhargavan (co-author of [RFC7627])
       INRIA
       karthikeyan.bhargavan@inria.fr
 
@@ -7101,11 +7106,6 @@ Internet-Draft                     TLS                        April 2017
       Nokia
       pasi.eronen@nokia.com
 
-   -  Cedric Fournet
-      Microsoft
-      fournet@microsoft.com
-
-   -  Anil Gangolli
 
 
 
@@ -7114,6 +7114,11 @@ Rescorla                Expires October 13, 2017              [Page 127]
 Internet-Draft                     TLS                        April 2017
 
 
+   -  Cedric Fournet
+      Microsoft
+      fournet@microsoft.com
+
+   -  Anil Gangolli
       anil@busybuddha.org
 
    -  David M.  Garrett
@@ -7158,17 +7163,16 @@ Internet-Draft                     TLS                        April 2017
    -  Jonathan Hoyland
       Royal Holloway, University of London
 
-   -  Subodh Iyengar
-      Facebook
-      subodh@fb.com
-
-
 
 
 Rescorla                Expires October 13, 2017              [Page 128]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Subodh Iyengar
+      Facebook
+      subodh@fb.com
 
    -  Benjamin Kaduk
       Akamai
@@ -7214,10 +7218,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Carl Mehner
       USAA
-      carl.mehner@usaa.com
-
-   -  Jan Mikkelsen
-      Transactionware
 
 
 
@@ -7226,6 +7226,10 @@ Rescorla                Expires October 13, 2017              [Page 129]
 Internet-Draft                     TLS                        April 2017
 
 
+      carl.mehner@usaa.com
+
+   -  Jan Mikkelsen
+      Transactionware
       janm@transactionware.com
 
    -  Bodo Moeller (co-author of [RFC4492])
@@ -7270,10 +7274,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Kyle Rose
       Akamai Technologies
-      krose@krose.org
-
-   -  Jim Roskind
-      Amazon
 
 
 
@@ -7282,6 +7282,10 @@ Rescorla                Expires October 13, 2017              [Page 130]
 Internet-Draft                     TLS                        April 2017
 
 
+      krose@krose.org
+
+   -  Jim Roskind
+      Amazon
       jroskind@amazon.com
 
    -  Michael Sabin
@@ -7326,10 +7330,6 @@ Internet-Draft                     TLS                        April 2017
       Royal Holloway, University of London
       tjvdmerwe@gmail.com
 
-   -  Tom Weinstein
-
-   -  Hoeteck Wee
-      Ecole Normale Superieure, Paris
 
 
 
@@ -7338,6 +7338,10 @@ Rescorla                Expires October 13, 2017              [Page 131]
 Internet-Draft                     TLS                        April 2017
 
 
+   -  Tom Weinstein
+
+   -  Hoeteck Wee
+      Ecole Normale Superieure, Paris
       hoeteck@alum.mit.edu
 
    -  David Wong
@@ -7358,10 +7362,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
