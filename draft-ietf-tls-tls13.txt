@@ -2095,7 +2095,7 @@ Internet-Draft                     TLS                        April 2017
     |                                                  |             |
     | signed_certificate_timestamp [RFC6962]           |  CH, CR, CT |
     |                                                  |             |
-    | client_certificate_type [RFC7250]                |      CR, CT |
+    | client_certificate_type [RFC7250]                |      CH, EE |
     |                                                  |             |
     | server_certificate_type [RFC7250]                |      CH, CT |
     |                                                  |             |
