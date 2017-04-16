@@ -6870,10 +6870,10 @@ Internet-Draft                     TLS                        April 2017
    binder does not cover the binder values from other PSKs, though they
    are included in the Finished MAC.
 
-   Note: TLS does not currently permit certificate-based clien
-   authentication When used with non-certificate-based handshakes (e.g.,
-   PSK).  If this restriction were to be relaxed in future, the client's
-   signature would not cover the server's certificate directly.
+   Note: TLS does not currently permit the server to send a
+   certificate_request message with non-certificate-based handshakes
+   (e.g., PSK).  If this restriction were to be relaxed in future, the
+   client's signature would not cover the server's certificate directly.
    However, if the PSK was established through a NewSessionTicket, the
    client's signature would transitively cover the server's certificate
    through the PSK binder.  [PSK-FINISHED] describes a concrete attack
