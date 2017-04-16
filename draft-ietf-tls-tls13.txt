@@ -1967,35 +1967,35 @@ Internet-Draft                     TLS                        April 2017
    A number of TLS messages contain tag-length-value encoded extensions
    structures.
 
-      struct {
-          ExtensionType extension_type;
-          opaque extension_data<0..2^16-1>;
-      } Extension;
+   struct {
+       ExtensionType extension_type;
+       opaque extension_data<0..2^16-1>;
+   } Extension;
 
-      enum {
-          server_name(0),
-          max_fragment_length(1),
-          status_request(5),
-          supported_groups(10),
-          signature_algorithms(13),
-          use_srtp(14),
-          heartbeat(15),
-          application_layer_protocol_negotiation(16),
-          signed_certificate_timestamp(18),
-          client_certificate_type(19),
-          server_certificate_type(20)
-          padding(21),
-          key_share(40),
-          pre_shared_key(41),
-          early_data(42),
-          supported_versions(43),
-          cookie(44),
-          psk_key_exchange_modes(45),
-          certificate_authorities(47),
-          oid_filters(48),
-          post_handshake_auth(49),
-          (65535)
-      } ExtensionType;
+   enum {
+       server_name(0),                             /* RFC 6066 */
+       max_fragment_length(1),                     /* RFC 6066 */
+       status_request(5),                          /* RFC 6066 */
+       supported_groups(10),                       /* RFC 4492, 7919 */
+       signature_algorithms(13),                   /* RFC 5246 */
+       use_srtp(14),                               /* RFC 5764 */
+       heartbeat(15),                              /* RFC 6520 */
+       application_layer_protocol_negotiation(16), /* RFC 7301 */
+       signed_certificate_timestamp(18),           /* RFC 6962 */
+       client_certificate_type(19),                /* RFC 7250 */
+       server_certificate_type(20)                 /* RFC 7250 */
+       padding(21),                                /* RFC 7685 */
+       key_share(40),                              /* [[this document]] */
+       pre_shared_key(41),                         /* [[this document]] */
+       early_data(42),                             /* [[this document]] */
+       supported_versions(43),                     /* [[this document]] */
+       cookie(44),                                 /* [[this document]] */
+       psk_key_exchange_modes(45),                 /* [[this document]] */
+       certificate_authorities(47),                /* [[this document]] */
+       oid_filters(48),                            /* [[this document]] */
+       post_handshake_auth(49),                    /* [[this document]] */
+       (65535)
+   } ExtensionType;
 
    Here:
 
@@ -3909,11 +3909,11 @@ Internet-Draft                     TLS                        April 2017
       Application Data payload (i.e., plaintext but not padding or the
       inner content type byte) is counted.  A server receiving more than
       max_early_data_size bytes of 0-RTT data SHOULD terminate the
-      connection with an "unexpected_message" alert.
-
-   Note that in principle it is possible to continue issuing new tickets
-   which indefinitely extend the lifetime of the keying material
-   originally derived from an initial non-PSK handshake (which was most
+      connection with an "unexpected_message" alert.  Note that servers
+      that reject early data due to lack of cryptographic material will
+      be unable to differentiate padding from content, so clients SHOULD
+      NOT depend on being able to send large quantities of padding in
+      early data records.
 
 
 
@@ -3922,6 +3922,9 @@ Rescorla                Expires October 18, 2017               [Page 70]
 Internet-Draft                     TLS                        April 2017
 
 
+   Note that in principle it is possible to continue issuing new tickets
+   which indefinitely extend the lifetime of the keying material
+   originally derived from an initial non-PSK handshake (which was most
    likely tied to the peer's certificate).  It is RECOMMENDED that
    implementations place limits on the total lifetime of such keying
    material; these limits should take into account the lifetime of the
@@ -3966,9 +3969,6 @@ Internet-Draft                     TLS                        April 2017
 
    request_update  Indicates whether the recipient of the KeyUpdate
       should respond with its own KeyUpdate.  If an implementation
-      receives any other value, it MUST terminate the connection with an
-      "illegal_parameter" alert.
-
 
 
 
@@ -3977,6 +3977,9 @@ Rescorla                Expires October 18, 2017               [Page 71]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      receives any other value, it MUST terminate the connection with an
+      "illegal_parameter" alert.
 
    The KeyUpdate handshake message is used to indicate that the sender
    is updating its sending cryptographic keys.  This message can be sent
@@ -4023,9 +4026,6 @@ Internet-Draft                     TLS                        April 2017
    TLS records are typed, which allows multiple higher-level protocols
    to be multiplexed over the same record layer.  This document
    specifies three content types: handshake, application data, and
-   alert.  Implementations MUST NOT send record types not defined in
-   this document unless negotiated by some extension.  If a TLS
-   implementation receives an unexpected record type, it MUST terminate
 
 
 
@@ -4034,6 +4034,9 @@ Rescorla                Expires October 18, 2017               [Page 72]
 Internet-Draft                     TLS                        April 2017
 
 
+   alert.  Implementations MUST NOT send record types not defined in
+   this document unless negotiated by some extension.  If a TLS
+   implementation receives an unexpected record type, it MUST terminate
    the connection with an "unexpected_message" alert.  New record
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 10.
@@ -4074,9 +4077,6 @@ Internet-Draft                     TLS                        April 2017
    Application Data messages are always protected.  Zero-length
    fragments of Application Data MAY be sent as they are potentially
    useful as a traffic analysis countermeasure.
-
-
-
 
 
 
@@ -5925,10 +5925,10 @@ B.3.  Handshake Protocol
 
 B.3.1.  Key Exchange Messages
 
-      uint16 ProtocolVersion;
-      opaque Random[32];
+   uint16 ProtocolVersion;
+   opaque Random[32];
 
-      uint8 CipherSuite[2];    /* Cryptographic suite selector */
+   uint8 CipherSuite[2];    /* Cryptographic suite selector */
 
 
 
@@ -5938,54 +5938,54 @@ Rescorla                Expires October 18, 2017              [Page 106]
 Internet-Draft                     TLS                        April 2017
 
 
-      struct {
-          ProtocolVersion legacy_version = 0x0303;    /* TLS v1.2 */
-          Random random;
-          opaque legacy_session_id<0..32>;
-          CipherSuite cipher_suites<2..2^16-2>;
-          opaque legacy_compression_methods<1..2^8-1>;
-          Extension extensions<8..2^16-1>;
-      } ClientHello;
+   struct {
+       ProtocolVersion legacy_version = 0x0303;    /* TLS v1.2 */
+       Random random;
+       opaque legacy_session_id<0..32>;
+       CipherSuite cipher_suites<2..2^16-2>;
+       opaque legacy_compression_methods<1..2^8-1>;
+       Extension extensions<8..2^16-1>;
+   } ClientHello;
 
-      struct {
-          ProtocolVersion version;
-          Random random;
-          CipherSuite cipher_suite;
-          Extension extensions<6..2^16-1>;
-      } ServerHello;
+   struct {
+       ProtocolVersion version;
+       Random random;
+       CipherSuite cipher_suite;
+       Extension extensions<6..2^16-1>;
+   } ServerHello;
 
-      struct {
-          ProtocolVersion server_version;
-          CipherSuite cipher_suite;
-          Extension extensions<2..2^16-1>;
-      } HelloRetryRequest;
+   struct {
+       ProtocolVersion server_version;
+       CipherSuite cipher_suite;
+       Extension extensions<2..2^16-1>;
+   } HelloRetryRequest;
 
-      struct {
-          ExtensionType extension_type;
-          opaque extension_data<0..2^16-1>;
-      } Extension;
+   struct {
+       ExtensionType extension_type;
+       opaque extension_data<0..2^16-1>;
+   } Extension;
 
-      enum {
-          server_name(0),
-          max_fragment_length(1),
-          status_request(5),
-          supported_groups(10),
-          signature_algorithms(13),
-          use_srtp(14),
-          heartbeat(15),
-          application_layer_protocol_negotiation(16),
-          signed_certificate_timestamp(18),
-          client_certificate_type(19),
-          server_certificate_type(20)
-          padding(21),
-          key_share(40),
-          pre_shared_key(41),
-          early_data(42),
-          supported_versions(43),
-          cookie(44),
-          psk_key_exchange_modes(45),
-          certificate_authorities(47),
-          oid_filters(48),
+   enum {
+       server_name(0),                             /* RFC 6066 */
+       max_fragment_length(1),                     /* RFC 6066 */
+       status_request(5),                          /* RFC 6066 */
+       supported_groups(10),                       /* RFC 4492, 7919 */
+       signature_algorithms(13),                   /* RFC 5246 */
+       use_srtp(14),                               /* RFC 5764 */
+       heartbeat(15),                              /* RFC 6520 */
+       application_layer_protocol_negotiation(16), /* RFC 7301 */
+       signed_certificate_timestamp(18),           /* RFC 6962 */
+       client_certificate_type(19),                /* RFC 7250 */
+       server_certificate_type(20)                 /* RFC 7250 */
+       padding(21),                                /* RFC 7685 */
+       key_share(40),                              /* [[this document]] */
+       pre_shared_key(41),                         /* [[this document]] */
+       early_data(42),                             /* [[this document]] */
+       supported_versions(43),                     /* [[this document]] */
+       cookie(44),                                 /* [[this document]] */
+       psk_key_exchange_modes(45),                 /* [[this document]] */
+       certificate_authorities(47),                /* [[this document]] */
+       oid_filters(48),                            /* [[this document]] */
 
 
 
@@ -5994,54 +5994,54 @@ Rescorla                Expires October 18, 2017              [Page 107]
 Internet-Draft                     TLS                        April 2017
 
 
-          post_handshake_auth(49),
-          (65535)
-      } ExtensionType;
+       post_handshake_auth(49),                    /* [[this document]] */
+       (65535)
+   } ExtensionType;
 
-      struct {
-          NamedGroup group;
-          opaque key_exchange<1..2^16-1>;
-      } KeyShareEntry;
+   struct {
+       NamedGroup group;
+       opaque key_exchange<1..2^16-1>;
+   } KeyShareEntry;
 
-      struct {
-          select (Handshake.msg_type) {
-              case client_hello:
-                  KeyShareEntry client_shares<0..2^16-1>;
+   struct {
+       select (Handshake.msg_type) {
+           case client_hello:
+               KeyShareEntry client_shares<0..2^16-1>;
 
-              case hello_retry_request:
-                  NamedGroup selected_group;
+           case hello_retry_request:
+               NamedGroup selected_group;
 
-              case server_hello:
-                  KeyShareEntry server_share;
-          };
-      } KeyShare;
+           case server_hello:
+               KeyShareEntry server_share;
+       };
+   } KeyShare;
 
-      enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
+   enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
 
-      struct {
-          PskKeyExchangeMode ke_modes<1..255>;
-      } PskKeyExchangeModes;
+   struct {
+       PskKeyExchangeMode ke_modes<1..255>;
+   } PskKeyExchangeModes;
 
-      struct {} Empty;
+   struct {} Empty;
 
-      struct {
-          select (Handshake.msg_type) {
-              case new_session_ticket:   uint32 max_early_data_size;
-              case client_hello:         Empty;
-              case encrypted_extensions: Empty;
-          };
-      } EarlyDataIndication;
+   struct {
+       select (Handshake.msg_type) {
+           case new_session_ticket:   uint32 max_early_data_size;
+           case client_hello:         Empty;
+           case encrypted_extensions: Empty;
+       };
+   } EarlyDataIndication;
 
-      struct {
-          opaque identity<1..2^16-1>;
-          uint32 obfuscated_ticket_age;
-      } PskIdentity;
+   struct {
+       opaque identity<1..2^16-1>;
+       uint32 obfuscated_ticket_age;
+   } PskIdentity;
 
-      opaque PskBinderEntry<32..255>;
+   opaque PskBinderEntry<32..255>;
 
-      struct {
-          select (Handshake.msg_type) {
-              case client_hello:
+   struct {
+       select (Handshake.msg_type) {
+           case client_hello:
 
 
 
@@ -6050,14 +6050,14 @@ Rescorla                Expires October 18, 2017              [Page 108]
 Internet-Draft                     TLS                        April 2017
 
 
-                  PskIdentity identities<7..2^16-1>;
-                  PskBinderEntry binders<33..2^16-1>;
+               PskIdentity identities<7..2^16-1>;
+               PskBinderEntry binders<33..2^16-1>;
 
-              case server_hello:
-                  uint16 selected_identity;
-          };
+           case server_hello:
+               uint16 selected_identity;
+       };
 
-      } PreSharedKeyExtension;
+   } PreSharedKeyExtension;
 
 B.3.1.1.  Version Extension
 

@@ -1355,27 +1355,27 @@ Subsequent Handshake:
    } Extension;
 
    enum {
-       server_name(0),
-       max_fragment_length(1),
-       status_request(5),
-       supported_groups(10),
-       signature_algorithms(13),
-       use_srtp(14),
-       heartbeat(15),
-       application_layer_protocol_negotiation(16),
-       signed_certificate_timestamp(18),
-       client_certificate_type(19),
-       server_certificate_type(20)
-       padding(21),
-       key_share(40),
-       pre_shared_key(41),
-       early_data(42),
-       supported_versions(43),
-       cookie(44),
-       psk_key_exchange_modes(45),
-       certificate_authorities(47),
-       oid_filters(48),
-       post_handshake_auth(49),
+       server_name(0),                             /* RFC 6066 */
+       max_fragment_length(1),                     /* RFC 6066 */
+       status_request(5),                          /* RFC 6066 */
+       supported_groups(10),                       /* RFC 4492, 7919 */
+       signature_algorithms(13),                   /* RFC 5246 */
+       use_srtp(14),                               /* RFC 5764 */
+       heartbeat(15),                              /* RFC 6520 */
+       application_layer_protocol_negotiation(16), /* RFC 7301 */
+       signed_certificate_timestamp(18),           /* RFC 6962 */
+       client_certificate_type(19),                /* RFC 7250 */
+       server_certificate_type(20)                 /* RFC 7250 */
+       padding(21),                                /* RFC 7685 */
+       key_share(40),                              /* [[this document]] */
+       pre_shared_key(41),                         /* [[this document]] */
+       early_data(42),                             /* [[this document]] */
+       supported_versions(43),                     /* [[this document]] */
+       cookie(44),                                 /* [[this document]] */
+       psk_key_exchange_modes(45),                 /* [[this document]] */
+       certificate_authorities(47),                /* [[this document]] */
+       oid_filters(48),                            /* [[this document]] */
+       post_handshake_auth(49),                    /* [[this document]] */
        (65535)
    } ExtensionType;
 </pre>
@@ -2126,7 +2126,7 @@ finished_key =
 
 <dl>
   <dt>max_early_data_size</dt>
-  <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload (i.e., plaintext but not padding or the inner content type byte) is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.</dd>
+  <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload (i.e., plaintext but not padding or the inner content type byte) is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.  Note that servers that reject early data due to lack of cryptographic material will be unable to differentiate padding from content, so clients SHOULD NOT depend on being able to send large quantities of padding in early data records.</dd>
 </dl>
 <p id="rfc.section.4.6.1.p.8">Note that in principle it is possible to continue issuing new tickets which indefinitely extend the lifetime of the keying material originally derived from an initial non-PSK handshake (which was most likely tied to the peer&#8217;s certificate). It is RECOMMENDED that implementations place limits on the total lifetime of such keying material; these limits should take into account the lifetime of the peer&#8217;s certificate, the likelihood of intervening revocation, and the time since the peer&#8217;s online CertificateVerify signature.</p>
 <h3 id="rfc.section.4.6.2"><a href="#rfc.section.4.6.2">4.6.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a></h3>
@@ -3285,27 +3285,27 @@ here         No 0-RTT |                 | 0-RTT
    } Extension;
 
    enum {
-       server_name(0),
-       max_fragment_length(1),
-       status_request(5),
-       supported_groups(10),
-       signature_algorithms(13),
-       use_srtp(14),
-       heartbeat(15),
-       application_layer_protocol_negotiation(16),
-       signed_certificate_timestamp(18),
-       client_certificate_type(19),
-       server_certificate_type(20)
-       padding(21),
-       key_share(40),
-       pre_shared_key(41),
-       early_data(42),
-       supported_versions(43),
-       cookie(44),
-       psk_key_exchange_modes(45),
-       certificate_authorities(47),
-       oid_filters(48),
-       post_handshake_auth(49),
+       server_name(0),                             /* RFC 6066 */
+       max_fragment_length(1),                     /* RFC 6066 */
+       status_request(5),                          /* RFC 6066 */
+       supported_groups(10),                       /* RFC 4492, 7919 */
+       signature_algorithms(13),                   /* RFC 5246 */
+       use_srtp(14),                               /* RFC 5764 */
+       heartbeat(15),                              /* RFC 6520 */
+       application_layer_protocol_negotiation(16), /* RFC 7301 */
+       signed_certificate_timestamp(18),           /* RFC 6962 */
+       client_certificate_type(19),                /* RFC 7250 */
+       server_certificate_type(20)                 /* RFC 7250 */
+       padding(21),                                /* RFC 7685 */
+       key_share(40),                              /* [[this document]] */
+       pre_shared_key(41),                         /* [[this document]] */
+       early_data(42),                             /* [[this document]] */
+       supported_versions(43),                     /* [[this document]] */
+       cookie(44),                                 /* [[this document]] */
+       psk_key_exchange_modes(45),                 /* [[this document]] */
+       certificate_authorities(47),                /* [[this document]] */
+       oid_filters(48),                            /* [[this document]] */
+       post_handshake_auth(49),                    /* [[this document]] */
        (65535)
    } ExtensionType;
 
