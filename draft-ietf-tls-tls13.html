@@ -389,7 +389,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-16" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-17" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -410,7 +410,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">April 16, 2017</td>
+  <td class="right">April 17, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -425,7 +425,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: October 18, 2017</td>
+  <td class="left">Expires: October 19, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -446,7 +446,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 18, 2017.</p>
+<p>This Internet-Draft will expire on October 19, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1063,7 +1063,7 @@ Subsequent Handshake:
 
 <ol>
   <li>This data is not forward secret, as it is encrypted solely under keys derived using the offered PSK.</li>
-  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (see <a href="#replay-time">Section 4.2.10.3</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
+  <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (see <a href="#replay-time">Section 4.2.10.4</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
 <p id="rfc.section.2.3.p.7">Protocols MUST NOT use 0-RTT data without a profile that defines its use. That profile needs to identify which messages or interactions are safe to use with 0-RTT. In addition, to avoid accidental misuse, implementations SHOULD NOT enable 0-RTT unless specifically requested. Implementations SHOULD provide special functions for 0-RTT data to ensure that an application is always aware that it is sending or receiving data that might be replayed.</p>
 <p id="rfc.section.2.3.p.8">The same warnings apply to any use of the early_exporter_secret.</p>
@@ -1741,7 +1741,7 @@ Subsequent Handshake:
 </pre>
 <p id="rfc.section.4.2.9.p.3">See <a href="#NSTMessage">Section 4.6.1</a> for the use of the max_early_data_size field.</p>
 <p id="rfc.section.4.2.9.p.4">The parameters for the 0-RTT data (symmetric cipher suite, ALPN protocol, etc.) are the same as those which were negotiated in the connection which established the PSK. The PSK used to encrypt the early data MUST be the first PSK listed in the client&#8217;s &#8220;pre_shared_key&#8221; extension.</p>
-<p id="rfc.section.4.2.9.p.5">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by subtracting ticket_age_add from PskIdentity.obfuscated_ticket_age modulo 2^32) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.10.3</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
+<p id="rfc.section.4.2.9.p.5">For PSKs provisioned via NewSessionTicket, a server MUST validate that the ticket age for the selected PSK identity (computed by subtracting ticket_age_add from PskIdentity.obfuscated_ticket_age modulo 2^32) is within a small tolerance of the time since the ticket was issued (see <a href="#replay-time">Section 4.2.10.4</a>).  If it is not, the server SHOULD proceed with the handshake but reject 0-RTT, and SHOULD NOT take any other action that assumes that this ClientHello is fresh.</p>
 <p id="rfc.section.4.2.9.p.6">0-RTT messages sent in the first flight have the same (encrypted) content types as their corresponding messages sent in other flights (handshake and application_data) but are protected under different keys.  After receiving the server&#8217;s Finished message, if the server has accepted early data, an EndOfEarlyData message will be sent to indicate the key change. This message will be encrypted with the 0-RTT traffic keys.</p>
 <p id="rfc.section.4.2.9.p.7">A server which receives an &#8220;early_data&#8221; extension MUST behave in one of three ways:</p>
 <p/>
@@ -1791,7 +1791,7 @@ Subsequent Handshake:
   <dt>identity</dt>
   <dd style="margin-left: 8">A label for a key. For instance, a ticket defined in <a href="#ticket-establishment">Appendix B.3.4</a>, or a label for a pre-shared key established externally.</dd>
   <dt>obfuscated_ticket_age</dt>
-  <dd style="margin-left: 8">For each ticket, the time since the client learned about the server configuration that it is using, in milliseconds.  This value is added modulo 2^32 to the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NSTMessage">Section 4.6.1</a>.  This addition prevents passive observers from correlating connections unless tickets are reused.  Note: because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds. For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
+  <dd style="margin-left: 8">An obfuscated version of the age of the key.  <a href="#ticket-age">Section 4.2.10.1</a> describes how to form this value for identities established via the NewSessionTicket message.  For identities established externally an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
   <dt>identities</dt>
   <dd style="margin-left: 8">A list of the identities that the client is willing to negotiate with the server. If sent alongside the &#8220;early_data&#8221; extension (see <a href="#early-data-indication">Section 4.2.9</a>), the first identity is the one used for 0-RTT data.</dd>
   <dt>binders</dt>
@@ -1801,39 +1801,44 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.4.2.10.p.4">Each PSK is associated with a single Hash algorithm. For PSKs established via the ticket mechanism (<a href="#NSTMessage">Section 4.6.1</a>), this is the Hash used for the KDF on the connection where the ticket was established.  For externally established PSKs, the Hash algorithm MUST be set when the PSK is established, or default to SHA-256 if no such algorithm is defined. The server must ensure that it selects a compatible PSK (if any) and cipher suite.</p>
 <p id="rfc.section.4.2.10.p.5">Implementor&#8217;s note: the most straightforward way to implement the PSK/cipher suite matching requirements is to negotiate the cipher suite first and then exclude any incompatible PSKs. Any unknown PSKs (e.g., they are not in the PSK database or are encrypted with an unknown key) SHOULD simply be ignored. If no acceptable PSKs are found, the server SHOULD perform a non-PSK handshake if possible.</p>
-<p id="rfc.section.4.2.10.p.6">Prior to accepting PSK key establishment, the server MUST validate the corresponding binder value (see <a href="#psk-binder">Section 4.2.10.1</a> below). If this value is not present or does not validate, the server MUST abort the handshake.  Servers SHOULD NOT attempt to validate multiple binders; rather they SHOULD select a single PSK and validate solely the binder that corresponds to that PSK. In order to accept PSK key establishment, the server sends a &#8220;pre_shared_key&#8221; extension indicating the selected identity.</p>
+<p id="rfc.section.4.2.10.p.6">Prior to accepting PSK key establishment, the server MUST validate the corresponding binder value (see <a href="#psk-binder">Section 4.2.10.2</a> below). If this value is not present or does not validate, the server MUST abort the handshake.  Servers SHOULD NOT attempt to validate multiple binders; rather they SHOULD select a single PSK and validate solely the binder that corresponds to that PSK. In order to accept PSK key establishment, the server sends a &#8220;pre_shared_key&#8221; extension indicating the selected identity.</p>
 <p id="rfc.section.4.2.10.p.7">Clients MUST verify that the server&#8217;s selected_identity is within the range supplied by the client, that the server selected a cipher suite indicating a Hash associated with the PSK and that a server &#8220;key_share&#8221; extension is present if required by the ClientHello &#8220;psk_key_exchange_modes&#8221;. If these values are not consistent the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.2.10.p.8">If the server supplies an &#8220;early_data&#8221; extension, the client MUST verify that the server&#8217;s selected_identity is 0. If any other value is returned, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <p id="rfc.section.4.2.10.p.9">This extension MUST be the last extension in the ClientHello (this facilitates implementation as described below). Servers MUST check that it is the last extension and otherwise fail the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
-<h4 id="rfc.section.4.2.10.1"><a href="#rfc.section.4.2.10.1">4.2.10.1.</a> <a href="#psk-binder" id="psk-binder">PSK Binder</a></h4>
-<p id="rfc.section.4.2.10.1.p.1">The PSK binder value forms a binding between a PSK and the current handshake, as well as between the handshake in which the PSK was generated (if via a NewSessionTicket message) and the handshake where it was used.  Each entry in the binders list is computed as an HMAC over a transcript hash (see <a href="#the-transcript-hash">Section 4.4.1</a>) containing a partial ClientHello up to and including the PreSharedKeyExtension.identities field. That is, it includes all of the ClientHello but not the binders list itself. The length fields for the message (including the overall length, the length of the extensions block, and the length of the &#8220;pre_shared_key&#8221; extension) are all set as if binders of the correct lengths were present.</p>
-<p id="rfc.section.4.2.10.1.p.2">The PskBinderEntry is computed in the same way as the Finished message (<a href="#finished">Section 4.4.4</a>) but with the BaseKey being the binder_key derived via the key schedule from the corresponding PSK which is being offered (see <a href="#key-schedule">Section 7.1</a>).</p>
-<p id="rfc.section.4.2.10.1.p.3">If the handshake includes a HelloRetryRequest, the initial ClientHello and HelloRetryRequest are included in the transcript along with the new ClientHello.  For instance, if the client sends ClientHello1, its binder will be computed over:</p>
+<h4 id="rfc.section.4.2.10.1"><a href="#rfc.section.4.2.10.1">4.2.10.1.</a> <a href="#ticket-age" id="ticket-age">Ticket Age</a></h4>
+<p id="rfc.section.4.2.10.1.p.1">The client&#8217;s view of the age of a ticket is the time since the receipt of the NewSessionTicket message. Clients MUST NOT attempt to use tickets which have ages greater than the &#8220;ticket_lifetime&#8221; value which was provided with the ticket. The &#8220;obfuscated_ticket_age&#8221; field of each PskIdentity contains an obfuscated version of the ticket age formed by taking the age in milliseconds and adding the &#8220;ticket_age_add&#8221; value that was included with the ticket, see <a href="#NSTMessage">Section 4.6.1</a> modulo 2^32.  This addition prevents passive observers from correlating connections unless tickets are reused. Note that the &#8220;ticket_lifetime&#8221; field in the NewSessionTicket message is in seconds but the &#8220;obfuscated_ticket_age&#8221; is in milliseconds. Because ticket lifetimes are restricted to a week, 32 bits is enough to represent any plausible age, even in milliseconds.</p>
+<h4 id="rfc.section.4.2.10.2"><a href="#rfc.section.4.2.10.2">4.2.10.2.</a> <a href="#psk-binder" id="psk-binder">PSK Binder</a></h4>
+<p id="rfc.section.4.2.10.2.p.1">The PSK binder value forms a binding between a PSK and the current handshake, as well as between the handshake in which the PSK was generated (if via a NewSessionTicket message) and the handshake where it was used.  Each entry in the binders list is computed as an HMAC over a transcript hash (see <a href="#the-transcript-hash">Section 4.4.1</a>) containing a partial ClientHello up to and including the PreSharedKeyExtension.identities field. That is, it includes all of the ClientHello but not the binders list itself. The length fields for the message (including the overall length, the length of the extensions block, and the length of the &#8220;pre_shared_key&#8221; extension) are all set as if binders of the correct lengths were present.</p>
+<p id="rfc.section.4.2.10.2.p.2">The PskBinderEntry is computed in the same way as the Finished message (<a href="#finished">Section 4.4.4</a>) but with the BaseKey being the binder_key derived via the key schedule from the corresponding PSK which is being offered (see <a href="#key-schedule">Section 7.1</a>).</p>
+<p id="rfc.section.4.2.10.2.p.3">If the handshake includes a HelloRetryRequest, the initial ClientHello and HelloRetryRequest are included in the transcript along with the new ClientHello.  For instance, if the client sends ClientHello1, its binder will be computed over:</p>
 <pre>
    Transcript-Hash(ClientHello1[truncated])
 </pre>
-<p id="rfc.section.4.2.10.1.p.4">If the server responds with HelloRetryRequest, and the client then sends ClientHello2, its binder will be computed over:</p>
+<p id="rfc.section.4.2.10.2.p.4">If the server responds with HelloRetryRequest, and the client then sends ClientHello2, its binder will be computed over:</p>
 <pre>
    Transcript-Hash(ClientHello1,
                    HelloRetryRequest,
                    ClientHello2[truncated])
 </pre>
-<p id="rfc.section.4.2.10.1.p.5">The full ClientHello1 is included in all other handshake hash computations.  Note that in the first flight, ClientHello1[truncated] is hashed directly, but in the second flight, ClientHello1 is hashed and then reinjected as a &#8220;handshake_hash&#8221; message, as described in <a href="#the-transcript-hash">Section 4.4.1</a>.</p>
-<h4 id="rfc.section.4.2.10.2"><a href="#rfc.section.4.2.10.2">4.2.10.2.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
-<p id="rfc.section.4.2.10.2.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the EndOfEarlyData message. In order to avoid deadlocks, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s EndOfEarlyData message.</p>
-<h4 id="rfc.section.4.2.10.3"><a href="#rfc.section.4.2.10.3">4.2.10.3.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
-<p id="rfc.section.4.2.10.3.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.</p>
-<p id="rfc.section.4.2.10.3.p.2">The &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension SHOULD be used by servers to limit the time over which the first flight might be replayed.  A server can store the time at which it sends a ticket to the client, or encode the time in the ticket.  Then, each time it receives an &#8220;pre_shared_key&#8221; extension, it can un-obfuscate the ticket age and compare it to the difference between the current time and the ticket creation time, to see if the value for the time elapsed sent by the client is consistent with the time since the ticket was issued.</p>
-<p id="rfc.section.4.2.10.3.p.3">The ticket age (the value with &#8220;ticket_age_add&#8221; subtracted) provided by the client will be shorter than the actual time elapsed on the server by a single round trip time.  This difference is comprised of the delay in sending the NewSessionTicket message to the client, plus the time taken to send the ClientHello to the server.  For this reason, a server SHOULD measure the round trip time prior to sending the NewSessionTicket message and account for that in the value it saves.</p>
-<p id="rfc.section.4.2.10.3.p.4">To properly validate the ticket age, a server needs to save at least two items:</p>
+<p id="rfc.section.4.2.10.2.p.5">The full ClientHello1 is included in all other handshake hash computations.  Note that in the first flight, ClientHello1[truncated] is hashed directly, but in the second flight, ClientHello1 is hashed and then reinjected as a &#8220;handshake_hash&#8221; message, as described in <a href="#the-transcript-hash">Section 4.4.1</a>.</p>
+<h4 id="rfc.section.4.2.10.3"><a href="#rfc.section.4.2.10.3">4.2.10.3.</a> <a href="#processing-order" id="processing-order">Processing Order</a></h4>
+<p id="rfc.section.4.2.10.3.p.1">Clients are permitted to &#8220;stream&#8221; 0-RTT data until they receive the server&#8217;s Finished, only then sending the EndOfEarlyData message. In order to avoid deadlocks, when accepting &#8220;early_data&#8221;, servers MUST process the client&#8217;s ClientHello and then immediately send the ServerHello, rather than waiting for the client&#8217;s EndOfEarlyData message.</p>
+<h4 id="rfc.section.4.2.10.4"><a href="#rfc.section.4.2.10.4">4.2.10.4.</a> <a href="#replay-time" id="replay-time">Replay Properties</a></h4>
+<p id="rfc.section.4.2.10.4.p.1">As noted in <a href="#zero-rtt-data">Section 2.3</a>, TLS provides a limited mechanism for replay protection for data sent by the client in the first flight.  This mechanism is intended to ensure that attackers cannot replay ClientHello messages at a time substantially after the original ClientHello was sent.</p>
+<p id="rfc.section.4.2.10.4.p.2">To properly validate the ticket age, a server needs to store the following values, either locally or by encoding them in the ticket:</p>
 <p/>
 
 <ul>
-  <li>The time that the server generated the session ticket and the estimated round trip time can be added together to form a baseline time.</li>
-  <li>The &#8220;ticket_age_add&#8221; parameter from the NewSessionTicket is needed to recover the ticket age from the &#8220;obfuscated_ticket_age&#8221; parameter.</li>
+  <li>The time that the server generated the session ticket.</li>
+  <li>The estimated round trip time between the client and server; this can be estimated by measuring the time between sending the Finished message and receiving the first message in the client&#8217;s second flight, or potentially using information from the operating system.</li>
+  <li>The &#8220;ticket_age_add&#8221; parameter from the NewSessionTicket message in which the ticket was established.</li>
 </ul>
-<p id="rfc.section.4.2.10.3.p.6">There are several potential sources of error that make an exact measurement of time difficult.  Variations in client and server clock rates are likely to be minimal, though potentially with gross time corrections.  Network propagation delays are the most likely causes of a mismatch in legitimate values for elapsed time.  Both the NewSessionTicket and ClientHello messages might be retransmitted and therefore delayed, which might be hidden by TCP.</p>
-<p id="rfc.section.4.2.10.3.p.7">A small allowance for errors in clocks and variations in measurements is advisable.  However, any allowance also increases the opportunity for replay.  In this case, it is better to reject early data and fall back to a full 1-RTT handshake than to risk greater exposure to replay attacks.  In common network topologies for browser clients, small allowances on the order of ten seconds are reasonable.  Clock skew distributions are not symmetric, so the optimal tradeoff may involve an asymmetric replay window.</p>
+<p id="rfc.section.4.2.10.4.p.4">The server can determine the client&#8217;s view of the age of the ticket by subtracting the ticket&#8217;s &#8220;ticket_age_add value&#8221; from the &#8220;obfuscated_ticket_age&#8221; parameter in the client&#8217;s &#8220;pre_shared_key&#8221; extension. The server can independently determine its view of the age of the ticket by subtracting the the time the ticket was issued from the curren time. If the client and server clocks were running at the same rate, the client&#8217;s view of would be shorter than the actual time elapsed on the server by a single round trip time.  This difference is comprised of the delay in sending the NewSessionTicket message to the client, plus the time taken to send the ClientHello to the server.</p>
+<p id="rfc.section.4.2.10.4.p.5">The mismatch between the client&#8217;s and server&#8217;s views of age is thus given by:</p>
+<pre>
+    mismatch = (client's view + RTT estimate) - (server's view)
+</pre>
+<p id="rfc.section.4.2.10.4.p.6">There are several potential sources of error that make an exact measurement of time difficult. Variations in client and server clock rates are likely to be minimal, though potentially with gross time corrections.  Network propagation delays are the most likely causes of a mismatch in legitimate values for elapsed time.  Both the NewSessionTicket and ClientHello messages might be retransmitted and therefore delayed, which might be hidden by TCP. Thus, an an allowance on the order of ten seconds to account for errors in clocks and variations in measurements is advisable. Outside this range, the server SHOULD reject early data and fall back to a full 1-RTT handshake. Clock skew distributions are not symmetric, so the optimal tradeoff may involve an asymmetric range of permissible mismatch values.</p>
 <h2 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#server-parameters" id="server-parameters">Server Parameters</a></h2>
 <p id="rfc.section.4.3.p.1">The next two messages from the server, EncryptedExtensions and CertificateRequest, contain information from the server that determines the rest of the handshake. These messages are encrypted with keys derived from the server_handshake_traffic_secret.</p>
 <h3 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#encrypted-extensions" id="encrypted-extensions">Encrypted Extensions</a></h3>
