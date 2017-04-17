@@ -3143,7 +3143,7 @@ Internet-Draft                     TLS                        April 2017
    "obfuscated_ticket_age" parameter in the client's "pre_shared_key"
    extension.  The server can independently determine its view of the
    age of the ticket by subtracting the the time the ticket was issued
-   from the curren time.  If the client and server clocks were running
+   from the current time.  If the client and server clocks were running
    at the same rate, the client's view of would be shorter than the
    actual time elapsed on the server by a single round trip time.  This
    difference is comprised of the delay in sending the NewSessionTicket
@@ -3161,13 +3161,14 @@ Internet-Draft                     TLS                        April 2017
    corrections.  Network propagation delays are the most likely causes
    of a mismatch in legitimate values for elapsed time.  Both the
    NewSessionTicket and ClientHello messages might be retransmitted and
-   therefore delayed, which might be hidden by TCP.  Thus, an an
-   allowance on the order of ten seconds to account for errors in clocks
-   and variations in measurements is advisable.  Outside this range, the
-   server SHOULD reject early data and fall back to a full 1-RTT
-   handshake.  Clock skew distributions are not symmetric, so the
-   optimal tradeoff may involve an asymmetric range of permissible
-   mismatch values.
+   therefore delayed, which might be hidden by TCP.  For browser clients
+   on the Internet, this implies that an an allowance on the order of
+   ten seconds to account for errors in clocks and variations in
+   measurements is advisable; other deployment scenarios may have
+   different needs.  Outside the selected range, the server SHOULD
+   reject early data and fall back to a full 1-RTT handshake.  Clock
+   skew distributions are not symmetric, so the optimal tradeoff may
+   involve an asymmetric range of permissible mismatch values.
 
 4.3.  Server Parameters
 
@@ -3185,7 +3186,6 @@ Internet-Draft                     TLS                        April 2017
 
    The EncryptedExtensions message contains extensions that can be
    protected, i.e., any which are not needed to establish the
-   cryptographic context, but which are not associated with individual
 
 
 
@@ -3194,6 +3194,7 @@ Rescorla                Expires October 19, 2017               [Page 57]
 Internet-Draft                     TLS                        April 2017
 
 
+   cryptographic context, but which are not associated with individual
    certificates.  The client MUST check EncryptedExtensions for the
    presence of any forbidden extensions and if any are found MUST abort
    the handshake with an "illegal_parameter" alert.
@@ -3240,8 +3241,7 @@ Internet-Draft                     TLS                        April 2017
    the "signature_algorithms" extension.  The latter is expressed by
    sending the "certificate_authorities" extension (see Section 4.2.4).
 
-   Servers which are authenticating with a PSK MUST NOT send the
-   CertificateRequest message.
+
 
 
 
@@ -3249,6 +3249,9 @@ Rescorla                Expires October 19, 2017               [Page 58]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   Servers which are authenticating with a PSK MUST NOT send the
+   CertificateRequest message.
 
 4.3.2.1.  OID Filters
 
@@ -3295,9 +3298,6 @@ Internet-Draft                     TLS                        April 2017
 
       o  The Extended Key Usage extension in a certificate matches the
          request when all key purpose OIDs present in the request are
-         also found in the Extended Key Usage certificate extension.
-         The special anyExtendedKeyUsage OID MUST NOT be used in the
-         request.
 
 
 
@@ -3305,6 +3305,10 @@ Rescorla                Expires October 19, 2017               [Page 59]
 
 Internet-Draft                     TLS                        April 2017
 
+
+         also found in the Extended Key Usage certificate extension.
+         The special anyExtendedKeyUsage OID MUST NOT be used in the
+         request.
 
       Separate specifications may define matching rules for other
       certificate extensions.
@@ -3347,10 +3351,6 @@ Internet-Draft                     TLS                        April 2017
 
    The following table defines the Handshake Context and MAC Base Key
    for each scenario:
-
-
-
-
 
 
 
