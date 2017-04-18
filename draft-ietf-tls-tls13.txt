@@ -7254,6 +7254,10 @@ Internet-Draft                     TLS                        April 2017
       ETAS
       jens.guballa@etas.com
 
+   -  Felix Guenther
+      TU Darmstadt
+      mail@felixguenther.info
+
    -  Vipul Gupta (co-author of [RFC4492])
       Sun Microsystems Laboratories
       vipul.gupta@sun.com
@@ -7270,10 +7274,6 @@ Internet-Draft                     TLS                        April 2017
       Independent Consultant
       david.hopwood@blueyonder.co.uk
 
-   -  Marko Horvat
-      MPI-SWS
-      mhorvat@mpi-sws.org
-
 
 
 
@@ -7281,6 +7281,10 @@ Rescorla                Expires October 20, 2017              [Page 130]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Marko Horvat
+      MPI-SWS
+      mhorvat@mpi-sws.org
 
    -  Jonathan Hoyland
       Royal Holloway, University of London
@@ -7327,16 +7331,16 @@ Internet-Draft                     TLS                        April 2017
       Independent
       ilariliusvaara@welho.com
 
-   -  Atul Luykx
-      K.U.  Leuven
-      atul.luykx@kuleuven.be
-
 
 
 Rescorla                Expires October 20, 2017              [Page 131]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Atul Luykx
+      K.U.  Leuven
+      atul.luykx@kuleuven.be
 
    -  Carl Mehner
       USAA
@@ -7382,10 +7386,6 @@ Internet-Draft                     TLS                        April 2017
       Microsoft
       maray@microsoft.com
 
-   -  Robert Relyea
-      Netscape Communications
-      relyea@netscape.com
-
 
 
 
@@ -7393,6 +7393,10 @@ Rescorla                Expires October 20, 2017              [Page 132]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Robert Relyea
+      Netscape Communications
+      relyea@netscape.com
 
    -  Kyle Rose
       Akamai Technologies
@@ -7438,10 +7442,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Filippo Valsorda
       Cloudflare Inc.
-      filippo@cloudflare.com
-
-   -  Thyla van der Merwe
-      Royal Holloway, University of London
 
 
 
@@ -7450,6 +7450,10 @@ Rescorla                Expires October 20, 2017              [Page 133]
 Internet-Draft                     TLS                        April 2017
 
 
+      filippo@cloudflare.com
+
+   -  Thyla van der Merwe
+      Royal Holloway, University of London
       tjvdmerwe@gmail.com
 
    -  Tom Weinstein
@@ -7476,10 +7480,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
