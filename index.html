@@ -911,7 +911,7 @@ Auth | {CertificateVerify*}
                  derived from a [sender]_handshake_traffic_secret.
 
               [] Indicates messages protected using keys
-                 derived from traffic_secret_N
+                 derived from [sender]_application_traffic_secret_N
 </pre>
 <p class="figure">Figure 1: Message flow for full TLS Handshake</p>
 <p id="rfc.section.2.p.6">The handshake can be thought of as having three phases (indicated in the diagram above):</p>
@@ -1067,7 +1067,7 @@ Subsequent Handshake:
                   derived from a [sender]_handshake_traffic_secret.
 
                [] Indicates messages protected using keys
-                  derived from traffic_secret_N
+                  derived from [sender]_application_traffic_secret_N
 </pre>
 <p class="figure">Figure 4: Message flow for a zero round trip handshake</p>
 <p id="rfc.section.2.3.p.5">IMPORTANT NOTE: The security properties for 0-RTT data are weaker than those for other kinds of TLS data.  Specifically:</p>
@@ -1078,7 +1078,7 @@ Subsequent Handshake:
   <li>There are no guarantees of non-replay between connections.  Unless the server takes special measures outside those provided by TLS, the server has no guarantee that the same 0-RTT data was not transmitted on multiple 0-RTT connections (see <a href="#replay-time">Section 4.2.10.4</a> for more details).  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application layer protocol. However, 0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.)</li>
 </ol>
 <p id="rfc.section.2.3.p.7">Protocols MUST NOT use 0-RTT data without a profile that defines its use. That profile needs to identify which messages or interactions are safe to use with 0-RTT. In addition, to avoid accidental misuse, implementations SHOULD NOT enable 0-RTT unless specifically requested. Implementations SHOULD provide special functions for 0-RTT data to ensure that an application is always aware that it is sending or receiving data that might be replayed.</p>
-<p id="rfc.section.2.3.p.8">The same warnings apply to any use of the early_exporter_secret.</p>
+<p id="rfc.section.2.3.p.8">The same warnings apply to any use of the early_exporter_master_secret.</p>
 <p id="rfc.section.2.3.p.9">The remainder of this document provides a detailed description of TLS.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#presentation-language" id="presentation-language">Presentation Language</a></h1>
 <p id="rfc.section.3.p.1">This document deals with the formatting of data in an external representation.  The following very basic and somewhat casually defined presentation syntax will be used.</p>
@@ -1956,7 +1956,7 @@ Subsequent Handshake:
     <tr>
       <td class="left">Post-Handshake</td>
       <td class="left">ClientHello &#8230; client Finished + CertificateRequest</td>
-      <td class="left">client_traffic_secret_N</td>
+      <td class="left">client_application_traffic_secret_N</td>
     </tr>
   </tbody>
 </table>
@@ -2482,7 +2482,7 @@ finished_key =
                  |
                  +-----&gt; Derive-Secret(., "early exporter master secret",
                  |                     ClientHello)
-                 |                     = early_exporter_secret
+                 |                     = early_exporter_master_secret
                  v
            Derive-Secret(., "derived secret", "")
                  |
@@ -2504,15 +2504,15 @@ finished_key =
                  |
                  +-----&gt; Derive-Secret(., "client application traffic secret",
                  |                     ClientHello...server Finished)
-                 |                     = client_traffic_secret_0
+                 |                     = client_application_traffic_secret_0
                  |
                  +-----&gt; Derive-Secret(., "server application traffic secret",
                  |                     ClientHello...server Finished)
-                 |                     = server_traffic_secret_0
+                 |                     = server_application_traffic_secret_0
                  |
                  +-----&gt; Derive-Secret(., "exporter master secret",
                  |                     ClientHello...server Finished)
-                 |                     = exporter_secret
+                 |                     = exporter_master_secret
                  |
                  +-----&gt; Derive-Secret(., "resumption master secret",
                                        ClientHello...client Finished)
@@ -2522,14 +2522,14 @@ finished_key =
 <p id="rfc.section.7.1.p.8">If a given secret is not available, then the 0-value consisting of a string of Hash.length zero bytes is used.  Note that this does not mean skipping rounds, so if PSK is not in use Early Secret will still be HKDF-Extract(0, 0). For the computation of the binder_secret, the label is &#8220;external psk binder key&#8221; for external PSKs (those provisioned outside of TLS) and &#8220;resumption psk binder key&#8221; for resumption PSKs (those provisioned as the resumption master secret of a previous handshake). The different labels prevent the substitution of one type of PSK for the other.</p>
 <p id="rfc.section.7.1.p.9">There are multiple potential Early Secret values depending on which PSK the server ultimately selects. The client will need to compute one for each potential PSK; if no PSK is selected, it will then need to compute the early secret corresponding to the zero PSK.</p>
 <h2 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#updating-traffic-keys" id="updating-traffic-keys">Updating Traffic Keys and IVs</a></h2>
-<p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message defined in <a href="#key-update">Section 4.6.3</a>.  The next generation of traffic keys is computed by generating client_/server_traffic_secret_N+1 from client_/server_traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
-<p id="rfc.section.7.2.p.2">The next-generation traffic_secret is computed as:</p>
+<p id="rfc.section.7.2.p.1">Once the handshake is complete, it is possible for either side to update its sending traffic keys using the KeyUpdate handshake message defined in <a href="#key-update">Section 4.6.3</a>.  The next generation of traffic keys is computed by generating client_/server_application_traffic_secret_N+1 from client_/server_application_traffic_secret_N as described in this section then re-deriving the traffic keys as described in <a href="#traffic-key-calculation">Section 7.3</a>.</p>
+<p id="rfc.section.7.2.p.2">The next-generation application_traffic_secret is computed as:</p>
 <pre>
-    traffic_secret_N+1 = HKDF-Expand-Label(
-                             traffic_secret_N,
-                             "application traffic secret", "", Hash.length)
+    application_traffic_secret_N+1 =
+        HKDF-Expand-Label(application_traffic_secret_N,
+                          "application traffic secret", "", Hash.length)
 </pre>
-<p id="rfc.section.7.2.p.3">Once client/server_traffic_secret_N+1 and its associated traffic keys have been computed, implementations SHOULD delete client_/server_traffic_secret_N and its associated traffic keys.</p>
+<p id="rfc.section.7.2.p.3">Once client/server_application_traffic_secret_N+1 and its associated traffic keys have been computed, implementations SHOULD delete client_/server_application_traffic_secret_N and its associated traffic keys.</p>
 <h2 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#traffic-key-calculation" id="traffic-key-calculation">Traffic Key Calculation</a></h2>
 <p id="rfc.section.7.3.p.1">The traffic keying material is generated from the following input values:</p>
 <p/>
@@ -2563,7 +2563,7 @@ finished_key =
     </tr>
     <tr>
       <td class="left">Application Data</td>
-      <td class="left">[sender]_traffic_secret_N</td>
+      <td class="left">[sender]_application_traffic_secret_N</td>
     </tr>
   </tbody>
 </table>
@@ -2590,7 +2590,7 @@ finished_key =
 HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
                   "exporter", Hash(context_value), key_length)
 </pre>
-<p id="rfc.section.7.5.p.3">Where Secret is either the early_exporter_secret or the exporter_secret.  Implementations MUST use the exporter_secret unless explicitly specified by the application. The early_exporter_secret is define for use in settings where an exporter is needed for 0-RTT data.  A separate interface for the early exporter is RECOMMENDED, especially on a server where a single interface can make the early exporter inaccessible.</p>
+<p id="rfc.section.7.5.p.3">Where Secret is either the early_exporter_master_secret or the exporter_master_secret.  Implementations MUST use the exporter_master_secret unless explicitly specified by the application. The early_exporter_master_secret is define for use in settings where an exporter is needed for 0-RTT data.  A separate interface for the early exporter is RECOMMENDED, especially on a server where a single interface can make the early exporter inaccessible.</p>
 <p id="rfc.section.7.5.p.4">If no context is provided, the context_value is zero-length. Consequently, providing no context computes the same value as providing an empty context. This is a change from previous versions of TLS where an empty context produced a different output to an absent context. As of this document&#8217;s publication, no allocated exporter label is used both with and without a context. Future specifications MUST NOT define a use of exporters that permit both an empty context and no context with the same label. New uses of exporters SHOULD provide a context in all exporter computations, though the value could be empty.</p>
 <p id="rfc.section.7.5.p.5">Requirements for the format of exporter labels are defined in section 4 of <a href="#RFC5705">[RFC5705]</a>.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
