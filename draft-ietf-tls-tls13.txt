@@ -76,11 +76,11 @@ Internet-Draft                     TLS                        April 2017
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   4
-     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   5
+     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   6
      1.2.  Change Log  . . . . . . . . . . . . . . . . . . . . . . .   6
-     1.3.  Major Differences from TLS 1.2  . . . . . . . . . . . . .  13
+     1.3.  Major Differences from TLS 1.2  . . . . . . . . . . . . .  14
      1.4.  Updates Affecting TLS 1.2 . . . . . . . . . . . . . . . .  14
-   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  14
+   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  15
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  18
      2.2.  Resumption and Pre-Shared Key (PSK) . . . . . . . . . . .  19
      2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  21
@@ -192,10 +192,16 @@ Internet-Draft                     TLS                        April 2017
      D.4.  Backwards Compatibility Security Restrictions . . . . . . 121
    Appendix E.  Overview of Security Properties  . . . . . . . . . . 122
      E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 122
+       E.1.1.  Key Derivation and HKDF . . . . . . . . . . . . . . . 125
+       E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 125
+       E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 126
+       E.1.4.  Post-Compromise Security  . . . . . . . . . . . . . . 126
+       E.1.5.  External References . . . . . . . . . . . . . . . . . 126
      E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 126
-   Appendix F.  Working Group Information  . . . . . . . . . . . . . 127
-   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 127
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 133
+       E.2.1.  External References . . . . . . . . . . . . . . . . . 128
+   Appendix F.  Working Group Information  . . . . . . . . . . . . . 128
+   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 128
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 134
 
 1.  Introduction
 
@@ -213,18 +219,17 @@ Internet-Draft                     TLS                        April 2017
    communicating peers.  Specifically, the channel should provide the
    following properties:
 
-   -  Authentication: The server side of the channel is always
-      authenticated; the client side is optionally authenticated.
-      Authentication can happen via asymmetric cryptography (e.g., RSA
-      [RSA], ECDSA [ECDSA]) or a pre-shared key (PSK).
-
-
 
 
 Rescorla                Expires October 20, 2017                [Page 4]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Authentication: The server side of the channel is always
+      authenticated; the client side is optionally authenticated.
+      Authentication can happen via asymmetric cryptography (e.g., RSA
+      [RSA], ECDSA [ECDSA]) or a pre-shared key (PSK).
 
    -  Confidentiality: Data sent over the channel is only visible to the
       endpoints.  TLS does not hide the length of the data it transmits,
@@ -266,6 +271,17 @@ Internet-Draft                     TLS                        April 2017
    versioning mechanism which allows clients and servers to
    interoperably negotiate a common version if one is supported.
 
+
+
+
+
+
+
+Rescorla                Expires October 20, 2017                [Page 5]
+
+Internet-Draft                     TLS                        April 2017
+
+
 1.1.  Conventions and Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -274,13 +290,6 @@ Internet-Draft                     TLS                        April 2017
    2119 [RFC2119].
 
    The following terms are used:
-
-
-
-Rescorla                Expires October 20, 2017                [Page 5]
-
-Internet-Draft                     TLS                        April 2017
-
 
    client: The endpoint initiating the TLS connection.
 
@@ -321,15 +330,6 @@ Internet-Draft                     TLS                        April 2017
    -  Hash ClientHello1 in the transcript when HRR is used.  This
       reduces the state that needs to be carried in cookies. (*)
 
-   -  Restructure CertificateRequest to have the selectors in
-      extensions.  This also allowed defining a
-      "certificate_authorities" extension which can be used by the
-      client instead of trusted_ca_keys (*).
-
-   -  Tighten record framing requirements and require checking of them
-      (*).
-
-
 
 
 
@@ -337,6 +337,14 @@ Rescorla                Expires October 20, 2017                [Page 6]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Restructure CertificateRequest to have the selectors in
+      extensions.  This also allowed defining a
+      "certificate_authorities" extension which can be used by the
+      client instead of trusted_ca_keys (*).
+
+   -  Tighten record framing requirements and require checking of them
+      (*).
 
    -  Consolidate "ticket_early_data_info" and "early_data" into a
       single extension (*).
@@ -379,6 +387,13 @@ Internet-Draft                     TLS                        April 2017
    -  Merge TicketExtensions and Extensions registry.  Changes
       ticket_early_data_info code point (*)
 
+
+
+Rescorla                Expires October 20, 2017                [Page 7]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Replace Client.key_shares in response to HRR (*)
 
    -  Remove redundant labels for traffic key derivation (*)
@@ -386,13 +401,6 @@ Internet-Draft                     TLS                        April 2017
    -  Harmonize requirements about cipher suite matching: for resumption
       you need to match KDF but for 0-RTT you need whole cipher suite.
       This allows PSKs to actually negotiate cipher suites. (*)
-
-
-
-Rescorla                Expires October 20, 2017                [Page 7]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Move SCT and OCSP into Certificate.extensions (*)
 
@@ -433,14 +441,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Forbid empty tickets (*)
 
-   -  Forbid application data messages in between post-handshake
-      messages from the same flight (*)
-
-   -  Clean up alert guidance (*)
-
-   -  Clearer guidance on what is needed for TLS 1.2.
-
-   -  Guidance on 0-RTT time windows.
 
 
 
@@ -449,6 +449,15 @@ Rescorla                Expires October 20, 2017                [Page 8]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Forbid application data messages in between post-handshake
+      messages from the same flight (*)
+
+   -  Clean up alert guidance (*)
+
+   -  Clearer guidance on what is needed for TLS 1.2.
+
+   -  Guidance on 0-RTT time windows.
 
    -  Rename a bunch of fields.
 
@@ -489,6 +498,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Major editorial restructuring.
 
+
+
+
+Rescorla                Expires October 20, 2017                [Page 9]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Replace the Security Analysis section with a WIP draft.
 
    draft-13
@@ -498,13 +515,6 @@ Internet-Draft                     TLS                        April 2017
    -  Remove 0-RTT client authentication
 
    -  Remove (EC)DHE 0-RTT.
-
-
-
-Rescorla                Expires October 20, 2017                [Page 9]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Flesh out 0-RTT PSK mode and shrink EarlyDataIndication
 
@@ -545,6 +555,13 @@ Internet-Draft                     TLS                        April 2017
 
    -  Editorial cleanup
 
+
+
+Rescorla                Expires October 20, 2017               [Page 10]
+
+Internet-Draft                     TLS                        April 2017
+
+
    draft-11
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
@@ -553,14 +570,6 @@ Internet-Draft                     TLS                        April 2017
       now empty.
 
    -  Reorder values in HkdfLabel.
-
-
-
-
-Rescorla                Expires October 20, 2017               [Page 10]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Add support for version anti-downgrade mechanism.
 
@@ -601,6 +610,14 @@ Internet-Draft                     TLS                        April 2017
    -  Shift the final decision to abort a handshake due to incompatible
       certificates to the client rather than having servers abort early.
 
+
+
+
+Rescorla                Expires October 20, 2017               [Page 11]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Deprecate SHA-1 with signatures.
 
    -  Add MTI algorithms.
@@ -610,13 +627,6 @@ Internet-Draft                     TLS                        April 2017
    -  Remove support for weak and lesser used named curves.
 
    -  Remove support for MD5 and SHA-224 hashes with signatures.
-
-
-
-Rescorla                Expires October 20, 2017               [Page 11]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Update lists of available AEAD cipher suites and error alerts.
 
@@ -656,6 +666,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Remove explicit IV.
 
+
+
+
+Rescorla                Expires October 20, 2017               [Page 12]
+
+Internet-Draft                     TLS                        April 2017
+
+
    draft-05
 
    -  Prohibit SSL negotiation for backwards compatibility.
@@ -665,14 +683,6 @@ Internet-Draft                     TLS                        April 2017
    draft-04
 
    -  Modify key computations to include session hash.
-
-
-
-
-Rescorla                Expires October 20, 2017               [Page 12]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Remove ChangeCipherSpec.
 
@@ -711,6 +721,15 @@ Internet-Draft                     TLS                        April 2017
 
    -  Remove support for non-AEAD ciphers.
 
+
+
+
+
+Rescorla                Expires October 20, 2017               [Page 13]
+
+Internet-Draft                     TLS                        April 2017
+
+
 1.3.  Major Differences from TLS 1.2
 
    The following is a list of the major functional differences between
@@ -721,14 +740,6 @@ Internet-Draft                     TLS                        April 2017
       algorithms that are considered legacy.  Those that remain are all
       Authenticated Encryption with Associated Data (AEAD) and all offer
       Perfect Forward Secrecy (PFS).
-
-
-
-
-Rescorla                Expires October 20, 2017               [Page 13]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  A Zero-RTT mode was added, saving a round-trip at connection setup
       for some application data, at the cost of certain security
@@ -766,6 +777,15 @@ Internet-Draft                     TLS                        April 2017
       negotiating the version of TLS to use, in preference to the
       legacy_version field of the ClientHello.
 
+
+
+
+
+Rescorla                Expires October 20, 2017               [Page 14]
+
+Internet-Draft                     TLS                        April 2017
+
+
    An implementation of TLS 1.3 that also supports TLS 1.2 might need to
    include changes to support these changes even when TLS 1.3 is not in
    use.  See the referenced sections for more details.
@@ -777,15 +797,6 @@ Internet-Draft                     TLS                        April 2017
    first communicating to agree on a protocol version, select
    cryptographic algorithms, optionally authenticate each other, and
    establish shared secret keying material.  Once the handshake is
-
-
-
-
-Rescorla                Expires October 20, 2017               [Page 14]
-
-Internet-Draft                     TLS                        April 2017
-
-
    complete, the peers use the established keys to protect application
    layer traffic.
 
@@ -803,17 +814,6 @@ Internet-Draft                     TLS                        April 2017
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -5505,6 +5505,10 @@ Internet-Draft                     TLS                        April 2017
               Using Discrete Logarithm Cryptography", NIST Special
               Publication 800-38D, May 2013.
 
+   [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
+              Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010 ,
+              2010, <https://eprint.iacr.org/2010/264>.
+
    [Kraw16]   Krawczyk, H., "A Unilateral-to-Mutual Authentication
               Compiler for Key Exchange (with Applications to Client
               Authentication in TLS 1.3", Proceedings of ACM CCS 2016 ,
@@ -5534,10 +5538,6 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC3552, July 2003,
               <http://www.rfc-editor.org/info/rfc3552>.
 
-   [RFC4086]  Eastlake 3rd, D., Schiller, J., and S. Crocker,
-              "Randomness Requirements for Security", BCP 106, RFC 4086,
-              DOI 10.17487/RFC4086, June 2005,
-              <http://www.rfc-editor.org/info/rfc4086>.
 
 
 
@@ -5545,6 +5545,11 @@ Rescorla                Expires October 20, 2017               [Page 99]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [RFC4086]  Eastlake 3rd, D., Schiller, J., and S. Crocker,
+              "Randomness Requirements for Security", BCP 106, RFC 4086,
+              DOI 10.17487/RFC4086, June 2005,
+              <http://www.rfc-editor.org/info/rfc4086>.
 
    [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.1", RFC 4346,
@@ -5590,17 +5595,17 @@ Internet-Draft                     TLS                        April 2017
               for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
               <http://www.rfc-editor.org/info/rfc5929>.
 
-   [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
-              for Transport Layer Security (TLS) Authentication",
-              RFC 6091, DOI 10.17487/RFC6091, February 2011,
-              <http://www.rfc-editor.org/info/rfc6091>.
-
 
 
 Rescorla                Expires October 20, 2017              [Page 100]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
+              for Transport Layer Security (TLS) Authentication",
+              RFC 6091, DOI 10.17487/RFC6091, February 2011,
+              <http://www.rfc-editor.org/info/rfc6091>.
 
    [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
               (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
@@ -5641,6 +5646,18 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC7568, June 2015,
               <http://www.rfc-editor.org/info/rfc7568>.
 
+
+
+
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 101]
+
+Internet-Draft                     TLS                        April 2017
+
+
    [RFC7627]  Bhargavan, K., Ed., Delignat-Lavaud, A., Pironti, A.,
               Langley, A., and M. Ray, "Transport Layer Security (TLS)
               Session Hash and Extended Master Secret Extension",
@@ -5650,13 +5667,6 @@ Internet-Draft                     TLS                        April 2017
    [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
               Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
               October 2015, <http://www.rfc-editor.org/info/rfc7685>.
-
-
-
-Rescorla                Expires October 20, 2017              [Page 101]
-
-Internet-Draft                     TLS                        April 2017
-
 
    [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
               (TLS) Cached Information Extension", RFC 7924,
@@ -5691,16 +5701,6 @@ Internet-Draft                     TLS                        April 2017
 11.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6919,10 +6919,7 @@ Internet-Draft                     TLS                        April 2017
    transcript is digested into the values which produce the Resumption
    Master Secret.  This requires that both the KDF used to produce the
    resumption master secret and the MAC used to compute the binder be
-   collision resistant.  These are properties of HKDF and HMAC
-   respectively when used with collision resistant hash functions and
-   producing output of at least 256 bits.  Any future replacement of
-   these functions MUST also provide collision resistance.  Note: The
+   collision resistant.  See Appendix E.1.1 for more on this.  Note: The
    binder does not cover the binder values from other PSKs, though they
    are included in the Finished MAC.
 
@@ -6938,6 +6935,9 @@ Internet-Draft                     TLS                        April 2017
    keys and the application traffic keys respectively, and thus have
    similar security properties.  Note that they do not include the
    client's certificate; future applications which wish to bind to the
+   client's certificate may need to define a new exporter that includes
+   the full handshake transcript.
+
 
 
 
@@ -6945,9 +6945,6 @@ Rescorla                Expires October 20, 2017              [Page 124]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   client's certificate may need to define a new exporter that includes
-   the full handshake transcript.
 
    For all handshake modes, the Finished MAC (and where present, the
    signature), prevents downgrade attacks.  In addition, the use of
@@ -6964,12 +6961,55 @@ Internet-Draft                     TLS                        April 2017
    identities due to length.  The client's proposed PSK identities are
    not encrypted, nor is the one that the server selects.
 
+E.1.1.  Key Derivation and HKDF
+
+   Key derivation in TLS 1.3 uses the HKDF function defined in [RFC
+   5869] and its two components, HKDF-Extract and HKDF-Expand.  The full
+   rationale for the HKDF construction can be found in [Kraw10] and the
+   rationale for the way it is used in TLS 1.3 in [KW16].  Throughout
+   this document, each application of HKDF-Extract is followed by one or
+   more invocations of HKDF-Expand.  This ordering should always be
+   followed (including in future revisions of this document), in
+   particular, one SHOULD NOT use an output of HKDF-Extract as an input
+   to another application of HKDF-Extract without an HKDF-Expand in
+   between, Consecutive applications of HKDF-Expand are allowed as long
+   as these are differentiated via the key and/or the labels.
+
+   Note that HKDF-Expand implements a pseudorandom function (PRF) with
+   both inputs and outputs of variable length.  In some of the uses of
+   HKDF in this document (e.g., for generating exporters and the
+   resumption_master_secret), it is necessary that the application of
+   HKDF-Expand be collision-resistant, namely, it should be infeasible
+   to find two different inputs to HKDF-Expand that output the same
+   value.  This requires the underlying hash function to be collision
+   resistant and the output length from HKDF-Expand to be of size at
+   least 256 bits (or as much as needed for the hash function to prevent
+   finding collisions).
+
+E.1.2.  Client Authentication
+
    A client that has sent authentication data to a server, either during
    the handshake or in post-handshake authentication, cannot be sure if
    the server afterwards considers the client to be authenticated or
    not.  If the client needs to determine if the server considers the
    connection to be unilaterally or mutually authenticated, this has to
    be provisioned by the application layer.  See [CHHSV17] for details.
+
+
+
+Rescorla                Expires October 20, 2017              [Page 125]
+
+Internet-Draft                     TLS                        April 2017
+
+
+   In addition, the analysis of post-handshake authentication from
+   [Kraw16] shows that the client identified by the certificate sent in
+   the post-handshake phase possesses the traffic key.  This party is
+   therefore the client that participated in the original handshake or
+   one to whom the original client delegated the traffic key (assuming
+   that the traffic key has not been compromised).
+
+E.1.3.  0-RTT
 
    The 0-RTT mode of operation generally provides the same security
    properties as 1-RTT data, with the two exceptions that the 0-RTT
@@ -6979,6 +7019,8 @@ Internet-Draft                     TLS                        April 2017
    state.  See Section 4.2.9 for one mechanism to limit the exposure to
    replay.
 
+E.1.4.  Post-Compromise Security
+
    TLS does not provide security for handshakes which take place after
    the peer's long-term secret (signature key or external PSK) is
    compromised.  It therefore does not provide post-compromise security
@@ -6987,20 +7029,11 @@ Internet-Draft                     TLS                        April 2017
    guarantees that a party has after its own long-term secret has been
    compromised.
 
+E.1.5.  External References
+
    The reader should refer to the following references for analysis of
    the TLS handshake: [DFGS15] [CHSV16] [DFGS16] [KW16] [Kraw16]
    [FGSW16] [LXZFH16] [FG17] [BBK17].
-
-
-
-
-
-
-
-Rescorla                Expires October 20, 2017              [Page 125]
-
-Internet-Draft                     TLS                        April 2017
-
 
 E.2.  Record Layer
 
@@ -7016,6 +7049,14 @@ E.2.  Record Layer
    Integrity.  An attacker should not be able to craft a new record
       which is different from an existing record which will be accepted
       by the receiver.
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 126]
+
+Internet-Draft                     TLS                        April 2017
+
 
    Order protection/non-replayability  An attacker should not be able to
       cause the receiver to accept a record which it has already
@@ -7050,14 +7091,6 @@ E.2.  Record Layer
    type of channel because even a constant time padding removal function
    will then feed the content into data-dependent functions.
 
-
-
-
-Rescorla                Expires October 20, 2017              [Page 126]
-
-Internet-Draft                     TLS                        April 2017
-
-
    The re-keying technique in TLS 1.3 (see Section 7.2) follows the
    construction of the serial generator in [REKEY], which shows that re-
    keying can allow keys to be used for a larger number of encryptions
@@ -7072,8 +7105,19 @@ Internet-Draft                     TLS                        April 2017
    secrecy/backward secrecy with respect to the traffic secret.  Indeed,
    an attacker who learns a traffic secret can compute all future
    traffic secrets on that connection.  Systems which want such
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 127]
+
+Internet-Draft                     TLS                        April 2017
+
+
    guarantees need to do a fresh handshake and establish a new
    connection with an (EC)DHE exchange.
+
+E.2.1.  External References
 
    The reader should refer to the following references for analysis of
    the TLS record layer: [BMMT15] [BT16] [BDFKPPRSZZ16] [BBK17].
@@ -7106,14 +7150,6 @@ Appendix G.  Contributors
       Google
       davidben@google.com
 
-
-
-
-Rescorla                Expires October 20, 2017              [Page 127]
-
-Internet-Draft                     TLS                        April 2017
-
-
    -  Benjamin Beurdouche
       INRIA & Microsoft Research - Joint Center
       benjamin.beurdouche@ens.fr
@@ -7125,6 +7161,14 @@ Internet-Draft                     TLS                        April 2017
    -  Simon Blake-Wilson (co-author of [RFC4492])
       BCI
       sblakewilson@bcisse.com
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 128]
+
+Internet-Draft                     TLS                        April 2017
+
 
    -  Nelson Bolyard (co-author of [RFC4492])
       Sun Microsystems, Inc.
@@ -7162,14 +7206,6 @@ Internet-Draft                     TLS                        April 2017
       Nokia
       pasi.eronen@nokia.com
 
-
-
-
-Rescorla                Expires October 20, 2017              [Page 128]
-
-Internet-Draft                     TLS                        April 2017
-
-
    -  Cedric Fournet
       Microsoft
       fournet@microsoft.com
@@ -7182,6 +7218,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Alessandro Ghedini
       Cloudflare Inc.
+
+
+
+Rescorla                Expires October 20, 2017              [Page 129]
+
+Internet-Draft                     TLS                        April 2017
+
+
       alessandro@cloudflare.com
 
    -  Daniel Kahn Gillmor
@@ -7219,13 +7263,6 @@ Internet-Draft                     TLS                        April 2017
    -  Jonathan Hoyland
       Royal Holloway, University of London
 
-
-
-Rescorla                Expires October 20, 2017              [Page 129]
-
-Internet-Draft                     TLS                        April 2017
-
-
    -  Subodh Iyengar
       Facebook
       subodh@fb.com
@@ -7237,6 +7274,13 @@ Internet-Draft                     TLS                        April 2017
    -  Hubert Kario
       Red Hat Inc.
       hkario@redhat.com
+
+
+
+Rescorla                Expires October 20, 2017              [Page 130]
+
+Internet-Draft                     TLS                        April 2017
+
 
    -  Phil Karlton (co-author of SSL 3.0)
 
@@ -7274,14 +7318,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Carl Mehner
       USAA
-
-
-
-Rescorla                Expires October 20, 2017              [Page 130]
-
-Internet-Draft                     TLS                        April 2017
-
-
       carl.mehner@usaa.com
 
    -  Jan Mikkelsen
@@ -7294,6 +7330,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Kyle Nekritz
       Facebook
+
+
+
+Rescorla                Expires October 20, 2017              [Page 131]
+
+Internet-Draft                     TLS                        April 2017
+
+
       knekritz@fb.com
 
    -  Erik Nygren
@@ -7330,14 +7374,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Kyle Rose
       Akamai Technologies
-
-
-
-Rescorla                Expires October 20, 2017              [Page 131]
-
-Internet-Draft                     TLS                        April 2017
-
-
       krose@krose.org
 
    -  Jim Roskind
@@ -7349,6 +7385,14 @@ Internet-Draft                     TLS                        April 2017
    -  Rich Salz
       Akamai
       rsalz@akamai.com
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 132]
+
+Internet-Draft                     TLS                        April 2017
+
 
    -  Sam Scott
       Royal Holloway, University of London
@@ -7386,14 +7430,6 @@ Internet-Draft                     TLS                        April 2017
       Royal Holloway, University of London
       tjvdmerwe@gmail.com
 
-
-
-
-Rescorla                Expires October 20, 2017              [Page 132]
-
-Internet-Draft                     TLS                        April 2017
-
-
    -  Tom Weinstein
 
    -  Hoeteck Wee
@@ -7406,6 +7442,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Tim Wright
       Vodafone
+
+
+
+Rescorla                Expires October 20, 2017              [Page 133]
+
+Internet-Draft                     TLS                        April 2017
+
+
       timothy.wright@vodafone.com
 
    -  Kazu Yamamoto
@@ -7445,4 +7489,16 @@ Author's Address
 
 
 
-Rescorla                Expires October 20, 2017              [Page 133]
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                Expires October 20, 2017              [Page 134]
