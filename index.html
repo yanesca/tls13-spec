@@ -7,8 +7,7 @@
 
   <title>The Transport Layer Security (TLS) Protocol Version 1.3</title>
 
-  
-<style type="text/css">/*<![CDATA[*/
+  <style type="text/css">/*<![CDATA[*/
 @viewport {
   zoom: 1.0;
   width: extend-to-zoom;
@@ -74,11 +73,7 @@ ul.toc li {
   padding-bottom: 5px;
   margin: 0;
 }
-ul.toc ul {
-  margin: 0;
-}
-/* xml2rfc nests ul directly inside ul which messes with the style badly */
-ul.toc, ul.toc>ul, ul.toc ul>ul {
+ul.toc, ul.toc ul {
   margin: 0 0 0 1.5em;
 }
 
@@ -213,9 +208,6 @@ ol, ul, li, p {
 li, p {
   margin-left: 0;
 }
-address {
-  font-style: normal;
-}
 
 .github-fork-ribbon-wrapper {
   display: none;
@@ -274,7 +266,6 @@ address {
     position: fixed;
   }
   /*]]>*/</style>
-
 
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
@@ -395,7 +386,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-22" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -416,7 +407,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">April 18, 2017</td>
+  <td class="right">April 22, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -431,7 +422,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: October 20, 2017</td>
+  <td class="left">Expires: October 24, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -452,7 +443,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 20, 2017.</p>
+<p>This Internet-Draft will expire on October 24, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -847,13 +838,15 @@ address {
 <p/>
 
 <ul>
-  <li>The list of supported ciphersuites has been pruned of all algorithms that are considered legacy. Those that remain are all Authenticated Encryption with Associated Data (AEAD) and all offer Perfect Forward Secrecy (PFS).</li>
+  <li>The list of supported ciphersuites has been pruned of all algorithms that are considered legacy. Those that remain all use Authenticated Encryption with Associated Data (AEAD) algorithms. The ciphersuite concept has been changed to separate the authentication and key exchange mechanisms from the record protection algorithm (including secret key length) and a hash to be used with the key derivation function and HMAC.</li>
   <li>A Zero-RTT mode was added, saving a round-trip at connection setup for some application data, at the cost of certain security properties.</li>
-  <li>All handshake messages after the ServerHello are now encrypted.</li>
+  <li>All handshake messages after the ServerHello are now encrypted. The newly introduced EncryptedExtension message allows various extensions previously sent in clear in the ServerHello to also enjoy confidentiality protection.</li>
+  <li>The key derivation functions have been re-designed. The new design allowed easier analysis by cryptographers due to their improved key separation properties. The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) has been used as an underlying primitive.</li>
   <li>The handshake state machine has been significantly restructured to be more consistent and to remove superfluous messages such as ChangeCipherSpec.</li>
-  <li>ECC is now in the base spec.</li>
-  <li>Other cryptographic improvements including the removal of compression and custom DHE groups, a revision of key derivation which now uses HKDF, changing the RSA padding to use PSS, and the removal of DSA.</li>
+  <li>ECC is now in the base spec and includes new signature algorithms, such as ed25519 and ed448. TLS 1.3 removed point format negotiation in favor of a single point format for each curve.</li>
+  <li>Other cryptographic improvements including the removal of compression and custom DHE groups, changing the RSA padding to use PSS, and the removal of DSA.</li>
   <li>The TLS 1.2 version negotiation mechanism has been deprecated in favor of a version list in an extension. This increases compatibility with servers which incorrectly implemented version negotiation.</li>
+  <li>Session resumption with and without server-side state as well as the PSK-based ciphersuites of earlier TLS versions have been replaced by a single new PSK exchange.</li>
 </ul>
 <h2 id="rfc.section.1.4"><a href="#rfc.section.1.4">1.4.</a> <a href="#updates-affecting-tls-12" id="updates-affecting-tls-12">Updates Affecting TLS 1.2</a></h2>
 <p id="rfc.section.1.4.p.1">This document defines several changes that optionally affect implementations of TLS 1.2:</p>
@@ -1019,7 +1012,7 @@ Subsequent Handshake:
 </pre>
 <p class="figure">Figure 3: Message flow for resumption and PSK</p>
 <p id="rfc.section.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify message. When a client offers resumption via PSK, it SHOULD also supply a &#8220;key_share&#8221; extension to the server to allow the server to decline resumption and fall back to a full handshake, if needed. The server responds with a &#8220;pre_shared_key&#8221; extension to negotiate use of PSK key establishment and can (as shown here) respond with a &#8220;key_share&#8221; extension to do (EC)DHE key establishment, thus providing forward secrecy.</p>
-<p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF to be used with the PSK MUST also be provisioned.</p>
+<p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF to be used with the PSK MUST also be provisioned.  Note: When using an out-of-band provisioned pre-shared secret, a critical consideration is using sufficient entropy during the key generation, as discussed in <a href="#RFC4086">[RFC4086]</a>. Deriving a shared secret from a password or other low-entropy sources is not secure. A low-entropy secret, or password, is subject to dictionary attacks based on the PSK binder.  The specified PSK authentication is not a strong password-based authenticated key exchange even when used with Diffie-Hellman key establishment.</p>
 <h2 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a></h2>
 <p id="rfc.section.2.3.p.1">When clients and servers share a PSK (either obtained externally or via a previous handshake), TLS 1.3 allows clients to send data on the first flight (&#8220;early data&#8221;). The client uses the PSK to authenticate the server and to encrypt the early data.</p>
 <p id="rfc.section.2.3.p.2">When clients use a PSK obtained externally to send early data, then the following additional information MUST be provisioned to both parties:</p>
@@ -1346,7 +1339,7 @@ Subsequent Handshake:
 <pre>
   44 4F 57 4E 47 52 44 01
 </pre>
-<p id="rfc.section.4.1.3.p.6">If negotiating TLS 1.1, TLS 1.3 servers MUST and TLS 1.2 servers SHOULD set the last eight bytes of their Random value to the bytes:</p>
+<p id="rfc.section.4.1.3.p.6">If negotiating TLS 1.1 or below, TLS 1.3 servers MUST and TLS 1.2 servers SHOULD set the last eight bytes of their Random value to the bytes:</p>
 <pre>
   44 4F 57 4E 47 52 44 00
 </pre>
@@ -1888,12 +1881,12 @@ Subsequent Handshake:
 
 <dl>
   <dt>certificate_request_context</dt>
-  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.6.2</a>.</dd>
+  <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client&#8217;s Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication">Section 4.6.2</a>.  When requesting post-handshake authentication, the server SHOULD make the context unpredictable to the client (e.g., by randomly generating it) in order to prevent an attacker who has temporary access to the client&#8217;s private key from pre-computing valid CertificateVerify messages.</dd>
   <dt>extensions</dt>
   <dd style="margin-left: 8">A set of extensions describing the parameters of the certificate being requested. The &#8220;signature_algorithms&#8221; extension MUST be specified, and other extensions may optionally be included if defined for this message.  Clients MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.3.2.p.4">In prior versions of TLS, the CertificateRequest message carried a list of signature algorithms and certificate authorities which the server would accept. In TLS 1.3 the former is expressed by sending the &#8220;signature_algorithms&#8221; extension. The latter is expressed by sending the &#8220;certificate_authorities&#8221; extension (see <a href="#certificate-authorities">Section 4.2.4</a>).</p>
-<p id="rfc.section.4.3.2.p.5">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message.</p>
+<p id="rfc.section.4.3.2.p.5">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message in the main handshake, though they MAY send it in post-handshake authentication (see <a href="#post-handshake-authentication">Section 4.6.2</a>) provided that the client has sent the &#8220;post_handshake_auth&#8221; extension (see <a href="#post_handshake_auth">Section 4.2.5</a>).</p>
 <h4 id="rfc.section.4.3.2.1"><a href="#rfc.section.4.3.2.1">4.3.2.1.</a> <a href="#oid-filters" id="oid-filters">OID Filters</a></h4>
 <p id="rfc.section.4.3.2.1.p.1">The &#8220;oid_filters&#8221; extension allows servers to provide a set of OID/value pairs which it would like the client&#8217;s certificate to match. This extension MUST only be sent in the CertificateRequest message.</p>
 <pre>
@@ -2643,7 +2636,7 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <p/>
 
 <ul>
-  <li>IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, &#8220;psk_key_exchange_modes&#8221;, &#8220;early_data&#8221;, &#8220;cookie&#8221;, &#8220;supported_versions&#8221;, &#8220;certificate_authorities&#8221;, and &#8220;oid_filters&#8221; extensions with the values defined in this document and the Recommended value of &#8220;Yes&#8221;.</li>
+  <li>IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, &#8220;psk_key_exchange_modes&#8221;, &#8220;early_data&#8221;, &#8220;cookie&#8221;, &#8220;supported_versions&#8221;, &#8220;certificate_authorities&#8221;, &#8220;oid_filters&#8221;, and &#8220;post_handshake_auth&#8221; extensions with the values defined in this document and the Recommended value of &#8220;Yes&#8221;.</li>
   <li>IANA [SHALL update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column which lists the messages in which the extension may appear. This column [SHALL be/has been] initially populated from the table in <a href="#extensions">Section 4.2</a> with any extension not listed there marked as &#8220;-&#8220; to indicate that it is not used by TLS 1.3.</li>
 </ul>
 <p id="rfc.section.10.p.5">In addition, this document defines a new registry to be maintained by IANA:</p>
@@ -3783,7 +3776,7 @@ here         No 0-RTT |                 | 0-RTT
 <p id="rfc.section.E.1.p.5">Informally, the signature-based modes of TLS 1.3 provide for the establishment of a unique, secret, shared, key established by an (EC)DHE key exchange and authenticated by the server&#8217;s signature over the handshake transcript, as well as tied to the server&#8217;s identity by a MAC. If the client is authenticated by a certificate, it also signs over the handshake transcript and provides a MAC tied to both identities. <a href="#SIGMA">[SIGMA]</a> describes the analysis of this type of key exchange protocol. If fresh (EC)DHE keys are used for each connection, then the output keys are forward secret.</p>
 <p id="rfc.section.E.1.p.6">The external PSK and resumption PSK bootstrap from a long-term shared secret into a unique per-connection set of short-term session keys. This secret may have been established in a previous handshake. If PSK with (EC)DHE key establishment is used, these session keys will also be forward secret. The resumption PSK has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.</p>
 <p id="rfc.section.E.1.p.7">The PSK binder value forms a binding between a PSK and the current handshake, as well as between the session where the PSK was established and the session where it was used. This binding transitively includes the original handshake transcript, because that transcript is digested into the values which produce the Resumption Master Secret. This requires that both the KDF used to produce the resumption master secret and the MAC used to compute the binder be collision resistant. See <a href="#key-derivation-and-hkdf">Appendix E.1.1</a> for more on this.  Note: The binder does not cover the binder values from other PSKs, though they are included in the Finished MAC.</p>
-<p id="rfc.section.E.1.p.8">Note: TLS does not currently permit the server to send a certificate_request message with non-certificate-based handshakes (e.g., PSK).  If this restriction were to be relaxed in future, the client&#8217;s signature would not cover the server&#8217;s certificate directly.  However, if the PSK was established through a NewSessionTicket, the client&#8217;s signature would transitively cover the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. Implementations MUST NOT combine external PSKs with certificate-based authentication.</p>
+<p id="rfc.section.E.1.p.8">Note: TLS does not currently permit the server to send a certificate_request message in non-certificate-based handshakes (e.g., PSK).  If this restriction were to be relaxed in future, the client&#8217;s signature would not cover the server&#8217;s certificate directly.  However, if the PSK was established through a NewSessionTicket, the client&#8217;s signature would transitively cover the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate. It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. Implementations MUST NOT combine external PSKs with certificate-based authentication of either the client or the server.</p>
 <p id="rfc.section.E.1.p.9">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
 <p id="rfc.section.E.1.p.10">For all handshake modes, the Finished MAC (and where present, the signature), prevents downgrade attacks. In addition, the use of certain bytes in the random nonces as described in <a href="#server-hello">Section 4.1.3</a> allows the detection of downgrade to previous TLS versions.</p>
 <p id="rfc.section.E.1.p.11">As soon as the client and the server have exchanged enough information to establish shared keys, the remainder of the handshake is encrypted, thus providing protection against passive attackers. Because the server authenticates before the client, the client can ensure that it only reveals its identity to an authenticated server. Note that implementations must use the provided record padding mechanism during the handshake to avoid leaking information about the identities due to length.  The client&#8217;s proposed PSK identities are not encrypted, nor is the one that the server selects.</p>
