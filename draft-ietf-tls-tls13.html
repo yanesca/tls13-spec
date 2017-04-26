@@ -295,7 +295,6 @@ address {
 <link href="#rfc.section.3.6" rel="Chapter" title="3.6 Constructed Types"/>
 <link href="#rfc.section.3.7" rel="Chapter" title="3.7 Constants"/>
 <link href="#rfc.section.3.8" rel="Chapter" title="3.8 Variants"/>
-<link href="#rfc.section.3.9" rel="Chapter" title="3.9 Decoding Errors"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Handshake Protocol"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Key Exchange Messages"/>
 <link href="#rfc.section.4.1.1" rel="Chapter" title="4.1.1 Cryptographic Negotiation"/>
@@ -483,7 +482,6 @@ address {
 <li>3.6.   <a href="#rfc.section.3.6">Constructed Types</a></li>
 <li>3.7.   <a href="#rfc.section.3.7">Constants</a></li>
 <li>3.8.   <a href="#rfc.section.3.8">Variants</a></li>
-<li>3.9.   <a href="#rfc.section.3.9">Decoding Errors</a></li>
 </ul><li>4.   <a href="#rfc.section.4">Handshake Protocol</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Key Exchange Messages</a></li>
 <ul><li>4.1.1.   <a href="#rfc.section.4.1.1">Cryptographic Negotiation</a></li>
@@ -1208,8 +1206,6 @@ Subsequent Handshake:
        };
    } VariantRecord;
 </pre>
-<h2 id="rfc.section.3.9"><a href="#rfc.section.3.9">3.9.</a> <a href="#decoding-errors" id="decoding-errors">Decoding Errors</a></h2>
-<p id="rfc.section.3.9.p.1">TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#handshake-protocol" id="handshake-protocol">Handshake Protocol</a></h1>
 <p id="rfc.section.4.p.1">The handshake protocol is used to negotiate the secure attributes of a connection. Handshake messages are supplied to the TLS record layer, where they are encapsulated within one or more TLSPlaintext or TLSCiphertext structures, which are processed and transmitted as specified by the current active connection state.</p>
 <pre>
@@ -2318,6 +2314,7 @@ finished_key =
 <p id="rfc.section.6.p.2">Alert messages convey a description of the alert and a legacy field that conveyed the severity of the message in previous versions of TLS.  In TLS 1.3, the severity is implicit in the type of alert being sent, and the &#8216;level&#8217; field can safely be ignored. The &#8220;close_notify&#8221; alert is used to indicate orderly closure of the connection.  Upon receiving such an alert, the TLS implementation SHOULD indicate end-of-data to the application.</p>
 <p id="rfc.section.6.p.3">Error alerts indicate abortive closure of the connection (see <a href="#error-alerts">Section 6.2</a>). Upon receiving an error alert, the TLS implementation SHOULD indicate an error to the application and MUST NOT allow any further data to be sent or received on the connection.  Servers and clients MUST forget keys and secrets associated with a failed connection. Stateful implementations of tickets (as in many clients) SHOULD discard tickets associated with failed connections.</p>
 <p id="rfc.section.6.p.4">All the alerts listed in <a href="#error-alerts">Section 6.2</a> MUST be sent as fatal and MUST be treated as fatal regardless of the AlertLevel in the message. Unknown alert types MUST be treated as fatal.</p>
+<p id="rfc.section.6.p.5">Note: TLS defines two generic alerts (see <a href="#alert-protocol">Section 6</a>) to use upon failure to parse a message. Peers which receive a message which cannot be parsed according to the syntax (e.g., have a length extending beyond the message boundary or contain an out-of-range length) MUST terminate the connection with a &#8220;decode_error&#8221; alert. Peers which receive a message which is syntactically correct but semantically invalid (e.g., a DHE share of p - 1, or an invalid enum) MUST terminate the connection with an &#8220;illegal_parameter&#8221; alert.</p>
 <pre>
    enum { warning(1), fatal(2), (255) } AlertLevel;
 
