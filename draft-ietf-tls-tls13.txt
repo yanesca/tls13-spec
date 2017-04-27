@@ -5030,9 +5030,9 @@ Internet-Draft                     TLS                        April 2017
 
    In the absence of an application profile standard specifying
    otherwise, a TLS-compliant application MUST implement the
-   TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the
-   TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher
-   suites. (see Appendix B.4)
+   TLS_AES_128_GCM_SHA256 [GCM] cipher suite and SHOULD implement the
+   TLS_AES_256_GCM_SHA384 [GCM] and TLS_CHACHA20_POLY1305_SHA256
+   [RFC7539] cipher suites.  (see Appendix B.4)
 
 
 
@@ -5196,9 +5196,9 @@ Internet-Draft                     TLS                        April 2017
 
 11.1.  Normative References
 
-   [AES]      National Institute of Standards and Technology,
-              "Specification for the Advanced Encryption Standard
-              (AES)", NIST FIPS 197, November 2001.
+   [DH]       Diffie, W. and M. Hellman, "New Directions in
+              Cryptography", IEEE Transactions on Information Theory,
+              V.IT-22 n.6 , June 1977.
 
 
 
@@ -5210,9 +5210,9 @@ Rescorla                Expires October 29, 2017               [Page 93]
 Internet-Draft                     TLS                        April 2017
 
 
-   [DH]       Diffie, W. and M. Hellman, "New Directions in
-              Cryptography", IEEE Transactions on Information Theory,
-              V.IT-22 n.6 , June 1977.
+   [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
+              Operation: Galois/Counter Mode (GCM) and GMAC",
+              NIST Special Publication 800-38D, November 2007.
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -5448,10 +5448,6 @@ Internet-Draft                     TLS                        April 2017
    [FW15]     Florian Weimer, ., "Factoring RSA Keys With TLS Perfect
               Forward Secrecy", September 2015.
 
-   [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
-              Operation: Galois/Counter Mode (GCM) and GMAC",
-              NIST Special Publication 800-38D, November 2007.
-
    [HCJ16]    Husak, M., &#268;ermak, M., Jirsik, T., and P.
               &#268;eleda, "HTTPS traffic analysis and client
               identification using passive SSL/TLS fingerprinting",
@@ -5483,16 +5479,16 @@ Internet-Draft                     TLS                        April 2017
               Using Discrete Logarithm Cryptography", NIST Special
               Publication 800-38D, May 2013.
 
+   [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
+              Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010 ,
+              2010, <https://eprint.iacr.org/2010/264>.
+
 
 
 Rescorla                Expires October 29, 2017               [Page 98]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
-              Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010 ,
-              2010, <https://eprint.iacr.org/2010/264>.
 
    [Kraw16]   Krawczyk, H., "A Unilateral-to-Mutual Authentication
               Compiler for Key Exchange (with Applications to Client
@@ -5537,6 +5533,10 @@ Internet-Draft                     TLS                        April 2017
               and T. Wright, "Transport Layer Security (TLS)
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
+
+
+
+
 
 
 

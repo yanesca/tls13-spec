@@ -2609,7 +2609,7 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <p id="rfc.section.7.5.p.5">Requirements for the format of exporter labels are defined in section 4 of <a href="#RFC5705">[RFC5705]</a>.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#compliance-requirements" id="compliance-requirements">Compliance Requirements</a></h1>
 <h2 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#mandatory-to-implement-cipher-suites" id="mandatory-to-implement-cipher-suites">Mandatory-to-Implement Cipher Suites</a></h2>
-<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 and TLS_CHACHA20_POLY1305_SHA256 cipher suites. (see <a href="#cipher-suites">Appendix B.4</a>)</p>
+<p id="rfc.section.8.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 <a href="#GCM">[GCM]</a> cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 <a href="#GCM">[GCM]</a> and TLS_CHACHA20_POLY1305_SHA256 <a href="#RFC7539">[RFC7539]</a> cipher suites.  (see <a href="#cipher-suites">Appendix B.4</a>)</p>
 <p id="rfc.section.8.1.p.2">A TLS-compliant application MUST support digital signatures with rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for CertificateVerify and certificates), and ecdsa_secp256r1_sha256. A TLS-compliant application MUST support key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748">[RFC7748]</a>.</p>
 <h2 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#mti-extensions" id="mti-extensions">Mandatory-to-Implement Extensions</a></h2>
 <p id="rfc.section.8.2.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the following TLS extensions:</p>
@@ -2673,15 +2673,15 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
   <tbody>
     <tr>
       <td class="reference">
-        <b id="AES">[AES]</b>
-      </td>
-      <td class="top"><a>National Institute of Standards and Technology</a>, "<a>Specification for the Advanced Encryption Standard (AES)</a>", NIST FIPS 197, November 2001.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="DH">[DH]</b>
       </td>
       <td class="top"><a>Diffie, W.</a> and <a>M. Hellman</a>, "<a>New Directions in Cryptography</a>", IEEE Transactions on Information Theory, V.IT-22 n.6 , June 1977.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="GCM">[GCM]</b>
+      </td>
+      <td class="top"><a>Dworkin, M.</a>, "<a>Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</a>", NIST Special Publication 800-38D, November 2007.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -2927,12 +2927,6 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
         <b id="FW15">[FW15]</b>
       </td>
       <td class="top"><a title="Red Hat Product Security">Florian Weimer, .</a>, "<a>Factoring RSA Keys With TLS Perfect Forward Secrecy</a>", September 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="GCM">[GCM]</b>
-      </td>
-      <td class="top"><a>Dworkin, M.</a>, "<a>Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</a>", NIST Special Publication 800-38D, November 2007.</td>
     </tr>
     <tr>
       <td class="reference">
