@@ -394,7 +394,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-27" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -415,7 +415,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">April 26, 2017</td>
+  <td class="right">April 27, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -430,7 +430,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: October 28, 2017</td>
+  <td class="left">Expires: October 29, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -451,7 +451,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 28, 2017.</p>
+<p>This Internet-Draft will expire on October 29, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2347,6 +2347,7 @@ finished_key =
        bad_certificate_hash_value(114),
        unknown_psk_identity(115),
        certificate_required(116),
+       no_application_protocol(120),
        (255)
    } AlertDescription;
 
@@ -2428,6 +2429,8 @@ finished_key =
   <dd style="margin-left: 8">Sent by servers when PSK key establishment is desired but no acceptable PSK identity is provided by the client. Sending this alert is OPTIONAL; servers MAY instead choose to send a &#8220;decrypt_error&#8221; alert to merely indicate an invalid PSK identity.</dd>
   <dt>certificate_required</dt>
   <dd style="margin-left: 8">Sent by servers when a client certificate is desired but none was provided by the client.</dd>
+  <dt>no_application_protocol</dt>
+  <dd style="margin-left: 8">Sent by servers when a client &#8220;application_layer_protocol_negotiation&#8221; extension advertises protocols that the server does not support.</dd>
 </dl>
 <p id="rfc.section.6.2.p.5">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#cryptographic-computations" id="cryptographic-computations">Cryptographic Computations</a></h1>
@@ -3302,6 +3305,7 @@ here         No 0-RTT |                 | 0-RTT
        bad_certificate_hash_value(114),
        unknown_psk_identity(115),
        certificate_required(116),
+       no_application_protocol(120),
        (255)
    } AlertDescription;
 
