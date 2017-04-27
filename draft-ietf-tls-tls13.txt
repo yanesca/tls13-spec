@@ -2342,7 +2342,7 @@ Internet-Draft                     TLS                        April 2017
    following meanings:
 
    RSASSA-PKCS1-v1_5 algorithms  Indicates a signature algorithm using
-      RSASSA-PKCS1-v1_5 [RFC3447] with the corresponding hash algorithm
+      RSASSA-PKCS1-v1_5 [RFC8017] with the corresponding hash algorithm
       as defined in [SHS].  These values refer solely to signatures
       which appear in certificates (see Section 4.4.2.2) and are not
       defined for use in signed TLS handshake messages.
@@ -2361,7 +2361,7 @@ Internet-Draft                     TLS                        April 2017
       [X690] ECDSA-Sig-Value structure.
 
    RSASSA-PSS algorithms  Indicates a signature algorithm using RSASSA-
-      PSS [RFC3447] with mask generation function 1.  The digest used in
+      PSS [RFC8017] with mask generation function 1.  The digest used in
       the mask generation function and the digest being signed are both
       the corresponding hash algorithm as defined in [SHS].  When used
       in signed TLS handshake messages, the length of the salt MUST be
@@ -5224,11 +5224,6 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
-              Standards (PKCS) #1: RSA Cryptography Specifications
-              Version 2.1", RFC 3447, DOI 10.17487/RFC3447, February
-              2003, <http://www.rfc-editor.org/info/rfc3447>.
-
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
               DOI 10.17487/RFC5226, May 2008,
@@ -5258,6 +5253,11 @@ Internet-Draft                     TLS                        April 2017
               Transport Layer Security (TLS)", RFC 6655,
               DOI 10.17487/RFC6655, July 2012,
               <http://www.rfc-editor.org/info/rfc6655>.
+
+
+
+
+
 
 
 
@@ -5304,15 +5304,15 @@ Internet-Draft                     TLS                        April 2017
               RFC 7919, DOI 10.17487/RFC7919, August 2016,
               <http://www.rfc-editor.org/info/rfc7919>.
 
+   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
+              "PKCS #1: RSA Cryptography Specifications Version 2.2",
+              RFC 8017, DOI 10.17487/RFC8017, November 2016,
+              <http://www.rfc-editor.org/info/rfc8017>.
+
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
               DOI 10.17487/RFC8032, January 2017,
               <http://www.rfc-editor.org/info/rfc8032>.
-
-   [SHS]      National Institute of Standards and Technology, U.S.
-              Department of Commerce, "Secure Hash Standard", NIST FIPS
-              PUB 180-4, March 2012.
-
 
 
 
@@ -5321,6 +5321,10 @@ Rescorla                Expires October 29, 2017               [Page 95]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [SHS]      National Institute of Standards and Technology, U.S.
+              Department of Commerce, "Secure Hash Standard", NIST FIPS
+              PUB 180-4, March 2012.
 
    [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
@@ -5367,16 +5371,16 @@ Internet-Draft                     TLS                        April 2017
               Authenticated Encryption: AES-GCM in TLS 1.3", Proceedings
               of CRYPTO 2016 , 2016, <https://eprint.iacr.org/2016/564>.
 
-   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
-              Compromise Security", IEEE Computer Security Foundations
-              Symposium , 2015.
-
 
 
 Rescorla                Expires October 29, 2017               [Page 96]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
+              Compromise Security", IEEE Computer Security Foundations
+              Symposium , 2015.
 
    [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
               and S. Scott, "Awkward Handshake: Possible mismatch of
@@ -5422,10 +5426,6 @@ Internet-Draft                     TLS                        April 2017
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
-
-
-
-
 
 
 

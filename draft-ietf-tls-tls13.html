@@ -1596,11 +1596,11 @@ Subsequent Handshake:
 
 <dl>
   <dt>RSASSA-PKCS1-v1_5 algorithms</dt>
-  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC3447">[RFC3447]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages.</dd>
+  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC8017">[RFC8017]</a> with the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages.</dd>
   <dt>ECDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using ECDSA <a href="#ECDSA">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962">[X962]</a> and FIPS 186-4 <a href="#DSS">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690">[X690]</a> ECDSA-Sig-Value structure.</dd>
   <dt>RSASSA-PSS algorithms</dt>
-  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC3447">[RFC3447]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. When used in signed TLS handshake messages, the length of the salt MUST be equal to the length of the digest output.  This codepoint is new in this document and is also defined for use with TLS 1.2.</dd>
+  <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS">[SHS]</a>. When used in signed TLS handshake messages, the length of the salt MUST be equal to the length of the digest output.  This codepoint is new in this document and is also defined for use with TLS 1.2.</dd>
   <dt>EdDSA algorithms</dt>
   <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#RFC8032">[RFC8032]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
 </dl>
@@ -2697,12 +2697,6 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
     </tr>
     <tr>
       <td class="reference">
-        <b id="RFC3447">[RFC3447]</b>
-      </td>
-      <td class="top"><a>Jonsson, J.</a> and <a>B. Kaliski</a>, "<a href="http://tools.ietf.org/html/rfc3447">Public-Key Cryptography Standards (PKCS) #1: RSA Cryptography Specifications Version 2.1</a>", RFC 3447, DOI 10.17487/RFC3447, February 2003.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="RFC5226">[RFC5226]</b>
       </td>
       <td class="top"><a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, DOI 10.17487/RFC5226, May 2008.</td>
@@ -2784,6 +2778,12 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
         <b id="RFC7919">[RFC7919]</b>
       </td>
       <td class="top"><a>Gillmor, D.</a>, "<a href="http://tools.ietf.org/html/rfc7919">Negotiated Finite Field Diffie-Hellman Ephemeral Parameters for Transport Layer Security (TLS)</a>", RFC 7919, DOI 10.17487/RFC7919, August 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC8017">[RFC8017]</b>
+      </td>
+      <td class="top"><a>Moriarty, K.</a>, <a>Kaliski, B.</a>, <a>Jonsson, J.</a> and <a>A. Rusch</a>, "<a href="http://tools.ietf.org/html/rfc8017">PKCS #1: RSA Cryptography Specifications Version 2.2</a>", RFC 8017, DOI 10.17487/RFC8017, November 2016.</td>
     </tr>
     <tr>
       <td class="reference">
