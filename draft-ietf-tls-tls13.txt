@@ -104,7 +104,7 @@ Table of Contents
        4.2.2.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  41
        4.2.3.  Signature Algorithms  . . . . . . . . . . . . . . . .  42
        4.2.4.  Certificate Authorities . . . . . . . . . . . . . . .  45
-       4.2.5.  Post-Handshake Client Authentication  . . . . . . . .  45
+       4.2.5.  Post-Handshake Client Authentication  . . . . . . . .  46
        4.2.6.  Negotiated Groups . . . . . . . . . . . . . . . . . .  46
 
 
@@ -2356,7 +2356,6 @@ Internet-Draft                     TLS                        April 2017
 
       enum {
           /* RSASSA-PKCS1-v1_5 algorithms */
-          rsa_pkcs1_sha1(0x0201),
           rsa_pkcs1_sha256(0x0401),
           rsa_pkcs1_sha384(0x0501),
           rsa_pkcs1_sha512(0x0601),
@@ -2374,6 +2373,10 @@ Internet-Draft                     TLS                        April 2017
           /* EdDSA algorithms */
           ed25519(0x0807),
           ed448(0x0808),
+
+          /* Legacy algorithms */
+          rsa_pkcs1_sha1(0x0201),
+          ecdsa_sha1(0x0203),
 
           /* Reserved Code Points */
           private_use(0xFE00..0xFFFF),
@@ -2399,9 +2402,6 @@ Internet-Draft                     TLS                        April 2017
 
    RSASSA-PKCS1-v1_5 algorithms  Indicates a signature algorithm using
       RSASSA-PKCS1-v1_5 [RFC8017] with the corresponding hash algorithm
-      as defined in [SHS].  These values refer solely to signatures
-      which appear in certificates (see Section 4.4.2.2) and are not
-      defined for use in signed TLS handshake messages.
 
 
 
@@ -2409,6 +2409,10 @@ Rescorla                Expires October 29, 2017               [Page 43]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      as defined in [SHS].  These values refer solely to signatures
+      which appear in certificates (see Section 4.4.2.2) and are not
+      defined for use in signed TLS handshake messages.
 
    ECDSA algorithms  Indicates a signature algorithm using ECDSA
       [ECDSA], the corresponding curve as defined in ANSI X9.62 [X962]
@@ -2429,12 +2433,18 @@ Internet-Draft                     TLS                        April 2017
       correspond to the "PureEdDSA" algorithms and not the "prehash"
       variants.
 
-   rsa_pkcs1_sha1, dsa_sha1, and ecdsa_sha1 SHOULD NOT be offered.
-   Clients offering these values (e.g., for backwards compatibility)
-   MUST list them as the lowest priority (listed after all other
-   algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a
-   SHA-1 signed certificate unless no valid certificate chain can be
-   produced without it (see Section 4.4.2.2).
+   Legacy algorithms  Indicates algorithms which are being deprecated
+      because they use algorithms with known weaknesses, specifically
+      SHA-1 which is in this context with either with RSA using RSASSA-
+      PKCS1-v1_5 or ECDSA.  These values refer solely to signatures
+      which appear in certificates (see Section 4.4.2.2) and are not
+      defined for use in signed TLS handshake messages.  Endpoints
+      SHOULD NOT these algorithms but are permitted to do so solely for
+      backward compatibility.  Clients offering these values MUST list
+      them as the lowest priority (listed after all other algorithms in
+      SignatureSchemeList).  TLS 1.3 servers MUST NOT offer a SHA-1
+      signed certificate unless no valid certificate chain can be
+      produced without it (see Section 4.4.2.2).
 
    The signatures on certificates that are self-signed or certificates
    that are trust anchors are not validated since they begin a
@@ -2448,16 +2458,6 @@ Internet-Draft                     TLS                        April 2017
    accordance with the requirements of [RFC5246] when negotiating that
    version.  In particular:
 
-   -  TLS 1.2 ClientHellos MAY omit this extension.
-
-   -  In TLS 1.2, the extension contained hash/signature pairs.  The
-      pairs are encoded in two octets, so SignatureScheme values have
-      been allocated to align with TLS 1.2's encoding.  Some legacy
-      pairs are left unallocated.  These algorithms are deprecated as of
-      TLS 1.3.  They MUST NOT be offered or negotiated by any
-      implementation.  In particular, MD5 [SLOTH] and SHA-224 MUST NOT
-      be used.
-
 
 
 
@@ -2465,6 +2465,16 @@ Rescorla                Expires October 29, 2017               [Page 44]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  TLS 1.2 ClientHellos MAY omit this extension.
+
+   -  In TLS 1.2, the extension contained hash/signature pairs.  The
+      pairs are encoded in two octets, so SignatureScheme values have
+      been allocated to align with TLS 1.2's encoding.  Some legacy
+      pairs are left unallocated.  These algorithms are deprecated as of
+      TLS 1.3.  They MUST NOT be offered or negotiated by any
+      implementation.  In particular, MD5 [SLOTH], SHA-224, and DSA MUST
+      NOT be used.
 
    -  ECDSA signature schemes align with TLS 1.2's ECDSA hash/signature
       pairs.  However, the old semantics did not constrain the signing
@@ -2503,6 +2513,15 @@ Internet-Draft                     TLS                        April 2017
    ClientHello message.  The server MAY send it in the
    CertificateRequest message.
 
+
+
+
+
+Rescorla                Expires October 29, 2017               [Page 45]
+
+Internet-Draft                     TLS                        April 2017
+
+
    The "trusted_ca_keys" extension, which serves a similar purpose
    [RFC6066], but is more complicated, is not used in TLS 1.3 (although
    it may appear in ClientHello messages from clients which are offering
@@ -2514,13 +2533,6 @@ Internet-Draft                     TLS                        April 2017
    is willing to perform post-handshake authentication Section 4.6.2.
    Servers MUST not send a post-handshake CertificateRequest to clients
    which do not offer this extension.
-
-
-
-Rescorla                Expires October 29, 2017               [Page 45]
-
-Internet-Draft                     TLS                        April 2017
-
 
    The "extension_data" field of the "post_handshake_auth" extension is
    zero length.
@@ -2559,6 +2571,13 @@ Internet-Draft                     TLS                        April 2017
           NamedGroup named_group_list<2..2^16-1>;
       } NamedGroupList;
 
+
+
+Rescorla                Expires October 29, 2017               [Page 46]
+
+Internet-Draft                     TLS                        April 2017
+
+
    Elliptic Curve Groups (ECDHE)  Indicates support for the
       corresponding named curve, defined either in FIPS 186-4 [DSS] or
       in [RFC7748].  Values 0xFE00 through 0xFEFF are reserved for
@@ -2570,13 +2589,6 @@ Internet-Draft                     TLS                        April 2017
 
    Items in named_group_list are ordered according to the client's
    preferences (most preferred choice first).
-
-
-
-Rescorla                Expires October 29, 2017               [Page 46]
-
-Internet-Draft                     TLS                        April 2017
-
 
    As of TLS 1.3, servers are permitted to send the "supported_groups"
    extension to the client.  If the server has a group it prefers to the
@@ -2613,18 +2625,6 @@ Internet-Draft                     TLS                        April 2017
       are determined by the specified group and its corresponding
       definition.
 
-   The "extension_data" field of this extension contains a "KeyShare"
-   value:
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2633,6 +2633,9 @@ Rescorla                Expires October 29, 2017               [Page 47]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   The "extension_data" field of this extension contains a "KeyShare"
+   value:
 
       struct {
           select (Handshake.msg_type) {
@@ -2679,9 +2682,6 @@ Internet-Draft                     TLS                        April 2017
    MUST verify that (1) the selected_group field corresponds to a group
    which was provided in the "supported_groups" extension in the
    original ClientHello; and (2) the selected_group field does not
-   correspond to a group which was provided in the "key_share" extension
-   in the original ClientHello.  If either of these checks fails, then
-   the client MUST abort the handshake with an "illegal_parameter"
 
 
 
@@ -2690,6 +2690,9 @@ Rescorla                Expires October 29, 2017               [Page 48]
 Internet-Draft                     TLS                        April 2017
 
 
+   correspond to a group which was provided in the "key_share" extension
+   in the original ClientHello.  If either of these checks fails, then
+   the client MUST abort the handshake with an "illegal_parameter"
    alert.  Otherwise, when sending the new ClientHello, the client MUST
    replace the original "key_share" extension with one containing only a
    new KeyShareEntry for the group indicated in the selected_group field
@@ -2731,11 +2734,8 @@ Internet-Draft                     TLS                        April 2017
    For secp256r1, secp384r1 and secp521r1, the contents are the
    serialized value of the following struct:
 
-      struct {
-          uint8                legacy_form = 4;
-          opaque               X[coordinate_length];
-          opaque               Y[coordinate_length];
-       } UncompressedPointRepresentation;
+
+
 
 
 
@@ -2745,6 +2745,12 @@ Rescorla                Expires October 29, 2017               [Page 49]
 
 Internet-Draft                     TLS                        April 2017
 
+
+      struct {
+          uint8                legacy_form = 4;
+          opaque               X[coordinate_length];
+          opaque               Y[coordinate_length];
+       } UncompressedPointRepresentation;
 
    X and Y respectively are the binary representations of the X and Y
    values in network byte order.  There are no internal length markers,
@@ -2787,12 +2793,6 @@ Internet-Draft                     TLS                        April 2017
    exchange mode that is not listed by the client.  This extension also
    restricts the modes for use with PSK resumption; servers SHOULD NOT
    send NewSessionTicket with tickets that are not compatible with the
-   advertised modes; however, if a server does so, the impact will just
-   be that the client's attempts at resumption fail.
-
-   The server MUST NOT send a "psk_key_exchange_modes" extension.
-
-
 
 
 
@@ -2801,6 +2801,11 @@ Rescorla                Expires October 29, 2017               [Page 50]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   advertised modes; however, if a server does so, the impact will just
+   be that the client's attempts at resumption fail.
+
+   The server MUST NOT send a "psk_key_exchange_modes" extension.
 
       enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
 
@@ -2845,11 +2850,6 @@ Internet-Draft                     TLS                        April 2017
    For PSKs provisioned via NewSessionTicket, a server MUST validate
    that the ticket age for the selected PSK identity (computed by
    subtracting ticket_age_add from PskIdentity.obfuscated_ticket_age
-   modulo 2^32) is within a small tolerance of the time since the ticket
-   was issued (see Section 4.2.10.4).  If it is not, the server SHOULD
-   proceed with the handshake but reject 0-RTT, and SHOULD NOT take any
-   other action that assumes that this ClientHello is fresh.
-
 
 
 
@@ -2857,6 +2857,11 @@ Rescorla                Expires October 29, 2017               [Page 51]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   modulo 2^32) is within a small tolerance of the time since the ticket
+   was issued (see Section 4.2.10.4).  If it is not, the server SHOULD
+   proceed with the handshake but reject 0-RTT, and SHOULD NOT take any
+   other action that assumes that this ClientHello is fresh.
 
    0-RTT messages sent in the first flight have the same (encrypted)
    content types as their corresponding messages sent in other flights
@@ -2902,11 +2907,6 @@ Internet-Draft                     TLS                        April 2017
 
    Future extensions MUST define their interaction with 0-RTT.
 
-   If any of these checks fail, the server MUST NOT respond with the
-   extension and must discard all the first flight data using one of the
-   first two mechanisms listed above (thus falling back to 1-RTT or
-   2-RTT).  If the client attempts a 0-RTT handshake but the server
-
 
 
 Rescorla                Expires October 29, 2017               [Page 52]
@@ -2914,6 +2914,10 @@ Rescorla                Expires October 29, 2017               [Page 52]
 Internet-Draft                     TLS                        April 2017
 
 
+   If any of these checks fail, the server MUST NOT respond with the
+   extension and must discard all the first flight data using one of the
+   first two mechanisms listed above (thus falling back to 1-RTT or
+   2-RTT).  If the client attempts a 0-RTT handshake but the server
    rejects it, the server will generally not have the 0-RTT record
    protection keys and must instead use trial decryption (either with
    the 1-RTT handshake keys or by looking for a cleartext ClientHello in
@@ -2950,10 +2954,6 @@ Internet-Draft                     TLS                        April 2017
 
    The "extension_data" field of this extension contains a
    "PreSharedKeyExtension" value:
-
-
-
-
 
 
 
@@ -5242,12 +5242,6 @@ Internet-Draft                     TLS                        April 2017
       "Recommended": ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384,
       rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.
 
-   Finally, this document obsoletes the TLS HashAlgorithm Registry and
-   the TLS SignatureAlgorithm Registry, both originally created in
-   [RFC5246].  IANA [SHALL update/has updated] the TLS HashAlgorithm
-   Registry to list values 7-223 as "Reserved" and the TLS
-   SignatureAlgorithm Registry to list values 4-223 as "Reserved".
-
 11.  References
 
 11.1.  Normative References
@@ -5255,16 +5249,6 @@ Internet-Draft                     TLS                        April 2017
    [DH]       Diffie, W. and M. Hellman, "New Directions in
               Cryptography", IEEE Transactions on Information Theory,
               V.IT-22 n.6 , June 1977.
-
-
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 94]
-
-Internet-Draft                     TLS                        April 2017
-
 
    [GCM]      Dworkin, M., "Recommendation for Block Cipher Modes of
               Operation: Galois/Counter Mode (GCM) and GMAC",
@@ -5274,6 +5258,13 @@ Internet-Draft                     TLS                        April 2017
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
               <http://www.rfc-editor.org/info/rfc2104>.
+
+
+
+Rescorla                Expires October 29, 2017               [Page 94]
+
+Internet-Draft                     TLS                        April 2017
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -5310,18 +5301,6 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC6655, July 2012,
               <http://www.rfc-editor.org/info/rfc6655>.
 
-
-
-
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 95]
-
-Internet-Draft                     TLS                        April 2017
-
-
    [RFC6960]  Santesson, S., Myers, M., Ankney, R., Malpani, A.,
               Galperin, S., and C. Adams, "X.509 Internet Public Key
               Infrastructure Online Certificate Status Protocol - OCSP",
@@ -5332,6 +5311,16 @@ Internet-Draft                     TLS                        April 2017
               Multiple Certificate Status Request Extension", RFC 6961,
               DOI 10.17487/RFC6961, June 2013,
               <http://www.rfc-editor.org/info/rfc6961>.
+
+
+
+
+
+
+Rescorla                Expires October 29, 2017               [Page 95]
+
+Internet-Draft                     TLS                        April 2017
+
 
    [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
@@ -5370,14 +5359,6 @@ Internet-Draft                     TLS                        April 2017
               DOI 10.17487/RFC8032, January 2017,
               <http://www.rfc-editor.org/info/rfc8032>.
 
-
-
-
-Rescorla                Expires October 29, 2017               [Page 96]
-
-Internet-Draft                     TLS                        April 2017
-
-
    [SHS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Secure Hash Standard", NIST FIPS
               PUB 180-4, March 2012.
@@ -5386,6 +5367,16 @@ Internet-Draft                     TLS                        April 2017
               Specification of Basic Encoding Rules (BER), Canonical
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2002, 2002.
+
+
+
+
+
+
+Rescorla                Expires October 29, 2017               [Page 96]
+
+Internet-Draft                     TLS                        April 2017
+
 
    [X962]     ANSI, "Public Key Cryptography For The Financial Services
               Industry: The Elliptic Curve Digital Signature Algorithm
@@ -5427,16 +5418,21 @@ Internet-Draft                     TLS                        April 2017
               Authenticated Encryption: AES-GCM in TLS 1.3", Proceedings
               of CRYPTO 2016 , 2016, <https://eprint.iacr.org/2016/564>.
 
+   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
+              Compromise Security", IEEE Computer Security Foundations
+              Symposium , 2015.
+
+
+
+
+
+
 
 
 Rescorla                Expires October 29, 2017               [Page 97]
 
 Internet-Draft                     TLS                        April 2017
 
-
-   [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
-              Compromise Security", IEEE Computer Security Foundations
-              Symposium , 2015.
 
    [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
               and S. Scott, "Awkward Handshake: Possible mismatch of
@@ -5482,6 +5478,10 @@ Internet-Draft                     TLS                        April 2017
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
+
+
+
+
 
 
 
@@ -6220,7 +6220,6 @@ Internet-Draft                     TLS                        April 2017
 
       enum {
           /* RSASSA-PKCS1-v1_5 algorithms */
-          rsa_pkcs1_sha1(0x0201),
           rsa_pkcs1_sha256(0x0401),
           rsa_pkcs1_sha384(0x0501),
           rsa_pkcs1_sha512(0x0601),
@@ -6239,16 +6238,19 @@ Internet-Draft                     TLS                        April 2017
           ed25519(0x0807),
           ed448(0x0808),
 
+          /* Legacy algorithms */
+          rsa_pkcs1_sha1(0x0201),
+          ecdsa_sha1(0x0203),
+
           /* Reserved Code Points */
-          dsa_sha1_RESERVED(0x0202),
-          dsa_sha256_RESERVED(0x0402),
-          dsa_sha384_RESERVED(0x0502),
-          dsa_sha512_RESERVED(0x0602),
-          ecdsa_sha1_RESERVED(0x0203),
           obsolete_RESERVED(0x0000..0x0200),
+          dsa_sha1_RESERVED(0x0202),
           obsolete_RESERVED(0x0204..0x0400),
+          dsa_sha256_RESERVED(0x0402),
           obsolete_RESERVED(0x0404..0x0500),
+          dsa_sha384_RESERVED(0x0502),
           obsolete_RESERVED(0x0504..0x0600),
+          dsa_sha512_RESERVED(0x0602),
           obsolete_RESERVED(0x0604..0x06FF),
           private_use(0xFE00..0xFFFF),
           (0xFFFF)
@@ -6259,8 +6261,6 @@ Internet-Draft                     TLS                        April 2017
       } SignatureSchemeList;
 
 B.3.1.4.  Supported Groups Extension
-
-
 
 
 
