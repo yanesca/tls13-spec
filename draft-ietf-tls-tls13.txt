@@ -7552,8 +7552,8 @@ Internet-Draft                     TLS                        April 2017
       Mozilla
       mt@mozilla.com
 
-   -  Filippo Valsorda
-      Cloudflare Inc.
+   -  Sean Turner
+      sn3rd
 
 
 
@@ -7562,6 +7562,10 @@ Rescorla                Expires October 29, 2017              [Page 135]
 Internet-Draft                     TLS                        April 2017
 
 
+      sean@sn3rd.com
+
+   -  Filippo Valsorda
+      Cloudflare Inc.
       filippo@cloudflare.com
 
    -  Thyla van der Merwe
@@ -7592,10 +7596,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
