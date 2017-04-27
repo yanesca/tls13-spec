@@ -324,11 +324,11 @@ Internet-Draft                     TLS                        April 2017
    -  Shorten labels for HKDF-Expand-Label so that we can fit within one
       compression block (*).
 
-   draft-19
+   -  Define how RFC 7250 works (*).
 
-   -  Hash context_value input to Exporters (*)
+   -  Re-enable post-handshake client authentication even when you do
+      PSK (this was just editor error).
 
-   -  Add an additional Derive-Secret stage to Exporters (*).
 
 
 
@@ -337,6 +337,20 @@ Rescorla                Expires October 29, 2017                [Page 6]
 
 Internet-Draft                     TLS                        April 2017
 
+
+   -  Remove cert_type and user_mapping, which don't work on TLS 1.3
+      anyway.
+
+   -  Added the no_application_protocol alert from [RFC7301] to the list
+      of extensions.
+
+   -  Added discussion of traffic analysis and side channel attacks.
+
+   draft-19
+
+   -  Hash context_value input to Exporters (*)
+
+   -  Add an additional Derive-Secret stage to Exporters (*).
 
    -  Hash ClientHello1 in the transcript when HRR is used.  This
       reduces the state that needs to be carried in cookies. (*)
@@ -372,6 +386,14 @@ Internet-Draft                     TLS                        April 2017
 
    -  Fix signature_algorithms entry in extensions table.
 
+
+
+
+Rescorla                Expires October 29, 2017                [Page 7]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Restate rule from RFC 6066 that you can't resume unless SNI is the
       same.
 
@@ -386,13 +408,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Add a 0-RTT exporter and change the transcript for the regular
       exporter (*)
-
-
-
-Rescorla                Expires October 29, 2017                [Page 7]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Merge TicketExtensions and Extensions registry.  Changes
       ticket_early_data_info code point (*)
@@ -425,6 +440,16 @@ Internet-Draft                     TLS                        April 2017
    -  Clarify the behavior of no exporter context and make it the same
       as an empty context.(*)
 
+
+
+
+
+
+Rescorla                Expires October 29, 2017                [Page 8]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  New KeyUpdate format that allows for requesting/not-requesting an
       answer.  This also means changes to the key schedule to support
       independent updates (*)
@@ -441,14 +466,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Require CertificateRequest.context to be empty during handshake
       (*)
-
-
-
-
-Rescorla                Expires October 29, 2017                [Page 8]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Forbid empty tickets (*)
 
@@ -482,6 +499,13 @@ Internet-Draft                     TLS                        April 2017
    -  Move the downgrade sentinel to the end of ServerHello.Random to
       accommodate tlsdate (*).
 
+
+
+Rescorla                Expires October 29, 2017                [Page 9]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Define ecdsa_sha1 (*).
 
    -  Allow resumption even after fatal alerts.  This matches current
@@ -497,14 +521,6 @@ Internet-Draft                     TLS                        April 2017
    -  Clarify how 0-RTT and PSK identities interact.
 
    -  Add a section describing the data limits for each cipher.
-
-
-
-
-Rescorla                Expires October 29, 2017                [Page 9]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Major editorial restructuring.
 
@@ -539,6 +555,13 @@ Internet-Draft                     TLS                        April 2017
 
    -  Provide a list of the PSK cipher suites.
 
+
+
+Rescorla                Expires October 29, 2017               [Page 10]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Remove the ability for the ServerHello to have no extensions (this
       aligns the syntax with the text).
 
@@ -554,13 +577,6 @@ Internet-Draft                     TLS                        April 2017
       implementing for interop.
 
    -  Define exporters.
-
-
-
-Rescorla                Expires October 29, 2017               [Page 10]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Editorial cleanup
 
@@ -595,6 +611,13 @@ Internet-Draft                     TLS                        April 2017
 
    draft-09
 
+
+
+Rescorla                Expires October 29, 2017               [Page 11]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Change to RSA-PSS signatures for handshake messages.
 
    -  Remove support for DSA.
@@ -608,15 +631,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Change HKDF labeling to include protocol version and value
       lengths.
-
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 11]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Shift the final decision to abort a handshake due to incompatible
       certificates to the client rather than having servers abort early.
@@ -653,6 +667,13 @@ Internet-Draft                     TLS                        April 2017
 
    -  Add initial 0-RTT support.
 
+
+
+Rescorla                Expires October 29, 2017               [Page 12]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Remove resumption and replace with PSK + tickets.
 
    -  Move ClientKeyShare into an extension.
@@ -666,13 +687,6 @@ Internet-Draft                     TLS                        April 2017
    -  Freeze & deprecate record layer version field.
 
    -  Update format of signatures with context.
-
-
-
-Rescorla                Expires October 29, 2017               [Page 12]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Remove explicit IV.
 
@@ -709,6 +723,13 @@ Internet-Draft                     TLS                        April 2017
 
    -  Add an explicit HelloRetryRequest to reject the client's.
 
+
+
+Rescorla                Expires October 29, 2017               [Page 13]
+
+Internet-Draft                     TLS                        April 2017
+
+
    draft-02
 
    -  Increment version number.
@@ -722,13 +743,6 @@ Internet-Draft                     TLS                        April 2017
    -  Remove support for static RSA and DH key exchange.
 
    -  Remove support for non-AEAD ciphers.
-
-
-
-Rescorla                Expires October 29, 2017               [Page 13]
-
-Internet-Draft                     TLS                        April 2017
-
 
 1.3.  Major Differences from TLS 1.2
 
@@ -763,6 +777,15 @@ Internet-Draft                     TLS                        April 2017
       be more consistent and to remove superfluous messages such as
       ChangeCipherSpec.
 
+
+
+
+
+Rescorla                Expires October 29, 2017               [Page 14]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  ECC is now in the base spec and includes new signature algorithms,
       such as ed25519 and ed448.  TLS 1.3 removed point format
       negotiation in favor of a single point format for each curve.
@@ -775,16 +798,6 @@ Internet-Draft                     TLS                        April 2017
       favor of a version list in an extension.  This increases
       compatibility with servers which incorrectly implemented version
       negotiation.
-
-
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 14]
-
-Internet-Draft                     TLS                        April 2017
-
 
    -  Session resumption with and without server-side state as well as
       the PSK-based ciphersuites of earlier TLS versions have been
@@ -822,6 +835,13 @@ Internet-Draft                     TLS                        April 2017
    termination of the connection, optionally preceded by an alert
    message (Section 6).
 
+
+
+Rescorla                Expires October 29, 2017               [Page 15]
+
+Internet-Draft                     TLS                        April 2017
+
+
    TLS supports three basic key exchange modes:
 
    -  (EC)DHE (Diffie-Hellman, both the finite field and elliptic curve
@@ -832,15 +852,6 @@ Internet-Draft                     TLS                        April 2017
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 15]
-
-Internet-Draft                     TLS                        April 2017
-
 
        Client                                               Server
 
@@ -880,6 +891,13 @@ Auth | {CertificateVerify*}
    The handshake can be thought of as having three phases (indicated in
    the diagram above):
 
+
+
+Rescorla                Expires October 29, 2017               [Page 16]
+
+Internet-Draft                     TLS                        April 2017
+
+
    -  Key Exchange: Establish shared keying material and select the
       cryptographic parameters.  Everything after this phase is
       encrypted.
@@ -890,13 +908,6 @@ Auth | {CertificateVerify*}
 
    -  Authentication: Authenticate the server (and optionally the
       client) and provide key confirmation and handshake integrity.
-
-
-
-Rescorla                Expires October 29, 2017               [Page 16]
-
-Internet-Draft                     TLS                        April 2017
-
 
    In the Key Exchange phase, the client sends the ClientHello
    (Section 4.1.2) message, which contains a random nonce
@@ -936,6 +947,13 @@ Internet-Draft                     TLS                        April 2017
    uses the same set of messages every time that authentication is
    needed.  Specifically:
 
+
+
+Rescorla                Expires October 29, 2017               [Page 17]
+
+Internet-Draft                     TLS                        April 2017
+
+
    Certificate:  the certificate of the endpoint and any per-certificate
       extensions.  This message is omitted by the server if not
       authenticating with a certificate and by the client if the server
@@ -945,14 +963,6 @@ Internet-Draft                     TLS                        April 2017
       [RFC7924] are in use, then this message will not contain a
       certificate but rather some other value corresponding to the
       server's long-term key.  [Section 4.4.2]
-
-
-
-
-Rescorla                Expires October 29, 2017               [Page 17]
-
-Internet-Draft                     TLS                        April 2017
-
 
    CertificateVerify:  a signature over the entire handshake using the
       private key corresponding to the public key in the Certificate
@@ -984,16 +994,6 @@ Internet-Draft                     TLS                        April 2017
    an appropriate "key_share" extension, as shown in Figure 2.  If no
    common cryptographic parameters can be negotiated, the server MUST
    abort the handshake with an appropriate alert.
-
-
-
-
-
-
-
-
-
-
 
 
 
