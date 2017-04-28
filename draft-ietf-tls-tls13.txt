@@ -2439,12 +2439,13 @@ Internet-Draft                     TLS                        April 2017
       RSASSA-PKCS1-v1_5 or ECDSA.  These values refer solely to
       signatures which appear in certificates (see Section 4.4.2.2) and
       are not defined for use in signed TLS handshake messages.
-      Endpoints SHOULD NOT these algorithms but are permitted to do so
-      solely for backward compatibility.  Clients offering these values
-      MUST list them as the lowest priority (listed after all other
-      algorithms in SignatureSchemeList).  TLS 1.3 servers MUST NOT
-      offer a SHA-1 signed certificate unless no valid certificate chain
-      can be produced without it (see Section 4.4.2.2).
+      Endpoints SHOULD NOT negotiate these algorithms but are permitted
+      to do so solely for backward compatibility.  Clients offering
+      these values MUST list them as the lowest priority (listed after
+      all other algorithms in SignatureSchemeList).  TLS 1.3 servers
+      MUST NOT offer a SHA-1 signed certificate unless no valid
+      certificate chain can be produced without it (see
+      Section 4.4.2.2).
 
    The signatures on certificates that are self-signed or certificates
    that are trust anchors are not validated since they begin a
@@ -2457,7 +2458,6 @@ Internet-Draft                     TLS                        April 2017
    implementations willing to negotiate TLS 1.2 MUST behave in
    accordance with the requirements of [RFC5246] when negotiating that
    version.  In particular:
-
 
 
 
