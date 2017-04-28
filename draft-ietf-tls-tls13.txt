@@ -5559,8 +5559,8 @@ Internet-Draft                     TLS                        April 2017
 
    [I-D.ietf-tls-iana-registry-updates]
               Salowey, J. and S. Turner, "D/TLS IANA Registry Updates",
-              draft-ietf-tls-iana-registry-updates-00 (work in
-              progress), January 2017.
+              draft-ietf-tls-iana-registry-updates-01 (work in
+              progress), April 2017.
 
    [I-D.ietf-tls-tls13-vectors]
               Thomson, M., "Example Handshake Traces for TLS 1.3",
@@ -7576,6 +7576,10 @@ Internet-Draft                     TLS                        April 2017
 
    -  Michael Sabin
 
+   -  Joe Salowey
+      Tableau Software
+      joe@salowey.net
+
    -  Rich Salz
       Akamai
       rsalz@akamai.com
@@ -7606,10 +7610,6 @@ Internet-Draft                     TLS                        April 2017
 
    -  Martin Thomson
       Mozilla
-      mt@mozilla.com
-
-   -  Sean Turner
-      sn3rd
 
 
 
@@ -7618,6 +7618,10 @@ Rescorla                Expires October 30, 2017              [Page 136]
 Internet-Draft                     TLS                        April 2017
 
 
+      mt@mozilla.com
+
+   -  Sean Turner
+      sn3rd
       sean@sn3rd.com
 
    -  Filippo Valsorda
@@ -7652,10 +7656,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
