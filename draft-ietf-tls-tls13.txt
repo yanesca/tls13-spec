@@ -4833,7 +4833,7 @@ Internet-Draft                     TLS                          May 2017
             HKDF-Expand-Label(Secret, Label,
                               Transcript-Hash(Messages), Hash.length)
 
-   The Hash function used by Transcript-Hash and HKDF are the cipher
+   The Hash function used by Transcript-Hash and HKDF is the cipher
    suite hash algorithm.  Hash.length is its output length in bytes.
    Messages are the concatenation of the indicated handshake messages,
    including the handshake message type and length fields, but not
