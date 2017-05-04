@@ -396,7 +396,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-01" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-04" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -417,7 +417,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">May 01, 2017</td>
+  <td class="right">May 04, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -432,7 +432,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 2, 2017</td>
+  <td class="left">Expires: November 5, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -453,7 +453,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 2, 2017.</p>
+<p>This Internet-Draft will expire on November 5, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2634,7 +2634,8 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <ul>
   <li>&#8220;supported_versions&#8221; is REQUIRED for all ClientHello messages.</li>
   <li>&#8220;signature_algorithms&#8221; is REQUIRED for certificate authentication.</li>
-  <li>&#8220;supported_groups&#8221; and &#8220;key_share&#8221; are REQUIRED for DHE or ECDHE key exchange.</li>
+  <li>&#8220;supported_groups&#8221; is REQUIRED for ClientHello messages using DHE or ECDHE key exchange.</li>
+  <li>&#8220;key_share&#8221; is REQUIRED for DHE or ECDHE key exchange.</li>
   <li>&#8220;pre_shared_key&#8221; is REQUIRED for PSK key agreement.</li>
 </ul>
 <p id="rfc.section.8.2.p.5">A client is considered to be attempting to negotiate using this specification if the ClientHello contains a &#8220;supported_versions&#8221; extension 0x0304 the highest version number contained in its body.  Such a ClientHello message MUST meet the following requirements:</p>
