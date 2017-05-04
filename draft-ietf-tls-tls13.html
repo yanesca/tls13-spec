@@ -1037,6 +1037,7 @@ Subsequent Handshake:
 <p/>
 
 <ul>
+  <li>The TLS version number for use with this PSK</li>
   <li>The cipher suite for use with this PSK</li>
   <li>The Application-Layer Protocol Negotiation (ALPN) protocol, if any is to be used</li>
   <li>The Server Name Indication (SNI), if any is to be used</li>
@@ -2444,7 +2445,7 @@ finished_key =
   <dt>certificate_required</dt>
   <dd style="margin-left: 8">Sent by servers when a client certificate is desired but none was provided by the client.</dd>
   <dt>no_application_protocol</dt>
-  <dd style="margin-left: 8">Sent by servers when a client &#8220;application_layer_protocol_negotiation&#8221; extension advertises protocols that the server does not support.</dd>
+  <dd style="margin-left: 8">Sent by servers when a client &#8220;application_layer_protocol_negotiation&#8221; extension advertises protocols that the server does not support (see <a href="#RFC7301">[RFC7301]</a>).</dd>
 </dl>
 <p id="rfc.section.6.2.p.5">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#cryptographic-computations" id="cryptographic-computations">Cryptographic Computations</a></h1>

@@ -1204,6 +1204,8 @@ Internet-Draft                     TLS                          May 2017
    the following additional information MUST be provisioned to both
    parties:
 
+   -  The TLS version number for use with this PSK
+
    -  The cipher suite for use with this PSK
 
    -  The Application-Layer Protocol Negotiation (ALPN) protocol, if any
@@ -1214,8 +1216,6 @@ Internet-Draft                     TLS                          May 2017
    As shown in Figure 4, the 0-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
-
-
 
 
 
@@ -4789,7 +4789,7 @@ Internet-Draft                     TLS                          May 2017
 
    no_application_protocol  Sent by servers when a client
       "application_layer_protocol_negotiation" extension advertises
-      protocols that the server does not support.
+      protocols that the server does not support (see [RFC7301]).
 
    New Alert values are assigned by IANA as described in Section 10.
 
