@@ -1183,15 +1183,15 @@ Internet-Draft                     TLS                          May 2017
    (EC)DHE key establishment, thus providing forward secrecy.
 
    When PSKs are provisioned out of band, the PSK identity and the KDF
-   to be used with the PSK MUST also be provisioned.  Note: When using
-   an out-of-band provisioned pre-shared secret, a critical
-   consideration is using sufficient entropy during the key generation,
-   as discussed in [RFC4086].  Deriving a shared secret from a password
-   or other low-entropy sources is not secure.  A low-entropy secret, or
-   password, is subject to dictionary attacks based on the PSK binder.
-   The specified PSK authentication is not a strong password-based
-   authenticated key exchange even when used with Diffie-Hellman key
-   establishment.
+   hash algorithm to be used with the PSK MUST also be provisioned.
+   Note: When using an out-of-band provisioned pre-shared secret, a
+   critical consideration is using sufficient entropy during the key
+   generation, as discussed in [RFC4086].  Deriving a shared secret from
+   a password or other low-entropy sources is not secure.  A low-entropy
+   secret, or password, is subject to dictionary attacks based on the
+   PSK binder.  The specified PSK authentication is not a strong
+   password-based authenticated key exchange even when used with Diffie-
+   Hellman key establishment.
 
 2.3.  Zero-RTT Data
 
@@ -3034,12 +3034,12 @@ Internet-Draft                     TLS                          May 2017
       (0-based) index into the identities in the client's list.
 
    Each PSK is associated with a single Hash algorithm.  For PSKs
-   established via the ticket mechanism (Section 4.6.1), this is the
-   Hash used for the KDF on the connection where the ticket was
-   established.  For externally established PSKs, the Hash algorithm
-   MUST be set when the PSK is established, or default to SHA-256 if no
-   such algorithm is defined.  The server must ensure that it selects a
-   compatible PSK (if any) and cipher suite.
+   established via the ticket mechanism (Section 4.6.1), this is the KDF
+   Hash algorithm on the connection where the ticket was established.
+   For externally established PSKs, the Hash algorithm MUST be set when
+   the PSK is established, or default to SHA-256 if no such algorithm is
+   defined.  The server must ensure that it selects a compatible PSK (if
+   any) and cipher suite.
 
    Implementor's note: the most straightforward way to implement the
    PSK/cipher suite matching requirements is to negotiate the cipher
@@ -3949,8 +3949,8 @@ Internet-Draft                     TLS                          May 2017
    ticket no more than once, with more recent tickets being used first.
 
    Any ticket MUST only be resumed with a cipher suite that has the same
-   KDF hash as that used to establish the original connection, and only
-   if the client provides the same SNI value as in the original
+   KDF hash algorithm as that used to establish the original connection,
+   and only if the client provides the same SNI value as in the original
    connection, as described in Section 3 of [RFC6066].
 
    Note: Although the resumption master secret depends on the client's
@@ -4833,12 +4833,12 @@ Internet-Draft                     TLS                          May 2017
             HKDF-Expand-Label(Secret, Label,
                               Transcript-Hash(Messages), Hash.length)
 
-   The Hash function and the HKDF hash are the cipher suite hash
-   algorithm.  Hash.length is its output length in bytes.  Messages are
-   the concatenation of the indicated handshake messages, including the
-   handshake message type and length fields, but not including record
-   layer headers.  Note that in some cases a zero-length HashValue
-   (indicated by "") is passed to HKDF-Expand-Label.
+   The Hash function used by Transcript-Hash and HKDF are the cipher
+   suite hash algorithm.  Hash.length is its output length in bytes.
+   Messages are the concatenation of the indicated handshake messages,
+   including the handshake message type and length fields, but not
+   including record layer headers.  Note that in some cases a zero-
+   length HashValue (indicated by "") is passed to HKDF-Expand-Label.
 
    Note: with common hash functions, any label longer than 12 characters
    requires an additional iteration of the hash function to compute.
