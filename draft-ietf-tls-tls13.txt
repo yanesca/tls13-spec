@@ -7481,7 +7481,7 @@ Internet-Draft                     TLS                          May 2017
 
    -  Hugo Krawczyk
       IBM
-      hugo@ee.technion.ac.il
+      hugokraw@us.ibm.com
 
    -  Adam Langley (co-author of [RFC7627])
       Google
