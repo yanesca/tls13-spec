@@ -396,7 +396,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-17" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -417,7 +417,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">May 11, 2017</td>
+  <td class="right">May 17, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -432,7 +432,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 12, 2017</td>
+  <td class="left">Expires: November 18, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -453,7 +453,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 12, 2017.</p>
+<p>This Internet-Draft will expire on November 18, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2044,7 +2044,7 @@ Subsequent Handshake:
   <li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension, when applicable.</li>
 </ul>
 <p id="rfc.section.4.4.2.2.p.3">All certificates provided by the server MUST be signed by a signature algorithm that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms">Section 4.2.3</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
-<p id="rfc.section.4.4.2.2.p.4">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST abort the handshake with an &#8220;unsupported_certificate&#8221; alert.</p>
+<p id="rfc.section.4.4.2.2.p.4">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST abort the handshake with an appropriate certificate-related alert (by default, &#8220;unsupported_certificate&#8221;; see <a href="#error-alerts">Section 6.2</a> for more).</p>
 <p id="rfc.section.4.4.2.2.p.5">If the server has multiple certificates, it chooses one of them based on the above-mentioned criteria (in addition to other criteria, such as transport layer endpoint, local configuration and preferences).</p>
 <h4 id="rfc.section.4.4.2.3"><a href="#rfc.section.4.4.2.3">4.4.2.3.</a> <a href="#client-certificate-selection" id="client-certificate-selection">Client Certificate Selection</a></h4>
 <p id="rfc.section.4.4.2.3.p.1">The following rules apply to certificates sent by the client:</p>
