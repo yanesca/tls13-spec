@@ -3147,11 +3147,11 @@ Internet-Draft                     TLS                          May 2017
 4.2.10.3.  Processing Order
 
    Clients are permitted to "stream" 0-RTT data until they receive the
-   server's Finished, only then sending the EndOfEarlyData message.  In
-   order to avoid deadlocks, when accepting "early_data", servers MUST
-   process the client's ClientHello and then immediately send the
-   ServerHello, rather than waiting for the client's EndOfEarlyData
-   message.
+   server's Finished, only then sending the EndOfEarlyData message,
+   followed by the rest of the handshake.  In order to avoid deadlocks,
+   when accepting "early_data", servers MUST process the client's
+   ClientHello and then immediately send the ServerHello, rather than
+   waiting for the client's EndOfEarlyData message.
 
 4.2.10.4.  Replay Properties
 
