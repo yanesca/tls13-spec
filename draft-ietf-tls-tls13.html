@@ -397,7 +397,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-20" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -418,7 +418,7 @@ address {
 </tr>
 <tr>
   <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-  <td class="right">May 18, 2017</td>
+  <td class="right">May 20, 2017</td>
 </tr>
 <tr>
   <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -433,7 +433,7 @@ address {
   <td class="right"></td>
 </tr>
 <tr>
-  <td class="left">Expires: November 19, 2017</td>
+  <td class="left">Expires: November 21, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 19, 2017.</p>
+<p>This Internet-Draft will expire on November 21, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -2390,8 +2390,7 @@ finished_key =
 <p id="rfc.section.6.1.p.6">Note: It is assumed that closing a connection reliably delivers pending data before destroying the transport.</p>
 <h2 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#error-alerts" id="error-alerts">Error Alerts</a></h2>
 <p id="rfc.section.6.2.p.1">Error handling in the TLS Handshake Protocol is very simple. When an error is detected, the detecting party sends a message to its peer. Upon transmission or receipt of a fatal alert message, both parties MUST immediately close the connection.</p>
-<p id="rfc.section.6.2.p.2">Whenever an implementation encounters a fatal error condition, it SHOULD send an appropriate fatal alert and MUST close the connection without sending or receiving any additional data. In the rest of this specification, when the phrases &#8220;terminate the connection&#8221; and &#8220;abort the handshake&#8221; are used without a specific alert it means that the implementation SHOULD send the alert indicated by the descriptions below. The phrases &#8220;terminate the connection with a X alert&#8221; and &#8220;abort the handshake with a X alert&#8221; mean that the implementation MUST send alert X if it sends any alert. All alerts defined in this section below, as well as all unknown alerts, are universally considered fatal as of TLS 1.3 (see <a href="#alert-protocol">Section 6</a>).</p>
-<p id="rfc.section.6.2.p.3">The following error alerts are defined:</p>
+<p id="rfc.section.6.2.p.2">Whenever an implementation encounters a fatal error condition, it SHOULD send an appropriate fatal alert and MUST close the connection without sending or receiving any additional data. In the rest of this specification, when the phrases &#8220;terminate the connection&#8221; and &#8220;abort the handshake&#8221; are used without a specific alert it means that the implementation SHOULD send the alert indicated by the descriptions below. The phrases &#8220;terminate the connection with a X alert&#8221; and &#8220;abort the handshake with a X alert&#8221; mean that the implementation MUST send alert X if it sends any alert. All alerts defined in this section below, as well as all unknown alerts, are universally considered fatal as of TLS 1.3 (see <a href="#alert-protocol">Section 6</a>).  The implementation SHOULD provide a way to facilitate logging the sending and receiving of alerts.</p>
 <p/>
 
 <dl>
@@ -2450,7 +2449,7 @@ finished_key =
   <dt>no_application_protocol</dt>
   <dd style="margin-left: 8">Sent by servers when a client &#8220;application_layer_protocol_negotiation&#8221; extension advertises protocols that the server does not support (see <a href="#RFC7301">[RFC7301]</a>).</dd>
 </dl>
-<p id="rfc.section.6.2.p.5">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
+<p id="rfc.section.6.2.p.4">New Alert values are assigned by IANA as described in <a href="#iana-considerations">Section 10</a>.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#cryptographic-computations" id="cryptographic-computations">Cryptographic Computations</a></h1>
 <p id="rfc.section.7.p.1">The TLS handshake establishes one or more input secrets which are combined to create the actual working keying material, as detailed below. The key derivation process incorporates both the input secrets and the handshake transcript. Note that because the handshake transcript includes the random values in the Hello messages, any given handshake will have different traffic secrets, even if the same input secrets are used, as is the case when the same PSK is used for multiple connections</p>
 <h2 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#key-schedule" id="key-schedule">Key Schedule</a></h2>
