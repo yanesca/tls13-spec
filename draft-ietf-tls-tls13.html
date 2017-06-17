@@ -733,7 +733,11 @@ address {
 </h2>
 <p id="rfc.section.1.2.p.1">RFC EDITOR PLEASE DELETE THIS SECTION.</p>
 <p id="rfc.section.1.2.p.2">(*) indicates changes to the wire protocol which may require implementations to update.</p>
-<p id="rfc.section.1.2.p.3">draft-20</p>
+<p id="rfc.section.1.2.p.3">draft-21</p>
+<p></p>
+
+<ul><li>Add a per-ticket nonce so that each ticket is associated with a different PSK (*).</li></ul>
+<p id="rfc.section.1.2.p.5">draft-20</p>
 <p></p>
 
 <ul>
@@ -745,7 +749,7 @@ address {
 <li>Added the no_application_protocol alert from <a href="#RFC7301" class="xref">[RFC7301]</a> to the list of extensions.</li>
 <li>Added discussion of traffic analysis and side channel attacks.</li>
 </ul>
-<p id="rfc.section.1.2.p.5">draft-19</p>
+<p id="rfc.section.1.2.p.7">draft-19</p>
 <p></p>
 
 <ul>
@@ -762,7 +766,7 @@ address {
 <li>Require peer public key validation</li>
 <li>Add state machine diagram.</li>
 </ul>
-<p id="rfc.section.1.2.p.7">draft-18</p>
+<p id="rfc.section.1.2.p.9">draft-18</p>
 <p></p>
 
 <ul>
@@ -770,7 +774,7 @@ address {
 <li>Fix signature_algorithms entry in extensions table.</li>
 <li>Restate rule from RFC 6066 that you can&#8217;t resume unless SNI is the same.</li>
 </ul>
-<p id="rfc.section.1.2.p.9">draft-17</p>
+<p id="rfc.section.1.2.p.11">draft-17</p>
 <p></p>
 
 <ul>
@@ -787,7 +791,7 @@ address {
 <li>Explicitly allow predicting client Finished for NST</li>
 <li>Clarify conditions for allowing 0-RTT with PSK</li>
 </ul>
-<p id="rfc.section.1.2.p.11">draft-16</p>
+<p id="rfc.section.1.2.p.13">draft-16</p>
 <p></p>
 
 <ul>
@@ -800,7 +804,7 @@ address {
 <li>Forbid CertificateRequest with 0-RTT and PSK.</li>
 <li>Relax requirement to check SNI for 0-RTT.</li>
 </ul>
-<p id="rfc.section.1.2.p.13">draft-15</p>
+<p id="rfc.section.1.2.p.15">draft-15</p>
 <p></p>
 
 <ul>
@@ -815,7 +819,7 @@ address {
 <li>Remove old PRNG text.</li>
 <li>Explicitly require checking that handshake records not span key changes.</li>
 </ul>
-<p id="rfc.section.1.2.p.15">draft-14</p>
+<p id="rfc.section.1.2.p.17">draft-14</p>
 <p></p>
 
 <ul>
@@ -833,7 +837,7 @@ address {
 <li>Major editorial restructuring.</li>
 <li>Replace the Security Analysis section with a WIP draft.</li>
 </ul>
-<p id="rfc.section.1.2.p.17">draft-13</p>
+<p id="rfc.section.1.2.p.19">draft-13</p>
 <p></p>
 
 <ul>
@@ -849,7 +853,7 @@ address {
 <li>Remove the redundant length fields in KeyShareEntry.</li>
 <li>Define a cookie field for HRR.</li>
 </ul>
-<p id="rfc.section.1.2.p.19">draft-12</p>
+<p id="rfc.section.1.2.p.21">draft-12</p>
 <p></p>
 
 <ul>
@@ -862,7 +866,7 @@ address {
 <li>Define exporters.</li>
 <li>Editorial cleanup</li>
 </ul>
-<p id="rfc.section.1.2.p.21">draft-11</p>
+<p id="rfc.section.1.2.p.23">draft-11</p>
 <p></p>
 
 <ul>
@@ -875,14 +879,14 @@ address {
 <li>Remove early_handshake content type. Terminate 0-RTT data with an alert.</li>
 <li>Reset sequence number upon key change (as proposed by Fournet et al.)</li>
 </ul>
-<p id="rfc.section.1.2.p.23">draft-10</p>
+<p id="rfc.section.1.2.p.25">draft-10</p>
 <p></p>
 
 <ul>
 <li>Remove ClientCertificateTypes field from CertificateRequest and add extensions.</li>
 <li>Merge client and server key shares into a single extension.</li>
 </ul>
-<p id="rfc.section.1.2.p.25">draft-09</p>
+<p id="rfc.section.1.2.p.27">draft-09</p>
 <p></p>
 
 <ul>
@@ -896,7 +900,7 @@ address {
 <li>Deprecate SHA-1 with signatures.</li>
 <li>Add MTI algorithms.</li>
 </ul>
-<p id="rfc.section.1.2.p.27">draft-08</p>
+<p id="rfc.section.1.2.p.29">draft-08</p>
 <p></p>
 
 <ul>
@@ -909,7 +913,7 @@ address {
 <li>Change code point for server_configuration to avoid collision with server_hello_done.</li>
 <li>Relax certificate_list ordering requirement to match current practice.</li>
 </ul>
-<p id="rfc.section.1.2.p.29">draft-07</p>
+<p id="rfc.section.1.2.p.31">draft-07</p>
 <p></p>
 
 <ul>
@@ -919,7 +923,7 @@ address {
 <li>Move ClientKeyShare into an extension.</li>
 <li>Move to HKDF.</li>
 </ul>
-<p id="rfc.section.1.2.p.31">draft-06</p>
+<p id="rfc.section.1.2.p.33">draft-06</p>
 <p></p>
 
 <ul>
@@ -928,14 +932,14 @@ address {
 <li>Update format of signatures with context.</li>
 <li>Remove explicit IV.</li>
 </ul>
-<p id="rfc.section.1.2.p.33">draft-05</p>
+<p id="rfc.section.1.2.p.35">draft-05</p>
 <p></p>
 
 <ul>
 <li>Prohibit SSL negotiation for backwards compatibility.</li>
 <li>Fix which MS is used for exporters.</li>
 </ul>
-<p id="rfc.section.1.2.p.35">draft-04</p>
+<p id="rfc.section.1.2.p.37">draft-04</p>
 <p></p>
 
 <ul>
@@ -945,7 +949,7 @@ address {
 <li>Remove renegotiation.</li>
 <li>Remove point format negotiation.</li>
 </ul>
-<p id="rfc.section.1.2.p.37">draft-03</p>
+<p id="rfc.section.1.2.p.39">draft-03</p>
 <p></p>
 
 <ul>
@@ -955,7 +959,7 @@ address {
 <li>Rename {Client,Server}KeyExchange to {Client,Server}KeyShare.</li>
 <li>Add an explicit HelloRetryRequest to reject the client&#8217;s.</li>
 </ul>
-<p id="rfc.section.1.2.p.39">draft-02</p>
+<p id="rfc.section.1.2.p.41">draft-02</p>
 <p></p>
 
 <ul>
@@ -1819,6 +1823,35 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.4.2.4.p.4">The client MAY send the &#8220;certificate_authorities&#8221; extension in the ClientHello message. The server MAY send it in the CertificateRequest message.</p>
 <p id="rfc.section.4.2.4.p.5">The &#8220;trusted_ca_keys&#8221; extension, which serves a similar purpose <a href="#RFC6066" class="xref">[RFC6066]</a>, but is more complicated, is not used in TLS 1.3 (although it may appear in ClientHello messages from clients which are offering prior versions of TLS).</p>
+<h4 id="rfc.section.4.2.4.1">
+<a href="#rfc.section.4.2.4.1">4.2.4.1.</a> <a href="#oid-filters" id="oid-filters">OID Filters</a>
+</h4>
+<p id="rfc.section.4.2.4.1.p.1">The &#8220;oid_filters&#8221; extension allows servers to provide a set of OID/value pairs which it would like the client&#8217;s certificate to match. This extension MUST only be sent in the CertificateRequest message.</p>
+<pre>
+   struct {
+       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
+       opaque certificate_extension_values&lt;0..2^16-1&gt;;
+   } OIDFilter;
+
+   struct {
+       OIDFilter filters&lt;0..2^16-1&gt;;
+   } OIDFilterExtension;
+</pre>
+<p></p>
+
+<dl>
+<dt>filters</dt>
+<dd style="margin-left: 8">A list of certificate extension OIDs <a href="#RFC5280" class="xref">[RFC5280]</a> with their allowed values, represented in DER-encoded <a href="#X690" class="xref">[X690]</a> format. Some certificate extension OIDs allow multiple values (e.g., Extended Key Usage).  If the server has included a non-empty certificate_extensions list, the client certificate included in the response MUST contain all of the specified extension OIDs that the client recognizes. For each extension OID recognized by the client, all of the specified values MUST be present in the client certificate (but the certificate MAY have other values as well). However, the client MUST ignore and skip any unrecognized certificate extension OIDs. If the client ignored some of the required certificate extension OIDs and supplied a certificate that does not satisfy the request, the server MAY at its discretion either continue the connection without client authentication, or abort the handshake with an &#8220;unsupported_certificate&#8221; alert.</dd>
+</dl>
+<p id="rfc.section.4.2.4.1.p.3">PKIX RFCs define a variety of certificate extension OIDs and their corresponding value types. Depending on the type, matching certificate extension values are not necessarily bitwise-equal. It is expected that TLS implementations will rely on their PKI libraries to perform certificate selection using certificate extension OIDs.</p>
+<p id="rfc.section.4.2.4.1.p.4">This document defines matching rules for two standard certificate extensions defined in <a href="#RFC5280" class="xref">[RFC5280]</a>:</p>
+<p></p>
+
+<ul>
+<li>The Key Usage extension in a certificate matches the request when all key usage bits asserted in the request are also asserted in the Key Usage certificate extension.</li>
+<li>The Extended Key Usage extension in a certificate matches the request when all key purpose OIDs present in the request are also found in the Extended Key Usage certificate extension. The special anyExtendedKeyUsage OID MUST NOT be used in the request.</li>
+</ul>
+<p id="rfc.section.4.2.4.1.p.6">Separate specifications may define matching rules for other certificate extensions.</p>
 <h3 id="rfc.section.4.2.5">
 <a href="#rfc.section.4.2.5">4.2.5.</a> <a href="#post_handshake_auth" id="post_handshake_auth">Post-Handshake Client Authentication</a>
 </h3>
@@ -2119,31 +2152,6 @@ Subsequent Handshake:
 </dl>
 <p id="rfc.section.4.3.2.p.4">In prior versions of TLS, the CertificateRequest message carried a list of signature algorithms and certificate authorities which the server would accept. In TLS 1.3 the former is expressed by sending the &#8220;signature_algorithms&#8221; extension. The latter is expressed by sending the &#8220;certificate_authorities&#8221; extension (see <a href="#certificate-authorities" class="xref">Section 4.2.4</a>).</p>
 <p id="rfc.section.4.3.2.p.5">Servers which are authenticating with a PSK MUST NOT send the CertificateRequest message in the main handshake, though they MAY send it in post-handshake authentication (see <a href="#post-handshake-authentication" class="xref">Section 4.6.2</a>) provided that the client has sent the &#8220;post_handshake_auth&#8221; extension (see <a href="#post_handshake_auth" class="xref">Section 4.2.5</a>).</p>
-<h4 id="rfc.section.4.3.2.1">
-<a href="#rfc.section.4.3.2.1">4.3.2.1.</a> <a href="#oid-filters" id="oid-filters">OID Filters</a>
-</h4>
-<p id="rfc.section.4.3.2.1.p.1">The &#8220;oid_filters&#8221; extension allows servers to provide a set of OID/value pairs which it would like the client&#8217;s certificate to match. This extension MUST only be sent in the CertificateRequest message.</p>
-<pre>
-   struct {
-       opaque certificate_extension_oid&lt;1..2^8-1&gt;;
-       opaque certificate_extension_values&lt;0..2^16-1&gt;;
-   } OIDFilter;
-
-   struct {
-       OIDFilter filters&lt;0..2^16-1&gt;;
-   } OIDFilterExtension;
-</pre>
-<p></p>
-
-<dl>
-<dt>filters</dt>
-<dd style="margin-left: 8">A list of certificate extension OIDs <a href="#RFC5280" class="xref">[RFC5280]</a> with their allowed values, represented in DER-encoded <a href="#X690" class="xref">[X690]</a> format. Some certificate extension OIDs allow multiple values (e.g., Extended Key Usage).  If the server has included a non-empty certificate_extensions list, the client certificate included in the response MUST contain all of the specified extension OIDs that the client recognizes. For each extension OID recognized by the client, all of the specified values MUST be present in the client certificate (but the certificate MAY have other values as well). However, the client MUST ignore and skip any unrecognized certificate extension OIDs. If the client ignored some of the required certificate extension OIDs and supplied a certificate that does not satisfy the request, the server MAY at its discretion either continue the connection without client authentication, or abort the handshake with an &#8220;unsupported_certificate&#8221; alert.  PKIX RFCs define a variety of certificate extension OIDs and their corresponding value types. Depending on the type, matching certificate extension values are not necessarily bitwise-equal. It is expected that TLS implementations will rely on their PKI libraries to perform certificate selection using certificate extension OIDs.  This document defines matching rules for two standard certificate extensions defined in <a href="#RFC5280" class="xref">[RFC5280]</a>: <ul>
-<li>The Key Usage extension in a certificate matches the request when all key usage bits asserted in the request are also asserted in the Key Usage certificate extension.</li>
-<li>The Extended Key Usage extension in a certificate matches the request when all key purpose OIDs present in the request are also found in the Extended Key Usage certificate extension. The special anyExtendedKeyUsage OID MUST NOT be used in the request.</li>
-</ul>
-<p> Separate specifications may define matching rules for other certificate extensions.</p>
-</dd>
-</dl>
 <h2 id="rfc.section.4.4">
 <a href="#rfc.section.4.4">4.4.</a> <a href="#authentication-messages" id="authentication-messages">Authentication Messages</a>
 </h2>
@@ -2281,7 +2289,7 @@ Subsequent Handshake:
 <li>The certificate type MUST be X.509v3 <a href="#RFC5280" class="xref">[RFC5280]</a>, unless explicitly negotiated otherwise (e.g., <a href="#RFC7250" class="xref">[RFC7250]</a>).</li>
 <li>If the &#8220;certificate_authorities&#8221; extension in the CertificateRequest message was present, at least one of the certificates in the certificate chain SHOULD be issued by one of the listed CAs.</li>
 <li>The certificates MUST be signed using an acceptable signature algorithm, as described in <a href="#certificate-request" class="xref">Section 4.3.2</a>.  Note that this relaxes the constraints on certificate-signing algorithms found in prior versions of TLS.</li>
-<li>If the certificate_extensions list in the CertificateRequest message was non-empty, the end-entity certificate MUST match the extension OIDs recognized by the client, as described in <a href="#certificate-request" class="xref">Section 4.3.2</a>.</li>
+<li>If the certificate_extensions list in the CertificateRequest message was non-empty, the end-entity certificate MUST match the extension OIDs recognized by the client, as described in <a href="#oid-filters" class="xref">Section 4.2.4.1</a>.</li>
 </ul>
 <p id="rfc.section.4.4.2.3.p.3">Note that, as with the server certificate, there are certificates that use algorithm combinations that cannot be currently used with TLS.</p>
 <h4 id="rfc.section.4.4.2.4">
@@ -2390,7 +2398,7 @@ finished_key =
 <h3 id="rfc.section.4.6.1">
 <a href="#rfc.section.4.6.1">4.6.1.</a> <a href="#NSTMessage" id="NSTMessage">New Session Ticket Message</a>
 </h3>
-<p id="rfc.section.4.6.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and the resumption master secret.</p>
+<p id="rfc.section.4.6.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a pre-shared key (PSK) binding between the ticket value and a secret derived from the resumption master secret.</p>
 <p id="rfc.section.4.6.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension" class="xref">Section 4.2.10</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events. For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.</p>
 <p id="rfc.section.4.6.1.p.3">Any ticket MUST only be resumed with a cipher suite that has the same KDF hash algorithm as that used to establish the original connection, and only if the client provides the same SNI value as in the original connection, as described in Section 3 of <a href="#RFC6066" class="xref">[RFC6066]</a>.</p>
 <p id="rfc.section.4.6.1.p.4">Note: Although the resumption master secret depends on the client&#8217;s second flight, servers which do not request client authentication MAY compute the remainder of the transcript independently and then send a NewSessionTicket immediately upon sending its Finished rather than waiting for the client Finished.  This might be appropriate in cases where the client is expected to open multiple TLS connections in parallel and would benefit from the reduced overhead of a resumption handshake, for example.</p>
@@ -2398,6 +2406,7 @@ finished_key =
    struct {
        uint32 ticket_lifetime;
        uint32 ticket_age_add;
+       opaque ticket_nonce&lt;1..255&gt;;
        opaque ticket&lt;1..2^16-1&gt;;
        Extension extensions&lt;0..2^16-2&gt;;
    } NewSessionTicket;
@@ -2409,6 +2418,8 @@ finished_key =
 <dd style="margin-left: 8">Indicates the lifetime in seconds as a 32-bit unsigned integer in network byte order from the time of ticket issuance.  Servers MUST NOT use any value more than 604800 seconds (7 days).  The value of zero indicates that the ticket should be discarded immediately. Clients MUST NOT cache tickets for longer than 7 days, regardless of the ticket_lifetime, and MAY delete the ticket earlier based on local policy. A server MAY treat a ticket as valid for a shorter period of time than what is stated in the ticket_lifetime.</dd>
 <dt>ticket_age_add</dt>
 <dd style="margin-left: 8">A securely generated, random 32-bit value that is used to obscure the age of the ticket that the client includes in the &#8220;pre_shared_key&#8221; extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client. The server MUST generate a fresh value for each ticket it sends.</dd>
+<dt>ticket_nonce</dt>
+<dd style="margin-left: 8">A unique per-ticket value.</dd>
 <dt>ticket</dt>
 <dd style="margin-left: 8">The value of the ticket to be used as the PSK identity.  The ticket itself is an opaque label. It MAY either be a database lookup key or a self-encrypted and self-authenticated value. Section 4 of <a href="#RFC5077" class="xref">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
 <dt>extensions</dt>
@@ -2421,7 +2432,13 @@ finished_key =
 <dt>max_early_data_size</dt>
 <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload (i.e., plaintext but not padding or the inner content type byte) is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an &#8220;unexpected_message&#8221; alert.  Note that servers that reject early data due to lack of cryptographic material will be unable to differentiate padding from content, so clients SHOULD NOT depend on being able to send large quantities of padding in early data records.</dd>
 </dl>
-<p id="rfc.section.4.6.1.p.8">Note that in principle it is possible to continue issuing new tickets which indefinitely extend the lifetime of the keying material originally derived from an initial non-PSK handshake (which was most likely tied to the peer&#8217;s certificate). It is RECOMMENDED that implementations place limits on the total lifetime of such keying material; these limits should take into account the lifetime of the peer&#8217;s certificate, the likelihood of intervening revocation, and the time since the peer&#8217;s online CertificateVerify signature.</p>
+<p id="rfc.section.4.6.1.p.8">The PSK associated with the ticket is computed as:</p>
+<pre>
+    HKDF-Expand-Label(resumption_master_secret,
+                     "resumption", ticket_nonce, Hash.length)
+</pre>
+<p id="rfc.section.4.6.1.p.9">Because the ticket_nonce value is distinct for each NewSessionTicket message, a different PSK will be derived for each ticket.</p>
+<p id="rfc.section.4.6.1.p.10">Note that in principle it is possible to continue issuing new tickets which indefinitely extend the lifetime of the keying material originally derived from an initial non-PSK handshake (which was most likely tied to the peer&#8217;s certificate). It is RECOMMENDED that implementations place limits on the total lifetime of such keying material; these limits should take into account the lifetime of the peer&#8217;s certificate, the likelihood of intervening revocation, and the time since the peer&#8217;s online CertificateVerify signature.</p>
 <h3 id="rfc.section.4.6.2">
 <a href="#rfc.section.4.6.2">4.6.2.</a> <a href="#post-handshake-authentication" id="post-handshake-authentication">Post-Handshake Authentication</a>
 </h3>
@@ -2738,7 +2755,7 @@ finished_key =
 <p></p>
 
 <ul>
-<li>PSK (a pre-shared key established externally or a resumption_master_secret value from a previous connection)</li>
+<li>PSK (a pre-shared key established externally or derived from the resumption_master_secret value from a previous connection)</li>
 <li>(EC)DHE shared secret (<a href="#ecdhe-shared-secret-calculation" class="xref">Section 7.4</a>)</li>
 </ul>
 <p id="rfc.section.7.1.p.6">This produces a full key derivation schedule shown in the diagram below.  In this diagram, the following formatting conventions apply:</p>
@@ -3806,15 +3823,6 @@ here         No 0-RTT |                 | 0-RTT
    } CertificateAuthoritiesExtension;
 
    struct {
-       Extension extensions&lt;0..2^16-1&gt;;
-   } EncryptedExtensions;
-
-   struct {
-       opaque certificate_request_context&lt;0..2^8-1&gt;;
-       Extension extensions&lt;2..2^16-1&gt;;
-   } CertificateRequest;
-
-   struct {
        opaque certificate_extension_oid&lt;1..2^8-1&gt;;
        opaque certificate_extension_values&lt;0..2^16-1&gt;;
    } OIDFilter;
@@ -3822,6 +3830,15 @@ here         No 0-RTT |                 | 0-RTT
    struct {
        OIDFilter filters&lt;0..2^16-1&gt;;
    } OIDFilterExtension;
+
+   struct {
+       Extension extensions&lt;0..2^16-1&gt;;
+   } EncryptedExtensions;
+
+   struct {
+       opaque certificate_request_context&lt;0..2^8-1&gt;;
+       Extension extensions&lt;2..2^16-1&gt;;
+   } CertificateRequest;
 </pre>
 <h3 id="rfc.appendix.B.3.3">
 <a href="#rfc.appendix.B.3.3">B.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a>
@@ -3860,6 +3877,7 @@ here         No 0-RTT |                 | 0-RTT
    struct {
        uint32 ticket_lifetime;
        uint32 ticket_age_add;
+       opaque ticket_nonce&lt;1..255&gt;;
        opaque ticket&lt;1..2^16-1&gt;;
        Extension extensions&lt;0..2^16-2&gt;;
    } NewSessionTicket;
@@ -4077,7 +4095,7 @@ here         No 0-RTT |                 | 0-RTT
 <dd style="margin-left: 8">The server&#8217;s identity (certificate) should be protected against passive attackers. The client&#8217;s identity should be protected against both passive and active attackers.</dd>
 </dl>
 <p id="rfc.section.E.1.p.5">Informally, the signature-based modes of TLS 1.3 provide for the establishment of a unique, secret, shared, key established by an (EC)DHE key exchange and authenticated by the server&#8217;s signature over the handshake transcript, as well as tied to the server&#8217;s identity by a MAC. If the client is authenticated by a certificate, it also signs over the handshake transcript and provides a MAC tied to both identities. <a href="#SIGMA" class="xref">[SIGMA]</a> describes the design and analysis of this type of key exchange protocol. If fresh (EC)DHE keys are used for each connection, then the output keys are forward secret.</p>
-<p id="rfc.section.E.1.p.6">The external PSK and resumption PSK bootstrap from a long-term shared secret into a unique per-connection set of short-term session keys. This secret may have been established in a previous handshake. If PSK with (EC)DHE key establishment is used, these session keys will also be forward secret. The resumption PSK has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.</p>
+<p id="rfc.section.E.1.p.6">The external PSK and resumption PSK bootstrap from a long-term shared secret into a unique per-connection set of short-term session keys. This secret may have been established in a previous handshake. If PSK with (EC)DHE key establishment is used, these session keys will also be forward secret. The resumption PSK has been designed so that the resumption master secret computed by connection N and needed to form connection N+1 is separate from the traffic keys used by connection N, thus providing forward secrecy between the connections.  In addition, if multiple tickets are established on the same connection, they are associated with different keys, so compromise of the PSK associated with one ticket does not lead to the compromise of connections established with PSKs associated with other tickets.  This property is most interesting if tickets are stored in a database (and so can be deleted) rather than if they are self-encrypted.</p>
 <p id="rfc.section.E.1.p.7">The PSK binder value forms a binding between a PSK and the current handshake, as well as between the session where the PSK was established and the session where it was used. This binding transitively includes the original handshake transcript, because that transcript is digested into the values which produce the Resumption Master Secret. This requires that both the KDF used to produce the resumption master secret and the MAC used to compute the binder be collision resistant. See <a href="#key-derivation-and-hkdf" class="xref">Appendix E.1.1</a> for more on this.  Note: The binder does not cover the binder values from other PSKs, though they are included in the Finished MAC.</p>
 <p id="rfc.section.E.1.p.8">Note: TLS does not currently permit the server to send a certificate_request message in non-certificate-based handshakes (e.g., PSK).  If this restriction were to be relaxed in future, the client&#8217;s signature would not cover the server&#8217;s certificate directly.  However, if the PSK was established through a NewSessionTicket, the client&#8217;s signature would transitively cover the server&#8217;s certificate through the PSK binder. <a href="#PSK-FINISHED" class="xref">[PSK-FINISHED]</a> describes a concrete attack on constructions that do not bind to the server&#8217;s certificate (see also <a href="#Kraw16" class="xref">[Kraw16]</a>). It is unsafe to use certificate-based client authentication when the client might potentially share the same PSK/key-id pair with two different endpoints. Implementations MUST NOT combine external PSKs with certificate-based authentication of either the client or the server.</p>
 <p id="rfc.section.E.1.p.9">If an exporter is used, then it produces values which are unique and secret (because they are generated from a unique session key).  Exporters computed with different labels and contexts are computationally independent, so it is not feasible to compute one from another or the session secret from the exported value. Note: exporters can produce arbitrary-length values. If exporters are to be used as channel bindings, the exported value MUST be large enough to provide collision resistance. The exporters provided in TLS 1.3 are derived from the same handshake contexts as the early traffic keys and the application traffic keys respectively, and thus have similar security properties. Note that they do not include the client&#8217;s certificate; future applications which wish to bind to the client&#8217;s certificate may need to define a new exporter that includes the full handshake transcript.</p>
