@@ -397,7 +397,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-6-17" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-6-19" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -418,7 +418,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">June 17, 2017</td>
+<td class="right">June 19, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -433,7 +433,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: December 19, 2017</td>
+<td class="left">Expires: December 21, 2017</td>
 <td class="right"></td>
 </tr>
 
@@ -450,7 +450,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 19, 2017.</p>
+<p>This Internet-Draft will expire on December 21, 2017.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -1171,7 +1171,7 @@ Subsequent Handshake:
 <ul>
 <li>The TLS version number for use with this PSK</li>
 <li>The cipher suite for use with this PSK</li>
-<li>The Application-Layer Protocol Negotiation (ALPN) protocol, if any is to be used</li>
+<li>The Application-Layer Protocol Negotiation (ALPN) protocol <a href="#RFC7301" class="xref">[RFC7301]</a>, if any is to be used</li>
 <li>The Server Name Indication (SNI), if any is to be used</li>
 </ul>
 <p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt" class="xref">Figure 4</a>, the 0-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
