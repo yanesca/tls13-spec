@@ -392,12 +392,12 @@ address {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.6.1 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.6.2 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-6-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-6-21" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -418,7 +418,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">June 19, 2017</td>
+<td class="right">June 21, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -433,7 +433,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: December 21, 2017</td>
+<td class="left">Expires: December 23, 2017</td>
 <td class="right"></td>
 </tr>
 
@@ -450,7 +450,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 21, 2017.</p>
+<p>This Internet-Draft will expire on December 23, 2017.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -2274,7 +2274,7 @@ Subsequent Handshake:
 <li>The certificate type MUST be X.509v3 <a href="#RFC5280" class="xref">[RFC5280]</a>, unless explicitly negotiated otherwise (e.g., <a href="#RFC7250" class="xref">[RFC7250]</a>).</li>
 <li>The server&#8217;s end-entity certificate&#8217;s public key (and associated restrictions) MUST be compatible with the selected authentication algorithm (currently RSA or ECDSA).</li>
 <li>The certificate MUST allow the key to be used for signing (i.e., the digitalSignature bit MUST be set if the Key Usage extension is present) with a signature scheme indicated in the client&#8217;s &#8220;signature_algorithms&#8221; extension.</li>
-<li>The &#8220;server_name&#8221; and &#8220;trusted_ca_keys&#8221; extensions <a href="#RFC6066" class="xref">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension, when applicable.</li>
+<li>The &#8220;server_name&#8221; and &#8220;certificate_authorities&#8221; extensions <a href="#RFC6066" class="xref">[RFC6066]</a> are used to guide certificate selection. As servers MAY require the presence of the &#8220;server_name&#8221; extension, clients SHOULD send this extension, when applicable.</li>
 </ul>
 <p id="rfc.section.4.4.2.2.p.3">All certificates provided by the server MUST be signed by a signature algorithm that appears in the &#8220;signature_algorithms&#8221; extension provided by the client, if they are able to provide such a chain (see <a href="#signature-algorithms" class="xref">Section 4.2.3</a>).  Certificates that are self-signed or certificates that are expected to be trust anchors are not validated as part of the chain and therefore MAY be signed with any algorithm.</p>
 <p id="rfc.section.4.4.2.2.p.4">If the server cannot produce a certificate chain that is signed only via the indicated supported algorithms, then it SHOULD continue the handshake by sending the client a certificate chain of its choice that may include algorithms that are not known to be supported by the client. This fallback chain MAY use the deprecated SHA-1 hash algorithm only if the &#8220;signature_algorithms&#8221; extension provided by the client permits it.  If the client cannot construct an acceptable chain using the provided certificates and decides to abort the handshake, then it MUST abort the handshake with an appropriate certificate-related alert (by default, &#8220;unsupported_certificate&#8221;; see <a href="#error-alerts" class="xref">Section 6.2</a> for more).</p>
@@ -3001,7 +3001,7 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <tr>
 <td class="reference"><b id="RFC5226">[RFC5226]</b></td>
 <td class="top">
-<a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, DOI 10.17487/RFC5226, May 2008.</td>
+<a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", RFC 5226, DOI 10.17487/RFC5226, May 2008.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5280">[RFC5280]</b></td>
