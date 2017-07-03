@@ -5348,7 +5348,11 @@ Internet-Draft                     TLS                         July 2017
    Note that freshness checking alone is not sufficient to prevent
    replays because it does not detect them during the error window,
    which, depending on bandwidth and system capacity could include
-   billions of replays in real-world settings.
+   billions of replays in real-world settings.  In addition, this
+   freshness checking is only done at the time the ClientHello is
+   received, and not when later early application data records are
+   received.  After early data is accepted, records may continue to be
+   streamed to the server over a longer time period.
 
 9.  Compliance Requirements
 
@@ -5365,10 +5369,6 @@ Internet-Draft                     TLS                         July 2017
    CertificateVerify and certificates), and ecdsa_secp256r1_sha256.  A
    TLS-compliant application MUST support key exchange with secp256r1
    (NIST P-256) and SHOULD support key exchange with X25519 [RFC7748].
-
-
-
-
 
 
 
