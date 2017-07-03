@@ -154,7 +154,7 @@ Internet-Draft                     TLS                         July 2017
      8.3.  Freshness Checks  . . . . . . . . . . . . . . . . . . . .  95
    9.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  96
      9.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  96
-     9.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  96
+     9.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  97
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  98
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  98
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  99
@@ -5234,14 +5234,14 @@ Internet-Draft                     TLS                         July 2017
    falling back to the 1-RTT handshake.
 
    If the expected arrival time is in the window, then the server checks
-   to see if it has recorded a matching ClientHello.  It either aborts
-   the handshake with an "illegal_parameter" alert or accepts the PSK
-   but reject 0-RTT.  If no matching ClientHello is found, then it
-   accepts 0-RTT and then stores the ClientHello for as long as the
-   expected_arrival_time is inside the window.  Servers MAY also
-   implement data stores with false positives, such as Bloom filters, in
-   which case they MUST respond to apparent replay by rejecting 0-RTT
-   but MUST NOT abort the handshake.
+   to see if it has recorded a matching ClientHello.  If one is found,
+   it either aborts the handshake with an "illegal_parameter" alert or
+   accepts the PSK but reject 0-RTT.  If no matching ClientHello is
+   found, then it accepts 0-RTT and then stores the ClientHello for as
+   long as the expected_arrival_time is inside the window.  Servers MAY
+   also implement data stores with false positives, such as Bloom
+   filters, in which case they MUST respond to apparent replay by
+   rejecting 0-RTT but MUST NOT abort the handshake.
 
    The server MUST derive the storage key only from validated sections
    of the ClientHello.  If the ClientHello contains multiple PSK
@@ -5250,14 +5250,14 @@ Internet-Draft                     TLS                         July 2017
    assumption that the server will not verify it, as recommended by
    Section 4.2.10.  I.e., if the client sends PSKs A and B but the
    server prefers A, then the attacker can change the binder for B
-   without affecting the binder for A.  If the validated binder or the
+   without affecting the binder for A.  This will cause the ClientHello
+   to be accepted, and may casue side effects such as replay cache
+   pollution, although any 0-RTT data will not be decryptable because it
+   will use different keys.  If the validated binder or the
    ClientHello.random are used as the storage key, then this attack is
    not possible.
 
-   Because this mechanism does not require storing all outstanding
-   tickets, it may be easier to implement in distributed systems with
-   high rates of resumption and 0-RTT, at the cost of potentially weaker
-   anti-replay defense because of the difficulty of reliably storing and
+
 
 
 
@@ -5266,6 +5266,10 @@ Rescorla                 Expires January 4, 2018               [Page 94]
 Internet-Draft                     TLS                         July 2017
 
 
+   Because this mechanism does not require storing all outstanding
+   tickets, it may be easier to implement in distributed systems with
+   high rates of resumption and 0-RTT, at the cost of potentially weaker
+   anti-replay defense because of the difficulty of reliably storing and
    retrieving the received ClientHello messages.  In many such systems,
    it is impractical to have globally consistent storage of all the
    received ClientHellos.  In this case, the best anti-replay protection
@@ -5310,10 +5314,6 @@ Internet-Draft                     TLS                         July 2017
    keep state for each outstanding ticket.  The server can determine the
    client's view of the age of the ticket by subtracting the ticket's
    "ticket_age_add value" from the "obfuscated_ticket_age" parameter in
-   the client's "pre_shared_key" extension.  The server can determine
-   the "expected arrival time" of the ClientHello as:
-
-     expected_arrival_time = adjusted_creation_time + clients_ticket_age
 
 
 
@@ -5321,6 +5321,11 @@ Rescorla                 Expires January 4, 2018               [Page 95]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   the client's "pre_shared_key" extension.  The server can determine
+   the "expected arrival time" of the ClientHello as:
+
+     expected_arrival_time = adjusted_creation_time + clients_ticket_age
 
    When a new ClientHello is received, the expected_arrival_time is then
    compared against the current server wall clock time and if they
@@ -5361,6 +5366,18 @@ Internet-Draft                     TLS                         July 2017
    TLS-compliant application MUST support key exchange with secp256r1
    (NIST P-256) and SHOULD support key exchange with X25519 [RFC7748].
 
+
+
+
+
+
+
+
+Rescorla                 Expires January 4, 2018               [Page 96]
+
+Internet-Draft                     TLS                         July 2017
+
+
 9.2.  Mandatory-to-Implement Extensions
 
    In the absence of an application profile standard specifying
@@ -5370,13 +5387,6 @@ Internet-Draft                     TLS                         July 2017
    -  Supported Versions ("supported_versions"; Section 4.2.1)
 
    -  Cookie ("cookie"; Section 4.2.2)
-
-
-
-Rescorla                 Expires January 4, 2018               [Page 96]
-
-Internet-Draft                     TLS                         July 2017
-
 
    -  Signature Algorithms ("signature_algorithms"; Section 4.2.3)
 
@@ -5417,22 +5427,19 @@ Internet-Draft                     TLS                         July 2017
    requirements MUST abort the handshake with a "missing_extension"
    alert.
 
-   Additionally, all implementations MUST support use of the
-   "server_name" extension with applications capable of using it.
-   Servers MAY require clients to send a valid "server_name" extension.
-   Servers requiring this extension SHOULD respond to a ClientHello
-   lacking a "server_name" extension by terminating the connection with
-   a "missing_extension" alert.
-
-
-
-
 
 
 Rescorla                 Expires January 4, 2018               [Page 97]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   Additionally, all implementations MUST support use of the
+   "server_name" extension with applications capable of using it.
+   Servers MAY require clients to send a valid "server_name" extension.
+   Servers requiring this extension SHOULD respond to a ClientHello
+   lacking a "server_name" extension by terminating the connection with
+   a "missing_extension" alert.
 
 10.  Security Considerations
 
@@ -5476,19 +5483,19 @@ Internet-Draft                     TLS                         July 2017
    created in [RFC4366].  IANA has updated it to reference this
    document.  The registry and its allocation policy is listed below:
 
-   -  IANA [SHALL update/has updated] this registry to include the
-      "key_share", "pre_shared_key", "psk_key_exchange_modes",
-      "early_data", "cookie", "supported_versions",
-      "certificate_authorities", "oid_filters", and
-      "post_handshake_auth" extensions with the values defined in this
-      document and the Recommended value of "Yes".
-
 
 
 Rescorla                 Expires January 4, 2018               [Page 98]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   -  IANA [SHALL update/has updated] this registry to include the
+      "key_share", "pre_shared_key", "psk_key_exchange_modes",
+      "early_data", "cookie", "supported_versions",
+      "certificate_authorities", "oid_filters", and
+      "post_handshake_auth" extensions with the values defined in this
+      document and the Recommended value of "Yes".
 
    -  IANA [SHALL update/has updated] this registry to include a "TLS
       1.3" column which lists the messages in which the extension may
@@ -5528,6 +5535,17 @@ Internet-Draft                     TLS                         July 2017
               DOI 10.17487/RFC2104, February 1997,
               <http://www.rfc-editor.org/info/rfc2104>.
 
+
+
+
+
+
+
+Rescorla                 Expires January 4, 2018               [Page 99]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -5537,14 +5555,6 @@ Internet-Draft                     TLS                         July 2017
               IANA Considerations Section in RFCs", RFC 5226,
               DOI 10.17487/RFC5226, May 2008,
               <http://www.rfc-editor.org/info/rfc5226>.
-
-
-
-
-Rescorla                 Expires January 4, 2018               [Page 99]
-
-Internet-Draft                     TLS                         July 2017
-
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -5582,16 +5592,6 @@ Internet-Draft                     TLS                         July 2017
               DOI 10.17487/RFC6961, June 2013,
               <http://www.rfc-editor.org/info/rfc6961>.
 
-   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
-              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
-              <http://www.rfc-editor.org/info/rfc6962>.
-
-   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
-              Algorithm (DSA) and Elliptic Curve Digital Signature
-              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
-              2013, <http://www.rfc-editor.org/info/rfc6979>.
-
-
 
 
 
@@ -5601,6 +5601,15 @@ Rescorla                 Expires January 4, 2018              [Page 100]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
+              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
+              <http://www.rfc-editor.org/info/rfc6962>.
+
+   [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
+              Algorithm (DSA) and Elliptic Curve Digital Signature
+              Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
+              2013, <http://www.rfc-editor.org/info/rfc6979>.
 
    [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
               "Transport Layer Security (TLS) Application-Layer Protocol
@@ -5639,15 +5648,6 @@ Internet-Draft                     TLS                         July 2017
               Department of Commerce, "Secure Hash Standard", NIST FIPS
               PUB 180-4, March 2012.
 
-   [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
-              Specification of Basic Encoding Rules (BER), Canonical
-              Encoding Rules (CER) and Distinguished Encoding Rules
-              (DER)", ISO/IEC 8825-1:2002, 2002.
-
-   [X962]     ANSI, "Public Key Cryptography For The Financial Services
-              Industry: The Elliptic Curve Digital Signature Algorithm
-              (ECDSA)", ANSI X9.62, 1998.
-
 
 
 
@@ -5657,6 +5657,15 @@ Rescorla                 Expires January 4, 2018              [Page 101]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
+              Specification of Basic Encoding Rules (BER), Canonical
+              Encoding Rules (CER) and Distinguished Encoding Rules
+              (DER)", ISO/IEC 8825-1:2002, 2002.
+
+   [X962]     ANSI, "Public Key Cryptography For The Financial Services
+              Industry: The Elliptic Curve Digital Signature Algorithm
+              (ECDSA)", ANSI X9.62, 1998.
 
 12.2.  Informative References
 
@@ -5698,21 +5707,19 @@ Internet-Draft                     TLS                         July 2017
               Compromise Security", IEEE Computer Security Foundations
               Symposium , 2015.
 
-   [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
-              and S. Scott, "Awkward Handshake: Possible mismatch of
-              client/server view on client authentication in post-
-              handshake mode in Revision 18", 2017,
-              <https://www.ietf.org/mail-archive/web/tls/current/
-              msg22382.html>.
-
-
-
 
 
 Rescorla                 Expires January 4, 2018              [Page 102]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
+              and S. Scott, "Awkward Handshake: Possible mismatch of
+              client/server view on client authentication in post-
+              handshake mode in Revision 18", 2017,
+              <https://www.ietf.org/mail-archive/web/tls/current/
+              msg22382.html>.
 
    [CHSV16]   Cremers, C., Horvat, M., Scott, S., and T. van der Merwe,
               "Automated Analysis and Verification of TLS 1.3: 0-RTT,
@@ -5752,6 +5759,17 @@ Internet-Draft                     TLS                         July 2017
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
 
+
+
+
+
+
+
+Rescorla                 Expires January 4, 2018              [Page 103]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [FG17]     Fischlin, M. and F. Guenther, "Replay Attacks on Zero
               Round-Trip Time: The Case of the TLS 1.3 Handshake
               Candidates", Proceedings of Euro S"P 2017 , 2017,
@@ -5762,13 +5780,6 @@ Internet-Draft                     TLS                         July 2017
               Implications for TLS 1.3", Proceedings of IEEE Symposium
               on Security and Privacy (Oakland) 2016 , 2016,
               <http://ieeexplore.ieee.org/document/7546517/>.
-
-
-
-Rescorla                 Expires January 4, 2018              [Page 103]
-
-Internet-Draft                     TLS                         July 2017
-
 
    [FW15]     Florian Weimer, ., "Factoring RSA Keys With TLS Perfect
               Forward Secrecy", September 2015.
@@ -5808,6 +5819,13 @@ Internet-Draft                     TLS                         July 2017
               Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010 ,
               2010, <https://eprint.iacr.org/2010/264>.
 
+
+
+Rescorla                 Expires January 4, 2018              [Page 104]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [Kraw16]   Krawczyk, H., "A Unilateral-to-Mutual Authentication
               Compiler for Key Exchange (with Applications to Client
               Authentication in TLS 1.3", Proceedings of ACM CCS 2016 ,
@@ -5816,15 +5834,6 @@ Internet-Draft                     TLS                         July 2017
    [KW16]     Krawczyk, H. and H. Wee, "The OPTLS Protocol and TLS 1.3",
               Proceedings of Euro S"P 2016 , 2016,
               <https://eprint.iacr.org/2015/978>.
-
-
-
-
-
-Rescorla                 Expires January 4, 2018              [Page 104]
-
-Internet-Draft                     TLS                         July 2017
-
 
    [LXZFH16]  Li, X., Xu, J., Feng, D., Zhang, Z., and H. Hu, "Multiple
               Handshakes Security of TLS 1.3 Candidates", Proceedings of
@@ -5864,6 +5873,15 @@ Internet-Draft                     TLS                         July 2017
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <http://www.rfc-editor.org/info/rfc4366>.
 
+
+
+
+
+Rescorla                 Expires January 4, 2018              [Page 105]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
               Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
               for Transport Layer Security (TLS)", RFC 4492,
@@ -5873,14 +5891,6 @@ Internet-Draft                     TLS                         July 2017
    [RFC4681]  Santesson, S., Medvinsky, A., and J. Ball, "TLS User
               Mapping Extension", RFC 4681, DOI 10.17487/RFC4681,
               October 2006, <http://www.rfc-editor.org/info/rfc4681>.
-
-
-
-
-Rescorla                 Expires January 4, 2018              [Page 105]
-
-Internet-Draft                     TLS                         July 2017
-
 
    [RFC5077]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
@@ -5919,6 +5929,15 @@ Internet-Draft                     TLS                         July 2017
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <http://www.rfc-editor.org/info/rfc6347>.
 
+
+
+
+
+Rescorla                 Expires January 4, 2018              [Page 106]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [RFC6520]  Seggelmann, R., Tuexen, M., and M. Williams, "Transport
               Layer Security (TLS) and Datagram Transport Layer Security
               (DTLS) Heartbeat Extension", RFC 6520,
@@ -5929,14 +5948,6 @@ Internet-Draft                     TLS                         July 2017
               Protocol (HTTP/1.1): Message Syntax and Routing",
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <http://www.rfc-editor.org/info/rfc7230>.
-
-
-
-
-Rescorla                 Expires January 4, 2018              [Page 106]
-
-Internet-Draft                     TLS                         July 2017
-
 
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
@@ -5973,6 +5984,16 @@ Internet-Draft                     TLS                         July 2017
               Cryptosystems", Communications of the ACM v. 21, n. 2, pp.
               120-126., February 1978.
 
+
+
+
+
+
+Rescorla                 Expires January 4, 2018              [Page 107]
+
+Internet-Draft                     TLS                         July 2017
+
+
    [SIGMA]    Krawczyk, H., "SIGMA: the 'SIGn-and-MAc' approach to
               authenticated Diffie-Hellman and its use in the IKE
               protocols", Proceedings of CRYPTO 2003 , 2003.
@@ -5987,13 +6008,6 @@ Internet-Draft                     TLS                         July 2017
    [SSL3]     Freier, A., Karlton, P., and P. Kocher, "The SSL 3.0
               Protocol", November 1996.
 
-
-
-Rescorla                 Expires January 4, 2018              [Page 107]
-
-Internet-Draft                     TLS                         July 2017
-
-
    [TIMING]   Boneh, D. and D. Brumley, "Remote timing attacks are
               practical", USENIX Security Symposium, 2003.
 
@@ -6003,20 +6017,6 @@ Internet-Draft                     TLS                         July 2017
 12.3.  URIs
 
    [1] mailto:tls@ietf.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
