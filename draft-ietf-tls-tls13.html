@@ -752,6 +752,8 @@ address {
 
 <ul>
 <li>Add a per-ticket nonce so that each ticket is associated with a different PSK (*).</li>
+<li>Clarify that clients should change to sending with handshake keys immediately upon reading ServerHello. Arguably a wire format change. (*).</li>
+<li>Update state machine to show rekeying events</li>
 <li>Add discussion of 0-RTT and replay. Recommend that implementations implement some anti-replay mechanism.</li>
 </ul>
 <p id="rfc.section.1.2.p.5">draft-20</p>
@@ -2364,7 +2366,7 @@ Subsequent Handshake:
 
 <ol>
 <li>Clients ending 0-RTT data as described in <a href="#early-data-indication" class="xref">Section 4.2.9</a>.</li>
-<li>Servers MAY send data after sending their first flight, but because the handshake is not yet complete, they have no assurance of either the peer&#8217;s identity or of it&#8217;s liveness (i.e., the ClientHello might have been replayed).</li>
+<li>Servers MAY send data after sending their first flight, but because the handshake is not yet complete, they have no assurance of either the peer&#8217;s identity or of its liveness (i.e., the ClientHello might have been replayed).</li>
 </ol>
 <p id="rfc.section.4.4.4.p.5">The key used to compute the finished message is computed from the Base key defined in <a href="#authentication-messages" class="xref">Section 4.4</a> using HKDF (see <a href="#key-schedule" class="xref">Section 7.1</a>). Specifically:</p>
 <pre>
@@ -3460,20 +3462,22 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <h1 id="rfc.appendix.A">
 <a href="#rfc.appendix.A">Appendix A.</a> <a href="#state-machine" id="state-machine">State Machine</a>
 </h1>
-<p id="rfc.section.A.p.1">This section provides a summary of the legal state transitions for the client and server handshakes.  State names (in all capitals, e.g., START) have no formal meaning but are provided for ease of comprehension.  Messages which are sent only sometimes are indicated in [].</p>
+<p id="rfc.section.A.p.1">This section provides a summary of the legal state transitions for the client and server handshakes.  State names (in all capitals, e.g., START) have no formal meaning but are provided for ease of comprehension.  Actions which are taken only in certain circumstances are indicated in []. The notation &#8220;K_{send,recv} = foo&#8221; means &#8220;set the send/recv key to the given key&#8221;.</p>
 <h2 id="rfc.appendix.A.1">
 <a href="#rfc.appendix.A.1">A.1.</a> <a href="#client" id="client">Client</a>
 </h2>
 <pre>
                            START &lt;----+
             Send ClientHello |        | Recv HelloRetryRequest
-         /                   v        |
-        |                  WAIT_SH ---+
-    Can |                    | Recv ServerHello
-   send |                    V
-  early |                 WAIT_EE
-   data |                    | Recv EncryptedExtensions
-        |           +--------+--------+
+       [K_send = early data] |        |
+                             v        |
+        /                 WAIT_SH ----+
+        |                    | Recv ServerHello
+        |                    | K_recv = handshake
+    Can |                    V
+   send |                 WAIT_EE
+  early |                    | Recv EncryptedExtensions
+   data |           +--------+--------+
         |     Using |                 | Using certificate
         |       PSK |                 v
         |           |            WAIT_CERT_CR
@@ -3486,15 +3490,15 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
         |           |                 | Recv CertificateVerify
         |           +&gt; WAIT_FINISHED &lt;+
         |                  | Recv Finished
-        \                  |
-                           | [Send EndOfEarlyData]
+        \                  | [Send EndOfEarlyData]
+                           | K_send = handshake
                            | [Send Certificate [+ CertificateVerify]]
-                           | Send Finished
- Can send                  v
- app data --&gt;          CONNECTED
- after
- here
+ Can send                  | Send Finished
+ app data   --&gt;            | K_send = K_recv = application
+ after here                v
+                       CONNECTED
 </pre>
+<p id="rfc.section.A.1.p.1">Note that with the transitions as shown above, clients may send alerts that derive from post-ServerHello messages in the clear or with the early data keys. If clients need to send such alerts, they SHOULD first rekey to the handshake keys if possible.</p>
 <h2 id="rfc.appendix.A.2">
 <a href="#rfc.appendix.A.2">A.2.</a> <a href="#server" id="server">Server</a>
 </h2>
@@ -3507,17 +3511,21 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
                                v
                             NEGOTIATED
                                | Send ServerHello
+                               | K_send = handshake
                                | Send EncryptedExtensions
                                | [Send CertificateRequest]
 Can send                       | [Send Certificate + CertificateVerify]
-app data --&gt;                   | Send Finished
-after                 +--------+--------+
-here         No 0-RTT |                 | 0-RTT
-                      |                 v
-                      |             WAIT_EOED &lt;---+
+app data                       | Send Finished
+after   --&gt;                    | K_send = application
+here                  +--------+--------+
+             No 0-RTT |                 | 0-RTT
+   K_recv = handshake |                 | K_recv = early_data
+[Skip decrypt errors] |             WAIT_EOED &lt;---+
                       |            Recv |   |     | Recv
-                      |  EndOfEarlyData |   |     | early data
-                      |                 |   +-----+
+                      |  EndOfEarlyData |   |     | Early data
+                      |        K_recv = |   +-----+
+                      |       handshake |
+                      |                 |
                       +&gt; WAIT_FLIGHT2 &lt;-+
                                |
                       +--------+--------+
@@ -3532,6 +3540,7 @@ here         No 0-RTT |                 | 0-RTT
                       |             v       | CertificateVerify
                       +-&gt; WAIT_FINISHED &lt;---+
                                | Recv Finished
+                               | K_recv = application
                                v
                            CONNECTED
 </pre>
