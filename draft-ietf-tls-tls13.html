@@ -23,13 +23,12 @@
     position: fixed;
     bottom: 0;
     right: 0;
-    right: calc(50vw - 500px);
+    right: calc(50vw - 525px);
     width: 300px;
-    padding: 0 1em;
     z-index: 1;
   }
   #rfc\.toc {
-    top: 16px;
+    top: 15px;
   }
   ul.toc {
     top: 80px;
@@ -37,8 +36,7 @@
   }
 
   body {
-    padding-left: 1.5em;
-    padding-right: 29em;
+    padding-right: 350px;
   }
 }
 
@@ -47,7 +45,7 @@ body {
   color: #333;
   font-size-adjust: 0.5;
   line-height: 130%;
-  margin: 2.5em auto;
+  margin: 25px auto;
   max-width: 724px;
 }
 
@@ -1002,7 +1000,7 @@ address {
 <li>All handshake messages after the ServerHello are now encrypted. The newly introduced EncryptedExtension message allows various extensions previously sent in clear in the ServerHello to also enjoy confidentiality protection.</li>
 <li>The key derivation functions have been re-designed. The new design allows easier analysis by cryptographers due to their improved key separation properties. The HMAC-based Extract-and-Expand Key Derivation Function (HKDF) is used as an underlying primitive.</li>
 <li>The handshake state machine has been significantly restructured to be more consistent and to remove superfluous messages such as ChangeCipherSpec.</li>
-<li>ECC is now in the base spec and includes new signature algorithms, such as ed25519 and ed448. TLS 1.3 removed point format negotiation in favor of a single point format for each curve.</li>
+<li>Elliptic curve algorithms are now in the base spec and includes new signature algorithms, such as ed25519 and ed448. TLS 1.3 removed point format negotiation in favor of a single point format for each curve.</li>
 <li>Other cryptographic improvements including the removal of compression and custom DHE groups, changing the RSA padding to use PSS, and the removal of DSA.</li>
 <li>The TLS 1.2 version negotiation mechanism has been deprecated in favor of a version list in an extension. This increases compatibility with servers which incorrectly implemented version negotiation.</li>
 <li>Session resumption with and without server-side state as well as the PSK-based ciphersuites of earlier TLS versions have been replaced by a single new PSK exchange.</li>
@@ -1102,7 +1100,7 @@ Auth | {CertificateVerify*}
 <dd style="margin-left: 8">a MAC (Message Authentication Code) over the entire handshake.  This message provides key confirmation, binds the endpoint&#8217;s identity to the exchanged keys, and in PSK mode also authenticates the handshake. [<a href="#finished" class="xref">Section 4.4.4</a>]</dd>
 </dl>
 <p id="rfc.section.2.p.14">Upon receiving the server&#8217;s messages, the client responds with its Authentication messages, namely Certificate and CertificateVerify (if requested), and Finished.</p>
-<p id="rfc.section.2.p.15">At this point, the handshake is complete, and the client and server must derive the keying material required by the record layer to exchange application-layer data protected through authenticated encryption.  Application data MUST NOT be sent prior to sending the Finished message and until the record layer starts using encryption keys.  Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is, of course, being sent to an unauthenticated peer.</p>
+<p id="rfc.section.2.p.15">At this point, the handshake is complete, and the client and server derive the keying material required by the record layer to exchange application-layer data protected through authenticated encryption.  Application data MUST NOT be sent prior to sending the Finished message and until the record layer starts using encryption keys.  Note that while the server may send application data prior to receiving the client&#8217;s Authentication messages, any data sent at that point is, of course, being sent to an unauthenticated peer.</p>
 <h2 id="rfc.section.2.1">
 <a href="#rfc.section.2.1">2.1.</a> <a href="#incorrect-dhe-share" id="incorrect-dhe-share">Incorrect DHE Share</a>
 </h2>
@@ -1180,7 +1178,13 @@ Subsequent Handshake:
 </pre>
 <p class="figure">Figure 3: Message flow for resumption and PSK</p>
 <p id="rfc.section.2.2.p.4">As the server is authenticating via a PSK, it does not send a Certificate or a CertificateVerify message. When a client offers resumption via PSK, it SHOULD also supply a &#8220;key_share&#8221; extension to the server to allow the server to decline resumption and fall back to a full handshake, if needed. The server responds with a &#8220;pre_shared_key&#8221; extension to negotiate use of PSK key establishment and can (as shown here) respond with a &#8220;key_share&#8221; extension to do (EC)DHE key establishment, thus providing forward secrecy.</p>
-<p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF hash algorithm to be used with the PSK MUST also be provisioned.  Note: When using an out-of-band provisioned pre-shared secret, a critical consideration is using sufficient entropy during the key generation, as discussed in <a href="#RFC4086" class="xref">[RFC4086]</a>. Deriving a shared secret from a password or other low-entropy sources is not secure. A low-entropy secret, or password, is subject to dictionary attacks based on the PSK binder.  The specified PSK authentication is not a strong password-based authenticated key exchange even when used with Diffie-Hellman key establishment.</p>
+<p id="rfc.section.2.2.p.5">When PSKs are provisioned out of band, the PSK identity and the KDF hash algorithm to be used with the PSK MUST also be provisioned.</p>
+<p></p>
+
+<dl>
+<dt>Note:</dt>
+<dd style="margin-left: 8">When using an out-of-band provisioned pre-shared secret, a critical consideration is using sufficient entropy during the key generation, as discussed in <a href="#RFC4086" class="xref">[RFC4086]</a>. Deriving a shared secret from a password or other low-entropy sources is not secure. A low-entropy secret, or password, is subject to dictionary attacks based on the PSK binder.  The specified PSK authentication is not a strong password-based authenticated key exchange even when used with Diffie-Hellman key establishment.</dd>
+</dl>
 <h2 id="rfc.section.2.3">
 <a href="#rfc.section.2.3">2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">Zero-RTT Data</a>
 </h2>
