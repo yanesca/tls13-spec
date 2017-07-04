@@ -238,7 +238,7 @@ Internet-Draft                     TLS                         July 2017
    -  Confidentiality: Data sent over the channel after establishment is
       only visible to the endpoints.  TLS does not hide the length of
       the data it transmits, though endpoints are able to pad TLS
-      records in order to obscure lengths and improve protection agains
+      records in order to obscure lengths and improve protection against
       traffic analysis techniques.
 
    -  Integrity: Data sent over the channel after establishment cannot
@@ -5195,7 +5195,7 @@ Internet-Draft                     TLS                         July 2017
    Section 4.2.10.  I.e., if the client sends PSKs A and B but the
    server prefers A, then the attacker can change the binder for B
    without affecting the binder for A.  This will cause the ClientHello
-   to be accepted, and may casue side effects such as replay cache
+   to be accepted, and may cause side effects such as replay cache
    pollution, although any 0-RTT data will not be decryptable because it
    will use different keys.  If the validated binder or the
    ClientHello.random are used as the storage key, then this attack is
