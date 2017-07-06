@@ -3954,7 +3954,8 @@ Internet-Draft                     TLS                         July 2017
       transmitted by the client.  The server MUST generate a fresh value
       for each ticket it sends.
 
-   ticket_nonce  A unique per-ticket value.
+   ticket_nonce  A per-ticket value that is unique across all tickets
+      issued on this connection.
 
    ticket  The value of the ticket to be used as the PSK identity.  The
       ticket itself is an opaque label.  It MAY either be a database
@@ -3969,7 +3970,6 @@ Internet-Draft                     TLS                         July 2017
    The sole extension currently defined for NewSessionTicket is
    "early_data", indicating that the ticket may be used to send 0-RTT
    data (Section 4.2.9)).  It contains the following value:
-
 
 
 
@@ -4615,6 +4615,8 @@ Internet-Draft                     TLS                         July 2017
    implementation SHOULD provide a way to facilitate logging the sending
    and receiving of alerts.
 
+   The following error alerts are defined:
+
    unexpected_message  An inappropriate message (e.g., the wrong
       handshake message, premature application data, etc.) was received.
       This alert should never be observed in communication between
@@ -4640,8 +4642,6 @@ Internet-Draft                     TLS                         July 2017
    bad_certificate  A certificate was corrupt, contained signatures that
       did not verify correctly, etc.
 
-   unsupported_certificate  A certificate was of an unsupported type.
-
 
 
 
@@ -4649,6 +4649,8 @@ Rescorla                 Expires January 7, 2018               [Page 83]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   unsupported_certificate  A certificate was of an unsupported type.
 
    certificate_revoked  A certificate was revoked by its signer.
 
@@ -4696,8 +4698,6 @@ Internet-Draft                     TLS                         July 2017
 
    inappropriate_fallback  Sent by a server in response to an invalid
       connection retry attempt from a client (see [RFC7507]).
-
-
 
 
 
@@ -7524,20 +7524,20 @@ Internet-Draft                     TLS                         July 2017
    Ultimately, servers have the responsibility to protect themselves
    against attacks employing 0-RTT data replication.  The mechanisms
    described in Section 8 are intended to prevent replay at the TLS
-   layer do not provide complete protection against receiving multiple
-   copies of client data.  TLS 1.3 falls back to the 1-RTT handshake
-   when the server does not have any information about the client, e.g.,
-   because it is in a different cluster which does not share state or
-   because the ticket has been deleted as described in Section 8.1.  If
-   the application layer protocol retransmits data in this setting, then
-   it is possible for an attacker to induce message duplication by
-   sending the ClientHello to both the original cluster (which processes
-   the data immediately) and another cluster which will fall back to
-   1-RTT and process the data upon application layer replay.  The scale
-   of this attack is limited by the client's willingness to retry
-   transactions and therefore only allows a limited amount of
-   duplication, with each copy appearing as a new connection at the
-   server.
+   layer but do not provide complete protection against receiving
+   multiple copies of client data.  TLS 1.3 falls back to the 1-RTT
+   handshake when the server does not have any information about the
+   client, e.g., because it is in a different cluster which does not
+   share state or because the ticket has been deleted as described in
+   Section 8.1.  If the application layer protocol retransmits data in
+   this setting, then it is possible for an attacker to induce message
+   duplication by sending the ClientHello to both the original cluster
+   (which processes the data immediately) and another cluster which will
+   fall back to 1-RTT and process the data upon application layer
+   replay.  The scale of this attack is limited by the client's
+   willingness to retry transactions and therefore only allows a limited
+   amount of duplication, with each copy appearing as a new connection
+   at the server.
 
    If implemented correctly, the mechanisms described in Section 8.1 and
    Section 8.2 prevent a replayed ClientHello and its associated 0-RTT
