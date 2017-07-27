@@ -401,7 +401,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-7-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-7-27" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -422,7 +422,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">July 19, 2017</td>
+<td class="right">July 27, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -437,7 +437,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: January 20, 2018</td>
+<td class="left">Expires: January 28, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 20, 2018.</p>
+<p>This Internet-Draft will expire on January 28, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -2234,7 +2234,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.2.p.4">Structure of this message:</p>
 <pre>
    struct {
-       select(certificate_type){
+       select (certificate_type){
            case RawPublicKey:
              // From RFC 7250 ASN.1_subjectPublicKeyInfo
              opaque ASN1_subjectPublicKeyInfo&lt;1..2^24-1&gt;;
@@ -2750,7 +2750,7 @@ finished_key =
 </h2>
 <p id="rfc.section.7.1.p.1">The key derivation process makes use of the HKDF-Extract and HKDF-Expand functions as defined for HKDF <a href="#RFC5869" class="xref">[RFC5869]</a>, as well as the functions defined below:</p>
 <pre>
-    HKDF-Expand-Label(Secret, Label, HashValue, Length) =
+    HKDF-Expand-Label(Secret, Label, Context, Length) =
          HKDF-Expand(Secret, HkdfLabel, Length)
 
     Where HkdfLabel is specified as:
@@ -2758,14 +2758,14 @@ finished_key =
     struct {
         uint16 length = Length;
         opaque label&lt;7..255&gt; = "tls13 " + Label;
-        opaque hash_value&lt;0..255&gt; = HashValue;
+        opaque context&lt;0..255&gt; = Context;
     } HkdfLabel;
 
     Derive-Secret(Secret, Label, Messages) =
          HKDF-Expand-Label(Secret, Label,
                            Transcript-Hash(Messages), Hash.length)
 </pre>
-<p id="rfc.section.7.1.p.2">The Hash function used by Transcript-Hash and HKDF is the cipher suite hash algorithm.  Hash.length is its output length in bytes. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers. Note that in some cases a zero-length HashValue (indicated by &#8220;&#8221;) is passed to HKDF-Expand-Label.</p>
+<p id="rfc.section.7.1.p.2">The Hash function used by Transcript-Hash and HKDF is the cipher suite hash algorithm.  Hash.length is its output length in bytes. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers. Note that in some cases a zero-length Context (indicated by &#8220;&#8221;) is passed to HKDF-Expand-Label.</p>
 <p id="rfc.section.7.1.p.3">Note: with common hash functions, any label longer than 12 characters requires an additional iteration of the hash function to compute.  The labels in this specification have all been chosen to fit within this limit.</p>
 <p id="rfc.section.7.1.p.4">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of Hash.length bytes set to zeros.  Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p></p>
@@ -3196,6 +3196,11 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <td class="reference"><b id="CCG16">[CCG16]</b></td>
 <td class="top">
 <a>Cohn-Gordon, K.</a>, <a>Cremers, C.</a> and <a>L. Garratt</a>, "<a>On Post-Compromise Security</a>", IEEE Computer Security Foundations Symposium , 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="CHECKOWAY">[CHECKOWAY]</b></td>
+<td class="top">
+<a>Checkoway, S.</a>, <a>Shacham, H.</a>, <a>Maskiewicz, J.</a>, <a>Garman, C.</a>, <a>Fried, J.</a>, <a>Cohney, S.</a>, <a>Green, M.</a>, <a>Heninger, N.</a>, <a>Weinmann, R.</a> and <a>E. Rescorla</a>, "<a>A Systematic Analysis of the Juniper Dual EC Incident</a>", Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security - CCS'16 , DOI 10.1145/2976749.2978395, 2016.</td>
 </tr>
 <tr>
 <td class="reference"><b id="CHHSV17">[CHHSV17]</b></td>
@@ -3917,7 +3922,7 @@ here                  +--------+--------+
 </h3>
 <pre>
    struct {
-       select(certificate_type){
+       select (certificate_type){
            case RawPublicKey:
              // From RFC 7250 ASN.1_subjectPublicKeyInfo
              opaque ASN1_subjectPublicKeyInfo&lt;1..2^24-1&gt;;
@@ -4039,6 +4044,7 @@ here                  +--------+--------+
 <a href="#rfc.appendix.C.1">C.1.</a> <a href="#random-number-generation-and-seeding" id="random-number-generation-and-seeding">Random Number Generation and Seeding</a>
 </h2>
 <p id="rfc.section.C.1.p.1">TLS requires a cryptographically secure pseudorandom number generator (CSPRNG).  In most cases, the operating system provides an appropriate facility such as /dev/urandom, which should be used absent other (performance) concerns.  It is RECOMMENDED to use an existing CSPRNG implementation in preference to crafting a new one. Many adequate cryptographic libraries are already available under favorable license terms.  Should those prove unsatisfactory, <a href="#RFC4086" class="xref">[RFC4086]</a> provides guidance on the generation of random values.</p>
+<p id="rfc.section.C.1.p.2">TLS uses random values both in public protocol fields such as the public Random values in the ClientHello and ServerHello and to generate keying material. With a properly functioning CSPRNG, this does not present a security problem as it is not feasible to determine the CSPRNG state from its output. However, with a broken CSPRNG, it may be possible for an attacker to use the public output to determine the CSPRNG internal state and thereby predict the keying material, as documented in <a href="#CHECKOWAY" class="xref">[CHECKOWAY]</a>.  Implementations can provide extra security against this form of attack by using separate CSPRNGs to generate public and private values.</p>
 <h2 id="rfc.appendix.C.2">
 <a href="#rfc.appendix.C.2">C.2.</a> <a href="#certificates-and-authentication" id="certificates-and-authentication">Certificates and Authentication</a>
 </h2>
