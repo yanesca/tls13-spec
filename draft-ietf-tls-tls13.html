@@ -1360,7 +1360,7 @@ Subsequent Handshake:
 <h2 id="rfc.section.3.8">
 <a href="#rfc.section.3.8">3.8.</a> <a href="#variants" id="variants">Variants</a>
 </h2>
-<p id="rfc.section.3.8.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines.  The body of the variant structure may be given a label for reference. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
+<p id="rfc.section.3.8.p.1">Defined structures may have variants based on some knowledge that is available within the environment. The selector must be an enumerated type that defines the possible variants the structure defines. Each arm of the select specifies the type of that variant&#8217;s field and an optional field label. The mechanism by which the variant is selected at runtime is not prescribed by the presentation language.</p>
 <pre>
    struct {
        T1 f1;
@@ -1368,11 +1368,11 @@ Subsequent Handshake:
        ....
        Tn fn;
        select (E) {
-           case e1: Te1;
-           case e2: Te2;
+           case e1: Te1 [[fe1]];
+           case e2: Te2 [[fe2]];
            ....
-           case en: Ten;
-       } [[fv]];
+           case en: Ten [[fen]];
+       };
    } Tv;
 </pre>
 <p id="rfc.section.3.8.p.2">For example:</p>
@@ -1433,7 +1433,7 @@ Subsequent Handshake:
            case finished:              Finished;
            case new_session_ticket:    NewSessionTicket;
            case key_update:            KeyUpdate;
-       } body;
+       };
    } Handshake;
 </pre>
 <p id="rfc.section.4.p.2">Protocol messages MUST be sent in the order defined in <a href="#the-transcript-hash" class="xref">Section 4.4.1</a> and shown in the diagrams in <a href="#protocol-overview" class="xref">Section 2</a>.  A peer which receives a handshake message in an unexpected order MUST abort the handshake with an &#8220;unexpected_message&#8221; alert.</p>
@@ -2068,15 +2068,15 @@ Subsequent Handshake:
    opaque PskBinderEntry&lt;32..255&gt;;
 
    struct {
+       PskIdentity identities&lt;7..2^16-1&gt;;
+       PskBinderEntry binders&lt;33..2^16-1&gt;;
+   } OfferedPsks;
+
+   struct {
        select (Handshake.msg_type) {
-           case client_hello:
-               PskIdentity identities&lt;7..2^16-1&gt;;
-               PskBinderEntry binders&lt;33..2^16-1&gt;;
-
-           case server_hello:
-               uint16 selected_identity;
+           case client_hello: OfferedPsks;
+           case server_hello: uint16 selected_identity;
        };
-
    } PreSharedKeyExtension;
 </pre>
 <p></p>
@@ -3538,14 +3538,14 @@ app data                       | Send Finished
 after   --&gt;                    | K_send = application
 here                  +--------+--------+
              No 0-RTT |                 | 0-RTT
-   K_recv = handshake |                 | K_recv = early_data
-[Skip decrypt errors] |             WAIT_EOED &lt;---+
-                      |            Recv |   |     | Recv
-                      |  EndOfEarlyData |   |     | Early data
-                      |        K_recv = |   +-----+
-                      |       handshake |
                       |                 |
-                      +&gt; WAIT_FLIGHT2 &lt;-+
+  K_recv = handshake  |                 | K_recv = early data
+[Skip decrypt errors] |    +------&gt; WAIT_EOED -+
+                      |    |       Recv |      | Recv EndOfEarlyData
+                      |    | early data |      | K_recv = handshake
+                      |    +------------+      |
+                      |                        |
+                      +&gt; WAIT_FLIGHT2 &lt;--------+
                                |
                       +--------+--------+
               No auth |                 | Client auth
@@ -3689,7 +3689,7 @@ here                  +--------+--------+
            case finished:              Finished;
            case new_session_ticket:    NewSessionTicket;
            case key_update:            KeyUpdate;
-       } body;
+       };
    } Handshake;
 </pre>
 <h3 id="rfc.appendix.B.3.1">
@@ -3801,15 +3801,15 @@ here                  +--------+--------+
    opaque PskBinderEntry&lt;32..255&gt;;
 
    struct {
+       PskIdentity identities&lt;7..2^16-1&gt;;
+       PskBinderEntry binders&lt;33..2^16-1&gt;;
+   } OfferedPsks;
+
+   struct {
        select (Handshake.msg_type) {
-           case client_hello:
-               PskIdentity identities&lt;7..2^16-1&gt;;
-               PskBinderEntry binders&lt;33..2^16-1&gt;;
-
-           case server_hello:
-               uint16 selected_identity;
+           case client_hello: OfferedPsks;
+           case server_hello: uint16 selected_identity;
        };
-
    } PreSharedKeyExtension;
 </pre>
 <h4 id="rfc.appendix.B.3.1.1">

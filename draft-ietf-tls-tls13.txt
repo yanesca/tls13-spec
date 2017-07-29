@@ -1518,10 +1518,10 @@ Internet-Draft                     TLS                         July 2017
 
    Defined structures may have variants based on some knowledge that is
    available within the environment.  The selector must be an enumerated
-   type that defines the possible variants the structure defines.  The
-   body of the variant structure may be given a label for reference.
-   The mechanism by which the variant is selected at runtime is not
-   prescribed by the presentation language.
+   type that defines the possible variants the structure defines.  Each
+   arm of the select specifies the type of that variant's field and an
+   optional field label.  The mechanism by which the variant is selected
+   at runtime is not prescribed by the presentation language.
 
       struct {
           T1 f1;
@@ -1529,11 +1529,11 @@ Internet-Draft                     TLS                         July 2017
           ....
           Tn fn;
           select (E) {
-              case e1: Te1;
-              case e2: Te2;
+              case e1: Te1 [[fe1]];
+              case e2: Te2 [[fe2]];
               ....
-              case en: Ten;
-          } [[fv]];
+              case en: Ten [[fen]];
+          };
       } Tv;
 
    For example:
@@ -1609,7 +1609,7 @@ Internet-Draft                     TLS                         July 2017
               case finished:              Finished;
               case new_session_ticket:    NewSessionTicket;
               case key_update:            KeyUpdate;
-          } body;
+          };
       } Handshake;
 
    Protocol messages MUST be sent in the order defined in Section 4.4.1
@@ -3053,15 +3053,15 @@ Internet-Draft                     TLS                         July 2017
       opaque PskBinderEntry<32..255>;
 
       struct {
+          PskIdentity identities<7..2^16-1>;
+          PskBinderEntry binders<33..2^16-1>;
+      } OfferedPsks;
+
+      struct {
           select (Handshake.msg_type) {
-              case client_hello:
-                  PskIdentity identities<7..2^16-1>;
-                  PskBinderEntry binders<33..2^16-1>;
-
-              case server_hello:
-                  uint16 selected_identity;
+              case client_hello: OfferedPsks;
+              case server_hello: uint16 selected_identity;
           };
-
       } PreSharedKeyExtension;
 
    identity  A label for a key.  For instance, a ticket defined in
@@ -6124,14 +6124,14 @@ A.2.  Server
  after   -->                    | K_send = application
  here                  +--------+--------+
               No 0-RTT |                 | 0-RTT
-    K_recv = handshake |                 | K_recv = early_data
- [Skip decrypt errors] |             WAIT_EOED <---+
-                       |            Recv |   |     | Recv
-                       |  EndOfEarlyData |   |     | Early data
-                       |        K_recv = |   +-----+
-                       |       handshake |
                        |                 |
-                       +> WAIT_FLIGHT2 <-+
+   K_recv = handshake  |                 | K_recv = early data
+ [Skip decrypt errors] |    +------> WAIT_EOED -+
+                       |    |       Recv |      | Recv EndOfEarlyData
+                       |    | early data |      | K_recv = handshake
+                       |    +------------+      |
+                       |                        |
+                       +> WAIT_FLIGHT2 <--------+
                                 |
                        +--------+--------+
                No auth |                 | Client auth
@@ -6312,7 +6312,7 @@ B.3.  Handshake Protocol
               case finished:              Finished;
               case new_session_ticket:    NewSessionTicket;
               case key_update:            KeyUpdate;
-          } body;
+          };
       } Handshake;
 
 B.3.1.  Key Exchange Messages
@@ -6445,15 +6445,15 @@ Internet-Draft                     TLS                         July 2017
    opaque PskBinderEntry<32..255>;
 
    struct {
+       PskIdentity identities<7..2^16-1>;
+       PskBinderEntry binders<33..2^16-1>;
+   } OfferedPsks;
+
+   struct {
        select (Handshake.msg_type) {
-           case client_hello:
-               PskIdentity identities<7..2^16-1>;
-               PskBinderEntry binders<33..2^16-1>;
-
-           case server_hello:
-               uint16 selected_identity;
+           case client_hello: OfferedPsks;
+           case server_hello: uint16 selected_identity;
        };
-
    } PreSharedKeyExtension;
 
 B.3.1.1.  Version Extension
