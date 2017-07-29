@@ -2223,9 +2223,9 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.1.p.2">As an exception to this general rule, when the server responds to a ClientHello with a HelloRetryRequest, the value of ClientHello1 is replaced with a special synthetic handshake message of handshake type &#8220;message_hash&#8221; containing Hash(ClientHello1). I.e.,</p>
 <pre>
  Transcript-Hash(ClientHello1, HelloRetryRequest, ... MN) =
-     Hash(message_hash ||        // Handshake type
-          00 00 Hash.length ||   // Handshake message length (bytes)
-          Hash(ClientHello1) ||  // Hash of ClientHello1
+     Hash(message_hash ||        /* Handshake type */
+          00 00 Hash.length ||   /* Handshake message length (bytes) */
+          Hash(ClientHello1) ||  /* Hash of ClientHello1 */
           HelloRetryRequest ... MN)
 </pre>
 <p id="rfc.section.4.4.1.p.3">The reason for this construction is to allow the server to do a stateless HelloRetryRequest by storing just the hash of ClientHello1 in the cookie, rather than requiring it to export the entire intermediate hash state (see <a href="#cookie" class="xref">Section 4.2.2</a>).</p>
@@ -2242,7 +2242,7 @@ Subsequent Handshake:
    struct {
        select (certificate_type) {
            case RawPublicKey:
-             // From RFC 7250 ASN.1_subjectPublicKeyInfo
+             /* From RFC 7250 ASN.1_subjectPublicKeyInfo */
              opaque ASN1_subjectPublicKeyInfo&lt;1..2^24-1&gt;;
 
            case X509:
@@ -3938,7 +3938,7 @@ here                  +--------+--------+
    struct {
        select (certificate_type) {
            case RawPublicKey:
-             // From RFC 7250 ASN.1_subjectPublicKeyInfo
+             /* From RFC 7250 ASN.1_subjectPublicKeyInfo */
              opaque ASN1_subjectPublicKeyInfo&lt;1..2^24-1&gt;;
 
            case X509:
