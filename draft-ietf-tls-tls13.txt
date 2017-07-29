@@ -87,18 +87,18 @@ Table of Contents
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  24
      3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  24
      3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  24
-     3.3.  Vectors . . . . . . . . . . . . . . . . . . . . . . . . .  24
-     3.4.  Numbers . . . . . . . . . . . . . . . . . . . . . . . . .  25
+     3.3.  Vectors . . . . . . . . . . . . . . . . . . . . . . . . .  25
+     3.4.  Numbers . . . . . . . . . . . . . . . . . . . . . . . . .  26
      3.5.  Enumerateds . . . . . . . . . . . . . . . . . . . . . . .  26
      3.6.  Constructed Types . . . . . . . . . . . . . . . . . . . .  27
      3.7.  Constants . . . . . . . . . . . . . . . . . . . . . . . .  27
-     3.8.  Variants  . . . . . . . . . . . . . . . . . . . . . . . .  27
-   4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  28
-     4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  29
+     3.8.  Variants  . . . . . . . . . . . . . . . . . . . . . . . .  28
+   4.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . . .  29
+     4.1.  Key Exchange Messages . . . . . . . . . . . . . . . . . .  30
        4.1.1.  Cryptographic Negotiation . . . . . . . . . . . . . .  30
        4.1.2.  Client Hello  . . . . . . . . . . . . . . . . . . . .  31
        4.1.3.  Server Hello  . . . . . . . . . . . . . . . . . . . .  34
-       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  35
+       4.1.4.  Hello Retry Request . . . . . . . . . . . . . . . . .  36
      4.2.  Extensions  . . . . . . . . . . . . . . . . . . . . . . .  37
        4.2.1.  Supported Versions  . . . . . . . . . . . . . . . . .  40
        4.2.2.  Cookie  . . . . . . . . . . . . . . . . . . . . . . .  41
@@ -115,14 +115,14 @@ Internet-Draft                     TLS                         July 2017
 
 
        4.2.7.  Negotiated Groups . . . . . . . . . . . . . . . . . .  47
-       4.2.8.  Key Share . . . . . . . . . . . . . . . . . . . . . .  48
+       4.2.8.  Key Share . . . . . . . . . . . . . . . . . . . . . .  49
        4.2.9.  Pre-Shared Key Exchange Modes . . . . . . . . . . . .  52
        4.2.10. Early Data Indication . . . . . . . . . . . . . . . .  52
        4.2.11. Pre-Shared Key Extension  . . . . . . . . . . . . . .  55
      4.3.  Server Parameters . . . . . . . . . . . . . . . . . . . .  58
        4.3.1.  Encrypted Extensions  . . . . . . . . . . . . . . . .  58
        4.3.2.  Certificate Request . . . . . . . . . . . . . . . . .  59
-     4.4.  Authentication Messages . . . . . . . . . . . . . . . . .  59
+     4.4.  Authentication Messages . . . . . . . . . . . . . . . . .  60
        4.4.1.  The Transcript Hash . . . . . . . . . . . . . . . . .  61
        4.4.2.  Certificate . . . . . . . . . . . . . . . . . . . . .  62
        4.4.3.  Certificate Verify  . . . . . . . . . . . . . . . . .  66
@@ -1331,12 +1331,12 @@ Internet-Draft                     TLS                         July 2017
    Single-byte entities containing uninterpreted data are of type
    opaque.
 
-3.3.  Vectors
+   A type alias T' for an existing type T is defined by:
 
-   A vector (single-dimensioned array) is a stream of homogeneous data
-   elements.  The size of the vector may be specified at documentation
-   time or left unspecified until runtime.  In either case, the length
-   declares the number of bytes, not the number of elements, in the
+      T T';
+
+
+
 
 
 
@@ -1346,6 +1346,12 @@ Rescorla                Expires January 30, 2018               [Page 24]
 Internet-Draft                     TLS                         July 2017
 
 
+3.3.  Vectors
+
+   A vector (single-dimensioned array) is a stream of homogeneous data
+   elements.  The size of the vector may be specified at documentation
+   time or left unspecified until runtime.  In either case, the length
+   declares the number of bytes, not the number of elements, in the
    vector.  The syntax for specifying a new type, T', that is a fixed-
    length vector of type T is
 
@@ -1387,12 +1393,6 @@ Internet-Draft                     TLS                         July 2017
       uint16 longer<0..800>;
             /* zero to 400 16-bit unsigned integers */
 
-3.4.  Numbers
-
-   The basic numeric data type is an unsigned byte (uint8).  All larger
-   numeric data types are formed from fixed-length series of bytes
-   concatenated as described in Section 3.1 and are also unsigned.  The
-   following numeric types are predefined.
 
 
 
@@ -1401,6 +1401,13 @@ Rescorla                Expires January 30, 2018               [Page 25]
 
 Internet-Draft                     TLS                         July 2017
 
+
+3.4.  Numbers
+
+   The basic numeric data type is an unsigned byte (uint8).  All larger
+   numeric data types are formed from fixed-length series of bytes
+   concatenated as described in Section 3.1 and are also unsigned.  The
+   following numeric types are predefined.
 
       uint8 uint16[2];
       uint8 uint24[3];
@@ -1443,13 +1450,6 @@ Internet-Draft                     TLS                         July 2017
 
    The names of the elements of an enumeration are scoped within the
    defined type.  In the first example, a fully qualified reference to
-   the second element of the enumeration would be Color.blue.  Such
-   qualification is not required if the target of the assignment is well
-   specified.
-
-      Color color = Color.blue;     /* overspecified, legal */
-      Color color = blue;           /* correct, type implicit */
-
 
 
 
@@ -1457,6 +1457,13 @@ Rescorla                Expires January 30, 2018               [Page 26]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   the second element of the enumeration would be Color.blue.  Such
+   qualification is not required if the target of the assignment is well
+   specified.
+
+      Color color = Color.blue;     /* overspecified, legal */
+      Color color = blue;           /* correct, type implicit */
 
    The names assigned to enumerateds do not need to be unique.  The
    numerical value can describe a range over which the same name
@@ -1477,7 +1484,7 @@ Internet-Draft                     TLS                         July 2017
           T2 f2;
           ...
           Tn fn;
-      } [[T]];
+      } T;
 
    Fixed- and variable-length vector fields are allowed using the
    standard vector syntax.  Structures V1 and V2 in the variants example
@@ -1486,8 +1493,6 @@ Internet-Draft                     TLS                         July 2017
    The fields within a structure may be qualified using the type's name,
    with a syntax much like that available for enumerateds.  For example,
    T.f2 refers to the second field of the previous declaration.
-   Structure definitions may be embedded.  Anonymous structs may also be
-   defined inside other structures.
 
 3.7.  Constants
 
@@ -1498,6 +1503,17 @@ Internet-Draft                     TLS                         July 2017
           T2 f2;
       } T;
 
+
+
+
+
+
+
+Rescorla                Expires January 30, 2018               [Page 27]
+
+Internet-Draft                     TLS                         July 2017
+
+
 3.8.  Variants
 
    Defined structures may have variants based on some knowledge that is
@@ -1506,13 +1522,6 @@ Internet-Draft                     TLS                         July 2017
    body of the variant structure may be given a label for reference.
    The mechanism by which the variant is selected at runtime is not
    prescribed by the presentation language.
-
-
-
-Rescorla                Expires January 30, 2018               [Page 27]
-
-Internet-Draft                     TLS                         July 2017
-
 
       struct {
           T1 f1;
@@ -1525,7 +1534,7 @@ Internet-Draft                     TLS                         July 2017
               ....
               case en: Ten;
           } [[fv]];
-      } [[Tv]];
+      } Tv;
 
    For example:
 
@@ -1549,15 +1558,6 @@ Internet-Draft                     TLS                         July 2017
           };
       } VariantRecord;
 
-4.  Handshake Protocol
-
-   The handshake protocol is used to negotiate the security parameters
-   of a connection.  Handshake messages are supplied to the TLS record
-   layer, where they are encapsulated within one or more TLSPlaintext or
-   TLSCiphertext structures, which are processed and transmitted as
-   specified by the current active connection state.
-
-
 
 
 
@@ -1569,6 +1569,14 @@ Rescorla                Expires January 30, 2018               [Page 28]
 
 Internet-Draft                     TLS                         July 2017
 
+
+4.  Handshake Protocol
+
+   The handshake protocol is used to negotiate the security parameters
+   of a connection.  Handshake messages are supplied to the TLS record
+   layer, where they are encapsulated within one or more TLSPlaintext or
+   TLSCiphertext structures, which are processed and transmitted as
+   specified by the current active connection state.
 
       enum {
           client_hello(1),
@@ -1609,6 +1617,15 @@ Internet-Draft                     TLS                         July 2017
    handshake message in an unexpected order MUST abort the handshake
    with an "unexpected_message" alert.
 
+
+
+
+
+Rescorla                Expires January 30, 2018               [Page 29]
+
+Internet-Draft                     TLS                         July 2017
+
+
    New handshake message types are assigned by IANA as described in
    Section 11.
 
@@ -1618,13 +1635,6 @@ Internet-Draft                     TLS                         July 2017
    capabilities of the client and the server and to establish shared
    secrets including the traffic keys used to protect the rest of the
    handshake and the data.
-
-
-
-Rescorla                Expires January 30, 2018               [Page 29]
-
-Internet-Draft                     TLS                         July 2017
-
 
 4.1.1.  Cryptographic Negotiation
 
@@ -1663,6 +1673,15 @@ Internet-Draft                     TLS                         July 2017
    overlap in the "supported_groups" parameters need not be fatal, as it
    is in the non-PSK case discussed in the previous paragraph.
 
+
+
+
+
+Rescorla                Expires January 30, 2018               [Page 30]
+
+Internet-Draft                     TLS                         July 2017
+
+
    If the server selects an (EC)DHE group and the client did not offer a
    compatible "key_share" extension in the initial ClientHello, the
    server MUST respond with a HelloRetryRequest (Section 4.1.4) message.
@@ -1673,14 +1692,6 @@ Internet-Draft                     TLS                         July 2017
 
    -  If PSK is being used, then the server will send a "pre_shared_key"
       extension indicating the selected key.
-
-
-
-
-Rescorla                Expires January 30, 2018               [Page 30]
-
-Internet-Draft                     TLS                         July 2017
-
 
    -  If PSK is not being used, then (EC)DHE and certificate-based
       authentication are always used.
@@ -1719,6 +1730,14 @@ Internet-Draft                     TLS                         July 2017
 
    -  Updating the "pre_shared_key" extension if present by recomputing
       the "obfuscated_ticket_age" and binder values and (optionally)
+
+
+
+Rescorla                Expires January 30, 2018               [Page 31]
+
+Internet-Draft                     TLS                         July 2017
+
+
       removing any PSKs which are incompatible with the server's
       indicated cipher suite.
 
@@ -1730,13 +1749,6 @@ Internet-Draft                     TLS                         July 2017
    TLS and receives a TLS 1.3 ClientHello in a renegotiation, it MUST
    retain the previous protocol version.  In particular, it MUST NOT
    negotiate TLS 1.3.
-
-
-
-Rescorla                Expires January 30, 2018               [Page 31]
-
-Internet-Draft                     TLS                         July 2017
-
 
    Structure of this message:
 
@@ -1773,6 +1785,15 @@ Internet-Draft                     TLS                         July 2017
       "session resumption" feature which has been merged with Pre-Shared
       Keys in this version (see Section 2.2).  This field MUST be
       ignored by a server negotiating TLS 1.3 and MUST be set as a zero
+
+
+
+
+Rescorla                Expires January 30, 2018               [Page 32]
+
+Internet-Draft                     TLS                         July 2017
+
+
       length vector (i.e., a single zero byte length field) by clients
       that do not have a cached session ID set by a pre-TLS 1.3 server.
 
@@ -1786,13 +1807,6 @@ Internet-Draft                     TLS                         July 2017
       Appendix B.4.  If the client is attempting a PSK key
       establishment, it SHOULD advertise at least one cipher suite
       indicating a Hash associated with the PSK.
-
-
-
-Rescorla                Expires January 30, 2018               [Page 32]
-
-Internet-Draft                     TLS                         July 2017
-
 
    legacy_compression_methods  Versions of TLS before 1.3 supported
       compression with the list of supported compression methods being
@@ -1828,6 +1842,14 @@ Internet-Draft                     TLS                         July 2017
    compatibility with TLS before extensions were defined.  TLS 1.3
    servers will need to perform this check first and only attempt to
    negotiate TLS 1.3 if a "supported_version" extension is present.  If
+
+
+
+Rescorla                Expires January 30, 2018               [Page 33]
+
+Internet-Draft                     TLS                         July 2017
+
+
    negotiating a version of TLS prior to 1.3, a server MUST check that
    the message either contains no data after legacy_compression_methods
    or that it contains a valid extensions block with no data following.
@@ -1841,14 +1863,6 @@ Internet-Draft                     TLS                         July 2017
    ServerHello or HelloRetryRequest message.  If early data is in use,
    the client may transmit early application data (Section 2.3) while
    waiting for the next handshake message.
-
-
-
-
-Rescorla                Expires January 30, 2018               [Page 33]
-
-Internet-Draft                     TLS                         July 2017
-
 
 4.1.3.  Server Hello
 
@@ -1885,6 +1899,13 @@ Internet-Draft                     TLS                         July 2017
       cipher suite that was not offered MUST abort the handshake with an
       "illegal_parameter" alert.
 
+
+
+Rescorla                Expires January 30, 2018               [Page 34]
+
+Internet-Draft                     TLS                         July 2017
+
+
    extensions  A list of extensions.  The ServerHello MUST only include
       extensions which are required to establish the cryptographic
       context.  Currently the only such extensions are "key_share" and
@@ -1897,14 +1918,6 @@ Internet-Draft                     TLS                         July 2017
    random value.  TLS 1.3 servers which negotiate TLS 1.2 or below in
    response to a ClientHello MUST set the last eight bytes of their
    Random value specially.
-
-
-
-
-Rescorla                Expires January 30, 2018               [Page 34]
-
-Internet-Draft                     TLS                         July 2017
-
 
    If negotiating TLS 1.2, TLS 1.3 servers MUST set the last eight bytes
    of their Random value to the bytes:
@@ -1941,6 +1954,14 @@ Internet-Draft                     TLS                         July 2017
 
    RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH Implementations of
    draft versions (see Section 4.2.1.1) of this specification SHOULD NOT
+
+
+
+Rescorla                Expires January 30, 2018               [Page 35]
+
+Internet-Draft                     TLS                         July 2017
+
+
    implement this mechanism on either client and server.  A pre-RFC
    client connecting to RFC servers, or vice versa, will appear to
    downgrade to TLS 1.2.  With the mechanism enabled, this will cause an
@@ -1954,13 +1975,6 @@ Internet-Draft                     TLS                         July 2017
    the handshake.
 
    Structure of this message:
-
-
-
-Rescorla                Expires January 30, 2018               [Page 35]
-
-Internet-Draft                     TLS                         July 2017
-
 
       struct {
           ProtocolVersion server_version;
@@ -1996,6 +2010,14 @@ Internet-Draft                     TLS                         July 2017
    In addition, in its updated ClientHello, the client SHOULD NOT offer
    any pre-shared keys associated with a hash other than that of the
    selected cipher suite.  This allows the client to avoid having to
+
+
+
+Rescorla                Expires January 30, 2018               [Page 36]
+
+Internet-Draft                     TLS                         July 2017
+
+
    compute partial hash transcripts for multiple hashes in the second
    ClientHello.  A client which receives a cipher suite that was not
    offered MUST abort the handshake.  Servers MUST ensure that they
@@ -2006,17 +2028,6 @@ Internet-Draft                     TLS                         July 2017
    supplied in the ServerHello is the same as that in the
    HelloRetryRequest and otherwise abort the handshake with an
    "illegal_parameter" alert.
-
-
-
-
-
-
-
-Rescorla                Expires January 30, 2018               [Page 36]
-
-Internet-Draft                     TLS                         July 2017
-
 
 4.2.  Extensions
 
@@ -2055,6 +2066,14 @@ Internet-Draft                     TLS                         July 2017
 
    Here:
 
+
+
+
+Rescorla                Expires January 30, 2018               [Page 37]
+
+Internet-Draft                     TLS                         July 2017
+
+
    -  "extension_type" identifies the particular extension type.
 
    -  "extension_data" contains information specific to the particular
@@ -2066,14 +2085,6 @@ Internet-Draft                     TLS                         July 2017
    Extensions are generally structured in a request/response fashion,
    though some extensions are just indications with no corresponding
    response.  The client sends its extension requests in the ClientHello
-
-
-
-Rescorla                Expires January 30, 2018               [Page 37]
-
-Internet-Draft                     TLS                         July 2017
-
-
    message and the server sends its extension responses in the
    ServerHello, EncryptedExtensions, HelloRetryRequest and Certificate
    messages.  The server sends extension requests in the
@@ -2096,17 +2107,6 @@ Internet-Draft                     TLS                         July 2017
    which it recognizes and which is not specified for the message in
    which it appears it MUST abort the handshake with an
    "illegal_parameter" alert.
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2635,6 +2635,7 @@ Internet-Draft                     TLS                         July 2017
 
 
       enum {
+
           /* Elliptic Curve Groups (ECDHE) */
           secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
           x25519(0x001D), x448(0x001E),
@@ -2677,10 +2678,9 @@ Internet-Draft                     TLS                         July 2017
    this extension SHOULD contain all groups the server supports,
    regardless of whether they are currently supported by the client.
 
-4.2.8.  Key Share
 
-   The "key_share" extension contains the endpoint's cryptographic
-   parameters.
+
+
 
 
 
@@ -2689,6 +2689,11 @@ Rescorla                Expires January 30, 2018               [Page 48]
 
 Internet-Draft                     TLS                         July 2017
 
+
+4.2.8.  Key Share
+
+   The "key_share" extension contains the endpoint's cryptographic
+   parameters.
 
    Clients MAY send an empty client_shares vector in order to request
    group selection from the server at the cost of an additional round
@@ -2732,11 +2737,6 @@ Internet-Draft                     TLS                         July 2017
       MAY be a non-contiguous subset of the "supported_groups" extension
       and MAY omit the most preferred groups.  Such a situation could
       arise if the most preferred groups are new and unlikely to be
-      supported in enough places to make pregenerating key shares for
-      them efficient.
-
-   selected_group  The mutually supported group the server intends to
-      negotiate and is requesting a retried ClientHello/KeyShare for.
 
 
 
@@ -2745,6 +2745,12 @@ Rescorla                Expires January 30, 2018               [Page 49]
 
 Internet-Draft                     TLS                         July 2017
 
+
+      supported in enough places to make pregenerating key shares for
+      them efficient.
+
+   selected_group  The mutually supported group the server intends to
+      negotiate and is requesting a retried ClientHello/KeyShare for.
 
    server_share  A single KeyShareEntry value that is in the same group
       as one of the client's shares.
@@ -2784,14 +2790,8 @@ Internet-Draft                     TLS                         July 2017
    HelloRetryRequest.  If this check fails, the client MUST abort the
    handshake with an "illegal_parameter" alert.
 
-4.2.8.1.  Diffie-Hellman Parameters
 
-   Diffie-Hellman [DH] parameters for both clients and servers are
-   encoded in the opaque key_exchange field of a KeyShareEntry in a
-   KeyShare structure.  The opaque value contains the Diffie-Hellman
-   public value (Y = g^X mod p) for the specified group (see [RFC7919]
-   for group definitions) encoded as a big-endian integer and padded to
-   the left with zeros to the size of p in bytes.
+
 
 
 
@@ -2801,6 +2801,15 @@ Rescorla                Expires January 30, 2018               [Page 50]
 
 Internet-Draft                     TLS                         July 2017
 
+
+4.2.8.1.  Diffie-Hellman Parameters
+
+   Diffie-Hellman [DH] parameters for both clients and servers are
+   encoded in the opaque key_exchange field of a KeyShareEntry in a
+   KeyShare structure.  The opaque value contains the Diffie-Hellman
+   public value (Y = g^X mod p) for the specified group (see [RFC7919]
+   for group definitions) encoded as a big-endian integer and padded to
+   the left with zeros to the size of p in bytes.
 
    Note: For a given Diffie-Hellman group, the padding results in all
    public keys having the same length.
@@ -2841,15 +2850,6 @@ Internet-Draft                     TLS                         July 2017
    equation.  For these curves, implementers do not need to verify
    membership in the correct subgroup.
 
-   For X25519 and X448, the contents of the public value are the byte
-   string inputs and outputs of the corresponding functions defined in
-   [RFC7748], 32 bytes for X25519 and 56 bytes for X448.
-
-   Note: Versions of TLS prior to 1.3 permitted point format
-   negotiation; TLS 1.3 removes this feature in favor of a single point
-   format for each curve.
-
-
 
 
 
@@ -2857,6 +2857,14 @@ Rescorla                Expires January 30, 2018               [Page 51]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   For X25519 and X448, the contents of the public value are the byte
+   string inputs and outputs of the corresponding functions defined in
+   [RFC7748], 32 bytes for X25519 and 56 bytes for X448.
+
+   Note: Versions of TLS prior to 1.3 permitted point format
+   negotiation; TLS 1.3 removes this feature in favor of a single point
+   format for each curve.
 
 4.2.9.  Pre-Shared Key Exchange Modes
 
@@ -2897,14 +2905,6 @@ Internet-Draft                     TLS                         July 2017
    flight of messages.  If the client opts to do so, it MUST supply both
    the "early_data" extension as well as the "pre_shared_key" extension.
 
-   The "extension_data" field of this extension contains an
-   "EarlyDataIndication" value.
-
-
-
-
-
-
 
 
 
@@ -2913,6 +2913,9 @@ Rescorla                Expires January 30, 2018               [Page 52]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   The "extension_data" field of this extension contains an
+   "EarlyDataIndication" value.
 
       struct {} Empty;
 
@@ -2958,10 +2961,7 @@ Internet-Draft                     TLS                         July 2017
       handshake, skipping records that fail to decrypt, up to the
       configured max_early_data_size.
 
-   -  Request that the client send another ClientHello by responding
-      with a HelloRetryRequest.  A client MUST NOT include the
-      "early_data" extension in its followup ClientHello.  The server
-      then ignores early data by skipping all records with external
+
 
 
 
@@ -2970,6 +2970,10 @@ Rescorla                Expires January 30, 2018               [Page 53]
 Internet-Draft                     TLS                         July 2017
 
 
+   -  Request that the client send another ClientHello by responding
+      with a HelloRetryRequest.  A client MUST NOT include the
+      "early_data" extension in its followup ClientHello.  The server
+      then ignores early data by skipping all records with external
       content type of "application_data" (indicating that they are
       encrypted).
 
@@ -3014,10 +3018,6 @@ Internet-Draft                     TLS                         July 2017
    could result in assumptions about the status of the connection being
    incorrect.  For instance, when the negotiated connection selects a
    different ALPN protocol from what was used for the early data, an
-   application might need to construct different messages.  Similarly,
-   if early data assumes anything about the connection state, it might
-   be sent in error after the handshake completes.
-
 
 
 
@@ -3025,6 +3025,10 @@ Rescorla                Expires January 30, 2018               [Page 54]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   application might need to construct different messages.  Similarly,
+   if early data assumes anything about the connection state, it might
+   be sent in error after the handshake completes.
 
    A TLS implementation SHOULD NOT automatically re-send early data;
    applications are in a better position to decide when re-transmission
@@ -3070,10 +3074,6 @@ Internet-Draft                     TLS                         July 2017
       established externally an obfuscated_ticket_age of 0 SHOULD be
       used, and servers MUST ignore the value.
 
-   identities  A list of the identities that the client is willing to
-      negotiate with the server.  If sent alongside the "early_data"
-      extension (see Section 4.2.10), the first identity is the one used
-      for 0-RTT data.
 
 
 
@@ -3081,6 +3081,11 @@ Rescorla                Expires January 30, 2018               [Page 55]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   identities  A list of the identities that the client is willing to
+      negotiate with the server.  If sent alongside the "early_data"
+      extension (see Section 4.2.10), the first identity is the one used
+      for 0-RTT data.
 
    binders  A series of HMAC values, one for each PSK offered in the
       "pre_shared_keys" extension and in the same order, computed as
@@ -3125,11 +3130,6 @@ Internet-Draft                     TLS                         July 2017
    is returned, the client MUST abort the handshake with an
    "illegal_parameter" alert.
 
-   This extension MUST be the last extension in the ClientHello (this
-   facilitates implementation as described below).  Servers MUST check
-   that it is the last extension and otherwise fail the handshake with
-   an "illegal_parameter" alert.
-
 
 
 
@@ -3137,6 +3137,11 @@ Rescorla                Expires January 30, 2018               [Page 56]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   This extension MUST be the last extension in the ClientHello (this
+   facilitates implementation as described below).  Servers MUST check
+   that it is the last extension and otherwise fail the handshake with
+   an "illegal_parameter" alert.
 
 4.2.11.1.  Ticket Age
 
@@ -3180,12 +3185,7 @@ Internet-Draft                     TLS                         July 2017
 
       Transcript-Hash(ClientHello1[truncated])
 
-   If the server responds with HelloRetryRequest, and the client then
-   sends ClientHello2, its binder will be computed over:
 
-      Transcript-Hash(ClientHello1,
-                      HelloRetryRequest,
-                      ClientHello2[truncated])
 
 
 
@@ -3193,6 +3193,13 @@ Rescorla                Expires January 30, 2018               [Page 57]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   If the server responds with HelloRetryRequest, and the client then
+   sends ClientHello2, its binder will be computed over:
+
+      Transcript-Hash(ClientHello1,
+                      HelloRetryRequest,
+                      ClientHello2[truncated])
 
    The full ClientHello1/ClientHello2 is included in all other handshake
    hash computations.  Note that in the first flight,
@@ -3236,19 +3243,15 @@ Internet-Draft                     TLS                         July 2017
           Extension extensions<0..2^16-1>;
       } EncryptedExtensions;
 
-   extensions  A list of extensions.  For more information, see the
-      table in Section 4.2.
-
-
-
-
-
 
 
 Rescorla                Expires January 30, 2018               [Page 58]
 
 Internet-Draft                     TLS                         July 2017
 
+
+   extensions  A list of extensions.  For more information, see the
+      table in Section 4.2.
 
 4.3.2.  Certificate Request
 
@@ -3293,11 +3296,8 @@ Internet-Draft                     TLS                         July 2017
    that the client has sent the "post_handshake_auth" extension (see
    Section 4.2.6).
 
-4.4.  Authentication Messages
 
-   As discussed in Section 2, TLS generally uses a common set of
-   messages for authentication, key confirmation, and handshake
-   integrity: Certificate, CertificateVerify, and Finished.  (The
+
 
 
 
@@ -3306,6 +3306,11 @@ Rescorla                Expires January 30, 2018               [Page 59]
 Internet-Draft                     TLS                         July 2017
 
 
+4.4.  Authentication Messages
+
+   As discussed in Section 2, TLS generally uses a common set of
+   messages for authentication, key confirmation, and handshake
+   integrity: Certificate, CertificateVerify, and Finished.  (The
    PreSharedKey binders also perform key confirmation, in a similar
    fashion.)  These three messages are always sent as the last messages
    in their handshake flight.  The Certificate and CertificateVerify
@@ -3339,11 +3344,6 @@ Internet-Draft                     TLS                         July 2017
 
    The following table defines the Handshake Context and MAC Base Key
    for each scenario:
-
-
-
-
-
 
 
 
@@ -6555,6 +6555,8 @@ Internet-Draft                     TLS                         July 2017
 
 
       enum {
+          unallocated_RESERVED(0x0000),
+
           /* Elliptic Curve Groups (ECDHE) */
           obsolete_RESERVED(0x0001..0x0016),
           secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
@@ -6587,8 +6589,6 @@ Internet-Draft                     TLS                         July 2017
    configured TLS implementations.
 
 B.3.2.  Server Parameters Messages
-
-
 
 
 

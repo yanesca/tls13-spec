@@ -1268,6 +1268,10 @@ Subsequent Handshake:
 <p id="rfc.section.3.2.p.1">Comments begin with &#8220;/*&#8221; and end with &#8220;*/&#8221;.</p>
 <p id="rfc.section.3.2.p.2">Optional components are denoted by enclosing them in &#8220;[[ ]]&#8221; double brackets.</p>
 <p id="rfc.section.3.2.p.3">Single-byte entities containing uninterpreted data are of type opaque.</p>
+<p id="rfc.section.3.2.p.4">A type alias T&#8217; for an existing type T is defined by:</p>
+<pre>
+   T T';
+</pre>
 <h2 id="rfc.section.3.3">
 <a href="#rfc.section.3.3">3.3.</a> <a href="#vectors" id="vectors">Vectors</a>
 </h2>
@@ -1339,10 +1343,10 @@ Subsequent Handshake:
        T2 f2;
        ...
        Tn fn;
-   } [[T]];
+   } T;
 </pre>
 <p id="rfc.section.3.6.p.2">Fixed- and variable-length vector fields are allowed using the standard vector syntax. Structures V1 and V2 in the variants example below demonstrate this.</p>
-<p id="rfc.section.3.6.p.3">The fields within a structure may be qualified using the type&#8217;s name, with a syntax much like that available for enumerateds. For example, T.f2 refers to the second field of the previous declaration. Structure definitions may be embedded. Anonymous structs may also be defined inside other structures.</p>
+<p id="rfc.section.3.6.p.3">The fields within a structure may be qualified using the type&#8217;s name, with a syntax much like that available for enumerateds. For example, T.f2 refers to the second field of the previous declaration.</p>
 <h2 id="rfc.section.3.7">
 <a href="#rfc.section.3.7">3.7.</a> <a href="#constants" id="constants">Constants</a>
 </h2>
@@ -1369,7 +1373,7 @@ Subsequent Handshake:
            ....
            case en: Ten;
        } [[fv]];
-   } [[Tv]];
+   } Tv;
 </pre>
 <p id="rfc.section.3.8.p.2">For example:</p>
 <pre>
@@ -1891,6 +1895,7 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.7.p.3">The &#8220;extension_data&#8221; field of this extension contains a &#8220;NamedGroupList&#8221; value:</p>
 <pre>
    enum {
+
        /* Elliptic Curve Groups (ECDHE) */
        secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
        x25519(0x001D), x448(0x001E),
@@ -3868,6 +3873,8 @@ here                  +--------+--------+
 </h4>
 <pre>
    enum {
+       unallocated_RESERVED(0x0000),
+
        /* Elliptic Curve Groups (ECDHE) */
        obsolete_RESERVED(0x0001..0x0016),
        secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
