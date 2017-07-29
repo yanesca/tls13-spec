@@ -1153,7 +1153,6 @@ Internet-Draft                     TLS                         July 2017
    Subsequent Handshake:
           ClientHello
           + key_share*
-          + psk_key_exchange_modes
           + pre_shared_key          -------->
                                                           ServerHello
                                                      + pre_shared_key
@@ -1170,6 +1169,7 @@ Internet-Draft                     TLS                         July 2017
    Certificate or a CertificateVerify message.  When a client offers
    resumption via PSK, it SHOULD also supply a "key_share" extension to
    the server to allow the server to decline resumption and fall back to
+   a full handshake, if needed.  The server responds with a
 
 
 
@@ -1178,7 +1178,6 @@ Rescorla                Expires January 30, 2018               [Page 21]
 Internet-Draft                     TLS                         July 2017
 
 
-   a full handshake, if needed.  The server responds with a
    "pre_shared_key" extension to negotiate use of PSK key establishment
    and can (as shown here) respond with a "key_share" extension to do
    (EC)DHE key establishment, thus providing forward secrecy.
@@ -1218,6 +1217,7 @@ Internet-Draft                     TLS                         July 2017
    As shown in Figure 4, the 0-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
+
 
 
 
