@@ -2827,10 +2827,10 @@ Internet-Draft                     TLS                         July 2017
    serialized value of the following struct:
 
       struct {
-          uint8                legacy_form = 4;
-          opaque               X[coordinate_length];
-          opaque               Y[coordinate_length];
-       } UncompressedPointRepresentation;
+          uint8 legacy_form = 4;
+          opaque X[coordinate_length];
+          opaque Y[coordinate_length];
+      } UncompressedPointRepresentation;
 
    X and Y respectively are the binary representations of the X and Y
    values in network byte order.  There are no internal length markers,
@@ -3446,7 +3446,7 @@ Internet-Draft                     TLS                         July 2017
    Structure of this message:
 
       struct {
-          select (certificate_type){
+          select (certificate_type) {
               case RawPublicKey:
                 // From RFC 7250 ASN.1_subjectPublicKeyInfo
                 opaque ASN1_subjectPublicKeyInfo<1..2^24-1>;
@@ -6408,6 +6408,12 @@ Internet-Draft                     TLS                         July 2017
        };
    } KeyShare;
 
+   struct {
+       uint8 legacy_form = 4;
+       opaque X[coordinate_length];
+       opaque Y[coordinate_length];
+   } UncompressedPointRepresentation;
+
    enum { psk_ke(0), psk_dhe_ke(1), (255) } PskKeyExchangeMode;
 
    struct {
@@ -6429,12 +6435,6 @@ Internet-Draft                     TLS                         July 2017
        uint32 obfuscated_ticket_age;
    } PskIdentity;
 
-   opaque PskBinderEntry<32..255>;
-
-   struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-
 
 
 Rescorla                Expires January 30, 2018              [Page 115]
@@ -6442,6 +6442,11 @@ Rescorla                Expires January 30, 2018              [Page 115]
 Internet-Draft                     TLS                         July 2017
 
 
+   opaque PskBinderEntry<32..255>;
+
+   struct {
+       select (Handshake.msg_type) {
+           case client_hello:
                PskIdentity identities<7..2^16-1>;
                PskBinderEntry binders<33..2^16-1>;
 
@@ -6464,11 +6469,6 @@ B.3.1.2.  Cookie Extension
       } Cookie;
 
 B.3.1.3.  Signature Algorithm Extension
-
-
-
-
-
 
 
 
@@ -6667,7 +6667,7 @@ Internet-Draft                     TLS                         July 2017
 
 
       struct {
-          select (certificate_type){
+          select (certificate_type) {
               case RawPublicKey:
                 // From RFC 7250 ASN.1_subjectPublicKeyInfo
                 opaque ASN1_subjectPublicKeyInfo<1..2^24-1>;
