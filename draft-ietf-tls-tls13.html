@@ -401,7 +401,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-06" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-10-24" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -422,7 +422,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">October 06, 2017</td>
+<td class="right">October 24, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -437,7 +437,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: April 9, 2018</td>
+<td class="left">Expires: April 27, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 9, 2018.</p>
+<p>This Internet-Draft will expire on April 27, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -1477,6 +1477,7 @@ Subsequent Handshake:
 <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication" class="xref">Section 4.2.10</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
 <li>Including a &#8220;cookie&#8221; extension if one was provided in the HelloRetryRequest.</li>
 <li>Updating the &#8220;pre_shared_key&#8221; extension if present by recomputing the &#8220;obfuscated_ticket_age&#8221; and binder values and (optionally) removing any PSKs which are incompatible with the server&#8217;s indicated cipher suite.</li>
+<li>Optionally adding, removing, or changing the length of the &#8220;padding&#8221; extension <a href="#RFC7685" class="xref">[RFC7685]</a>.</li>
 </ul>
 <p id="rfc.section.4.1.2.p.3">Because TLS 1.3 forbids renegotiation, if a server has negotiated TLS 1.3 and receives a ClientHello at any other time, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.4.1.2.p.4">If a server established a TLS connection with a previous version of TLS and receives a TLS 1.3 ClientHello in a renegotiation, it MUST retain the previous protocol version. In particular, it MUST NOT negotiate TLS 1.3.</p>
