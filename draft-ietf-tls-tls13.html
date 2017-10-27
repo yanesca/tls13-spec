@@ -2553,7 +2553,7 @@ finished_key =
        ContentType opaque_type = 23; /* application_data */
        ProtocolVersion legacy_record_version = 0x0301; /* TLS v1.x */
        uint16 length;
-       opaque encrypted_record[length];
+       opaque encrypted_record[TLSCiphertext.length];
    } TLSCiphertext;
 </pre>
 <p></p>
@@ -3598,7 +3598,7 @@ here                  +--------+--------+
        ContentType opaque_type = 23; /* application_data */
        ProtocolVersion legacy_record_version = 0x0301; /* TLS v1.x */
        uint16 length;
-       opaque encrypted_record[length];
+       opaque encrypted_record[TLSCiphertext.length];
    } TLSCiphertext;
 </pre>
 <h2 id="rfc.appendix.B.2">
