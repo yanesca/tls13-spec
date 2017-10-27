@@ -401,7 +401,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-10-27" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -422,7 +422,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">October 24, 2017</td>
+<td class="right">October 27, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -437,7 +437,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: April 27, 2018</td>
+<td class="left">Expires: April 30, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 27, 2018.</p>
+<p>This Internet-Draft will expire on April 30, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -2264,7 +2264,7 @@ Subsequent Handshake:
 <dt>certificate_list</dt>
 <dd style="margin-left: 8">This is a sequence (chain) of CertificateEntry structures, each containing a single certificate and set of extensions.</dd>
 <dt>extensions:</dt>
-<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The &#8220;Extension&#8221; format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions include OCSP Status extensions (<a href="#RFC6066" class="xref">[RFC6066]</a> and <a href="#RFC6961" class="xref">[RFC6961]</a>) and SignedCertificateTimestamps (<a href="#RFC6962" class="xref">[RFC6962]</a>).  An extension MUST only be present in a Certificate message if the corresponding ClientHello extension was presented in the initial handshake.  If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
+<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The &#8220;Extension&#8221; format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions include OCSP Status extension (<a href="#RFC6066" class="xref">[RFC6066]</a>) and SignedCertificateTimestamps (<a href="#RFC6962" class="xref">[RFC6962]</a>).  An extension MUST only be present in a Certificate message if the corresponding ClientHello extension was presented in the initial handshake.  If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
 </dl>
 <p id="rfc.section.4.4.2.p.6">If the corresponding certificate type extension (&#8220;server_certificate_type&#8221; or &#8220;client_certificate_type&#8221;) was not used or the X.509 certificate type was negotiated, then each CertificateEntry contains an X.509 certificate. The sender&#8217;s certificate MUST come in the first CertificateEntry in the list.  Each following certificate SHOULD directly certify one preceding it.  Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</p>
 <p id="rfc.section.4.4.2.p.7">Note: Prior to TLS 1.3, &#8220;certificate_list&#8221; ordering required each certificate to certify the one immediately preceding it; however, some implementations allowed some flexibility. Servers sometimes send both a current and deprecated intermediate for transitional purposes, and others are simply configured incorrectly, but these cases can nonetheless be validated properly. For maximum compatibility, all implementations SHOULD be prepared to handle potentially extraneous certificates and arbitrary orderings from any TLS version, with the exception of the end-entity certificate which MUST be first.</p>
@@ -2275,8 +2275,9 @@ Subsequent Handshake:
 <a href="#rfc.section.4.4.2.1">4.4.2.1.</a> <a href="#ocsp-and-sct" id="ocsp-and-sct">OCSP Status and SCT Extensions</a>
 </h4>
 <p><a href="#RFC6066" class="xref">[RFC6066]</a> and <a href="#RFC6961" class="xref">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server replies with an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in the CertificateEntry containing the associated certificate. Specifically: The body of the &#8220;status_request&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>, which is interpreted as defined in <a href="#RFC6960" class="xref">[RFC6960]</a>.</p>
-<p id="rfc.section.4.4.2.1.p.2">A server MAY request that a client present an OCSP response with its certificate by sending an empty &#8220;status_request&#8221; extension in its CertificateRequest message. If the client opts to send an OCSP response, the body of its &#8220;status_request&#8221; extension MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>.</p>
-<p id="rfc.section.4.4.2.1.p.3">Similarly, <a href="#RFC6962" class="xref">[RFC6962]</a> provides a mechanism for a server to send a Signed Certificate Timestamp (SCT) as an extension in the ServerHello in TLS 1.2 and below.  In TLS 1.3, the server&#8217;s SCT information is carried in an extension in CertificateEntry.</p>
+<p id="rfc.section.4.4.2.1.p.2">Note: status_request_v2 extension (<a href="#RFC6961" class="xref">[RFC6961]</a>) is deprecated. TLS 1.3 servers MUST NOT act upon its presence or information in it when processing Client Hello, in particular they MUST NOT send the status_request_v2 extension in the Encrypted Extensions, Certificate Request or the Certificate messages.  TLS 1.3 servers MUST be able to process Client Hello messages that include it, as it MAY be sent by clients that wish to use it in earlier protocol versions.</p>
+<p id="rfc.section.4.4.2.1.p.3">A server MAY request that a client present an OCSP response with its certificate by sending an empty &#8220;status_request&#8221; extension in its CertificateRequest message. If the client opts to send an OCSP response, the body of its &#8220;status_request&#8221; extension MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>.</p>
+<p id="rfc.section.4.4.2.1.p.4">Similarly, <a href="#RFC6962" class="xref">[RFC6962]</a> provides a mechanism for a server to send a Signed Certificate Timestamp (SCT) as an extension in the ServerHello in TLS 1.2 and below.  In TLS 1.3, the server&#8217;s SCT information is carried in an extension in CertificateEntry.</p>
 <h4 id="rfc.section.4.4.2.2">
 <a href="#rfc.section.4.4.2.2">4.4.2.2.</a> <a href="#server-certificate-selection" id="server-certificate-selection">Server Certificate Selection</a>
 </h4>
