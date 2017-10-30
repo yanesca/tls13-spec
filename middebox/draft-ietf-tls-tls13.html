@@ -401,7 +401,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-9-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-10-30" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -422,7 +422,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">September 29, 2017</td>
+<td class="right">October 30, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -437,7 +437,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: April 2, 2018</td>
+<td class="left">Expires: May 3, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 2, 2018.</p>
+<p>This Internet-Draft will expire on May 3, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -1477,6 +1477,7 @@ Subsequent Handshake:
 <li>Removing the &#8220;early_data&#8221; extension (<a href="#early-data-indication" class="xref">Section 4.2.10</a>) if one was present. Early data is not permitted after HelloRetryRequest.</li>
 <li>Including a &#8220;cookie&#8221; extension if one was provided in the HelloRetryRequest.</li>
 <li>Updating the &#8220;pre_shared_key&#8221; extension if present by recomputing the &#8220;obfuscated_ticket_age&#8221; and binder values and (optionally) removing any PSKs which are incompatible with the server&#8217;s indicated cipher suite.</li>
+<li>Optionally adding, removing, or changing the length of the &#8220;padding&#8221; extension <a href="#RFC7685" class="xref">[RFC7685]</a>.</li>
 </ul>
 <p id="rfc.section.4.1.2.p.3">Because TLS 1.3 forbids renegotiation, if a server has negotiated TLS 1.3 and receives a ClientHello at any other time, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.4.1.2.p.4">If a server established a TLS connection with a previous version of TLS and receives a TLS 1.3 ClientHello in a renegotiation, it MUST retain the previous protocol version. In particular, it MUST NOT negotiate TLS 1.3.</p>
@@ -2263,7 +2264,7 @@ Subsequent Handshake:
 <dt>certificate_list</dt>
 <dd style="margin-left: 8">This is a sequence (chain) of CertificateEntry structures, each containing a single certificate and set of extensions.</dd>
 <dt>extensions:</dt>
-<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The &#8220;Extension&#8221; format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions include OCSP Status extensions (<a href="#RFC6066" class="xref">[RFC6066]</a> and <a href="#RFC6961" class="xref">[RFC6961]</a>) and SignedCertificateTimestamps (<a href="#RFC6962" class="xref">[RFC6962]</a>).  An extension MUST only be present in a Certificate message if the corresponding ClientHello extension was presented in the initial handshake.  If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
+<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The &#8220;Extension&#8221; format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions include OCSP Status extension (<a href="#RFC6066" class="xref">[RFC6066]</a>) and SignedCertificateTimestamps (<a href="#RFC6962" class="xref">[RFC6962]</a>).  An extension MUST only be present in a Certificate message if the corresponding ClientHello extension was presented in the initial handshake.  If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
 </dl>
 <p id="rfc.section.4.4.2.p.6">If the corresponding certificate type extension (&#8220;server_certificate_type&#8221; or &#8220;client_certificate_type&#8221;) was not used or the X.509 certificate type was negotiated, then each CertificateEntry contains an X.509 certificate. The sender&#8217;s certificate MUST come in the first CertificateEntry in the list.  Each following certificate SHOULD directly certify one preceding it.  Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</p>
 <p id="rfc.section.4.4.2.p.7">Note: Prior to TLS 1.3, &#8220;certificate_list&#8221; ordering required each certificate to certify the one immediately preceding it; however, some implementations allowed some flexibility. Servers sometimes send both a current and deprecated intermediate for transitional purposes, and others are simply configured incorrectly, but these cases can nonetheless be validated properly. For maximum compatibility, all implementations SHOULD be prepared to handle potentially extraneous certificates and arbitrary orderings from any TLS version, with the exception of the end-entity certificate which MUST be first.</p>
@@ -2274,8 +2275,9 @@ Subsequent Handshake:
 <a href="#rfc.section.4.4.2.1">4.4.2.1.</a> <a href="#ocsp-and-sct" id="ocsp-and-sct">OCSP Status and SCT Extensions</a>
 </h4>
 <p><a href="#RFC6066" class="xref">[RFC6066]</a> and <a href="#RFC6961" class="xref">[RFC6961]</a> provide extensions to negotiate the server sending OCSP responses to the client. In TLS 1.2 and below, the server replies with an empty extension to indicate negotiation of this extension and the OCSP information is carried in a CertificateStatus message. In TLS 1.3, the server&#8217;s OCSP information is carried in an extension in the CertificateEntry containing the associated certificate. Specifically: The body of the &#8220;status_request&#8221; extension from the server MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>, which is interpreted as defined in <a href="#RFC6960" class="xref">[RFC6960]</a>.</p>
-<p id="rfc.section.4.4.2.1.p.2">A server MAY request that a client present an OCSP response with its certificate by sending an empty &#8220;status_request&#8221; extension in its CertificateRequest message. If the client opts to send an OCSP response, the body of its &#8220;status_request&#8221; extension MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>.</p>
-<p id="rfc.section.4.4.2.1.p.3">Similarly, <a href="#RFC6962" class="xref">[RFC6962]</a> provides a mechanism for a server to send a Signed Certificate Timestamp (SCT) as an extension in the ServerHello in TLS 1.2 and below.  In TLS 1.3, the server&#8217;s SCT information is carried in an extension in CertificateEntry.</p>
+<p id="rfc.section.4.4.2.1.p.2">Note: status_request_v2 extension (<a href="#RFC6961" class="xref">[RFC6961]</a>) is deprecated. TLS 1.3 servers MUST NOT act upon its presence or information in it when processing Client Hello, in particular they MUST NOT send the status_request_v2 extension in the Encrypted Extensions, Certificate Request or the Certificate messages.  TLS 1.3 servers MUST be able to process Client Hello messages that include it, as it MAY be sent by clients that wish to use it in earlier protocol versions.</p>
+<p id="rfc.section.4.4.2.1.p.3">A server MAY request that a client present an OCSP response with its certificate by sending an empty &#8220;status_request&#8221; extension in its CertificateRequest message. If the client opts to send an OCSP response, the body of its &#8220;status_request&#8221; extension MUST be a CertificateStatus structure as defined in <a href="#RFC6066" class="xref">[RFC6066]</a>.</p>
+<p id="rfc.section.4.4.2.1.p.4">Similarly, <a href="#RFC6962" class="xref">[RFC6962]</a> provides a mechanism for a server to send a Signed Certificate Timestamp (SCT) as an extension in the ServerHello in TLS 1.2 and below.  In TLS 1.3, the server&#8217;s SCT information is carried in an extension in CertificateEntry.</p>
 <h4 id="rfc.section.4.4.2.2">
 <a href="#rfc.section.4.4.2.2">4.4.2.2.</a> <a href="#server-certificate-selection" id="server-certificate-selection">Server Certificate Selection</a>
 </h4>
@@ -2551,7 +2553,7 @@ finished_key =
        ContentType opaque_type = 23; /* application_data */
        ProtocolVersion legacy_record_version = 0x0301; /* TLS v1.x */
        uint16 length;
-       opaque encrypted_record[length];
+       opaque encrypted_record[TLSCiphertext.length];
    } TLSCiphertext;
 </pre>
 <p></p>
@@ -2770,7 +2772,7 @@ finished_key =
          HKDF-Expand-Label(Secret, Label,
                            Transcript-Hash(Messages), Hash.length)
 </pre>
-<p id="rfc.section.7.1.p.2">The Hash function used by Transcript-Hash and HKDF is the cipher suite hash algorithm.  Hash.length is its output length in bytes. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers. Note that in some cases a zero-length Context (indicated by &#8220;&#8221;) is passed to HKDF-Expand-Label.</p>
+<p id="rfc.section.7.1.p.2">The Hash function used by Transcript-Hash and HKDF is the cipher suite hash algorithm.  Hash.length is its output length in bytes. Messages are the concatenation of the indicated handshake messages, including the handshake message type and length fields, but not including record layer headers. Note that in some cases a zero-length Context (indicated by &#8220;&#8221;) is passed to HKDF-Expand-Label.  The Labels specified in this document are all ASCII strings, and do not include a trailing NUL byte.</p>
 <p id="rfc.section.7.1.p.3">Note: with common hash functions, any label longer than 12 characters requires an additional iteration of the hash function to compute.  The labels in this specification have all been chosen to fit within this limit.</p>
 <p id="rfc.section.7.1.p.4">Given a set of n InputSecrets, the final &#8220;master secret&#8221; is computed by iteratively invoking HKDF-Extract with InputSecret_1, InputSecret_2, etc.  The initial secret is simply a string of Hash.length bytes set to zeros.  Concretely, for the present version of TLS 1.3, secrets are added in the following order:</p>
 <p></p>
@@ -2936,9 +2938,9 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <li>Network attackers who mount a replay attack by simply duplicating a flight of 0-RTT data.</li>
 <li>Network attackers who take advantage of client retry behavior to arrange for the server to receive multiple copies of an application message. This threat already exists to some extent because clients that value robustness respond to network errors by attempting to retry requests. However, 0-RTT adds an additional dimension for any server system which does not maintain globally consistent server state. Specifically, if a server system has multiple zones where tickets from zone A will not be accepted in zone B, then an attacker can duplicate a ClientHello and early data intended for A to both A and B. At A, the data will be accepted in 0-RTT, but at B the server will reject 0-RTT data and instead force a full handshake. If the attacker blocks the ServerHello from A, then the client will complete the handshake with B and probably retry the request, leading to duplication on the server system as a whole.</li>
 </ul>
-<p id="rfc.section.8.p.3">The first class of attack can be prevented by the mechanism described in this section.  Servers need not permit 0-RTT at all, but those which do SHOULD implement either the single-use tickets or ClientHello recording techniques described in the following two sections.</p>
-<p id="rfc.section.8.p.4">The second class of attack cannot be prevented at the TLS layer and MUST be dealt with by any application. Note that any application whose clients implement any kind of retry behavior already needs to implement some sort of anti-replay defense.</p>
-<p id="rfc.section.8.p.5">In normal operation, clients will not know which, if any, of these mechanisms servers actually implement and therefore MUST only send early data which they are willing to have subject to the attacks described in <a href="#replay-0rtt" class="xref">Appendix E.5</a>.</p>
+<p id="rfc.section.8.p.3">The first class of attack can be prevented by sharing state to guarantee that the 0-RTT data is accepted at most once.  Servers SHOULD provide that level of replay safety, by implementing one of the methods described in this section or by equivalent means.  It is understood, however, that due to operational concerns not all deployments will maintain state at that level.  Therefore, in normal operation, clients will not know which, if any, of these mechanisms servers actually implement and hence MUST only send early data which they deem safe to be replayed.</p>
+<p id="rfc.section.8.p.4">In addition to the direct effects of replays, there is a class of attacks where even operations normally considered idempotent could be exploited by a large number of replays (timing attacks, resource limit exhaustion and others described in <a href="#replay-0rtt" class="xref">Appendix E.5</a>).  Those can be mitigated by ensuring that every 0-RTT payload can be replayed only a limited number of times.  The server MUST ensure that any instance of it (be it a machine, a thread or any other entity within the relevant serving infrastructure) would accept 0-RTT for the same 0-RTT handshake at most once; this limits the number of replays to the number of server instances in the deployment.  Such a guarantee can be accomplished by locally recording data from recently-received ClientHellos and rejecting repeats, or by any other method that provides the same or a stronger guarantee.  The &#8220;at most once per server instance&#8221; guarantee is a minimum requirement; servers SHOULD limit 0-RTT replays further when feasible.</p>
+<p id="rfc.section.8.p.5">The second class of attack cannot be prevented at the TLS layer and MUST be dealt with by any application. Note that any application whose clients implement any kind of retry behavior already needs to implement some sort of anti-replay defense.</p>
 <h2 id="rfc.section.8.1">
 <a href="#rfc.section.8.1">8.1.</a> <a href="#single-use-tickets" id="single-use-tickets">Single-Use Tickets</a>
 </h2>
@@ -3280,7 +3282,7 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <tr>
 <td class="reference"><b id="I-D.ietf-tls-iana-registry-updates">[I-D.ietf-tls-iana-registry-updates]</b></td>
 <td class="top">
-<a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="https://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-01">D/TLS IANA Registry Updates</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-01, April 2017.</td>
+<a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="https://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-02">IANA Registry Updates for TLS and DTLS</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-02, October 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-tls-tls13-vectors">[I-D.ietf-tls-tls13-vectors]</b></td>
@@ -3596,7 +3598,7 @@ here                  +--------+--------+
        ContentType opaque_type = 23; /* application_data */
        ProtocolVersion legacy_record_version = 0x0301; /* TLS v1.x */
        uint16 length;
-       opaque encrypted_record[length];
+       opaque encrypted_record[TLSCiphertext.length];
    } TLSCiphertext;
 </pre>
 <h2 id="rfc.appendix.B.2">
