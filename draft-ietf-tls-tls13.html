@@ -401,7 +401,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-27" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-11-13" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -422,7 +422,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">October 27, 2017</td>
+<td class="right">November 13, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -437,7 +437,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: April 30, 2018</td>
+<td class="left">Expires: May 17, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -454,7 +454,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 30, 2018.</p>
+<p>This Internet-Draft will expire on May 17, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -1885,7 +1885,7 @@ Subsequent Handshake:
 <h3 id="rfc.section.4.2.6">
 <a href="#rfc.section.4.2.6">4.2.6.</a> <a href="#post_handshake_auth" id="post_handshake_auth">Post-Handshake Client Authentication</a>
 </h3>
-<p id="rfc.section.4.2.6.p.1">The &#8220;post_handshake_auth&#8221; extension is used to indicate that a client is willing to perform post-handshake authentication <a href="#post-handshake-authentication" class="xref">Section 4.6.2</a>. Servers MUST not send a post-handshake CertificateRequest to clients which do not offer this extension. Servers MUST NOT send this extension.</p>
+<p id="rfc.section.4.2.6.p.1">The &#8220;post_handshake_auth&#8221; extension is used to indicate that a client is willing to perform post-handshake authentication <a href="#post-handshake-authentication" class="xref">Section 4.6.2</a>. Servers MUST NOT send a post-handshake CertificateRequest to clients which do not offer this extension. Servers MUST NOT send this extension.</p>
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of the &#8220;post_handshake_auth&#8221; extension is zero length.</p>
 <h3 id="rfc.section.4.2.7">
 <a href="#rfc.section.4.2.7">4.2.7.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a>
@@ -2611,7 +2611,7 @@ finished_key =
 <p id="rfc.section.5.4.p.3">Application Data records may contain a zero-length TLSInnerPlaintext.content if the sender desires.  This permits generation of plausibly-sized cover traffic in contexts where the presence or absence of activity may be sensitive.  Implementations MUST NOT send Handshake or Alert records that have a zero-length TLSInnerPlaintext.content; if such a message is received, the receiving implementation MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
 <p id="rfc.section.5.4.p.4">The padding sent is automatically verified by the record protection mechanism; upon successful decryption of a TLSCiphertext.encrypted_record, the receiving implementation scans the field from the end toward the beginning until it finds a non-zero octet. This non-zero octet is the content type of the message.  This padding scheme was selected because it allows padding of any encrypted TLS record by an arbitrary size (from zero up to TLS record size limits) without introducing new content types.  The design also enforces all-zero padding octets, which allows for quick detection of padding errors.</p>
 <p id="rfc.section.5.4.p.5">Implementations MUST limit their scanning to the cleartext returned from the AEAD decryption.  If a receiving implementation does not find a non-zero octet in the cleartext, it MUST terminate the connection with an &#8220;unexpected_message&#8221; alert.</p>
-<p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations - the full encoded TLSInnerPlaintext MUST not exceed 2^14 octets. If the maximum fragment length is reduced, as for example by the max_fragment_length extension from <a href="#RFC6066" class="xref">[RFC6066]</a>, then the reduced limit applies to the full plaintext, including the padding.</p>
+<p id="rfc.section.5.4.p.6">The presence of padding does not change the overall record size limitations - the full encoded TLSInnerPlaintext MUST NOT exceed 2^14 + 1 octets. If the maximum fragment length is reduced, as for example by the max_fragment_length extension from <a href="#RFC6066" class="xref">[RFC6066]</a>, then the reduced limit applies to the full plaintext, including the content type and padding.</p>
 <p id="rfc.section.5.4.p.7">Selecting a padding policy that suggests when and how much to pad is a complex topic and is beyond the scope of this specification. If the application layer protocol on top of TLS has its own padding, it may be preferable to pad application_data TLS records within the application layer.  Padding for encrypted handshake and alert TLS records must still be handled at the TLS layer, though.  Later documents may define padding selection algorithms or define a padding policy request mechanism through TLS extensions or some other means.</p>
 <h2 id="rfc.section.5.5">
 <a href="#rfc.section.5.5">5.5.</a> <a href="#limits-on-key-usage" id="limits-on-key-usage">Limits on Key Usage</a>
@@ -3282,7 +3282,7 @@ HKDF-Expand-Label(Derive-Secret(Secret, label, ""),
 <tr>
 <td class="reference"><b id="I-D.ietf-tls-iana-registry-updates">[I-D.ietf-tls-iana-registry-updates]</b></td>
 <td class="top">
-<a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="https://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-01">D/TLS IANA Registry Updates</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-01, April 2017.</td>
+<a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="https://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates-02">IANA Registry Updates for TLS and DTLS</a>", Internet-Draft draft-ietf-tls-iana-registry-updates-02, October 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-tls-tls13-vectors">[I-D.ietf-tls-tls13-vectors]</b></td>
