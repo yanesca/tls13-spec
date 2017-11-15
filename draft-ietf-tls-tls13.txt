@@ -3616,9 +3616,9 @@ Internet-Draft                     TLS                     November 2017
       present) with a signature scheme indicated in the client's
       "signature_algorithms" extension.
 
-   -  The "server_name" and "certificate_authorities" extensions
-      [RFC6066] are used to guide certificate selection.  As servers MAY
-      require the presence of the "server_name" extension, clients
+   -  The "server_name" [RFC6066] and "certificate_authorities"
+      extensions are used to guide certificate selection.  As servers
+      MAY require the presence of the "server_name" extension, clients
       SHOULD send this extension, when applicable.
 
    All certificates provided by the server MUST be signed by a signature
