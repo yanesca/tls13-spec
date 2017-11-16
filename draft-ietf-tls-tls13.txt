@@ -8070,6 +8070,10 @@ Internet-Draft                     TLS                     November 2017
       Akamai
       rsalz@akamai.com
 
+   -  David Schinazi
+      Apple Inc.
+      dschinazi@apple.com
+
    -  Sam Scott
       Royal Holloway, University of London
       me@samjs.co.uk
@@ -8110,10 +8114,6 @@ Internet-Draft                     TLS                     November 2017
       Google
       svaldez@google.com
 
-   -  Filippo Valsorda
-      Cloudflare Inc.
-      filippo@cloudflare.com
-
 
 
 
@@ -8121,6 +8121,10 @@ Rescorla                  Expires May 20, 2018                [Page 145]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   -  Filippo Valsorda
+      Cloudflare Inc.
+      filippo@cloudflare.com
 
    -  Thyla van der Merwe
       Royal Holloway, University of London
@@ -8154,10 +8158,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
