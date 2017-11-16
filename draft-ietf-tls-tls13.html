@@ -1198,7 +1198,6 @@ Subsequent Handshake:
 <li>The TLS version number for use with this PSK</li>
 <li>The cipher suite for use with this PSK</li>
 <li>The Application-Layer Protocol Negotiation (ALPN) protocol <a href="#RFC7301" class="xref">[RFC7301]</a>, if any is to be used</li>
-<li>The Server Name Indication (SNI), if any is to be used</li>
 </ul>
 <p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt" class="xref">Figure 4</a>, the 0-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
 <div id="rfc.figure.4"></div>
@@ -2049,7 +2048,6 @@ Subsequent Handshake:
 <li>The TLS version number</li>
 <li>The selected cipher suite</li>
 <li>The selected ALPN <a href="#RFC7301" class="xref">[RFC7301]</a> protocol, if any</li>
-<li>The selected SNI (Section 3 of <a href="#RFC6066" class="xref">[RFC6066]</a>) value, if any</li>
 </ul>
 <p id="rfc.section.4.2.10.p.11">These requirements are a superset of those needed to perform a 1-RTT handshake using the PSK in question.  For externally established PSKs, the associated values are those provisioned along with the key.  For PSKs established via a NewSessionTicket message, the associated values are those negotiated in the connection during which the ticket was established.</p>
 <p id="rfc.section.4.2.10.p.12">Future extensions MUST define their interaction with 0-RTT.</p>
@@ -2097,7 +2095,7 @@ Subsequent Handshake:
 <dd style="margin-left: 8">The server&#8217;s chosen identity expressed as a (0-based) index into the identities in the client&#8217;s list.</dd>
 </dl>
 <p id="rfc.section.4.2.11.p.4">Each PSK is associated with a single Hash algorithm. For PSKs established via the ticket mechanism (<a href="#NSTMessage" class="xref">Section 4.6.1</a>), this is the KDF Hash algorithm on the connection where the ticket was established.  For externally established PSKs, the Hash algorithm MUST be set when the PSK is established, or default to SHA-256 if no such algorithm is defined. The server MUST ensure that it selects a compatible PSK (if any) and cipher suite.</p>
-<p id="rfc.section.4.2.11.p.5">Each PSK is also associated with at most one Server Name Identification (SNI) value (Section 3 of <a href="#RFC6066" class="xref">[RFC6066]</a>).  For PSKs established via the ticket mechanism (<a href="#NSTMessage" class="xref">Section 4.6.1</a>), this is the SNI value (if any) on the connection where the ticket was established.  For externally established PSKs, the associated SNI value (or lack of value) is set when the PSK is established.  The server MUST ensure that it selects a compatible PSK (if any) and SNI value (if any).  SNI MUST NOT be negotiated when using a PSK not associated with an SNI value.</p>
+<p id="rfc.section.4.2.11.p.5">In TLS versions prior to TLS 1.3, the Server Name Identification (SNI) value was intended to be associated with the session (Section 3 of <a href="#RFC6066" class="xref">[RFC6066]</a>), with the server being required to enforce that the SNI value associated with the session matches the one specified in the resumption handshake.  However, in reality the implementations were not consistent on which of two supplied SNI values they would use, leading to the consistency requirement being de-facto enforced by the clients.  In TLS 1.3, the SNI value is always explicitly specified in the resumption handshake, and there is no need for the server to associate an SNI value with the ticket. Clients, however, SHOULD store the SNI with the PSK to fulfill the requirements of <a href="#NSTMessage" class="xref">Section 4.6.1</a>.</p>
 <p id="rfc.section.4.2.11.p.6">Implementor&#8217;s note: the most straightforward way to implement the PSK/cipher suite matching requirements is to negotiate the cipher suite first and then exclude any incompatible PSKs. Any unknown PSKs (e.g., they are not in the PSK database or are encrypted with an unknown key) SHOULD simply be ignored. If no acceptable PSKs are found, the server SHOULD perform a non-PSK handshake if possible.</p>
 <p id="rfc.section.4.2.11.p.7">Prior to accepting PSK key establishment, the server MUST validate the corresponding binder value (see <a href="#psk-binder" class="xref">Section 4.2.11.2</a> below). If this value is not present or does not validate, the server MUST abort the handshake.  Servers SHOULD NOT attempt to validate multiple binders; rather they SHOULD select a single PSK and validate solely the binder that corresponds to that PSK. In order to accept PSK key establishment, the server sends a &#8220;pre_shared_key&#8221; extension indicating the selected identity.</p>
 <p id="rfc.section.4.2.11.p.8">Clients MUST verify that the server&#8217;s selected_identity is within the range supplied by the client, that the server selected a cipher suite indicating a Hash associated with the PSK and that a server &#8220;key_share&#8221; extension is present if required by the ClientHello &#8220;psk_key_exchange_modes&#8221;. If these values are not consistent the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
@@ -2432,15 +2430,9 @@ finished_key =
 <li>Opening multiple parallel HTTP connections.</li>
 <li>Performing connection racing across interfaces and address families via, e.g., Happy Eyeballs <a href="#RFC6555" class="xref">[RFC6555]</a> or related techniques.</li>
 </ul>
-<p id="rfc.section.4.6.1.p.4">Clients SHOULD attempt to use each ticket no more than once, with more recent tickets being used first.</p>
-<p id="rfc.section.4.6.1.p.5">Any ticket MUST only be resumed on connections where the following values match the values negotiated in the connection during which the ticket was established:</p>
-<p></p>
-
-<ul>
-<li>The KDF hash algorithm associated with the cipher suite</li>
-<li>The SNI value (if any), as described in Section 3 of <a href="#RFC6066" class="xref">[RFC6066]</a>
-</li>
-</ul>
+<p id="rfc.section.4.6.1.p.4">Any ticket MUST only be resumed with a cipher suite that has the same KDF hash algorithm as that used to establish the original connection.</p>
+<p id="rfc.section.4.6.1.p.5">Clients MUST only resume if the new SNI value is valid for the server certificate presented in the original session, and SHOULD only resume if the SNI value matches the one used in the original session.  The latter is a performance optimization: normally, there is no reason to expect that different servers covered by a single certificate would be able to accept each other&#8217;s tickets, hence attempting resumption in that case would waste a single-use ticket.  If such an indication is provided (externally or by any other means), clients MAY resume with a different SNI value.</p>
+<p id="rfc.section.4.6.1.p.6">On resumption, if reporting an SNI value to the calling application, implementations MUST use the value sent in the resumption ClientHello rather than the value sent in the previous session. Note that if a server implementation declines all PSK identities with different SNI values, these two values are always the same.</p>
 <p id="rfc.section.4.6.1.p.7">Note: Although the resumption master secret depends on the client&#8217;s second flight, servers which do not request client authentication MAY compute the remainder of the transcript independently and then send a NewSessionTicket immediately upon sending its Finished rather than waiting for the client Finished.  This might be appropriate in cases where the client is expected to open multiple TLS connections in parallel and would benefit from the reduced overhead of a resumption handshake, for example.</p>
 <pre>
    struct {
