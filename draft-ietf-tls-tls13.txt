@@ -78,7 +78,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   4
      1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   6
      1.2.  Change Log  . . . . . . . . . . . . . . . . . . . . . . .   6
-     1.3.  Major Differences from TLS 1.2  . . . . . . . . . . . . .  14
+     1.3.  Major Differences from TLS 1.2  . . . . . . . . . . . . .  15
      1.4.  Updates Affecting TLS 1.2 . . . . . . . . . . . . . . . .  16
    2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  16
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  19
@@ -341,6 +341,17 @@ Internet-Draft                     TLS                     November 2017
    (*) indicates changes to the wire protocol which may require
    implementations to update.
 
+   draft-22 - Implement changes for improved middlebox penetration (*)
+
+   -  Move server_certificate_type to encrypted extensions (*)
+
+   -  Allow resumption with a different SNI (*)
+
+   -  Padding extension can change on HRR (*)
+
+   -  Remove requirement to immediately respond to close_notify with
+      close_notify (allowing half-close)
+
    draft-21
 
    -  Add a per-ticket nonce so that each ticket is associated with a
@@ -375,6 +386,14 @@ Internet-Draft                     TLS                     November 2017
 
    -  Added discussion of traffic analysis and side channel attacks.
 
+
+
+
+Rescorla                  Expires May 28, 2018                  [Page 7]
+
+Internet-Draft                     TLS                     November 2017
+
+
    draft-19
 
    -  Hash context_value input to Exporters (*)
@@ -386,14 +405,6 @@ Internet-Draft                     TLS                     November 2017
 
    -  Restructure CertificateRequest to have the selectors in
       extensions.  This also allowed defining a
-
-
-
-Rescorla                  Expires May 28, 2018                  [Page 7]
-
-Internet-Draft                     TLS                     November 2017
-
-
       "certificate_authorities" extension which can be used by the
       client instead of trusted_ca_keys (*).
 
@@ -431,6 +442,14 @@ Internet-Draft                     TLS                     November 2017
    -  Remove 0-RTT Finished and resumption_context, and replace with a
       psk_binder field in the PSK itself (*)
 
+
+
+
+Rescorla                  Expires May 28, 2018                  [Page 8]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Restructure PSK key exchange negotiation modes (*)
 
    -  Add max_early_data_size field to TicketEarlyDataInfo (*)
@@ -442,13 +461,6 @@ Internet-Draft                     TLS                     November 2017
       ticket_early_data_info code point (*)
 
    -  Replace Client.key_shares in response to HRR (*)
-
-
-
-Rescorla                  Expires May 28, 2018                  [Page 8]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Remove redundant labels for traffic key derivation (*)
 
@@ -486,6 +498,14 @@ Internet-Draft                     TLS                     November 2017
 
    -  Relax requirement to check SNI for 0-RTT.
 
+
+
+
+Rescorla                  Expires May 28, 2018                  [Page 9]
+
+Internet-Draft                     TLS                     November 2017
+
+
    draft-15
 
    -  New negotiation syntax as discussed in Berlin (*)
@@ -497,14 +517,6 @@ Internet-Draft                     TLS                     November 2017
 
    -  Forbid application data messages in between post-handshake
       messages from the same flight (*)
-
-
-
-
-Rescorla                  Expires May 28, 2018                  [Page 9]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Clean up alert guidance (*)
 
@@ -543,6 +555,13 @@ Internet-Draft                     TLS                     November 2017
 
    -  Make the rules for accepting 0-RTT less restrictive.
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 10]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Clarify 0-RTT backward-compatibility rules.
 
    -  Clarify how 0-RTT and PSK identities interact.
@@ -554,13 +573,6 @@ Internet-Draft                     TLS                     November 2017
    -  Replace the Security Analysis section with a WIP draft.
 
    draft-13
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 10]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Allow server to send SupportedGroups.
 
@@ -598,6 +610,14 @@ Internet-Draft                     TLS                     November 2017
    -  Revise signature algorithm negotiation to group hash, signature
       algorithm, and curve together.  This is backwards compatible.
 
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 11]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Make ticket lifetime mandatory and limit it to a week.
 
    -  Make the purpose strings lower-case.  This matches how people are
@@ -610,13 +630,6 @@ Internet-Draft                     TLS                     November 2017
    draft-11
 
    -  Port the CFRG curves & signatures work from RFC4492bis.
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 11]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Remove sequence number and version from additional_data, which is
       now empty.
@@ -654,6 +667,13 @@ Internet-Draft                     TLS                     November 2017
 
    -  Add support for per-record padding.
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 12]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Switch to encrypted record ContentType.
 
    -  Change HKDF labeling to include protocol version and value
@@ -665,14 +685,6 @@ Internet-Draft                     TLS                     November 2017
    -  Deprecate SHA-1 with signatures.
 
    -  Add MTI algorithms.
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 12]
-
-Internet-Draft                     TLS                     November 2017
-
 
    draft-08
 
@@ -710,6 +722,14 @@ Internet-Draft                     TLS                     November 2017
 
    draft-06
 
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 13]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Prohibit RC4 negotiation for backwards compatibility.
 
    -  Freeze & deprecate record layer version field.
@@ -721,14 +741,6 @@ Internet-Draft                     TLS                     November 2017
    draft-05
 
    -  Prohibit SSL negotiation for backwards compatibility.
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 13]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Fix which MS is used for exporters.
 
@@ -767,6 +779,13 @@ Internet-Draft                     TLS                     November 2017
 
    -  Remove custom DHE groups.
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 14]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Remove support for compression.
 
    -  Remove support for static RSA and DH key exchange.
@@ -778,13 +797,6 @@ Internet-Draft                     TLS                     November 2017
    The following is a list of the major functional differences between
    TLS 1.2 and TLS 1.3.  It is not intended to be exhaustive and there
    are many minor differences.
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 14]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  The list of supported symmetric algorithms has been pruned of all
       algorithms that are considered legacy.  Those that remain all use
@@ -822,6 +834,14 @@ Internet-Draft                     TLS                     November 2017
       removed point format negotiation in favor of a single point format
       for each curve.
 
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 15]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Other cryptographic improvements including the removal of
       compression and custom DHE groups, changing the RSA padding to use
       PSS, and the removal of DSA.
@@ -834,13 +854,6 @@ Internet-Draft                     TLS                     November 2017
    -  Session resumption with and without server-side state as well as
       the PSK-based ciphersuites of earlier TLS versions have been
       replaced by a single new PSK exchange.
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 15]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Updated references to point to the updated versions of RFCs, as
       appropriate (e.g., RFC 5280 rather than RFC 3280).
@@ -878,6 +891,13 @@ Internet-Draft                     TLS                     November 2017
    termination of the connection, optionally preceded by an alert
    message (Section 6).
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 16]
+
+Internet-Draft                     TLS                     November 2017
+
+
    TLS supports three basic key exchange modes:
 
    -  (EC)DHE (Diffie-Hellman over either finite fields or elliptic
@@ -888,15 +908,6 @@ Internet-Draft                     TLS                     November 2017
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 16]
-
-Internet-Draft                     TLS                     November 2017
-
 
        Client                                               Server
 
@@ -936,6 +947,13 @@ Auth | {CertificateVerify*}
    The handshake can be thought of as having three phases (indicated in
    the diagram above):
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 17]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Key Exchange: Establish shared keying material and select the
       cryptographic parameters.  Everything after this phase is
       encrypted.
@@ -946,13 +964,6 @@ Auth | {CertificateVerify*}
 
    -  Authentication: Authenticate the server (and optionally the
       client) and provide key confirmation and handshake integrity.
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 17]
-
-Internet-Draft                     TLS                     November 2017
-
 
    In the Key Exchange phase, the client sends the ClientHello
    (Section 4.1.2) message, which contains a random nonce
@@ -992,6 +1003,13 @@ Internet-Draft                     TLS                     November 2017
    uses the same set of messages every time that authentication is
    needed.  Specifically:
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 18]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Certificate:  the certificate of the endpoint and any per-certificate
       extensions.  This message is omitted by the server if not
       authenticating with a certificate and by the client if the server
@@ -1001,14 +1019,6 @@ Internet-Draft                     TLS                     November 2017
       [RFC7924] are in use, then this message will not contain a
       certificate but rather some other value corresponding to the
       server's long-term key.  [Section 4.4.2]
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 18]
-
-Internet-Draft                     TLS                     November 2017
-
 
    CertificateVerify:  a signature over the entire handshake using the
       private key corresponding to the public key in the Certificate
@@ -1042,16 +1052,6 @@ Internet-Draft                     TLS                     November 2017
    an appropriate "key_share" extension, as shown in Figure 2.  If no
    common cryptographic parameters can be negotiated, the server MUST
    abort the handshake with an appropriate alert.
-
-
-
-
-
-
-
-
-
-
 
 
 
