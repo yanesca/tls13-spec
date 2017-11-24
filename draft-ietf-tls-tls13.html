@@ -2262,6 +2262,12 @@ Subsequent Handshake:
 <p id="rfc.section.4.4.2.p.3">The client MUST send a Certificate message if and only if the server has requested client authentication via a CertificateRequest message (<a href="#certificate-request" class="xref">Section 4.3.2</a>). If the server requests client authentication but no suitable certificate is available, the client MUST send a Certificate message containing no certificates (i.e., with the &#8220;certificate_list&#8221; field having length 0).</p>
 <p id="rfc.section.4.4.2.p.4">Structure of this message:</p>
 <pre>
+   enum {
+       X509(0),
+       RawPublicKey(2),
+       (255)
+   } CertificateType;
+   
    struct {
        select (certificate_type) {
            case RawPublicKey:
@@ -3976,6 +3982,13 @@ here                  +--------+--------+
 <a href="#rfc.appendix.B.3.3">B.3.3.</a> <a href="#authentication-messages-1" id="authentication-messages-1">Authentication Messages</a>
 </h3>
 <pre>
+   enum {
+       X509(0),
+       OpenPGP_RESERVED(1),
+       RawPublicKey(2),
+       (255)
+   } CertificateType;
+   
    struct {
        select (certificate_type) {
            case RawPublicKey:

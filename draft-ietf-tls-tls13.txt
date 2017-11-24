@@ -125,20 +125,20 @@ Internet-Draft                     TLS                     November 2017
      4.4.  Authentication Messages . . . . . . . . . . . . . . . . .  61
        4.4.1.  The Transcript Hash . . . . . . . . . . . . . . . . .  63
        4.4.2.  Certificate . . . . . . . . . . . . . . . . . . . . .  64
-       4.4.3.  Certificate Verify  . . . . . . . . . . . . . . . . .  68
+       4.4.3.  Certificate Verify  . . . . . . . . . . . . . . . . .  69
        4.4.4.  Finished  . . . . . . . . . . . . . . . . . . . . . .  71
      4.5.  End of Early Data . . . . . . . . . . . . . . . . . . . .  72
-     4.6.  Post-Handshake Messages . . . . . . . . . . . . . . . . .  72
-       4.6.1.  New Session Ticket Message  . . . . . . . . . . . . .  72
+     4.6.  Post-Handshake Messages . . . . . . . . . . . . . . . . .  73
+       4.6.1.  New Session Ticket Message  . . . . . . . . . . . . .  73
        4.6.2.  Post-Handshake Authentication . . . . . . . . . . . .  75
-       4.6.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  75
-   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  76
-     5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  77
-     5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  79
-     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  81
+       4.6.3.  Key and IV Update . . . . . . . . . . . . . . . . . .  76
+   5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  77
+     5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  78
+     5.2.  Record Payload Protection . . . . . . . . . . . . . . . .  80
+     5.3.  Per-Record Nonce  . . . . . . . . . . . . . . . . . . . .  82
      5.4.  Record Padding  . . . . . . . . . . . . . . . . . . . . .  82
-     5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  83
-   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  83
+     5.5.  Limits on Key Usage . . . . . . . . . . . . . . . . . . .  84
+   6.  Alert Protocol  . . . . . . . . . . . . . . . . . . . . . . .  84
      6.1.  Closure Alerts  . . . . . . . . . . . . . . . . . . . . .  85
      6.2.  Error Alerts  . . . . . . . . . . . . . . . . . . . . . .  86
    7.  Cryptographic Computations  . . . . . . . . . . . . . . . . .  89
@@ -184,13 +184,13 @@ Internet-Draft                     TLS                     November 2017
      B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 125
    Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 126
      C.1.  Random Number Generation and Seeding  . . . . . . . . . . 126
-     C.2.  Certificates and Authentication . . . . . . . . . . . . . 126
+     C.2.  Certificates and Authentication . . . . . . . . . . . . . 127
      C.3.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 127
      C.4.  Client Tracking Prevention  . . . . . . . . . . . . . . . 128
-     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 128
+     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 129
    Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 129
      D.1.  Negotiating with an older server  . . . . . . . . . . . . 130
-     D.2.  Negotiating with an older client  . . . . . . . . . . . . 130
+     D.2.  Negotiating with an older client  . . . . . . . . . . . . 131
      D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 131
      D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 131
      D.5.  Backwards Compatibility Security Restrictions . . . . . . 132
@@ -200,16 +200,16 @@ Internet-Draft                     TLS                     November 2017
        E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 137
        E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 137
        E.1.4.  Exporter Independence . . . . . . . . . . . . . . . . 137
-       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 137
+       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 138
        E.1.6.  External References . . . . . . . . . . . . . . . . . 138
      E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 138
        E.2.1.  External References . . . . . . . . . . . . . . . . . 139
      E.3.  Traffic Analysis  . . . . . . . . . . . . . . . . . . . . 139
      E.4.  Side Channel Attacks  . . . . . . . . . . . . . . . . . . 140
-     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 140
+     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 141
        E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 142
    Appendix F.  Working Group Information  . . . . . . . . . . . . . 142
-   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 142
+   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 143
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 149
 
 1.  Introduction
@@ -3557,6 +3557,41 @@ Internet-Draft                     TLS                     November 2017
 
    Structure of this message:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 64]
+
+Internet-Draft                     TLS                     November 2017
+
+
+      enum {
+          X509(0),
+          RawPublicKey(2),
+          (255)
+      } CertificateType;
+
       struct {
           select (certificate_type) {
               case RawPublicKey:
@@ -3579,13 +3614,6 @@ Internet-Draft                     TLS                     November 2017
       that message.  Otherwise (in the case of server authentication),
       this field SHALL be zero length.
 
-
-
-Rescorla                  Expires May 28, 2018                 [Page 64]
-
-Internet-Draft                     TLS                     November 2017
-
-
    certificate_list  This is a sequence (chain) of CertificateEntry
       structures, each containing a single certificate and set of
       extensions.
@@ -3606,6 +3634,14 @@ Internet-Draft                     TLS                     November 2017
    The sender's certificate MUST come in the first CertificateEntry in
    the list.  Each following certificate SHOULD directly certify one
    preceding it.  Because certificate validation requires that trust
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 65]
+
+Internet-Draft                     TLS                     November 2017
+
+
    anchors be distributed independently, a certificate that specifies a
    trust anchor MAY be omitted from the chain, provided that supported
    peers are known to possess any omitted certificates.
@@ -3633,15 +3669,6 @@ Internet-Draft                     TLS                     November 2017
    appropriate certificate to send in response to the server's
    authentication request.
 
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 65]
-
-Internet-Draft                     TLS                     November 2017
-
-
 4.4.2.1.  OCSP Status and SCT Extensions
 
    [RFC6066] and [RFC6961] provide extensions to negotiate the server
@@ -3662,6 +3689,14 @@ Internet-Draft                     TLS                     November 2017
    Request or the Certificate messages.  TLS 1.3 servers MUST be able to
    process Client Hello messages that include it, as it MAY be sent by
    clients that wish to use it in earlier protocol versions.
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 66]
+
+Internet-Draft                     TLS                     November 2017
+
 
    A server MAY request that a client present an OCSP response with its
    certificate by sending an empty "status_request" extension in its
@@ -3690,14 +3725,6 @@ Internet-Draft                     TLS                     November 2017
       present) with a signature scheme indicated in the client's
       "signature_algorithms" extension.
 
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 66]
-
-Internet-Draft                     TLS                     November 2017
-
-
    -  The "server_name" [RFC6066] and "certificate_authorities"
       extensions are used to guide certificate selection.  As servers
       MAY require the presence of the "server_name" extension, clients
@@ -3718,6 +3745,14 @@ Internet-Draft                     TLS                     November 2017
    algorithm in general, but MAY do so if the "signature_algorithms"
    extension provided by the client permits it, and MUST NOT do so
    otherwise.
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 67]
+
+Internet-Draft                     TLS                     November 2017
+
 
    If the client cannot construct an acceptable chain using the provided
    certificates and decides to abort the handshake, then it MUST abort
@@ -3745,15 +3780,6 @@ Internet-Draft                     TLS                     November 2017
       the constraints on certificate-signing algorithms found in prior
       versions of TLS.
 
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 67]
-
-Internet-Draft                     TLS                     November 2017
-
-
    -  If the CertificateRequest message contained a non-empty
       "oid_filters" extension, the end-entity certificate MUST match the
       extension OIDs recognized by the client, as described in
@@ -3776,6 +3802,14 @@ Internet-Draft                     TLS                     November 2017
    discretion either continue the handshake without client
    authentication, or abort the handshake with a "certificate_required"
    alert.  Also, if some aspect of the certificate chain was
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 68]
+
+Internet-Draft                     TLS                     November 2017
+
+
    unacceptable (e.g., it was not signed by a known, trusted CA), the
    server MAY at its discretion either continue the handshake
    (considering the client unauthenticated) or abort the handshake.
@@ -3802,14 +3836,6 @@ Internet-Draft                     TLS                     November 2017
    This message is used to provide explicit proof that an endpoint
    possesses the private key corresponding to its certificate.  The
    CertificateVerify message also provides integrity for the handshake
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 68]
-
-Internet-Draft                     TLS                     November 2017
-
-
    up to this point.  Servers MUST send this message when authenticating
    via a certificate.  Clients MUST send this message whenever
    authenticating via a certificate (i.e., when the Certificate message
@@ -3831,6 +3857,14 @@ Internet-Draft                     TLS                     November 2017
    namely:
 
       Transcript-Hash(Handshake Context, Certificate)
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 69]
+
+Internet-Draft                     TLS                     November 2017
+
 
    The digital signature is then computed over the concatenation of:
 
@@ -3858,14 +3892,6 @@ Internet-Draft                     TLS                     November 2017
    would make sense for SHA-256), the content covered by the digital
    signature for a server CertificateVerify would be:
 
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 69]
-
-Internet-Draft                     TLS                     November 2017
-
-
       2020202020202020202020202020202020202020202020202020202020202020
       2020202020202020202020202020202020202020202020202020202020202020
       544c5320312e332c207365727665722043657274696669636174655665726966
@@ -3888,6 +3914,14 @@ Internet-Draft                     TLS                     November 2017
 
    If sent by a client, the signature algorithm used in the signature
    MUST be one of those present in the supported_signature_algorithms
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 70]
+
+Internet-Draft                     TLS                     November 2017
+
+
    field of the "signature_algorithms" extension in the
    CertificateRequest message.
 
@@ -3914,14 +3948,6 @@ Internet-Draft                     TLS                     November 2017
    If the verification fails, the receiver MUST terminate the handshake
    with a "decrypt_error" alert.
 
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 70]
-
-Internet-Draft                     TLS                     November 2017
-
-
 4.4.4.  Finished
 
    The Finished message is the final message in the authentication
@@ -3944,6 +3970,13 @@ Internet-Draft                     TLS                     November 2017
        because the handshake is not yet complete, they have no assurance
        of either the peer's identity or of its liveness (i.e., the
        ClientHello might have been replayed).
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 71]
+
+Internet-Draft                     TLS                     November 2017
+
 
    The key used to compute the finished message is computed from the
    Base key defined in Section 4.4 using HKDF (see Section 7.1).
@@ -3971,13 +4004,6 @@ Internet-Draft                     TLS                     November 2017
    above, the HMAC input can generally be implemented by a running hash,
    i.e., just the handshake hash at this point.
 
-
-
-Rescorla                  Expires May 28, 2018                 [Page 71]
-
-Internet-Draft                     TLS                     November 2017
-
-
    In previous versions of TLS, the verify_data was always 12 octets
    long.  In TLS 1.3, it is the size of the HMAC output for the Hash
    used for the handshake.
@@ -4000,6 +4026,14 @@ Internet-Draft                     TLS                     November 2017
    server does not send an "early_data" extension, then the client MUST
    NOT send an EndOfEarlyData message.  This message indicates that all
    0-RTT application_data messages, if any, have been transmitted and
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 72]
+
+Internet-Draft                     TLS                     November 2017
+
+
    that the following records are protected under handshake traffic
    keys.  Servers MUST NOT send this message and clients receiving it
    MUST terminate the connection with an "unexpected_message" alert.
@@ -4025,15 +4059,6 @@ Internet-Draft                     TLS                     November 2017
    connection, either immediately after each other or after specific
    events.  For instance, the server might send a new ticket after post-
    handshake authentication in order to encapsulate the additional
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 72]
-
-Internet-Draft                     TLS                     November 2017
-
-
    client authentication state.  Multiple tickets are useful for clients
    for a variety of purposes, including:
 
@@ -4055,6 +4080,15 @@ Internet-Draft                     TLS                     November 2017
    in that case would waste a single-use ticket.  If such an indication
    is provided (externally or by any other means), clients MAY resume
    with a different SNI value.
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 73]
+
+Internet-Draft                     TLS                     November 2017
+
 
    On resumption, if reporting an SNI value to the calling application,
    implementations MUST use the value sent in the resumption ClientHello
@@ -4082,14 +4116,6 @@ Internet-Draft                     TLS                     November 2017
    ticket_lifetime  Indicates the lifetime in seconds as a 32-bit
       unsigned integer in network byte order from the time of ticket
       issuance.  Servers MUST NOT use any value greater than 604800
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 73]
-
-Internet-Draft                     TLS                     November 2017
-
-
       seconds (7 days).  The value of zero indicates that the ticket
       should be discarded immediately.  Clients MUST NOT cache tickets
       for longer than 7 days, regardless of the ticket_lifetime, and MAY
@@ -4112,6 +4138,13 @@ Internet-Draft                     TLS                     November 2017
       lookup key or a self-encrypted and self-authenticated value.
       Section 4 of [RFC5077] describes a recommended ticket construction
       mechanism.
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 74]
+
+Internet-Draft                     TLS                     November 2017
+
 
    extensions  A set of extension values for the ticket.  The
       "Extension" format is defined in Section 4.2.  Clients MUST ignore
@@ -4136,15 +4169,6 @@ Internet-Draft                     TLS                     November 2017
 
        HKDF-Expand-Label(resumption_master_secret,
                         "resumption", ticket_nonce, Hash.length)
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 74]
-
-Internet-Draft                     TLS                     November 2017
-
 
    Because the ticket_nonce value is distinct for each NewSessionTicket
    message, a different PSK will be derived for each ticket.
@@ -4171,6 +4195,13 @@ Internet-Draft                     TLS                     November 2017
    messages for a given response MUST appear consecutively on the wire
    with no intervening messages of other types.
 
+
+
+Rescorla                  Expires May 28, 2018                 [Page 75]
+
+Internet-Draft                     TLS                     November 2017
+
+
    A client that receives a CertificateRequest message without having
    sent the "post_handshake_auth" extension MUST send an
    "unexpected_message" fatal alert.
@@ -4193,14 +4224,6 @@ Internet-Draft                     TLS                     November 2017
       struct {
           KeyUpdateRequest request_update;
       } KeyUpdate;
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 75]
-
-Internet-Draft                     TLS                     November 2017
-
 
    request_update  Indicates whether the recipient of the KeyUpdate
       should respond with its own KeyUpdate.  If an implementation
@@ -4227,6 +4250,14 @@ Internet-Draft                     TLS                     November 2017
    messages between sending a KeyUpdate with request_update set to
    update_requested and receiving the peer's KeyUpdate, because those
    messages may already be in flight.  However, because send and receive
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 76]
+
+Internet-Draft                     TLS                     November 2017
+
+
    keys are derived from independent traffic secrets, retaining the
    receive traffic secret does not threaten the forward secrecy of data
    sent before the sender changed keys.
@@ -4248,15 +4279,6 @@ Internet-Draft                     TLS                     November 2017
    the data into manageable blocks, protects the records, and transmits
    the result.  Received data is verified, decrypted, reassembled, and
    then delivered to higher-level clients.
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 76]
-
-Internet-Draft                     TLS                     November 2017
-
 
    TLS records are typed, which allows multiple higher-level protocols
    to be multiplexed over the same record layer.  This document
@@ -4283,6 +4305,15 @@ Internet-Draft                     TLS                     November 2017
    content type values are assigned by IANA in the TLS Content Type
    Registry as described in Section 11.
 
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 77]
+
+Internet-Draft                     TLS                     November 2017
+
+
 5.1.  Record Layer
 
    The record layer fragments information blocks into TLSPlaintext
@@ -4307,13 +4338,6 @@ Internet-Draft                     TLS                     November 2017
       messages can immediately precede a key change, implementations
       MUST send these messages in alignment with a record boundary.
 
-
-
-Rescorla                  Expires May 28, 2018                 [Page 77]
-
-Internet-Draft                     TLS                     November 2017
-
-
    Implementations MUST NOT send zero-length fragments of Handshake
    types, even if those fragments contain padding.
 
@@ -4328,6 +4352,23 @@ Internet-Draft                     TLS                     November 2017
    useful as a traffic analysis countermeasure.  Application Data
    fragments MAY be split across multiple records or coalesced into a
    single record.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 78]
+
+Internet-Draft                     TLS                     November 2017
+
 
       enum {
           invalid(0),
@@ -4360,16 +4401,6 @@ Internet-Draft                     TLS                     November 2017
       a record that exceeds this length MUST terminate the connection
       with a "record_overflow" alert.
 
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 78]
-
-Internet-Draft                     TLS                     November 2017
-
-
    fragment  The data being transmitted.  This value is transparent and
       is treated as an independent block to be dealt with by the higher-
       level protocol specified by the type field.
@@ -4387,6 +4418,13 @@ Internet-Draft                     TLS                     November 2017
    structures are written directly onto the wire.  Once record
    protection has started, TLSPlaintext records are protected and sent
    as described in the following section.
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 79]
+
+Internet-Draft                     TLS                     November 2017
+
 
 5.2.  Record Payload Protection
 
@@ -4418,14 +4456,6 @@ Internet-Draft                     TLS                     November 2017
 
    type  The content type of the record.
 
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 79]
-
-Internet-Draft                     TLS                     November 2017
-
-
    zeros  An arbitrary-length run of zero-valued bytes may appear in the
       cleartext after the type field.  This provides an opportunity for
       senders to pad any TLS record by a chosen amount as long as the
@@ -4444,6 +4474,14 @@ Internet-Draft                     TLS                     November 2017
       concerns where other values might be received.  Implementations
       MAY verify that the legacy_record_version field is 0x0303 and
       abort the connection if it is not.  Note that the handshake
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 80]
+
+Internet-Draft                     TLS                     November 2017
+
+
       protocol including the ClientHello and ServerHello messages
       authenticates the protocol version, so this value is redundant.
 
@@ -4474,14 +4512,6 @@ Internet-Draft                     TLS                     November 2017
    the corresponding TLSPlaintext.length due to the inclusion of
    TLSInnerPlaintext.type and any padding supplied by the sender.  The
    length of the AEAD output will generally be larger than the
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 80]
-
-Internet-Draft                     TLS                     November 2017
-
-
    plaintext, but by an amount that varies with the AEAD algorithm.
    Since the ciphers might incorporate padding, the amount of overhead
    could vary with different lengths of plaintext.  Symbolically,
@@ -4499,6 +4529,14 @@ Internet-Draft                     TLS                     November 2017
 
    If the decryption fails, the receiver MUST terminate the connection
    with a "bad_record_mac" alert.
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 81]
+
+Internet-Draft                     TLS                     November 2017
+
 
    An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion
    greater than 255 octets.  An endpoint that receives a record from its
@@ -4529,15 +4567,6 @@ Internet-Draft                     TLS                     November 2017
    bytes MUST NOT be used with TLS.  The per-record nonce for the AEAD
    construction is formed as follows:
 
-
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 81]
-
-Internet-Draft                     TLS                     November 2017
-
-
    1.  The 64-bit record sequence number is encoded in network byte
        order and padded to the left with zeros to iv_length.
 
@@ -4555,6 +4584,15 @@ Internet-Draft                     TLS                     November 2017
    All encrypted TLS records can be padded to inflate the size of the
    TLSCiphertext.  This allows the sender to hide the size of the
    traffic from an observer.
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 82]
+
+Internet-Draft                     TLS                     November 2017
+
 
    When generating a TLSCiphertext record, implementations MAY choose to
    pad.  An unpadded record is just a record with a padding length of
@@ -4587,13 +4625,6 @@ Internet-Draft                     TLS                     November 2017
    find a non-zero octet in the cleartext, it MUST terminate the
    connection with an "unexpected_message" alert.
 
-
-
-Rescorla                  Expires May 28, 2018                 [Page 82]
-
-Internet-Draft                     TLS                     November 2017
-
-
    The presence of padding does not change the overall record size
    limitations - the full encoded TLSInnerPlaintext MUST NOT exceed 2^14
    + 1 octets.  If the maximum fragment length is reduced, as for
@@ -4609,6 +4640,15 @@ Internet-Draft                     TLS                     November 2017
    records must still be handled at the TLS layer, though.  Later
    documents may define padding selection algorithms or define a padding
    policy request mechanism through TLS extensions or some other means.
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                 [Page 83]
+
+Internet-Draft                     TLS                     November 2017
+
 
 5.5.  Limits on Key Usage
 
@@ -4642,14 +4682,6 @@ Internet-Draft                     TLS                     November 2017
    Error alerts indicate abortive closure of the connection (see
    Section 6.2).  Upon receiving an error alert, the TLS implementation
    SHOULD indicate an error to the application and MUST NOT allow any
-
-
-
-Rescorla                  Expires May 28, 2018                 [Page 83]
-
-Internet-Draft                     TLS                     November 2017
-
-
    further data to be sent or received on the connection.  Servers and
    clients MUST forget keys and secrets associated with a failed
    connection.  Stateful implementations of tickets (as in many clients)
@@ -4665,38 +4697,6 @@ Internet-Draft                     TLS                     November 2017
    extending beyond the message boundary or contain an out-of-range
    length) MUST terminate the connection with a "decode_error" alert.
    Peers which receive a message which is syntactically correct but
-   semantically invalid (e.g., a DHE share of p - 1, or an invalid enum)
-   MUST terminate the connection with an "illegal_parameter" alert.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4705,6 +4705,9 @@ Rescorla                  Expires May 28, 2018                 [Page 84]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   semantically invalid (e.g., a DHE share of p - 1, or an invalid enum)
+   MUST terminate the connection with an "illegal_parameter" alert.
 
       enum { warning(1), fatal(2), (255) } AlertLevel;
 
@@ -4751,9 +4754,6 @@ Internet-Draft                     TLS                     November 2017
    The client and the server must share knowledge that the connection is
    ending in order to avoid a truncation attack.
 
-   close_notify  This alert notifies the recipient that the sender will
-      not send any more messages on this connection.  Any data received
-      after a closure alert has been received MUST be ignored.
 
 
 
@@ -4761,6 +4761,10 @@ Rescorla                  Expires May 28, 2018                 [Page 85]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   close_notify  This alert notifies the recipient that the sender will
+      not send any more messages on this connection.  Any data received
+      after a closure alert has been received MUST be ignored.
 
    user_canceled  This alert notifies the recipient that the sender is
       canceling the handshake for some reason unrelated to a protocol
@@ -4806,10 +4810,6 @@ Internet-Draft                     TLS                     November 2017
 
    Whenever an implementation encounters a fatal error condition, it
    SHOULD send an appropriate fatal alert and MUST close the connection
-   without sending or receiving any additional data.  In the rest of
-   this specification, when the phrases "terminate the connection" and
-   "abort the handshake" are used without a specific alert it means that
-   the implementation SHOULD send the alert indicated by the
 
 
 
@@ -4818,6 +4818,10 @@ Rescorla                  Expires May 28, 2018                 [Page 86]
 Internet-Draft                     TLS                     November 2017
 
 
+   without sending or receiving any additional data.  In the rest of
+   this specification, when the phrases "terminate the connection" and
+   "abort the handshake" are used without a specific alert it means that
+   the implementation SHOULD send the alert indicated by the
    descriptions below.  The phrases "terminate the connection with a X
    alert" and "abort the handshake with a X alert" mean that the
    implementation MUST send alert X if it sends any alert.  All alerts
@@ -4863,10 +4867,6 @@ Internet-Draft                     TLS                     November 2017
    certificate_unknown  Some other (unspecified) issue arose in
       processing the certificate, rendering it unacceptable.
 
-   illegal_parameter  A field in the handshake was incorrect or
-      inconsistent with other fields.  This alert is used for errors
-
-
 
 
 Rescorla                  Expires May 28, 2018                 [Page 87]
@@ -4874,6 +4874,8 @@ Rescorla                  Expires May 28, 2018                 [Page 87]
 Internet-Draft                     TLS                     November 2017
 
 
+   illegal_parameter  A field in the handshake was incorrect or
+      inconsistent with other fields.  This alert is used for errors
       which conform to the formal protocol syntax but are otherwise
       incorrect.
 
@@ -4920,8 +4922,6 @@ Internet-Draft                     TLS                     November 2017
       the given hello message, or including any extensions in a
       ServerHello or Certificate not first offered in the corresponding
       ClientHello.
-
-
 
 
 
@@ -6890,6 +6890,13 @@ Rescorla                  Expires May 28, 2018                [Page 123]
 Internet-Draft                     TLS                     November 2017
 
 
+      enum {
+          X509(0),
+          OpenPGP_RESERVED(1),
+          RawPublicKey(2),
+          (255)
+      } CertificateType;
+
       struct {
           select (certificate_type) {
               case RawPublicKey:
@@ -6928,6 +6935,17 @@ B.3.4.  Ticket Establishment
 
 B.3.5.  Updating Keys
 
+
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 124]
+
+Internet-Draft                     TLS                     November 2017
+
+
       struct {} EndOfEarlyData;
 
       enum {
@@ -6937,14 +6955,6 @@ B.3.5.  Updating Keys
       struct {
           KeyUpdateRequest request_update;
       } KeyUpdate;
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 124]
-
-Internet-Draft                     TLS                     November 2017
-
 
 B.4.  Cipher Suites
 
@@ -6983,6 +6993,15 @@ B.4.  Cipher Suites
               | TLS_AES_128_CCM_8_SHA256     | {0x13,0x05} |
               +------------------------------+-------------+
 
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 125]
+
+Internet-Draft                     TLS                     November 2017
+
+
    The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM,
    and AEAD_AES_128_CCM are defined in [RFC5116].
    AEAD_CHACHA20_POLY1305 is defined in [RFC7539].  AEAD_AES_128_CCM_8
@@ -6994,13 +7013,6 @@ B.4.  Cipher Suites
    specifying the symmetric ciphers, and cannot be used for TLS 1.2.
    Similarly, TLS 1.2 and lower cipher suites cannot be used with TLS
    1.3.
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 125]
-
-Internet-Draft                     TLS                     November 2017
-
 
    New cipher suite values are assigned by IANA as described in
    Section 11.
@@ -7034,6 +7046,18 @@ C.1.  Random Number Generation and Seeding
    extra security against this form of attack by using separate CSPRNGs
    to generate public and private values.
 
+
+
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 126]
+
+Internet-Draft                     TLS                     November 2017
+
+
 C.2.  Certificates and Authentication
 
    Implementations are responsible for verifying the integrity of
@@ -7047,16 +7071,6 @@ C.2.  Certificates and Authentication
    example, certification paths containing keys or signatures weaker
    than 2048-bit RSA or 224-bit ECDSA are not appropriate for secure
    applications.
-
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 126]
-
-Internet-Draft                     TLS                     November 2017
-
 
 C.3.  Implementation Pitfalls
 
@@ -7093,6 +7107,13 @@ C.3.  Implementation Pitfalls
       Certificate message, instead of omitting the whole message (see
       Section 4.4.2.3)?
 
+
+
+Rescorla                  Expires May 28, 2018                [Page 127]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  When processing the plaintext fragment produced by AEAD-Decrypt
       and scanning from the end for the ContentType, do you avoid
       scanning past the start of the cleartext in the event that the
@@ -7105,15 +7126,6 @@ C.3.  Implementation Pitfalls
 
    -  As a server, do you send a HelloRetryRequest to clients which
       support a compatible (EC)DHE group but do not predict it in the
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 127]
-
-Internet-Draft                     TLS                     November 2017
-
-
       "key_share" extension?  As a client, do you correctly handle a
       HelloRetryRequest from the server?
 
@@ -7151,6 +7163,13 @@ C.4.  Client Tracking Prevention
    This ensures that clients are always able to use a new ticket when
    creating a new connection.
 
+
+
+Rescorla                  Expires May 28, 2018                [Page 128]
+
+Internet-Draft                     TLS                     November 2017
+
+
 C.5.  Unauthenticated Operation
 
    Previous versions of TLS offered explicitly unauthenticated cipher
@@ -7160,15 +7179,6 @@ C.5.  Unauthenticated Operation
    several methods, including:
 
    -  Raw public keys [RFC7250].
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 128]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Using a public key contained in a certificate but without
       validation of the certificate chain or any of its contents.
@@ -7207,6 +7217,15 @@ Appendix D.  Backward Compatibility
    extension, and ServerHello.version).  In order to maximize
    interoperability with older endpoints, implementations that negotiate
    the use of TLS 1.0-1.2 SHOULD set the record layer version number to
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 129]
+
+Internet-Draft                     TLS                     November 2017
+
+
    the negotiated version for the ServerHello and all records
    thereafter.
 
@@ -7218,14 +7237,6 @@ Appendix D.  Backward Compatibility
 
    TLS 1.2 and prior supported an "Extended Master Secret" [RFC7627]
    extension which digested large parts of the handshake transcript into
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 129]
-
-Internet-Draft                     TLS                     November 2017
-
-
    the master secret.  Because TLS 1.3 always hashes in the transcript
    up to the server CertificateVerify, implementations which support
    both TLS 1.3 and earlier versions SHOULD indicate the use of the
@@ -7261,6 +7272,16 @@ D.1.  Negotiating with an older server
    this practice is vulnerable to downgrade attacks and is NOT
    RECOMMENDED.
 
+
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 130]
+
+Internet-Draft                     TLS                     November 2017
+
+
 D.2.  Negotiating with an older client
 
    A TLS server can also receive a ClientHello indicating a version
@@ -7273,15 +7294,6 @@ D.2.  Negotiating with an older client
    legacy_version is TLS 1.0, the server will proceed with a TLS 1.0
    ServerHello.  If the "supported_versions" extension is absent and the
    server only supports versions greater than
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 130]
-
-Internet-Draft                     TLS                     November 2017
-
-
    ClientHello.legacy_version, the server MUST abort the handshake with
    a "protocol_version" alert.
 
@@ -7318,6 +7330,14 @@ D.4.  Middlebox Compatibility Mode
    through those middleboxes by making the TLS 1.3 handshake look more
    like a TLS 1.2 handshake:
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 131]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  The client always provides a non-empty session ID in the
       ClientHello.
 
@@ -7330,13 +7350,6 @@ D.4.  Middlebox Compatibility Mode
    -  The server sends a dummy change_cipher_spec record immediately
       after its first handshake message.  This may either be after a
       ServerHello or a HelloRetryRequest.
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 131]
-
-Internet-Draft                     TLS                     November 2017
-
 
    When put together, these changes make the TLS 1.3 handshake resemble
    TLS 1.2 session resumption, which improves the chance of successfully
@@ -7373,6 +7386,14 @@ D.5.  Backwards Compatibility Security Restrictions
    RECOMMENDED to accept an SSL version 2.0 compatible CLIENT-HELLO in
    order to negotiate older versions of TLS.
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 132]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Implementations MUST NOT send a ClientHello.legacy_version or
    ServerHello.version set to 0x0300 or less.  Any endpoint receiving a
    Hello message with ClientHello.legacy_version or ServerHello.version
@@ -7383,16 +7404,6 @@ D.5.  Backwards Compatibility Security Restrictions
    0x0300.  Implementations SHOULD NOT accept any records with a version
    less than 0x0300 (but may inadvertently do so if the record version
    number is ignored completely).
-
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 132]
-
-Internet-Draft                     TLS                     November 2017
-
 
    Implementations MUST NOT use the Truncated HMAC extension, defined in
    Section 7 of [RFC6066], as it is not applicable to AEAD algorithms
@@ -7430,6 +7441,15 @@ E.1.  Handshake
    properties are not necessarily independent, but reflect the protocol
    consumers' needs.
 
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 133]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Establishing the same session keys.  The handshake needs to output
       the same set of session keys on both sides of the handshake,
       provided that it completes successfully on each endpoint (See
@@ -7441,14 +7461,6 @@ E.1.  Handshake
       authenticated connection, the attacker can establish its own
       session keys with the server, but those session keys are distinct
       from those established by the client.
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 133]
-
-Internet-Draft                     TLS                     November 2017
-
 
    Peer Authentication.  The client's view of the peer identity should
       reflect the server's identity.  If the client is authenticated,
@@ -7486,6 +7498,14 @@ Internet-Draft                     TLS                     November 2017
       client's identity should be protected against both passive and
       active attackers.
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 134]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Informally, the signature-based modes of TLS 1.3 provide for the
    establishment of a unique, secret, shared key established by an
    (EC)DHE key exchange and authenticated by the server's signature over
@@ -7498,14 +7518,6 @@ Internet-Draft                     TLS                     November 2017
 
    The external PSK and resumption PSK bootstrap from a long-term shared
    secret into a unique per-connection set of short-term session keys.
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 134]
-
-Internet-Draft                     TLS                     November 2017
-
-
    This secret may have been established in a previous handshake.  If
    PSK with (EC)DHE key establishment is used, these session keys will
    also be forward secret.  The resumption PSK has been designed so that
@@ -7541,6 +7553,15 @@ Internet-Draft                     TLS                     November 2017
    also [Kraw16]).  It is unsafe to use certificate-based client
    authentication when the client might potentially share the same PSK/
    key-id pair with two different endpoints.  Implementations MUST NOT
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 135]
+
+Internet-Draft                     TLS                     November 2017
+
+
    combine external PSKs with certificate-based authentication of either
    the client or the server.
 
@@ -7554,14 +7575,6 @@ Internet-Draft                     TLS                     November 2017
    to provide collision resistance.  The exporters provided in TLS 1.3
    are derived from the same handshake contexts as the early traffic
    keys and the application traffic keys respectively, and thus have
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 135]
-
-Internet-Draft                     TLS                     November 2017
-
-
    similar security properties.  Note that they do not include the
    client's certificate; future applications which wish to bind to the
    client's certificate may need to define a new exporter that includes
@@ -7596,6 +7609,15 @@ E.1.1.  Key Derivation and HKDF
    followed (including in future revisions of this document), in
    particular, one SHOULD NOT use an output of HKDF-Extract as an input
    to another application of HKDF-Extract without an HKDF-Expand in
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 136]
+
+Internet-Draft                     TLS                     November 2017
+
+
    between.  Consecutive applications of HKDF-Expand are allowed as long
    as these are differentiated via the key and/or the labels.
 
@@ -7609,14 +7631,6 @@ E.1.1.  Key Derivation and HKDF
    resistant and the output length from HKDF-Expand to be of size at
    least 256 bits (or as much as needed for the hash function to prevent
    finding collisions).
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 136]
-
-Internet-Draft                     TLS                     November 2017
-
 
 E.1.2.  Client Authentication
 
@@ -7652,6 +7666,14 @@ E.1.4.  Exporter Independence
    total set of exporter labels is known, then implementations SHOULD
    pre-compute the inner Derive-Secret stage of the exporter computation
    for all those labels, then erase the [early_]exporter_master_secret,
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 137]
+
+Internet-Draft                     TLS                     November 2017
+
+
    followed by each inner values as soon as it is known that it will not
    be needed again.
 
@@ -7664,15 +7686,6 @@ E.1.5.  Post-Compromise Security
    This is in contrast to KCI resistance, which describes the security
    guarantees that a party has after its own long-term secret has been
    compromised.
-
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 137]
-
-Internet-Draft                     TLS                     November 2017
-
 
 E.1.6.  External References
 
@@ -7710,6 +7723,13 @@ E.2.  Record Layer
       the endpoint should not be able to decrypt traffic encrypted with
       the old key.
 
+
+
+Rescorla                  Expires May 28, 2018                [Page 138]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Informally, TLS 1.3 provides these properties by AEAD-protecting the
    plaintext with a strong key.  AEAD encryption [RFC5116] provides
    confidentiality and integrity for the data.  Non-replayability is
@@ -7721,15 +7741,6 @@ E.2.  Record Layer
    plaintext is repeatedly encrypted by different users under the same
    key (as is commonly the case for HTTP), the nonce is formed by mixing
    the sequence number with a secret per-connection initialization
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 138]
-
-Internet-Draft                     TLS                     November 2017
-
-
    vector derived along with the traffic keys.  See [BT16] for analysis
    of this construction.
 
@@ -7767,6 +7778,14 @@ E.3.  Traffic Analysis
    TLS does not provide any specific defenses against this form of
    attack but does include a padding mechanism for use by applications:
    The plaintext protected by the AEAD function consists of content plus
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 139]
+
+Internet-Draft                     TLS                     November 2017
+
+
    variable-length padding, which allows the application to produce
    arbitrary length encrypted records as well as padding-only cover
    traffic to conceal the difference between periods of transmission and
@@ -7778,14 +7797,6 @@ E.3.  Traffic Analysis
    which ones elicit a response from the server).  In general, it is not
    known how to remove all of these channels because even a constant
    time padding removal function will likely feed the content into data-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 139]
-
-Internet-Draft                     TLS                     November 2017
-
-
    dependent functions.  At minimum, a fully constant time server or
    client would require close cooperation with the application layer
    protocol implementation, including making that higher level protocol
@@ -7822,6 +7833,15 @@ E.4.  Side Channel Attacks
    application protocols separately ensuring that confidential
    information is not inadvertently leaked.
 
+
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 140]
+
+Internet-Draft                     TLS                     November 2017
+
+
 E.5.  Replay Attacks on 0-RTT
 
    Replayable 0-RTT data presents a number of security threats to TLS-
@@ -7833,14 +7853,6 @@ E.5.  Replay Attacks on 0-RTT
    -  Duplication of actions which cause side effects (e.g., purchasing
       an item or transferring money) to be duplicated, thus harming the
       site or the user.
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 140]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Attackers can store and replay 0-RTT messages in order to re-order
       them with respect to other messages (e.g., moving a delete to
@@ -7878,6 +7890,14 @@ Internet-Draft                     TLS                     November 2017
    If implemented correctly, the mechanisms described in Section 8.1 and
    Section 8.2 prevent a replayed ClientHello and its associated 0-RTT
    data from being accepted multiple times by any cluster with
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 141]
+
+Internet-Draft                     TLS                     November 2017
+
+
    consistent state; for servers which limit the use of 0-RTT to one
    cluster for a single ticket, then a given ClientHello and its
    associated 0-RTT data will only be accepted once.  However, if state
@@ -7890,14 +7910,6 @@ Internet-Draft                     TLS                     November 2017
 
    Application protocols MUST NOT use 0-RTT data without a profile that
    defines its use.  That profile needs to identify which messages or
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 141]
-
-Internet-Draft                     TLS                     November 2017
-
-
    interactions are safe to use with 0-RTT and how to handle the
    situation when the server rejects 0-RTT and falls back to 1-RTT.
 
@@ -7934,6 +7946,14 @@ Appendix F.  Working Group Information
    information on how to subscribe to the list is at
    https://www.ietf.org/mailman/listinfo/tls [2]
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 142]
+
+Internet-Draft                     TLS                     November 2017
+
+
    Archives of the list can be found at: https://www.ietf.org/mail-
    archive/web/tls/current/index.html [3]
 
@@ -7946,13 +7966,6 @@ Appendix G.  Contributors
    -  Christopher Allen (co-editor of TLS 1.0)
       Alacrity Ventures
       ChristopherA@AlacrityManagement.com
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 142]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Richard Barnes
       Cisco
@@ -7990,6 +8003,13 @@ Internet-Draft                     TLS                     November 2017
       OpenSSL
       matt@openssl.org
 
+
+
+Rescorla                  Expires May 28, 2018                [Page 143]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Stephen Checkoway
       University of Illinois at Chicago
       sfc@uic.edu
@@ -8001,14 +8021,6 @@ Internet-Draft                     TLS                     November 2017
    -  Katriel Cohn-Gordon
       University of Oxford
       me@katriel.co.uk
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 143]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Cas Cremers
       University of Oxford
@@ -8046,6 +8058,14 @@ Internet-Draft                     TLS                     November 2017
 
    -  Daniel Kahn Gillmor
       ACLU
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 144]
+
+Internet-Draft                     TLS                     November 2017
+
+
       dkg@fifthhorseman.net
 
    -  Matthew Green
@@ -8058,14 +8078,6 @@ Internet-Draft                     TLS                     November 2017
 
    -  Felix Guenther
       TU Darmstadt
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 144]
-
-Internet-Draft                     TLS                     November 2017
-
-
       mail@felixguenther.info
 
    -  Vipul Gupta (co-author of [RFC4492])
@@ -8103,6 +8115,13 @@ Internet-Draft                     TLS                     November 2017
       Red Hat Inc.
       hkario@redhat.com
 
+
+
+Rescorla                  Expires May 28, 2018                [Page 145]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Phil Karlton (co-author of SSL 3.0)
 
    -  Leon Klingele
@@ -8114,14 +8133,6 @@ Internet-Draft                     TLS                     November 2017
       paul@cryptography.com
 
    -  Hugo Krawczyk
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 145]
-
-Internet-Draft                     TLS                     November 2017
-
-
       IBM
       hugokraw@us.ibm.com
 
@@ -8159,6 +8170,14 @@ Internet-Draft                     TLS                     November 2017
 
    -  Bodo Moeller (co-author of [RFC4492])
       Google
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 146]
+
+Internet-Draft                     TLS                     November 2017
+
+
       bodo@openssl.org
 
    -  Kyle Nekritz
@@ -8170,14 +8189,6 @@ Internet-Draft                     TLS                     November 2017
       erik+ietf@nygren.org
 
    -  Magnus Nystrom
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 146]
-
-Internet-Draft                     TLS                     November 2017
-
-
       Microsoft
       mnystrom@microsoft.com
 
@@ -8215,6 +8226,14 @@ Internet-Draft                     TLS                     November 2017
 
    -  Michael Sabin
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 147]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Joe Salowey
       Tableau Software
       joe@salowey.net
@@ -8226,13 +8245,6 @@ Internet-Draft                     TLS                     November 2017
    -  David Schinazi
       Apple Inc.
       dschinazi@apple.com
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 147]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Sam Scott
       Royal Holloway, University of London
@@ -8270,6 +8282,14 @@ Internet-Draft                     TLS                     November 2017
       sn3rd
       sean@sn3rd.com
 
+
+
+
+Rescorla                  Expires May 28, 2018                [Page 148]
+
+Internet-Draft                     TLS                     November 2017
+
+
    -  Steven Valdez
       Google
       svaldez@google.com
@@ -8281,14 +8301,6 @@ Internet-Draft                     TLS                     November 2017
    -  Thyla van der Merwe
       Royal Holloway, University of London
       tjvdmerwe@gmail.com
-
-
-
-
-Rescorla                  Expires May 28, 2018                [Page 148]
-
-Internet-Draft                     TLS                     November 2017
-
 
    -  Victor Vasiliev
       Google
@@ -8318,18 +8330,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
