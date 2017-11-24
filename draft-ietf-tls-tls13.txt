@@ -2654,6 +2654,8 @@ Internet-Draft                     TLS                     November 2017
    which do not offer this extension.  Servers MUST NOT send this
    extension.
 
+      struct {} PostHandShakeAuth;
+
    The "extension_data" field of the "post_handshake_auth" extension is
    zero length.
 
@@ -2671,8 +2673,6 @@ Internet-Draft                     TLS                     November 2017
 
    The "extension_data" field of this extension contains a
    "NamedGroupList" value:
-
-
 
 
 

@@ -1906,6 +1906,9 @@ Subsequent Handshake:
 <a href="#rfc.section.4.2.6">4.2.6.</a> <a href="#post_handshake_auth" id="post_handshake_auth">Post-Handshake Client Authentication</a>
 </h3>
 <p id="rfc.section.4.2.6.p.1">The &#8220;post_handshake_auth&#8221; extension is used to indicate that a client is willing to perform post-handshake authentication <a href="#post-handshake-authentication" class="xref">Section 4.6.2</a>. Servers MUST NOT send a post-handshake CertificateRequest to clients which do not offer this extension. Servers MUST NOT send this extension.</p>
+<pre>
+   struct {} PostHandShakeAuth;
+</pre>
 <p id="rfc.section.4.2.6.p.2">The &#8220;extension_data&#8221; field of the &#8220;post_handshake_auth&#8221; extension is zero length.</p>
 <h3 id="rfc.section.4.2.7">
 <a href="#rfc.section.4.2.7">4.2.7.</a> <a href="#negotiated-groups" id="negotiated-groups">Negotiated Groups</a>
