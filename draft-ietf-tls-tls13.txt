@@ -83,7 +83,7 @@ Table of Contents
    2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  16
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  19
      2.2.  Resumption and Pre-Shared Key (PSK) . . . . . . . . . . .  20
-     2.3.  Zero-RTT Data . . . . . . . . . . . . . . . . . . . . . .  22
+     2.3.  0-RTT Data  . . . . . . . . . . . . . . . . . . . . . . .  22
    3.  Presentation Language . . . . . . . . . . . . . . . . . . . .  24
      3.1.  Basic Block Size  . . . . . . . . . . . . . . . . . . . .  24
      3.2.  Miscellaneous . . . . . . . . . . . . . . . . . . . . . .  24
@@ -191,7 +191,7 @@ Internet-Draft                     TLS                     November 2017
    Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 129
      D.1.  Negotiating with an older server  . . . . . . . . . . . . 130
      D.2.  Negotiating with an older client  . . . . . . . . . . . . 131
-     D.3.  Zero-RTT backwards compatibility  . . . . . . . . . . . . 131
+     D.3.  0-RTT backwards compatibility . . . . . . . . . . . . . . 131
      D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 131
      D.5.  Backwards Compatibility Security Restrictions . . . . . . 132
    Appendix E.  Overview of Security Properties  . . . . . . . . . . 133
@@ -806,7 +806,7 @@ Internet-Draft                     TLS                     November 2017
       protection algorithm (including secret key length) and a hash to
       be used with the key derivation function and HMAC.
 
-   -  A Zero-RTT mode was added, saving a round-trip at connection setup
+   -  A 0-RTT mode was added, saving a round-trip at connection setup
       for some application data, at the cost of certain security
       properties.
 
@@ -1194,7 +1194,7 @@ Internet-Draft                     TLS                     November 2017
       a strong password-based authenticated key exchange even when used
       with Diffie-Hellman key establishment.
 
-2.3.  Zero-RTT Data
+2.3.  0-RTT Data
 
    When clients and servers share a PSK (either obtained externally or
    via a previous handshake), TLS 1.3 allows clients to send data on the
@@ -3071,7 +3071,7 @@ Internet-Draft                     TLS                     November 2017
    rejects it, the server will generally not have the 0-RTT record
    protection keys and must instead use trial decryption (either with
    the 1-RTT handshake keys or by looking for a cleartext ClientHello in
-   the case of HelloRetryRequest) to find the first non-0RTT message.
+   the case of HelloRetryRequest) to find the first non-0-RTT message.
 
 
 
@@ -7302,7 +7302,7 @@ D.2.  Negotiating with an older client
    (TLSPlaintext.legacy_record_version).  Servers will receive various
    TLS 1.x versions in this field, but its value MUST always be ignored.
 
-D.3.  Zero-RTT backwards compatibility
+D.3.  0-RTT backwards compatibility
 
    0-RTT data is not compatible with older servers.  An older server
    will respond to the ClientHello with an older ServerHello, but it
