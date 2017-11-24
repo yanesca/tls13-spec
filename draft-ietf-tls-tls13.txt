@@ -7990,6 +7990,10 @@ Internet-Draft                     TLS                     November 2017
       OpenSSL
       matt@openssl.org
 
+   -  Stephen Checkoway
+      University of Illinois at Chicago
+      sfc@uic.edu
+
    -  Pete Chown
       Skygate Technology Ltd
       pc@skygate.co.uk
@@ -7998,10 +8002,6 @@ Internet-Draft                     TLS                     November 2017
       University of Oxford
       me@katriel.co.uk
 
-   -  Cas Cremers
-      University of Oxford
-      cas.cremers@cs.ox.ac.uk
-
 
 
 
@@ -8009,6 +8009,10 @@ Rescorla                  Expires May 28, 2018                [Page 143]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   -  Cas Cremers
+      University of Oxford
+      cas.cremers@cs.ox.ac.uk
 
    -  Antoine Delignat-Lavaud (co-author of [RFC7627])
       INRIA
@@ -8054,10 +8058,6 @@ Internet-Draft                     TLS                     November 2017
 
    -  Felix Guenther
       TU Darmstadt
-      mail@felixguenther.info
-
-   -  Vipul Gupta (co-author of [RFC4492])
-      Sun Microsystems Laboratories
 
 
 
@@ -8066,6 +8066,10 @@ Rescorla                  Expires May 28, 2018                [Page 144]
 Internet-Draft                     TLS                     November 2017
 
 
+      mail@felixguenther.info
+
+   -  Vipul Gupta (co-author of [RFC4492])
+      Sun Microsystems Laboratories
       vipul.gupta@sun.com
 
    -  Chris Hawk (co-author of [RFC4492])
@@ -8110,10 +8114,6 @@ Internet-Draft                     TLS                     November 2017
       paul@cryptography.com
 
    -  Hugo Krawczyk
-      IBM
-      hugokraw@us.ibm.com
-
-   -  Adam Langley (co-author of [RFC7627])
 
 
 
@@ -8122,6 +8122,10 @@ Rescorla                  Expires May 28, 2018                [Page 145]
 Internet-Draft                     TLS                     November 2017
 
 
+      IBM
+      hugokraw@us.ibm.com
+
+   -  Adam Langley (co-author of [RFC7627])
       Google
       agl@google.com
 
@@ -8166,10 +8170,6 @@ Internet-Draft                     TLS                     November 2017
       erik+ietf@nygren.org
 
    -  Magnus Nystrom
-      Microsoft
-      mnystrom@microsoft.com
-
-   -  Kazuho Oku
 
 
 
@@ -8178,6 +8178,10 @@ Rescorla                  Expires May 28, 2018                [Page 146]
 Internet-Draft                     TLS                     November 2017
 
 
+      Microsoft
+      mnystrom@microsoft.com
+
+   -  Kazuho Oku
       DeNA Co., Ltd.
       kazuhooku@gmail.com
 
@@ -8223,16 +8227,16 @@ Internet-Draft                     TLS                     November 2017
       Apple Inc.
       dschinazi@apple.com
 
-   -  Sam Scott
-      Royal Holloway, University of London
-      me@samjs.co.uk
-
 
 
 Rescorla                  Expires May 28, 2018                [Page 147]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   -  Sam Scott
+      Royal Holloway, University of London
+      me@samjs.co.uk
 
    -  Dan Simon
       Microsoft, Inc.
@@ -8278,10 +8282,6 @@ Internet-Draft                     TLS                     November 2017
       Royal Holloway, University of London
       tjvdmerwe@gmail.com
 
-   -  Victor Vasiliev
-      Google
-      vasilvv@google.com
-
 
 
 
@@ -8289,6 +8289,10 @@ Rescorla                  Expires May 28, 2018                [Page 148]
 
 Internet-Draft                     TLS                     November 2017
 
+
+   -  Victor Vasiliev
+      Google
+      vasilvv@google.com
 
    -  Tom Weinstein
 
@@ -8314,10 +8318,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
