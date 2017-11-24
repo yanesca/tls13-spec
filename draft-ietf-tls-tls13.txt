@@ -4407,7 +4407,7 @@ Internet-Draft                     TLS                     November 2017
       } TLSInnerPlaintext;
 
       struct {
-          ContentType opaque_type = 23; /* application_data */
+          ContentType opaque_type = application_data; /* 23 */
           ProtocolVersion legacy_record_version = 0x0303; /* TLS v1.2 */
           uint16 length;
           opaque encrypted_record[TLSCiphertext.length];
@@ -6414,7 +6414,7 @@ B.1.  Record Layer
       } TLSInnerPlaintext;
 
       struct {
-          ContentType opaque_type = 23; /* application_data */
+          ContentType opaque_type = application_data; /* 23 */
           ProtocolVersion legacy_record_version = 0x0303; /* TLS v1.2 */
           uint16 length;
           opaque encrypted_record[TLSCiphertext.length];
