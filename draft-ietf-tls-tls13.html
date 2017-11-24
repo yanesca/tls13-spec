@@ -2136,15 +2136,16 @@ Subsequent Handshake:
 <p id="rfc.section.4.2.11.2.p.2">The PskBinderEntry is computed in the same way as the Finished message (<a href="#finished" class="xref">Section 4.4.4</a>) but with the BaseKey being the binder_key derived via the key schedule from the corresponding PSK which is being offered (see <a href="#key-schedule" class="xref">Section 7.1</a>).</p>
 <p id="rfc.section.4.2.11.2.p.3">If the handshake includes a HelloRetryRequest, the initial ClientHello and HelloRetryRequest are included in the transcript along with the new ClientHello.  For instance, if the client sends ClientHello1, its binder will be computed over:</p>
 <pre>
-   Transcript-Hash(ClientHello1[truncated])
+   Transcript-Hash(Truncate(ClientHello1))
 </pre>
-<p id="rfc.section.4.2.11.2.p.4">If the server responds with HelloRetryRequest, and the client then sends ClientHello2, its binder will be computed over:</p>
+<p id="rfc.section.4.2.11.2.p.4">Where Truncate() removes the binders list from the ClientHello.</p>
+<p id="rfc.section.4.2.11.2.p.5">If the server responds with HelloRetryRequest, and the client then sends ClientHello2, its binder will be computed over:</p>
 <pre>
    Transcript-Hash(ClientHello1,
                    HelloRetryRequest,
-                   ClientHello2[truncated])
+                   Truncate(ClientHello2))
 </pre>
-<p id="rfc.section.4.2.11.2.p.5">The full ClientHello1/ClientHello2 is included in all other handshake hash computations.  Note that in the first flight, ClientHello1[truncated] is hashed directly, but in the second flight, ClientHello1 is hashed and then reinjected as a &#8220;message_hash&#8221; message, as described in <a href="#the-transcript-hash" class="xref">Section 4.4.1</a>.</p>
+<p id="rfc.section.4.2.11.2.p.6">The full ClientHello1/ClientHello2 is included in all other handshake hash computations.  Note that in the first flight, Truncate(ClientHello1) is hashed directly, but in the second flight, ClientHello1 is hashed and then reinjected as a &#8220;message_hash&#8221; message, as described in <a href="#the-transcript-hash" class="xref">Section 4.4.1</a>.</p>
 <h4 id="rfc.section.4.2.11.3">
 <a href="#rfc.section.4.2.11.3">4.2.11.3.</a> <a href="#processing-order" id="processing-order">Processing Order</a>
 </h4>

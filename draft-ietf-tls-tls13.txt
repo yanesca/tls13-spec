@@ -3290,14 +3290,14 @@ Internet-Draft                     TLS                     November 2017
    along with the new ClientHello.  For instance, if the client sends
    ClientHello1, its binder will be computed over:
 
-      Transcript-Hash(ClientHello1[truncated])
+      Transcript-Hash(Truncate(ClientHello1))
+
+   Where Truncate() removes the binders list from the ClientHello.
 
    If the server responds with HelloRetryRequest, and the client then
    sends ClientHello2, its binder will be computed over:
 
-      Transcript-Hash(ClientHello1,
-                      HelloRetryRequest,
-                      ClientHello2[truncated])
+
 
 
 
@@ -3306,9 +3306,13 @@ Rescorla                  Expires May 28, 2018                 [Page 59]
 Internet-Draft                     TLS                     November 2017
 
 
+      Transcript-Hash(ClientHello1,
+                      HelloRetryRequest,
+                      Truncate(ClientHello2))
+
    The full ClientHello1/ClientHello2 is included in all other handshake
    hash computations.  Note that in the first flight,
-   ClientHello1[truncated] is hashed directly, but in the second flight,
+   Truncate(ClientHello1) is hashed directly, but in the second flight,
    ClientHello1 is hashed and then reinjected as a "message_hash"
    message, as described in Section 4.4.1.
 
@@ -3350,10 +3354,6 @@ Internet-Draft                     TLS                     November 2017
 
    extensions  A list of extensions.  For more information, see the
       table in Section 4.2.
-
-
-
-
 
 
 
