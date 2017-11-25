@@ -402,7 +402,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-11-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-11-25" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -423,7 +423,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">November 24, 2017</td>
+<td class="right">November 25, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -438,7 +438,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: May 28, 2018</td>
+<td class="left">Expires: May 29, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -455,7 +455,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 28, 2018.</p>
+<p>This Internet-Draft will expire on May 29, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -2454,7 +2454,7 @@ finished_key =
 <a href="#rfc.section.4.6.1">4.6.1.</a> <a href="#NSTMessage" id="NSTMessage">New Session Ticket Message</a>
 </h3>
 <p id="rfc.section.4.6.1.p.1">At any time after the server has received the client Finished message, it MAY send a NewSessionTicket message. This message creates a unique association between the ticket value and a secret PSK derived from the resumption master secret.</p>
-<p id="rfc.section.4.6.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension" class="xref">Section 4.2.11</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events.  For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Multiple tickets are useful for clients for a variety of purposes, including:</p>
+<p id="rfc.section.4.6.1.p.2">The client MAY use this PSK for future handshakes by including the ticket value in the &#8220;pre_shared_key&#8221; extension in its ClientHello (<a href="#pre-shared-key-extension" class="xref">Section 4.2.11</a>). Servers MAY send multiple tickets on a single connection, either immediately after each other or after specific events (see <a href="#client-tracking" class="xref">Appendix C.4</a>).  For instance, the server might send a new ticket after post-handshake authentication in order to encapsulate the additional client authentication state. Multiple tickets are useful for clients for a variety of purposes, including:</p>
 <p></p>
 
 <ul>
@@ -4152,7 +4152,7 @@ here                  +--------+--------+
 </li>
 </ul>
 <h2 id="rfc.appendix.C.4">
-<a href="#rfc.appendix.C.4">C.4.</a> <a href="#client-tracking-prevention" id="client-tracking-prevention">Client Tracking Prevention</a>
+<a href="#rfc.appendix.C.4">C.4.</a> <a href="#client-tracking" id="client-tracking">Client Tracking Prevention</a>
 </h2>
 <p id="rfc.section.C.4.p.1">Clients SHOULD NOT reuse a ticket for multiple connections. Reuse of a ticket allows passive observers to correlate different connections.  Servers that issue tickets SHOULD offer at least as many tickets as the number of connections that a client might use; for example, a web browser using HTTP/1.1 <a href="#RFC7230" class="xref">[RFC7230]</a> might open six connections to a server. Servers SHOULD issue new tickets with every connection. This ensures that clients are always able to use a new ticket when creating a new connection.</p>
 <h2 id="rfc.appendix.C.5">
