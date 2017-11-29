@@ -1201,20 +1201,20 @@ Internet-Draft                     TLS                     November 2017
    first flight ("early data").  The client uses the PSK to authenticate
    the server and to encrypt the early data.
 
-   When clients use a PSK obtained externally to send early data, then
-   the following additional information MUST be provisioned to both
-   parties:
-
-   -  The TLS version number for use with this PSK
-
-   -  The cipher suite for use with this PSK
-
-   -  The Application-Layer Protocol Negotiation (ALPN) protocol
-      [RFC7301], if any is to be used
-
    As shown in Figure 4, the 0-RTT data is just added to the 1-RTT
    handshake in the first flight.  The rest of the handshake uses the
    same messages as with a 1-RTT handshake with PSK resumption.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2283,7 +2283,7 @@ Internet-Draft                     TLS                     November 2017
 
               case server_hello:
                    ProtocolVersion selected_version;
-          }
+          };
       } SupportedVersions;
 
    The "supported_versions" extension is used by the client to indicate
@@ -6685,7 +6685,7 @@ B.3.1.1.  Version Extension
 
               case server_hello:
                    ProtocolVersion selected_version;
-          }
+          };
       } SupportedVersions;
 
 B.3.1.2.  Cookie Extension
@@ -6849,6 +6849,8 @@ Internet-Draft                     TLS                     November 2017
           OIDFilter filters<0..2^16-1>;
       } OIDFilterExtension;
 
+      struct {} PostHandshakeAuth;
+
       struct {
           Extension extensions<0..2^16-1>;
       } EncryptedExtensions;
@@ -6859,8 +6861,6 @@ Internet-Draft                     TLS                     November 2017
       } CertificateRequest;
 
 B.3.3.  Authentication Messages
-
-
 
 
 

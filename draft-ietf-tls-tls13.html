@@ -1204,15 +1204,7 @@ Subsequent Handshake:
 <a href="#rfc.section.2.3">2.3.</a> <a href="#zero-rtt-data" id="zero-rtt-data">0-RTT Data</a>
 </h2>
 <p id="rfc.section.2.3.p.1">When clients and servers share a PSK (either obtained externally or via a previous handshake), TLS 1.3 allows clients to send data on the first flight (&#8220;early data&#8221;). The client uses the PSK to authenticate the server and to encrypt the early data.</p>
-<p id="rfc.section.2.3.p.2">When clients use a PSK obtained externally to send early data, then the following additional information MUST be provisioned to both parties:</p>
-<p></p>
-
-<ul>
-<li>The TLS version number for use with this PSK</li>
-<li>The cipher suite for use with this PSK</li>
-<li>The Application-Layer Protocol Negotiation (ALPN) protocol <a href="#RFC7301" class="xref">[RFC7301]</a>, if any is to be used</li>
-</ul>
-<p id="rfc.section.2.3.p.4">As shown in <a href="#tls-0-rtt" class="xref">Figure 4</a>, the 0-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
+<p id="rfc.section.2.3.p.2">As shown in <a href="#tls-0-rtt" class="xref">Figure 4</a>, the 0-RTT data is just added to the 1-RTT handshake in the first flight. The rest of the handshake uses the same messages as with a 1-RTT handshake with PSK resumption.</p>
 <div id="rfc.figure.4"></div>
 <div id="tls-0-rtt"></div>
 <pre>
@@ -1252,14 +1244,14 @@ Subsequent Handshake:
                   derived from [sender]_application_traffic_secret_N
 </pre>
 <p class="figure">Figure 4: Message flow for a zero round trip handshake</p>
-<p id="rfc.section.2.3.p.5">IMPORTANT NOTE: The security properties for 0-RTT data are weaker than those for other kinds of TLS data.  Specifically:</p>
+<p id="rfc.section.2.3.p.3">IMPORTANT NOTE: The security properties for 0-RTT data are weaker than those for other kinds of TLS data.  Specifically:</p>
 <p></p>
 
 <ol>
 <li>This data is not forward secret, as it is encrypted solely under keys derived using the offered PSK.</li>
 <li>There are no guarantees of non-replay between connections.  Protection against replay for ordinary TLS 1.3 1-RTT data is provided via the server&#8217;s Random value, but 0-RTT data does not depend on the ServerHello and therefore has weaker guarantees.  This is especially relevant if the data is authenticated either with TLS client authentication or inside the application protocol. The same warnings apply to any use of the early_exporter_master_secret.</li>
 </ol>
-<p id="rfc.section.2.3.p.7">0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.) <a href="#replay-0rtt" class="xref">Appendix E.5</a> contains a description of potential attacks and <a href="#anti-replay" class="xref">Section 8</a> describes mechanisms which the server can use to limit the impact of replay.</p>
+<p id="rfc.section.2.3.p.5">0-RTT data cannot be duplicated within a connection (i.e., the server will not process the same data twice for the same connection) and an attacker will not be able to make 0-RTT data appear to be 1-RTT data (because it is protected with different keys.) <a href="#replay-0rtt" class="xref">Appendix E.5</a> contains a description of potential attacks and <a href="#anti-replay" class="xref">Section 8</a> describes mechanisms which the server can use to limit the impact of replay.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#presentation-language" id="presentation-language">Presentation Language</a>
 </h1>
@@ -1758,10 +1750,10 @@ Subsequent Handshake:
        select (Handshake.msg_type) {
            case client_hello:
                 ProtocolVersion versions&lt;2..254&gt;;
-                
+
            case server_hello:
                 ProtocolVersion selected_version;
-       }
+       };
    } SupportedVersions;
 </pre>
 <p id="rfc.section.4.2.1.p.1">The &#8220;supported_versions&#8221; extension is used by the client to indicate which versions of TLS it supports and by the server to indicate which version it is using. The extension contains a list of supported versions in preference order, with the most preferred version first. Implementations of this specification MUST send this extension containing all versions of TLS which they are prepared to negotiate (for this specification, that means minimally 0x0304, but if previous versions of TLS are allowed to be negotiated, they MUST be present as well).</p>
@@ -2272,7 +2264,7 @@ Subsequent Handshake:
        RawPublicKey(2),
        (255)
    } CertificateType;
-   
+
    struct {
        select (certificate_type) {
            case RawPublicKey:
@@ -3867,10 +3859,10 @@ here                  +--------+--------+
        select (Handshake.msg_type) {
            case client_hello:
                 ProtocolVersion versions&lt;2..254&gt;;
-                
+
            case server_hello:
                 ProtocolVersion selected_version;
-       }
+       };
    } SupportedVersions;
 </pre>
 <h4 id="rfc.appendix.B.3.1.2">
@@ -3975,6 +3967,8 @@ here                  +--------+--------+
        OIDFilter filters&lt;0..2^16-1&gt;;
    } OIDFilterExtension;
 
+   struct {} PostHandshakeAuth;
+
    struct {
        Extension extensions&lt;0..2^16-1&gt;;
    } EncryptedExtensions;
@@ -3994,7 +3988,7 @@ here                  +--------+--------+
        RawPublicKey(2),
        (255)
    } CertificateType;
-   
+
    struct {
        select (certificate_type) {
            case RawPublicKey:
