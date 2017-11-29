@@ -2769,31 +2769,31 @@ Internet-Draft                     TLS                     November 2017
       are determined by the specified group and its corresponding
       definition.
 
-   The "extension_data" field of this extension contains a "KeyShare"
-   value:
+   In the ClientHello message, the "extension_data" field of this
+   extension contains a "KeyShareClientHello" value:
 
       struct {
-          select (Handshake.msg_type) {
-              case client_hello:
-                  KeyShareEntry client_shares<0..2^16-1>;
-
-              case hello_retry_request:
-                  NamedGroup selected_group;
-
-              case server_hello:
-                  KeyShareEntry server_share;
-          };
-      } KeyShare;
+          KeyShareEntry client_shares<0..2^16-1>;
+      } KeyShareClientHello;
 
    client_shares  A list of offered KeyShareEntry values in descending
-      order of client preference.  This vector MAY be empty if the
-      client is requesting a HelloRetryRequest.  Each KeyShareEntry
-      value MUST correspond to a group offered in the "supported_groups"
-      extension and MUST appear in the same order.  However, the values
-      MAY be a non-contiguous subset of the "supported_groups" extension
-      and MAY omit the most preferred groups.  Such a situation could
-      arise if the most preferred groups are new and unlikely to be
+      order of client preference.
 
+   This vector MAY be empty if the client is requesting a
+   HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a
+   group offered in the "supported_groups" extension and MUST appear in
+   the same order.  However, the values MAY be a non-contiguous subset
+   of the "supported_groups" extension and MAY omit the most preferred
+   groups.  Such a situation could arise if the most preferred groups
+   are new and unlikely to be supported in enough places to make
+   pregenerating key shares for them efficient.
+
+   Clients can offer an arbitrary number of KeyShareEntry values, each
+   representing a single set of key exchange parameters.  For instance,
+   a client might offer shares for several elliptic curves or multiple
+   FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be
+   generated independently.  Clients MUST NOT offer multiple
+   KeyShareEntry values for the same group.  Clients MUST NOT offer any
 
 
 
@@ -2802,25 +2802,20 @@ Rescorla                  Expires June 2, 2018                 [Page 50]
 Internet-Draft                     TLS                     November 2017
 
 
-      supported in enough places to make pregenerating key shares for
-      them efficient.
-
-   selected_group  The mutually supported group the server intends to
-      negotiate and is requesting a retried ClientHello/KeyShare for.
-
-   server_share  A single KeyShareEntry value that is in the same group
-      as one of the client's shares.
-
-   Clients can offer an arbitrary number of KeyShareEntry values, each
-   representing a single set of key exchange parameters.  For instance,
-   a client might offer shares for several elliptic curves or multiple
-   FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be
-   generated independently.  Clients MUST NOT offer multiple
-   KeyShareEntry values for the same group.  Clients MUST NOT offer any
    KeyShareEntry values for groups not listed in the client's
    "supported_groups" extension.  Servers MAY check for violations of
    these rules and abort the handshake with an "illegal_parameter" alert
    if one is violated.
+
+   In a HelloRetryRequest message, the "extension_data" field of this
+   extension contains a KeyShareHelloRetryRequest value:
+
+      struct {
+          NamedGroup selected_group;
+      } KeyShareHelloRetryRequest;
+
+   selected_group  The mutually supported group the server intends to
+      negotiate and is requesting a retried ClientHello/KeyShare for.
 
    Upon receipt of this extension in a HelloRetryRequest, the client
    MUST verify that (1) the selected_group field corresponds to a group
@@ -2834,6 +2829,16 @@ Internet-Draft                     TLS                     November 2017
    new KeyShareEntry for the group indicated in the selected_group field
    of the triggering HelloRetryRequest.
 
+   In a ServerHello message, the "extension_data" field of this
+   extension contains a KeyShareServerHello value:
+
+      struct {
+          KeyShareEntry server_share;
+      } KeyShareServerHello;
+
+   server_share  A single KeyShareEntry value that is in the same group
+      as one of the client's shares.
+
    If using (EC)DHE key establishment, servers offer exactly one
    KeyShareEntry in the ServerHello.  This value MUST be in the same
    group as the KeyShareEntry value offered by the client that the
@@ -2845,11 +2850,6 @@ Internet-Draft                     TLS                     November 2017
    NamedGroup in the ServerHello is the same as that in the
    HelloRetryRequest.  If this check fails, the client MUST abort the
    handshake with an "illegal_parameter" alert.
-
-
-
-
-
 
 
 
@@ -5669,9 +5669,9 @@ Internet-Draft                     TLS                     November 2017
    -  TLS HandshakeType Registry: Future values are allocated via
       Standards Action [RFC5226].  IANA [SHALL update/has updated] this
       registry to rename item 4 from "NewSessionTicket" to
-      "new_session_ticket" and to add the "hello_retry_request",
-      "encrypted_extensions", "end_of_early_data", "key_update", and
-      "message_hash" values.
+      "new_session_ticket" and to add the
+      "hello_retry_request_RESERVED", "encrypted_extensions",
+      "end_of_early_data", "key_update", and "message_hash" values.
 
    This document also uses the TLS ExtensionType Registry originally
    created in [RFC4366].  IANA has updated it to reference this
@@ -6615,17 +6615,16 @@ Internet-Draft                     TLS                     November 2017
    } KeyShareEntry;
 
    struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-               KeyShareEntry client_shares<0..2^16-1>;
+       KeyShareEntry client_shares<0..2^16-1>;
+   } KeyShareClientHello;
 
-           case hello_retry_request:
-               NamedGroup selected_group;
+   struct {
+       NamedGroup selected_group;
+   } KeyShareHelloRetryRequest;
 
-           case server_hello:
-               KeyShareEntry server_share;
-       };
-   } KeyShare;
+   struct {
+       KeyShareEntry server_share;
+   } KeyShareServerHello;
 
    struct {
        uint8 legacy_form = 4;
@@ -6658,6 +6657,7 @@ Internet-Draft                     TLS                     November 2017
 
    struct {
        PskIdentity identities<7..2^16-1>;
+       PskBinderEntry binders<33..2^16-1>;
 
 
 
@@ -6666,7 +6666,6 @@ Rescorla                  Expires June 2, 2018                [Page 119]
 Internet-Draft                     TLS                     November 2017
 
 
-       PskBinderEntry binders<33..2^16-1>;
    } OfferedPsks;
 
    struct {
@@ -6695,6 +6694,7 @@ B.3.1.2.  Cookie Extension
       } Cookie;
 
 B.3.1.3.  Signature Algorithm Extension
+
 
 
 
