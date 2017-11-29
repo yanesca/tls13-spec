@@ -8320,6 +8320,10 @@ Internet-Draft                     TLS                     November 2017
       Vodafone
       timothy.wright@vodafone.com
 
+   -  Peter Wu
+      Independent
+      peter@lekensteyn.nl
+
    -  Kazu Yamamoto
       Internet Initiative Japan Inc.
       kazu@iij.ad.jp
@@ -8330,10 +8334,6 @@ Author's Address
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
 
 
 
