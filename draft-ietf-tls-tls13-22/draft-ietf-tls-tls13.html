@@ -1960,34 +1960,46 @@ Subsequent Handshake:
 <dt>key_exchange</dt>
 <dd style="margin-left: 8">Key exchange information.  The contents of this field are determined by the specified group and its corresponding definition.</dd>
 </dl>
-<p id="rfc.section.4.2.8.p.4">The &#8220;extension_data&#8221; field of this extension contains a &#8220;KeyShare&#8221; value:</p>
+<p id="rfc.section.4.2.8.p.4">In the ClientHello message, the &#8220;extension_data&#8221; field of this extension contains a &#8220;KeyShareClientHello&#8221; value:</p>
 <pre>
    struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-               KeyShareEntry client_shares&lt;0..2^16-1&gt;;
-
-           case hello_retry_request:
-               NamedGroup selected_group;
-
-           case server_hello:
-               KeyShareEntry server_share;
-       };
-   } KeyShare;
+       KeyShareEntry client_shares&lt;0..2^16-1&gt;;
+   } KeyShareClientHello;
 </pre>
 <p></p>
 
 <dl>
 <dt>client_shares</dt>
-<dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.  This vector MAY be empty if the client is requesting a HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a group offered in the &#8220;supported_groups&#8221; extension and MUST appear in the same order.  However, the values MAY be a non-contiguous subset of the &#8220;supported_groups&#8221; extension and MAY omit the most preferred groups. Such a situation could arise if the most preferred groups are new and unlikely to be supported in enough places to make pregenerating key shares for them efficient.</dd>
+<dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.</dd>
+</dl>
+<p id="rfc.section.4.2.8.p.6">This vector MAY be empty if the client is requesting a HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a group offered in the &#8220;supported_groups&#8221; extension and MUST appear in the same order.  However, the values MAY be a non-contiguous subset of the &#8220;supported_groups&#8221; extension and MAY omit the most preferred groups. Such a situation could arise if the most preferred groups are new and unlikely to be supported in enough places to make pregenerating key shares for them efficient.</p>
+<p id="rfc.section.4.2.8.p.7">Clients can offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and abort the handshake with an &#8220;illegal_parameter&#8221; alert if one is violated.</p>
+<p id="rfc.section.4.2.8.p.8">In a HelloRetryRequest message, the &#8220;extension_data&#8221; field of this extension contains a KeyShareHelloRetryRequest value:</p>
+<pre>
+   struct {
+       NamedGroup selected_group;
+   } KeyShareHelloRetryRequest;
+</pre>
+<p></p>
+
+<dl>
 <dt>selected_group</dt>
 <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
+</dl>
+<p id="rfc.section.4.2.8.p.10">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello; and (2) the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field of the triggering HelloRetryRequest.</p>
+<p id="rfc.section.4.2.8.p.11">In a ServerHello message, the &#8220;extension_data&#8221; field of this extension contains a KeyShareServerHello value:</p>
+<pre>
+   struct {
+       KeyShareEntry server_share;
+   } KeyShareServerHello;
+</pre>
+<p></p>
+
+<dl>
 <dt>server_share</dt>
 <dd style="margin-left: 8">A single KeyShareEntry value that is in the same group as one of the client&#8217;s shares.</dd>
 </dl>
-<p id="rfc.section.4.2.8.p.6">Clients can offer an arbitrary number of KeyShareEntry values, each representing a single set of key exchange parameters. For instance, a client might offer shares for several elliptic curves or multiple FFDHE groups.  The key_exchange values for each KeyShareEntry MUST be generated independently.  Clients MUST NOT offer multiple KeyShareEntry values for the same group.  Clients MUST NOT offer any KeyShareEntry values for groups not listed in the client&#8217;s &#8220;supported_groups&#8221; extension.  Servers MAY check for violations of these rules and abort the handshake with an &#8220;illegal_parameter&#8221; alert if one is violated.</p>
-<p id="rfc.section.4.2.8.p.7">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the &#8220;supported_groups&#8221; extension in the original ClientHello; and (2) the selected_group field does not correspond to a group which was provided in the &#8220;key_share&#8221; extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original &#8220;key_share&#8221; extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field of the triggering HelloRetryRequest.</p>
-<p id="rfc.section.4.2.8.p.8">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST be in the same group as the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension and MUST NOT send a KeyShareEntry when using the &#8220;psk_ke&#8221; PskKeyExchangeMode.  If a HelloRetryRequest was received by the client, the client MUST verify that the selected NamedGroup in the ServerHello is the same as that in the HelloRetryRequest. If this check fails, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
+<p id="rfc.section.4.2.8.p.13">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST be in the same group as the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST NOT send a KeyShareEntry for any group not indicated in the &#8220;supported_groups&#8221; extension and MUST NOT send a KeyShareEntry when using the &#8220;psk_ke&#8221; PskKeyExchangeMode.  If a HelloRetryRequest was received by the client, the client MUST verify that the selected NamedGroup in the ServerHello is the same as that in the HelloRetryRequest. If this check fails, the client MUST abort the handshake with an &#8220;illegal_parameter&#8221; alert.</p>
 <h4 id="rfc.section.4.2.8.1">
 <a href="#rfc.section.4.2.8.1">4.2.8.1.</a> <a href="#ffdhe-param" id="ffdhe-param">Diffie-Hellman Parameters</a>
 </h4>
@@ -3066,7 +3078,7 @@ TLS-Exporter(label, context_value, key_length) =
 <li>TLS Cipher Suite Registry: values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226" class="xref">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226" class="xref">[RFC5226]</a>.  <br><br> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites" class="xref">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.ietf-tls-iana-registry-updates" class="xref">[I-D.ietf-tls-iana-registry-updates]</a> has been applied.]]</li>
 <li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>.</li>
 <li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
-<li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, &#8220;key_update&#8221;, and &#8220;message_hash&#8221; values.</li>
+<li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request_RESERVED&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, &#8220;key_update&#8221;, and &#8220;message_hash&#8221; values.</li>
 </ul>
 <p id="rfc.section.11.p.3">This document also uses the TLS ExtensionType Registry originally created in <a href="#RFC4366" class="xref">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
 <p></p>
@@ -3799,17 +3811,16 @@ here                  +--------+--------+
    } KeyShareEntry;
 
    struct {
-       select (Handshake.msg_type) {
-           case client_hello:
-               KeyShareEntry client_shares&lt;0..2^16-1&gt;;
+       KeyShareEntry client_shares&lt;0..2^16-1&gt;;
+   } KeyShareClientHello;
 
-           case hello_retry_request:
-               NamedGroup selected_group;
+   struct {
+       NamedGroup selected_group;
+   } KeyShareHelloRetryRequest;
 
-           case server_hello:
-               KeyShareEntry server_share;
-       };
-   } KeyShare;
+   struct {
+       KeyShareEntry server_share;
+   } KeyShareServerHello;
 
    struct {
        uint8 legacy_form = 4;
@@ -4437,6 +4448,7 @@ here                  +--------+--------+
 <li>Hoeteck Wee <br> Ecole Normale Superieure, Paris <br> hoeteck@alum.mit.edu</li>
 <li>David Wong <br> NCC Group <br> david.wong@nccgroup.trust</li>
 <li>Tim Wright <br> Vodafone <br> timothy.wright@vodafone.com</li>
+<li>Peter Wu <br> Independent <br> peter@lekensteyn.nl</li>
 <li>Kazu Yamamoto <br> Internet Initiative Japan Inc. <br> kazu@iij.ad.jp</li>
 </ul>
 <h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
