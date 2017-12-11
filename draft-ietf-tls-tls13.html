@@ -403,7 +403,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-12-10" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-12-11" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -424,7 +424,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">December 10, 2017</td>
+<td class="right">December 11, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -439,7 +439,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: June 13, 2018</td>
+<td class="left">Expires: June 14, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -456,7 +456,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 13, 2018.</p>
+<p>This Internet-Draft will expire on June 14, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -3075,10 +3075,10 @@ TLS-Exporter(label, context_value, key_length) =
 <p></p>
 
 <ul>
-<li>TLS Cipher Suite Registry: values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC5226" class="xref">[RFC5226]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC5226" class="xref">[RFC5226]</a>.  <br><br> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites" class="xref">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.ietf-tls-iana-registry-updates" class="xref">[I-D.ietf-tls-iana-registry-updates]</a> has been applied.]]</li>
-<li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>.</li>
-<li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
-<li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC5226" class="xref">[RFC5226]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request_RESERVED&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, &#8220;key_update&#8221;, and &#8220;message_hash&#8221; values.</li>
+<li>TLS Cipher Suite Registry: values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC8126" class="xref">[RFC8126]</a>.  Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC8126" class="xref">[RFC8126]</a>.  <br><br> IANA [SHALL add/has added] the cipher suites listed in <a href="#cipher-suites" class="xref">Appendix B.4</a> to the registry. The &#8220;Value&#8221; and &#8220;Description&#8221; columns are taken from the table.  The &#8220;DTLS-OK&#8221; and &#8220;Recommended&#8221; columns are both marked as &#8220;Yes&#8221; for each new cipher suite. [[This assumes <a href="#I-D.ietf-tls-iana-registry-updates" class="xref">[I-D.ietf-tls-iana-registry-updates]</a> has been applied.]]</li>
+<li>TLS ContentType Registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>.</li>
+<li>TLS Alert Registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>. IANA [SHALL update/has updated] this registry to include values for &#8220;missing_extension&#8221; and &#8220;certificate_required&#8221;.</li>
+<li>TLS HandshakeType Registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>. IANA [SHALL update/has updated] this registry to rename item 4 from &#8220;NewSessionTicket&#8221; to &#8220;new_session_ticket&#8221; and to add the &#8220;hello_retry_request_RESERVED&#8221;, &#8220;encrypted_extensions&#8221;, &#8220;end_of_early_data&#8221;, &#8220;key_update&#8221;, and &#8220;message_hash&#8221; values.</li>
 </ul>
 <p id="rfc.section.11.p.3">This document also uses the TLS ExtensionType Registry originally created in <a href="#RFC4366" class="xref">[RFC4366]</a>. IANA has updated it to reference this document. The registry and its allocation policy is listed below:</p>
 <p></p>
@@ -3090,7 +3090,7 @@ TLS-Exporter(label, context_value, key_length) =
 <p id="rfc.section.11.p.5">In addition, this document defines a new registry to be maintained by IANA:</p>
 <p></p>
 
-<ul><li>TLS SignatureScheme Registry: Values with the first byte in the range 0-253 (decimal) are assigned via Specification Required <a href="#RFC5226" class="xref">[RFC5226]</a>.  Values with the first byte 254 or 255 (decimal) are reserved for Private Use <a href="#RFC5226" class="xref">[RFC5226]</a>. Values with the first byte in the range 0-6 or with the second byte in the range 0-3 that are not currently allocated are reserved for backwards compatibility.  This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms" class="xref">Section 4.2.3</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li></ul>
+<ul><li>TLS SignatureScheme Registry: Values with the first byte in the range 0-253 (decimal) are assigned via Specification Required <a href="#RFC8126" class="xref">[RFC8126]</a>.  Values with the first byte 254 or 255 (decimal) are reserved for Private Use <a href="#RFC8126" class="xref">[RFC8126]</a>. Values with the first byte in the range 0-6 or with the second byte in the range 0-3 that are not currently allocated are reserved for backwards compatibility.  This registry SHALL have a &#8220;Recommended&#8221; column.  The registry [shall be/ has been] initially populated with the values described in <a href="#signature-algorithms" class="xref">Section 4.2.3</a>. The following values SHALL be marked as &#8220;Recommended&#8221;: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384, rsa_pss_sha256, rsa_pss_sha384, rsa_pss_sha512, ed25519.</li></ul>
 <h1 id="rfc.references">
 <a href="#rfc.references">12.</a> References</h1>
 <h2 id="rfc.references.1">
@@ -3115,11 +3115,6 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
 <a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
-</tr>
-<tr>
-<td class="reference"><b id="RFC5226">[RFC5226]</b></td>
-<td class="top">
-<a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="https://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", RFC 5226, DOI 10.17487/RFC5226, May 2008.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5280">[RFC5280]</b></td>
@@ -3200,6 +3195,11 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="RFC8032">[RFC8032]</b></td>
 <td class="top">
 <a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="https://tools.ietf.org/html/rfc8032">Edwards-Curve Digital Signature Algorithm (EdDSA)</a>", RFC 8032, DOI 10.17487/RFC8032, January 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8126">[RFC8126]</b></td>
+<td class="top">
+<a>Cotton, M.</a>, <a>Leiba, B.</a> and <a>T. Narten</a>, "<a href="https://tools.ietf.org/html/rfc8126">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 8126, DOI 10.17487/RFC8126, June 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="SHS">[SHS]</b></td>
