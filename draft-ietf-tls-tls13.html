@@ -1752,7 +1752,7 @@ Subsequent Handshake:
            case client_hello:
                 ProtocolVersion versions&lt;2..254&gt;;
 
-           case server_hello:
+           case server_hello: /* and HelloRetryRequest */
                 ProtocolVersion selected_version;
        };
    } SupportedVersions;
@@ -1765,7 +1765,7 @@ Subsequent Handshake:
 <a href="#rfc.section.4.2.1.1">4.2.1.1.</a> <a href="#draft-version-indicator" id="draft-version-indicator">Draft Version Indicator</a>
 </h4>
 <p id="rfc.section.4.2.1.1.p.1">RFC EDITOR: PLEASE REMOVE THIS SECTION</p>
-<p id="rfc.section.4.2.1.1.p.2">While the eventual version indicator for the RFC version of TLS 1.3 will be 0x0304, implementations of draft versions of this specification SHOULD instead advertise 0x7f00 | draft_version in ServerHello.version, and HelloRetryRequest.server_version.  For instance, draft-17 would be encoded as the 0x7f11.  This allows pre-RFC implementations to safely negotiate with each other, even if they would otherwise be incompatible.</p>
+<p id="rfc.section.4.2.1.1.p.2">While the eventual version indicator for the RFC version of TLS 1.3 will be 0x0304, implementations of draft versions of this specification SHOULD instead advertise 0x7f00 | draft_version in the &#8220;supported_versions&#8221; extension.  For instance, draft-17 would be encoded as the 0x7f11.  This allows pre-RFC implementations to safely negotiate with each other, even if they would otherwise be incompatible.</p>
 <h3 id="rfc.section.4.2.2">
 <a href="#rfc.section.4.2.2">4.2.2.</a> <a href="#cookie" id="cookie">Cookie</a>
 </h3>
@@ -3877,7 +3877,7 @@ here                  +--------+--------+
            case client_hello:
                 ProtocolVersion versions&lt;2..254&gt;;
 
-           case server_hello:
+           case server_hello: /* and HelloRetryRequest */
                 ProtocolVersion selected_version;
        };
    } SupportedVersions;
