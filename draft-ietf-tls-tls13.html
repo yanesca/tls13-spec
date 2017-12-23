@@ -403,7 +403,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-12-22" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-12-23" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -424,7 +424,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">December 22, 2017</td>
+<td class="right">December 23, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -439,7 +439,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: June 25, 2018</td>
+<td class="left">Expires: June 26, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -456,7 +456,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 25, 2018.</p>
+<p>This Internet-Draft will expire on June 26, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -2465,7 +2465,7 @@ finished_key =
 
 <ul>
 <li>Opening multiple parallel HTTP connections.</li>
-<li>Performing connection racing across interfaces and address families via, e.g., Happy Eyeballs <a href="#RFC6555" class="xref">[RFC6555]</a> or related techniques.</li>
+<li>Performing connection racing across interfaces and address families via, e.g., Happy Eyeballs <a href="#RFC8305" class="xref">[RFC8305]</a> or related techniques.</li>
 </ul>
 <p id="rfc.section.4.6.1.p.4">Any ticket MUST only be resumed with a cipher suite that has the same KDF hash algorithm as that used to establish the original connection.</p>
 <p id="rfc.section.4.6.1.p.5">Clients MUST only resume if the new SNI value is valid for the server certificate presented in the original session, and SHOULD only resume if the SNI value matches the one used in the original session.  The latter is a performance optimization: normally, there is no reason to expect that different servers covered by a single certificate would be able to accept each other&#8217;s tickets, hence attempting resumption in that case would waste a single-use ticket.  If such an indication is provided (externally or by any other means), clients MAY resume with a different SNI value.</p>
@@ -3466,11 +3466,6 @@ TLS-Exporter(label, context_value, key_length) =
 <a>Seggelmann, R.</a>, <a>Tuexen, M.</a> and <a>M. Williams</a>, "<a href="https://tools.ietf.org/html/rfc6520">Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS) Heartbeat Extension</a>", RFC 6520, DOI 10.17487/RFC6520, February 2012.</td>
 </tr>
 <tr>
-<td class="reference"><b id="RFC6555">[RFC6555]</b></td>
-<td class="top">
-<a>Wing, D.</a> and <a>A. Yourtchenko</a>, "<a href="https://tools.ietf.org/html/rfc6555">Happy Eyeballs: Success with Dual-Stack Hosts</a>", RFC 6555, DOI 10.17487/RFC6555, April 2012.</td>
-</tr>
-<tr>
 <td class="reference"><b id="RFC7230">[RFC7230]</b></td>
 <td class="top">
 <a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="https://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
@@ -3504,6 +3499,11 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="RFC7924">[RFC7924]</b></td>
 <td class="top">
 <a>Santesson, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/rfc7924">Transport Layer Security (TLS) Cached Information Extension</a>", RFC 7924, DOI 10.17487/RFC7924, July 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8305">[RFC8305]</b></td>
+<td class="top">
+<a>Schinazi, D.</a> and <a>T. Pauly</a>, "<a href="https://tools.ietf.org/html/rfc8305">Happy Eyeballs Version 2: Better Connectivity Using Concurrency</a>", RFC 8305, DOI 10.17487/RFC8305, December 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RSA">[RSA]</b></td>
@@ -4182,7 +4182,7 @@ here                  +--------+--------+
 <a href="#rfc.appendix.D">Appendix D.</a> <a href="#backward-compatibility" id="backward-compatibility">Backward Compatibility</a>
 </h1>
 <p id="rfc.section.D.p.1">The TLS protocol provides a built-in mechanism for version negotiation between endpoints potentially supporting different versions of TLS.</p>
-<p id="rfc.section.D.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and the client supports the highest protocol version available in the server.</p>
+<p id="rfc.section.D.p.2">TLS 1.x and SSL 3.0 use compatible ClientHello messages. Servers can also handle clients trying to use future versions of TLS as long as the ClientHello format remains compatible and and there is at least one protocol version supported by both the client and the server.</p>
 <p id="rfc.section.D.p.3">Prior versions of TLS used the record layer version number for various purposes. (TLSPlaintext.legacy_record_version and TLSCiphertext.legacy_record_version) As of TLS 1.3, this field is deprecated. The value of TLSPlaintext.legacy_record_version MUST be ignored by all implementations.  The value of TLSCiphertext.legacy_record_version MAY be ignored, or MAY be validated to match the fixed constant value.  Version negotiation is performed using only the handshake versions (ClientHello.legacy_version, ClientHello &#8220;supported_versions&#8221; extension, and ServerHello.version).  In order to maximize interoperability with older endpoints, implementations that negotiate the use of TLS 1.0-1.2 SHOULD set the record layer version number to the negotiated version for the ServerHello and all records thereafter.</p>
 <p id="rfc.section.D.p.4">For maximum compatibility with previously non-standard behavior and misconfigured deployments, all implementations SHOULD support validation of certification paths based on the expectations in this document, even when handling prior TLS versions&#8217; handshakes. (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>)</p>
 <p id="rfc.section.D.p.5">TLS 1.2 and prior supported an &#8220;Extended Master Secret&#8221; <a href="#RFC7627" class="xref">[RFC7627]</a> extension which digested large parts of the handshake transcript into the master secret.  Because TLS 1.3 always hashes in the transcript up to the server CertificateVerify, implementations which support both TLS 1.3 and earlier versions SHOULD indicate the use of the Extended Master Secret extension in their APIs whenever TLS 1.3 is used.</p>
