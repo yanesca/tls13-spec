@@ -4,11 +4,11 @@
 
 Network Working Group                                        E. Rescorla
 Internet-Draft                                                RTFM, Inc.
-Obsoletes: 5077, 5246 (if approved)                    December 23, 2017
+Obsoletes: 5077, 5246 (if approved)                    December 26, 2017
 Updates: 4492, 5705, 6066, 6961 (if
          approved)
 Intended status: Standards Track
-Expires: June 26, 2018
+Expires: June 29, 2018
 
 
         The Transport Layer Security (TLS) Protocol Version 1.3
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 26, 2018.
+   This Internet-Draft will expire on June 29, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 1]
+Rescorla                  Expires June 29, 2018                 [Page 1]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 2]
+Rescorla                  Expires June 29, 2018                 [Page 2]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -156,76 +156,77 @@ Internet-Draft                     TLS                     December 2017
    9.  Compliance Requirements . . . . . . . . . . . . . . . . . . . 101
      9.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . . 101
      9.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . . 101
-   10. Security Considerations . . . . . . . . . . . . . . . . . . . 102
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . . 103
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . . 104
-     12.1.  Normative References . . . . . . . . . . . . . . . . . . 104
-     12.2.  Informative References . . . . . . . . . . . . . . . . . 107
-   Appendix A.  State Machine  . . . . . . . . . . . . . . . . . . . 114
+     9.3.  Protocol Invariants . . . . . . . . . . . . . . . . . . . 102
+   10. Security Considerations . . . . . . . . . . . . . . . . . . . 104
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . . 104
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . . 105
+     12.1.  Normative References . . . . . . . . . . . . . . . . . . 105
+     12.2.  Informative References . . . . . . . . . . . . . . . . . 108
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 3]
+Rescorla                  Expires June 29, 2018                 [Page 3]
 
 Internet-Draft                     TLS                     December 2017
 
 
-     A.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . . 114
-     A.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . . 115
-   Appendix B.  Protocol Data Structures and Constant Values . . . . 115
-     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 116
-     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . . 116
-     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 118
-       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 118
-       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 123
-       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 124
-       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 125
-       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 125
-     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 126
-   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 127
-     C.1.  Random Number Generation and Seeding  . . . . . . . . . . 127
-     C.2.  Certificates and Authentication . . . . . . . . . . . . . 128
-     C.3.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 128
-     C.4.  Client Tracking Prevention  . . . . . . . . . . . . . . . 129
-     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 130
-   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 130
-     D.1.  Negotiating with an older server  . . . . . . . . . . . . 131
-     D.2.  Negotiating with an older client  . . . . . . . . . . . . 132
-     D.3.  0-RTT backwards compatibility . . . . . . . . . . . . . . 132
-     D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 132
-     D.5.  Backwards Compatibility Security Restrictions . . . . . . 133
-   Appendix E.  Overview of Security Properties  . . . . . . . . . . 134
-     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 134
-       E.1.1.  Key Derivation and HKDF . . . . . . . . . . . . . . . 137
-       E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 138
-       E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 138
-       E.1.4.  Exporter Independence . . . . . . . . . . . . . . . . 138
-       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 139
-       E.1.6.  External References . . . . . . . . . . . . . . . . . 139
-     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 139
-       E.2.1.  External References . . . . . . . . . . . . . . . . . 140
-     E.3.  Traffic Analysis  . . . . . . . . . . . . . . . . . . . . 140
-     E.4.  Side Channel Attacks  . . . . . . . . . . . . . . . . . . 141
-     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 142
-       E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 143
-   Appendix F.  Working Group Information  . . . . . . . . . . . . . 143
-   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 144
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 150
+   Appendix A.  State Machine  . . . . . . . . . . . . . . . . . . . 115
+     A.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . . 115
+     A.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . . 116
+   Appendix B.  Protocol Data Structures and Constant Values . . . . 116
+     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 117
+     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . . 117
+     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 119
+       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 119
+       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 124
+       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 125
+       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 126
+       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 126
+     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 127
+   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 128
+     C.1.  Random Number Generation and Seeding  . . . . . . . . . . 128
+     C.2.  Certificates and Authentication . . . . . . . . . . . . . 129
+     C.3.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 129
+     C.4.  Client Tracking Prevention  . . . . . . . . . . . . . . . 130
+     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 131
+   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 131
+     D.1.  Negotiating with an older server  . . . . . . . . . . . . 132
+     D.2.  Negotiating with an older client  . . . . . . . . . . . . 133
+     D.3.  0-RTT backwards compatibility . . . . . . . . . . . . . . 133
+     D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 133
+     D.5.  Backwards Compatibility Security Restrictions . . . . . . 134
+   Appendix E.  Overview of Security Properties  . . . . . . . . . . 135
+     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 135
+       E.1.1.  Key Derivation and HKDF . . . . . . . . . . . . . . . 138
+       E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 139
+       E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 139
+       E.1.4.  Exporter Independence . . . . . . . . . . . . . . . . 139
+       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 140
+       E.1.6.  External References . . . . . . . . . . . . . . . . . 140
+     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 140
+       E.2.1.  External References . . . . . . . . . . . . . . . . . 141
+     E.3.  Traffic Analysis  . . . . . . . . . . . . . . . . . . . . 141
+     E.4.  Side Channel Attacks  . . . . . . . . . . . . . . . . . . 142
+     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 143
+       E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 144
+   Appendix F.  Working Group Information  . . . . . . . . . . . . . 144
+   Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 145
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 151
 
 1.  Introduction
 
    RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH The source for this
    draft is maintained in GitHub.  Suggested changes should be submitted
    as pull requests at https://github.com/tlswg/tls13-spec.
-   Instructions are on that page as well.  Editorial changes can be
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 4]
+Rescorla                  Expires June 29, 2018                 [Page 4]
 
 Internet-Draft                     TLS                     December 2017
 
 
+   Instructions are on that page as well.  Editorial changes can be
    managed in GitHub, but any substantive change should be discussed on
    the TLS mailing list.
 
@@ -272,15 +273,17 @@ Internet-Draft                     TLS                     December 2017
    layer on top of TLS transparently.  The TLS standard, however, does
    not specify how protocols add security with TLS; how to initiate TLS
    handshaking and how to interpret the authentication certificates
-   exchanged are left to the judgment of the designers and implementors
-   of protocols that run on top of TLS.
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 5]
+
+Rescorla                  Expires June 29, 2018                 [Page 5]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   exchanged are left to the judgment of the designers and implementors
+   of protocols that run on top of TLS.
 
    This document defines TLS version 1.3.  While TLS 1.3 is not directly
    compatible with previous versions, all versions of TLS incorporate a
@@ -330,10 +333,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-
-
-
-Rescorla                  Expires June 26, 2018                 [Page 6]
+Rescorla                  Expires June 29, 2018                 [Page 6]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -389,7 +389,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 7]
+Rescorla                  Expires June 29, 2018                 [Page 7]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -445,7 +445,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 8]
+Rescorla                  Expires June 29, 2018                 [Page 8]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -501,7 +501,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                 [Page 9]
+Rescorla                  Expires June 29, 2018                 [Page 9]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -557,7 +557,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 10]
+Rescorla                  Expires June 29, 2018                [Page 10]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -613,7 +613,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 11]
+Rescorla                  Expires June 29, 2018                [Page 11]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -669,7 +669,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 12]
+Rescorla                  Expires June 29, 2018                [Page 12]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -725,7 +725,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 13]
+Rescorla                  Expires June 29, 2018                [Page 13]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -781,7 +781,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 14]
+Rescorla                  Expires June 29, 2018                [Page 14]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -837,7 +837,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 15]
+Rescorla                  Expires June 29, 2018                [Page 15]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -881,23 +881,25 @@ Internet-Draft                     TLS                     December 2017
    include changes to support these changes even when TLS 1.3 is not in
    use.  See the referenced sections for more details.
 
+   Additionally, this document clarifies some compliance requirements
+   for earlier versions of TLS; see Section 9.3.
+
 2.  Protocol Overview
 
    The cryptographic parameters used by the secure channel are produced
    by the TLS handshake protocol.  This sub-protocol of TLS is used by
    the client and server when first communicating with each other.  The
    handshake protocol allows peers to negotiate a protocol version,
-   select cryptographic algorithms, optionally authenticate each other,
-   and establish shared secret keying material.  Once the handshake is
 
 
 
-
-Rescorla                  Expires June 26, 2018                [Page 16]
+Rescorla                  Expires June 29, 2018                [Page 16]
 
 Internet-Draft                     TLS                     December 2017
 
 
+   select cryptographic algorithms, optionally authenticate each other,
+   and establish shared secret keying material.  Once the handshake is
    complete, the peers use the established keys to protect the
    application layer traffic.
 
@@ -947,9 +949,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-
-
-Rescorla                  Expires June 26, 2018                [Page 17]
+Rescorla                  Expires June 29, 2018                [Page 17]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1005,7 +1005,7 @@ Auth | {CertificateVerify*}
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 18]
+Rescorla                  Expires June 29, 2018                [Page 18]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 19]
+Rescorla                  Expires June 29, 2018                [Page 19]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 20]
+Rescorla                  Expires June 29, 2018                [Page 20]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 21]
+Rescorla                  Expires June 29, 2018                [Page 21]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 22]
+Rescorla                  Expires June 29, 2018                [Page 22]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 23]
+Rescorla                  Expires June 29, 2018                [Page 23]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 24]
+Rescorla                  Expires June 29, 2018                [Page 24]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 25]
+Rescorla                  Expires June 29, 2018                [Page 25]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 26]
+Rescorla                  Expires June 29, 2018                [Page 26]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 27]
+Rescorla                  Expires June 29, 2018                [Page 27]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1565,7 +1565,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 28]
+Rescorla                  Expires June 29, 2018                [Page 28]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 29]
+Rescorla                  Expires June 29, 2018                [Page 29]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 30]
+Rescorla                  Expires June 29, 2018                [Page 30]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 31]
+Rescorla                  Expires June 29, 2018                [Page 31]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1789,7 +1789,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 32]
+Rescorla                  Expires June 29, 2018                [Page 32]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1845,7 +1845,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 33]
+Rescorla                  Expires June 29, 2018                [Page 33]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1901,7 +1901,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 34]
+Rescorla                  Expires June 29, 2018                [Page 34]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -1957,7 +1957,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 35]
+Rescorla                  Expires June 29, 2018                [Page 35]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2013,7 +2013,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 36]
+Rescorla                  Expires June 29, 2018                [Page 36]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2069,7 +2069,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 37]
+Rescorla                  Expires June 29, 2018                [Page 37]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2125,7 +2125,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 38]
+Rescorla                  Expires June 29, 2018                [Page 38]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2181,7 +2181,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 39]
+Rescorla                  Expires June 29, 2018                [Page 39]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2237,7 +2237,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 40]
+Rescorla                  Expires June 29, 2018                [Page 40]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2293,7 +2293,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 41]
+Rescorla                  Expires June 29, 2018                [Page 41]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2349,7 +2349,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 42]
+Rescorla                  Expires June 29, 2018                [Page 42]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2405,7 +2405,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 43]
+Rescorla                  Expires June 29, 2018                [Page 43]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2461,7 +2461,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 44]
+Rescorla                  Expires June 29, 2018                [Page 44]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2517,7 +2517,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 45]
+Rescorla                  Expires June 29, 2018                [Page 45]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2573,7 +2573,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 46]
+Rescorla                  Expires June 29, 2018                [Page 46]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2629,7 +2629,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 47]
+Rescorla                  Expires June 29, 2018                [Page 47]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2685,7 +2685,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 48]
+Rescorla                  Expires June 29, 2018                [Page 48]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2741,7 +2741,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 49]
+Rescorla                  Expires June 29, 2018                [Page 49]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2797,7 +2797,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 50]
+Rescorla                  Expires June 29, 2018                [Page 50]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2853,7 +2853,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 51]
+Rescorla                  Expires June 29, 2018                [Page 51]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2909,7 +2909,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 52]
+Rescorla                  Expires June 29, 2018                [Page 52]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -2965,7 +2965,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 53]
+Rescorla                  Expires June 29, 2018                [Page 53]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3021,7 +3021,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 54]
+Rescorla                  Expires June 29, 2018                [Page 54]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3077,7 +3077,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 55]
+Rescorla                  Expires June 29, 2018                [Page 55]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3133,7 +3133,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 56]
+Rescorla                  Expires June 29, 2018                [Page 56]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3189,7 +3189,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 57]
+Rescorla                  Expires June 29, 2018                [Page 57]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3245,7 +3245,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 58]
+Rescorla                  Expires June 29, 2018                [Page 58]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3301,7 +3301,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 59]
+Rescorla                  Expires June 29, 2018                [Page 59]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3357,7 +3357,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 60]
+Rescorla                  Expires June 29, 2018                [Page 60]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3413,7 +3413,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 61]
+Rescorla                  Expires June 29, 2018                [Page 61]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3469,7 +3469,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 62]
+Rescorla                  Expires June 29, 2018                [Page 62]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3525,7 +3525,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 63]
+Rescorla                  Expires June 29, 2018                [Page 63]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3581,7 +3581,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 64]
+Rescorla                  Expires June 29, 2018                [Page 64]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3637,7 +3637,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 65]
+Rescorla                  Expires June 29, 2018                [Page 65]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3693,7 +3693,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 66]
+Rescorla                  Expires June 29, 2018                [Page 66]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3749,7 +3749,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 67]
+Rescorla                  Expires June 29, 2018                [Page 67]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3805,7 +3805,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 68]
+Rescorla                  Expires June 29, 2018                [Page 68]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3861,7 +3861,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 69]
+Rescorla                  Expires June 29, 2018                [Page 69]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3917,7 +3917,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 70]
+Rescorla                  Expires June 29, 2018                [Page 70]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -3973,7 +3973,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 71]
+Rescorla                  Expires June 29, 2018                [Page 71]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4029,7 +4029,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 72]
+Rescorla                  Expires June 29, 2018                [Page 72]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4085,7 +4085,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 73]
+Rescorla                  Expires June 29, 2018                [Page 73]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4141,7 +4141,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 74]
+Rescorla                  Expires June 29, 2018                [Page 74]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4197,7 +4197,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 75]
+Rescorla                  Expires June 29, 2018                [Page 75]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4253,7 +4253,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 76]
+Rescorla                  Expires June 29, 2018                [Page 76]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4309,7 +4309,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 77]
+Rescorla                  Expires June 29, 2018                [Page 77]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4365,7 +4365,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 78]
+Rescorla                  Expires June 29, 2018                [Page 78]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4421,7 +4421,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 79]
+Rescorla                  Expires June 29, 2018                [Page 79]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4477,7 +4477,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 80]
+Rescorla                  Expires June 29, 2018                [Page 80]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4533,7 +4533,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 81]
+Rescorla                  Expires June 29, 2018                [Page 81]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4589,7 +4589,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 82]
+Rescorla                  Expires June 29, 2018                [Page 82]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4645,7 +4645,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 83]
+Rescorla                  Expires June 29, 2018                [Page 83]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4701,7 +4701,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 84]
+Rescorla                  Expires June 29, 2018                [Page 84]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4757,7 +4757,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 85]
+Rescorla                  Expires June 29, 2018                [Page 85]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4813,7 +4813,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 86]
+Rescorla                  Expires June 29, 2018                [Page 86]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4869,7 +4869,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 87]
+Rescorla                  Expires June 29, 2018                [Page 87]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4925,7 +4925,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 88]
+Rescorla                  Expires June 29, 2018                [Page 88]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -4981,7 +4981,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 89]
+Rescorla                  Expires June 29, 2018                [Page 89]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5037,7 +5037,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 90]
+Rescorla                  Expires June 29, 2018                [Page 90]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5093,7 +5093,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 91]
+Rescorla                  Expires June 29, 2018                [Page 91]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5149,7 +5149,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 92]
+Rescorla                  Expires June 29, 2018                [Page 92]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5205,7 +5205,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 93]
+Rescorla                  Expires June 29, 2018                [Page 93]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5261,7 +5261,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 94]
+Rescorla                  Expires June 29, 2018                [Page 94]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5317,7 +5317,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 95]
+Rescorla                  Expires June 29, 2018                [Page 95]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5373,7 +5373,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 96]
+Rescorla                  Expires June 29, 2018                [Page 96]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5429,7 +5429,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 97]
+Rescorla                  Expires June 29, 2018                [Page 97]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5485,7 +5485,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 98]
+Rescorla                  Expires June 29, 2018                [Page 98]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5541,7 +5541,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018                [Page 99]
+Rescorla                  Expires June 29, 2018                [Page 99]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5597,7 +5597,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 100]
+Rescorla                  Expires June 29, 2018               [Page 100]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5653,7 +5653,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 101]
+Rescorla                  Expires June 29, 2018               [Page 101]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -5698,21 +5698,85 @@ Internet-Draft                     TLS                     December 2017
    lacking a "server_name" extension by terminating the connection with
    a "missing_extension" alert.
 
+9.3.  Protocol Invariants
+
+   This section describes invariants that TLS endpoints and
+   intermediaries MUST follow.  It also applies to earlier versions,
+   which assumed these rules but did not document them.
+
+   TLS is designed to be securely and compatibly extensible.  Newer
+   clients or servers, when communicating with newer peers, SHOULD
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 102]
+
+Internet-Draft                     TLS                     December 2017
+
+
+   negotiate the most preferred common parameters.  The TLS handshake
+   provides downgrade protection: Intermediaries passing traffic between
+   a newer client and newer server without terminating TLS should be
+   unable to influence the handshake (see Appendix E.1).  At the same
+   time, deployments update at different rates, so a newer client or
+   server MAY continue to support older parameters, which would allow it
+   to interoperate with older endpoints.
+
+   For this to work, implementations MUST correctly handle extensible
+   fields:
+
+   -  A client sending a ClientHello MUST support all parameters
+      advertised in it.  Otherwise, the server may fail to interoperate
+      by selecting one of those parameters.
+
+   -  A server receiving a ClientHello MUST correctly ignore all
+      unrecognized cipher suites, extensions, and other parameters.
+      Otherwise, it may fail to interoperate with newer clients.  In TLS
+      1.3, a client receiving a CertificateRequest or NewSessionTicket
+      MUST also ignore all unrecognized extensions.
+
+   -  An intermediary which terminates a TLS connection MUST behave as a
+      compliant TLS server (to the original client), including having a
+      certificate which the client is willing to accept, and as a
+      compliant TLS client (to the original server), including verifying
+      the original server's certificate.  In particular, it MUST
+      generate its own ClientHello containing only parameters it
+      understands, and it MUST generate a fresh ServerHello random
+      value, rather than forwarding the endpoint's value.
+
+      In this scenario, the intermediary is a pair of TLS endpoints for
+      purposes of protocol requirements and security analysis.
+
+   -  An intermediary which forwards ClientHello parameters it does not
+      understand MUST NOT process any messages beyond that ClientHello.
+      It MUST forward all subsequent traffic unmodified.  Otherwise, it
+      may fail to interoperate with newer clients and servers.
+
+      Forwarded ClientHellos may contain advertisements for features not
+      supported by the intermediary, so the response may include future
+      TLS additions the intermediary does not recognize.  These
+      additions MAY change any message beyond the ClientHello
+      arbitrarily.  In particular, the values sent in the ServerHello
+      might change, the ServerHello format might change, and the
+      TLSCiphertext format might change.
+
+   The design of TLS 1.3 was constrained by widely-deployed non-
+   compliant TLS intermediaries (see Appendix D.4), however it does not
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 103]
+
+Internet-Draft                     TLS                     December 2017
+
+
+   relax the invariants.  Those intermediaries continue to be non-
+   compliant.
+
 10.  Security Considerations
 
    Security issues are discussed throughout this memo, especially in
    Appendix C, Appendix D, and Appendix E.
-
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 102]
-
-Internet-Draft                     TLS                     December 2017
-
 
 11.  IANA Considerations
 
@@ -5754,6 +5818,14 @@ Internet-Draft                     TLS                     December 2017
    -  IANA [SHALL update/has updated] this registry to include the
       "key_share", "pre_shared_key", "psk_key_exchange_modes",
       "early_data", "cookie", "supported_versions",
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 104]
+
+Internet-Draft                     TLS                     December 2017
+
+
       "certificate_authorities", "oid_filters", and
       "post_handshake_auth" extensions with the values defined in this
       document and the Recommended value of "Yes".
@@ -5761,15 +5833,6 @@ Internet-Draft                     TLS                     December 2017
    -  IANA [SHALL update/has updated] this registry to include a "TLS
       1.3" column which lists the messages in which the extension may
       appear.  This column [SHALL be/has been] initially populated from
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 103]
-
-Internet-Draft                     TLS                     December 2017
-
-
       the table in Section 4.2 with any extension not listed there
       marked as "-" to indicate that it is not used by TLS 1.3.
 
@@ -5810,21 +5873,20 @@ Internet-Draft                     TLS                     December 2017
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 105]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 104]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [RFC5705]  Rescorla, E., "Keying Material Exporters for Transport
               Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
@@ -5865,6 +5927,17 @@ Internet-Draft                     TLS                     December 2017
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
               2013, <https://www.rfc-editor.org/info/rfc6979>.
 
+
+
+
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 106]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
               "Transport Layer Security (TLS) Application-Layer Protocol
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
@@ -5874,13 +5947,6 @@ Internet-Draft                     TLS                     December 2017
               Suite Value (SCSV) for Preventing Protocol Downgrade
               Attacks", RFC 7507, DOI 10.17487/RFC7507, April 2015,
               <https://www.rfc-editor.org/info/rfc7507>.
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 105]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [RFC7539]  Nir, Y. and A. Langley, "ChaCha20 and Poly1305 for IETF
               Protocols", RFC 7539, DOI 10.17487/RFC7539, May 2015,
@@ -5918,6 +5984,16 @@ Internet-Draft                     TLS                     December 2017
               Standards and Technology report,
               DOI 10.6028/nist.fips.180-4, July 2015.
 
+
+
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 107]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [X690]     ITU-T, "Information technology - ASN.1 encoding Rules:
               Specification of Basic Encoding Rules (BER), Canonical
               Encoding Rules (CER) and Distinguished Encoding Rules
@@ -5926,17 +6002,6 @@ Internet-Draft                     TLS                     December 2017
    [X962]     ANSI, "Public Key Cryptography For The Financial Services
               Industry: The Elliptic Curve Digital Signature Algorithm
               (ECDSA)", ANSI X9.62, 1998.
-
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 106]
-
-Internet-Draft                     TLS                     December 2017
-
 
 12.2.  Informative References
 
@@ -5978,6 +6043,13 @@ Internet-Draft                     TLS                     December 2017
               Compromise Security", IEEE Computer Security Foundations
               Symposium , 2015.
 
+
+
+Rescorla                  Expires June 29, 2018               [Page 108]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [CHECKOWAY]
               Checkoway, S., Shacham, H., Maskiewicz, J., Garman, C.,
               Fried, J., Cohney, S., Green, M., Heninger, N., Weinmann,
@@ -5985,14 +6057,6 @@ Internet-Draft                     TLS                     December 2017
               Dual EC Incident", Proceedings of the 2016 ACM SIGSAC
               Conference on Computer and Communications Security
               - CCS'16, DOI 10.1145/2976749.2978395, 2016.
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 107]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., van der Merwe, T.,
               and S. Scott, "Awkward Handshake: Possible mismatch of
@@ -6034,21 +6098,18 @@ Internet-Draft                     TLS                     December 2017
               Department of Commerce, "Digital Signature Standard,
               version 4", NIST FIPS PUB 186-4, 2013.
 
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 109]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [ECDSA]    American National Standards Institute, "Public Key
               Cryptography for the Financial Services Industry: The
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
-
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 108]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [FG17]     Fischlin, M. and F. Guenther, "Replay Attacks on Zero
               Round-Trip Time: The Case of the TLS 1.3 Handshake
@@ -6089,22 +6150,24 @@ Internet-Draft                     TLS                     December 2017
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
 
+
+
+
+
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 110]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [KEYAGREEMENT]
               Barker, E., Chen, L., Roginsky, A., and M. Smid,
               "Recommendation for Pair-Wise Key Establishment Schemes
               Using Discrete Logarithm Cryptography", National Institute
               of Standards and Technology report,
               DOI 10.6028/nist.sp.800-56ar2, May 2013.
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 109]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
               Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010 ,
@@ -6147,20 +6210,18 @@ Internet-Draft                     TLS                     December 2017
               DOI 10.17487/RFC4086, June 2005,
               <https://www.rfc-editor.org/info/rfc4086>.
 
+
+
+
+Rescorla                  Expires June 29, 2018               [Page 111]
+
+Internet-Draft                     TLS                     December 2017
+
+
    [RFC4346]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.1", RFC 4346,
               DOI 10.17487/RFC4346, April 2006,
               <https://www.rfc-editor.org/info/rfc4346>.
-
-
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 110]
-
-Internet-Draft                     TLS                     December 2017
-
 
    [RFC4366]  Blake-Wilson, S., Nystrom, M., Hopwood, D., Mikkelsen, J.,
               and T. Wright, "Transport Layer Security (TLS)
@@ -6206,17 +6267,16 @@ Internet-Draft                     TLS                     December 2017
               RFC 6091, DOI 10.17487/RFC6091, February 2011,
               <https://www.rfc-editor.org/info/rfc6091>.
 
-   [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
-              (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
-              2011, <https://www.rfc-editor.org/info/rfc6176>.
 
 
-
-
-Rescorla                  Expires June 26, 2018               [Page 111]
+Rescorla                  Expires June 29, 2018               [Page 112]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   [RFC6176]  Turner, S. and T. Polk, "Prohibiting Secure Sockets Layer
+              (SSL) Version 2.0", RFC 6176, DOI 10.17487/RFC6176, March
+              2011, <https://www.rfc-editor.org/info/rfc6176>.
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
@@ -6265,11 +6325,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-
-
-
-
-Rescorla                  Expires June 26, 2018               [Page 112]
+Rescorla                  Expires June 29, 2018               [Page 113]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6325,7 +6381,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 113]
+Rescorla                  Expires June 29, 2018               [Page 114]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6381,7 +6437,7 @@ A.1.  Client
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 114]
+Rescorla                  Expires June 29, 2018               [Page 115]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6437,7 +6493,7 @@ Appendix B.  Protocol Data Structures and Constant Values
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 115]
+Rescorla                  Expires June 29, 2018               [Page 116]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6493,7 +6549,7 @@ B.2.  Alert Messages
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 116]
+Rescorla                  Expires June 29, 2018               [Page 117]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6549,7 +6605,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 117]
+Rescorla                  Expires June 29, 2018               [Page 118]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6605,7 +6661,7 @@ B.3.1.  Key Exchange Messages
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 118]
+Rescorla                  Expires June 29, 2018               [Page 119]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6661,7 +6717,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 119]
+Rescorla                  Expires June 29, 2018               [Page 120]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6717,7 +6773,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 120]
+Rescorla                  Expires June 29, 2018               [Page 121]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6773,7 +6829,7 @@ B.3.1.3.  Signature Algorithm Extension
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 121]
+Rescorla                  Expires June 29, 2018               [Page 122]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6829,7 +6885,7 @@ B.3.1.4.  Supported Groups Extension
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 122]
+Rescorla                  Expires June 29, 2018               [Page 123]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6885,7 +6941,7 @@ B.3.2.  Server Parameters Messages
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 123]
+Rescorla                  Expires June 29, 2018               [Page 124]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6941,7 +6997,7 @@ B.3.3.  Authentication Messages
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 124]
+Rescorla                  Expires June 29, 2018               [Page 125]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -6997,7 +7053,7 @@ B.3.5.  Updating Keys
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 125]
+Rescorla                  Expires June 29, 2018               [Page 126]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7053,7 +7109,7 @@ B.4.  Cipher Suites
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 126]
+Rescorla                  Expires June 29, 2018               [Page 127]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7109,7 +7165,7 @@ C.1.  Random Number Generation and Seeding
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 127]
+Rescorla                  Expires June 29, 2018               [Page 128]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7165,7 +7221,7 @@ C.3.  Implementation Pitfalls
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 128]
+Rescorla                  Expires June 29, 2018               [Page 129]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7221,7 +7277,7 @@ C.4.  Client Tracking Prevention
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 129]
+Rescorla                  Expires June 29, 2018               [Page 130]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7277,7 +7333,7 @@ Appendix D.  Backward Compatibility
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 130]
+Rescorla                  Expires June 29, 2018               [Page 131]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7333,7 +7389,7 @@ D.1.  Negotiating with an older server
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 131]
+Rescorla                  Expires June 29, 2018               [Page 132]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7389,7 +7445,7 @@ D.4.  Middlebox Compatibility Mode
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 132]
+Rescorla                  Expires June 29, 2018               [Page 133]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7445,7 +7501,7 @@ D.5.  Backwards Compatibility Security Restrictions
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 133]
+Rescorla                  Expires June 29, 2018               [Page 134]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7501,7 +7557,7 @@ E.1.  Handshake
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 134]
+Rescorla                  Expires June 29, 2018               [Page 135]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7557,7 +7613,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 135]
+Rescorla                  Expires June 29, 2018               [Page 136]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7613,7 +7669,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 136]
+Rescorla                  Expires June 29, 2018               [Page 137]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7669,7 +7725,7 @@ E.1.1.  Key Derivation and HKDF
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 137]
+Rescorla                  Expires June 29, 2018               [Page 138]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7725,7 +7781,7 @@ E.1.4.  Exporter Independence
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 138]
+Rescorla                  Expires June 29, 2018               [Page 139]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7781,7 +7837,7 @@ E.2.  Record Layer
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 139]
+Rescorla                  Expires June 29, 2018               [Page 140]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7837,7 +7893,7 @@ E.3.  Traffic Analysis
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 140]
+Rescorla                  Expires June 29, 2018               [Page 141]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7893,7 +7949,7 @@ E.4.  Side Channel Attacks
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 141]
+Rescorla                  Expires June 29, 2018               [Page 142]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -7949,7 +8005,7 @@ E.5.  Replay Attacks on 0-RTT
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 142]
+Rescorla                  Expires June 29, 2018               [Page 143]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8005,7 +8061,7 @@ Appendix F.  Working Group Information
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 143]
+Rescorla                  Expires June 29, 2018               [Page 144]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8061,7 +8117,7 @@ Appendix G.  Contributors
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 144]
+Rescorla                  Expires June 29, 2018               [Page 145]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8117,7 +8173,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 145]
+Rescorla                  Expires June 29, 2018               [Page 146]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8173,7 +8229,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 146]
+Rescorla                  Expires June 29, 2018               [Page 147]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8229,7 +8285,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 147]
+Rescorla                  Expires June 29, 2018               [Page 148]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8285,7 +8341,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 148]
+Rescorla                  Expires June 29, 2018               [Page 149]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8341,7 +8397,7 @@ Internet-Draft                     TLS                     December 2017
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 149]
+Rescorla                  Expires June 29, 2018               [Page 150]
 
 Internet-Draft                     TLS                     December 2017
 
@@ -8397,4 +8453,4 @@ Author's Address
 
 
 
-Rescorla                  Expires June 26, 2018               [Page 150]
+Rescorla                  Expires June 29, 2018               [Page 151]

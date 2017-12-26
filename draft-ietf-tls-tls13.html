@@ -349,6 +349,7 @@ address {
 <link href="#rfc.section.9" rel="Chapter" title="9 Compliance Requirements">
 <link href="#rfc.section.9.1" rel="Chapter" title="9.1 Mandatory-to-Implement Cipher Suites">
 <link href="#rfc.section.9.2" rel="Chapter" title="9.2 Mandatory-to-Implement Extensions">
+<link href="#rfc.section.9.3" rel="Chapter" title="9.3 Protocol Invariants">
 <link href="#rfc.section.10" rel="Chapter" title="10 Security Considerations">
 <link href="#rfc.section.11" rel="Chapter" title="11 IANA Considerations">
 <link href="#rfc.references" rel="Chapter" title="12 References">
@@ -403,7 +404,7 @@ address {
 
   <meta name="dct.creator" content="Rescorla, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-tls-tls13-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-12-23" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-12-26" />
   <meta name="dct.abstract" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
   <meta name="description" content="This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery." />
 
@@ -424,7 +425,7 @@ address {
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246 (if approved)</td>
-<td class="right">December 23, 2017</td>
+<td class="right">December 26, 2017</td>
 </tr>
 <tr>
 <td class="left">Updates: 4492, 5705, 6066, 6961 (if</td>
@@ -439,7 +440,7 @@ address {
 <td class="right"></td>
 </tr>
 <tr>
-<td class="left">Expires: June 26, 2018</td>
+<td class="left">Expires: June 29, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -456,7 +457,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 26, 2018.</p>
+<p>This Internet-Draft will expire on June 29, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -612,6 +613,8 @@ address {
 <ul><li>9.1.   <a href="#rfc.section.9.1">Mandatory-to-Implement Cipher Suites</a>
 </li>
 <li>9.2.   <a href="#rfc.section.9.2">Mandatory-to-Implement Extensions</a>
+</li>
+<li>9.3.   <a href="#rfc.section.9.3">Protocol Invariants</a>
 </li>
 </ul><li>10.   <a href="#rfc.section.10">Security Considerations</a>
 </li>
@@ -1035,6 +1038,7 @@ address {
 <li>The &#8220;supported_versions&#8221; ClientHello extension can be used to negotiate the version of TLS to use, in preference to the legacy_version field of the ClientHello.</li>
 </ul>
 <p id="rfc.section.1.4.p.3">An implementation of TLS 1.3 that also supports TLS 1.2 might need to include changes to support these changes even when TLS 1.3 is not in use.  See the referenced sections for more details.</p>
+<p id="rfc.section.1.4.p.4">Additionally, this document clarifies some compliance requirements for earlier versions of TLS; see <a href="#protocol-invariants" class="xref">Section 9.3</a>.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#protocol-overview" id="protocol-overview">Protocol Overview</a>
 </h1>
@@ -3064,6 +3068,21 @@ TLS-Exporter(label, context_value, key_length) =
 </ul>
 <p id="rfc.section.9.2.p.7">Servers receiving a ClientHello which does not conform to these requirements MUST abort the handshake with a &#8220;missing_extension&#8221; alert.</p>
 <p id="rfc.section.9.2.p.8">Additionally, all implementations MUST support use of the &#8220;server_name&#8221; extension with applications capable of using it.  Servers MAY require clients to send a valid &#8220;server_name&#8221; extension.  Servers requiring this extension SHOULD respond to a ClientHello lacking a &#8220;server_name&#8221; extension by terminating the connection with a &#8220;missing_extension&#8221; alert.</p>
+<h2 id="rfc.section.9.3">
+<a href="#rfc.section.9.3">9.3.</a> <a href="#protocol-invariants" id="protocol-invariants">Protocol Invariants</a>
+</h2>
+<p id="rfc.section.9.3.p.1">This section describes invariants that TLS endpoints and intermediaries MUST follow. It also applies to earlier versions, which assumed these rules but did not document them.</p>
+<p id="rfc.section.9.3.p.2">TLS is designed to be securely and compatibly extensible. Newer clients or servers, when communicating with newer peers, SHOULD negotiate the most preferred common parameters. The TLS handshake provides downgrade protection: Intermediaries passing traffic between a newer client and newer server without terminating TLS should be unable to influence the handshake (see <a href="#security-handshake" class="xref">Appendix E.1</a>). At the same time, deployments update at different rates, so a newer client or server MAY continue to support older parameters, which would allow it to interoperate with older endpoints.</p>
+<p id="rfc.section.9.3.p.3">For this to work, implementations MUST correctly handle extensible fields:</p>
+<p></p>
+
+<ul>
+<li>A client sending a ClientHello MUST support all parameters advertised in it.  Otherwise, the server may fail to interoperate by selecting one of those parameters.</li>
+<li>A server receiving a ClientHello MUST correctly ignore all unrecognized cipher suites, extensions, and other parameters. Otherwise, it may fail to interoperate with newer clients. In TLS 1.3, a client receiving a CertificateRequest or NewSessionTicket MUST also ignore all unrecognized extensions.</li>
+<li>An intermediary which terminates a TLS connection MUST behave as a compliant TLS server (to the original client), including having a certificate which the client is willing to accept, and as a compliant TLS client (to the original server), including verifying the original server&#8217;s certificate.  In particular, it MUST generate its own ClientHello containing only parameters it understands, and it MUST generate a fresh ServerHello random value, rather than forwarding the endpoint&#8217;s value.  <br><br> In this scenario, the intermediary is a pair of TLS endpoints for purposes of protocol requirements and security analysis.</li>
+<li>An intermediary which forwards ClientHello parameters it does not understand MUST NOT process any messages beyond that ClientHello. It MUST forward all subsequent traffic unmodified. Otherwise, it may fail to interoperate with newer clients and servers.  <br><br> Forwarded ClientHellos may contain advertisements for features not supported by the intermediary, so the response may include future TLS additions the intermediary does not recognize. These additions MAY change any message beyond the ClientHello arbitrarily. In particular, the values sent in the ServerHello might change, the ServerHello format might change, and the TLSCiphertext format might change.</li>
+</ul>
+<p id="rfc.section.9.3.p.5">The design of TLS 1.3 was constrained by widely-deployed non-compliant TLS intermediaries (see <a href="#middlebox" class="xref">Appendix D.4</a>), however it does not relax the invariants.  Those intermediaries continue to be non-compliant.</p>
 <h1 id="rfc.section.10">
 <a href="#rfc.section.10">10.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
