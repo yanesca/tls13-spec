@@ -7467,11 +7467,13 @@ Internet-Draft                     TLS                     December 2017
 
    When put together, these changes make the TLS 1.3 handshake resemble
    TLS 1.2 session resumption, which improves the chance of successfully
-   connecting through middleboxes.  This "compatibility mode" is not
-   explicitly negotiated.  The client can opt to provide a session ID or
+   connecting through middleboxes.  This "compatibility mode" is
+   partially negotiated: The client can opt to provide a session ID or
    not and the server has to echo it.  Either side can send
    change_cipher_spec at any time during the handshake, as they must be
-   ignored by the peer.
+   ignored by the peer, but if the client sends a non-empty session ID,
+   the server MUST send the change_cipher_spec as described in this
+   section.
 
 D.5.  Backwards Compatibility Security Restrictions
 
@@ -7496,8 +7498,6 @@ D.5.  Backwards Compatibility Security Restrictions
 
    Implementations MUST NOT send an SSL version 2.0 compatible CLIENT-
    HELLO.  Implementations MUST NOT negotiate TLS 1.3 or later using an
-   SSL version 2.0 compatible CLIENT-HELLO.  Implementations are NOT
-
 
 
 
@@ -7506,6 +7506,7 @@ Rescorla                  Expires June 30, 2018               [Page 134]
 Internet-Draft                     TLS                     December 2017
 
 
+   SSL version 2.0 compatible CLIENT-HELLO.  Implementations are NOT
    RECOMMENDED to accept an SSL version 2.0 compatible CLIENT-HELLO in
    order to negotiate older versions of TLS.
 
@@ -7553,7 +7554,6 @@ E.1.  Handshake
    it has complete control over the network used to communicate between
    the parties [RFC3552].  Even under these conditions, the handshake
    should provide the properties listed below.  Note that these
-
 
 
 
