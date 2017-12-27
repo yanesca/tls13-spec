@@ -1623,6 +1623,7 @@ Subsequent Handshake:
        certificate_authorities(47),                /* [[this document]] */
        oid_filters(48),                            /* [[this document]] */
        post_handshake_auth(49),                    /* [[this document]] */
+       signature_algorithms_cert(50),              /* [[this document]] */
        (65535)
    } ExtensionType;
 </pre>
@@ -1739,6 +1740,10 @@ Subsequent Handshake:
 <td class="left">post_handshake_auth [[this document]]</td>
 <td class="right">CH</td>
 </tr>
+<tr>
+<td class="left">signature_algorithms_cert [[this document]]</td>
+<td class="right">CH, CR</td>
+</tr>
 </tbody>
 </table>
 <p id="rfc.section.4.2.p.8">When multiple extensions of different types are present, the extensions MAY appear in any order, with the exception of &#8220;pre_shared_key&#8221; <a href="#pre-shared-key-extension" class="xref">Section 4.2.11</a> which MUST be the last extension in the ClientHello.  There MUST NOT be more than one extension of the same type in a given extension block.</p>
@@ -1792,8 +1797,9 @@ Subsequent Handshake:
 <h3 id="rfc.section.4.2.3">
 <a href="#rfc.section.4.2.3">4.2.3.</a> <a href="#signature-algorithms" id="signature-algorithms">Signature Algorithms</a>
 </h3>
-<p id="rfc.section.4.2.3.p.1">The client uses the &#8220;signature_algorithms&#8221; extension to indicate to the server which signature algorithms may be used in digital signatures. Clients which desire the server to authenticate itself via a certificate MUST send this extension.  If a server is authenticating via a certificate and the client has not sent a &#8220;signature_algorithms&#8221; extension, then the server MUST abort the handshake with a &#8220;missing_extension&#8221; alert (see <a href="#mti-extensions" class="xref">Section 9.2</a>).</p>
-<p id="rfc.section.4.2.3.p.2">The &#8220;extension_data&#8221; field of this extension in a ClientHello contains a SignatureSchemeList value:</p>
+<p id="rfc.section.4.2.3.p.1">TLS 1.3 provides two extensions for indicating which signature algorithms may be used in digital signatures. The &#8220;signature_algorithms_cert&#8221; extension applies to signatures in certificates and the &#8220;signature_algorithms&#8221; extension, which originally appeared in TLS 1.2, applies to signatures in CertificateVerify messages. The keys found in certificates MUST also be of appropriate type for the signature algorithms they are used with. This is a particular issue for RSA keys and PSS signatures, as described below. If no &#8220;signature_algorithms_cert&#8221; extension is present, then the &#8220;signature_algorithms&#8221; extension also applies to signatures appearing in certificates. Clients which desire the server to authenticate itself via a certificate MUST send &#8220;signature_algorithms&#8221;. If a server is authenticating via a certificate and the client has not sent a &#8220;signature_algorithms&#8221; extension, then the server MUST abort the handshake with a &#8220;missing_extension&#8221; alert (see <a href="#mti-extensions" class="xref">Section 9.2</a>).</p>
+<p id="rfc.section.4.2.3.p.2">The &#8220;signature_algorithms_cert&#8221; extension was added to allow implementatations which supported different sets of algorithms for certificates and in TLS itself to clearly signal their capabilities. TLS 1.2 implementations SHOULD also process this extension.</p>
+<p id="rfc.section.4.2.3.p.3">The &#8220;extension_data&#8221; field of these extension contains a SignatureSchemeList value:</p>
 <pre>
    enum {
        /* RSASSA-PKCS1-v1_5 algorithms */
@@ -1806,14 +1812,18 @@ Subsequent Handshake:
        ecdsa_secp384r1_sha384(0x0503),
        ecdsa_secp521r1_sha512(0x0603),
 
-       /* RSASSA-PSS algorithms */
-       rsa_pss_sha256(0x0804),
-       rsa_pss_sha384(0x0805),
-       rsa_pss_sha512(0x0806),
-
+       /* RSASSA-PSS algorithms with public key OID rsaEncryption */
+       rsa_pss_rsae_sha256(0x0804),
+       rsa_pss_rsae_sha384(0x0805),
+       rsa_pss_rsae_sha512(0x0806),
        /* EdDSA algorithms */
        ed25519(0x0807),
        ed448(0x0808),
+
+       /* RSASSA-PSS algorithms with public key OID RSASSA-PSS */
+       rsa_pss_pss_sha256(0x0809),
+       rsa_pss_pss_sha384(0x0810),
+       rsa_pss_pss_sha512(0x0811),
 
        /* Legacy algorithms */
        rsa_pkcs1_sha1(0x0201),
@@ -1828,24 +1838,26 @@ Subsequent Handshake:
        SignatureScheme supported_signature_algorithms&lt;2..2^16-2&gt;;
    } SignatureSchemeList;
 </pre>
-<p id="rfc.section.4.2.3.p.3">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
-<p id="rfc.section.4.2.3.p.4">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
+<p id="rfc.section.4.2.3.p.4">Note: This enum is named &#8220;SignatureScheme&#8221; because there is already a &#8220;SignatureAlgorithm&#8221; type in TLS 1.2, which this replaces.  We use the term &#8220;signature algorithm&#8221; throughout the text.</p>
+<p id="rfc.section.4.2.3.p.5">Each SignatureScheme value lists a single signature algorithm that the client is willing to verify. The values are indicated in descending order of preference. Note that a signature algorithm takes as input an arbitrary-length message, rather than a digest. Algorithms which traditionally act on a digest should be defined in TLS to first hash the input with a specified hash algorithm and then proceed as usual.  The code point groups listed above have the following meanings:</p>
 <p></p>
 
 <dl>
 <dt>RSASSA-PKCS1-v1_5 algorithms</dt>
-<dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC8017" class="xref">[RFC8017]</a> with the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages.</dd>
+<dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC8017" class="xref">[RFC8017]</a> with the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages, although they MAY appear in &#8220;signature_algorithms&#8221; and &#8220;signature_algorithms_cert&#8221; for backward compatibility with TLS 1.2,</dd>
 <dt>ECDSA algorithms</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using ECDSA <a href="#ECDSA" class="xref">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962" class="xref">[X962]</a> and FIPS 186-4 <a href="#DSS" class="xref">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690" class="xref">[X690]</a> ECDSA-Sig-Value structure.</dd>
-<dt>RSASSA-PSS algorithms</dt>
-<dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017" class="xref">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. When used in signed TLS handshake messages, the length of the salt MUST be equal to the length of the digest output.  This codepoint is new in this document and is also defined for use with TLS 1.2.</dd>
+<dt>RSASSA-PSS RSAE algorithms</dt>
+<dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017" class="xref">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>.  The length of the salt MUST be equal to the length of the digest algorithm. If the public key is carried in an X.509 certificate, it MUST use the rsaEncryption OID <a href="#RFC5280" class="xref">[RFC5280]</a>.</dd>
 <dt>EdDSA algorithms</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#RFC8032" class="xref">[RFC8032]</a> or its successors. Note that these correspond to the &#8220;PureEdDSA&#8221; algorithms and not the &#8220;prehash&#8221; variants.</dd>
+<dt>RSASSA-PSS PSS algorithms</dt>
+<dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017" class="xref">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>.  The length of the salt MUST be equal to the length of the digest algorithm. If the public key is carried in an X.509 certificate, it MUST use the RSASSA-PSS OID  <a href="#RFC5756" class="xref">[RFC5756]</a>. When used in certificate signatures, the algorithm parameters MUST be DER encoded. If the corresponding public key&#8217;s parameters present, then the parameters in the signature MUST be identical to those in the public key.</dd>
 <dt>Legacy algorithms</dt>
-<dd style="margin-left: 8">Indicates algorithms which are being deprecated because they use algorithms with known weaknesses, specifically SHA-1 which is used in this context with either with RSA using RSASSA-PKCS1-v1_5 or ECDSA.  These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages. Endpoints SHOULD NOT negotiate these algorithms but are permitted to do so solely for backward compatibility. Clients offering these values MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>).</dd>
+<dd style="margin-left: 8">Indicates algorithms which are being deprecated because they use algorithms with known weaknesses, specifically SHA-1 which is used in this context with either with RSA using RSASSA-PKCS1-v1_5 or ECDSA.  These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages, even if they appear in the &#8220;signature_algorithms&#8221; list (this is necessary for backward compatibility with TLS 1.2).  Endpoints SHOULD NOT negotiate these algorithms but are permitted to do so solely for backward compatibility. Clients offering these values MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList). TLS 1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>).</dd>
 </dl>
-<p id="rfc.section.4.2.3.p.6">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280" class="xref">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
-<p id="rfc.section.4.2.3.p.7">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246" class="xref">[RFC5246]</a> when negotiating that version. In particular:</p>
+<p id="rfc.section.4.2.3.p.7">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated since they begin a certification path (see <a href="#RFC5280" class="xref">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the &#8220;signature_algorithms&#8221; extension.</p>
+<p id="rfc.section.4.2.3.p.8">Note that TLS 1.2 defines this extension differently. TLS 1.3 implementations willing to negotiate TLS 1.2 MUST behave in accordance with the requirements of <a href="#RFC5246" class="xref">[RFC5246]</a> when negotiating that version. In particular:</p>
 <p></p>
 
 <ul>
@@ -3037,7 +3049,7 @@ TLS-Exporter(label, context_value, key_length) =
 <a href="#rfc.section.9.1">9.1.</a> <a href="#mandatory-to-implement-cipher-suites" id="mandatory-to-implement-cipher-suites">Mandatory-to-Implement Cipher Suites</a>
 </h2>
 <p id="rfc.section.9.1.p.1">In the absence of an application profile standard specifying otherwise, a TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 <a href="#GCM" class="xref">[GCM]</a> cipher suite and SHOULD implement the TLS_AES_256_GCM_SHA384 <a href="#GCM" class="xref">[GCM]</a> and TLS_CHACHA20_POLY1305_SHA256 <a href="#RFC7539" class="xref">[RFC7539]</a> cipher suites.  (see <a href="#cipher-suites" class="xref">Appendix B.4</a>)</p>
-<p id="rfc.section.9.1.p.2">A TLS-compliant application MUST support digital signatures with rsa_pkcs1_sha256 (for certificates), rsa_pss_sha256 (for CertificateVerify and certificates), and ecdsa_secp256r1_sha256. A TLS-compliant application MUST support key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748" class="xref">[RFC7748]</a>.</p>
+<p id="rfc.section.9.1.p.2">A TLS-compliant application MUST support digital signatures with rsa_pkcs1<em>sha256 (for certificates), rsa_pss_rsae_sha256</em> (for CertificateVerify and certificates), and ecdsa_secp256r1_sha256. A TLS-compliant application MUST support key exchange with secp256r1 (NIST P-256) and SHOULD support key exchange with X25519 <a href="#RFC7748" class="xref">[RFC7748]</a>.</p>
 <h2 id="rfc.section.9.2">
 <a href="#rfc.section.9.2">9.2.</a> <a href="#mti-extensions" id="mti-extensions">Mandatory-to-Implement Extensions</a>
 </h2>
@@ -3106,7 +3118,7 @@ TLS-Exporter(label, context_value, key_length) =
 <p></p>
 
 <ul>
-<li>IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, &#8220;psk_key_exchange_modes&#8221;, &#8220;early_data&#8221;, &#8220;cookie&#8221;, &#8220;supported_versions&#8221;, &#8220;certificate_authorities&#8221;, &#8220;oid_filters&#8221;, and &#8220;post_handshake_auth&#8221; extensions with the values defined in this document and the Recommended value of &#8220;Yes&#8221;.</li>
+<li>IANA [SHALL update/has updated] this registry to include the &#8220;key_share&#8221;, &#8220;pre_shared_key&#8221;, &#8220;psk_key_exchange_modes&#8221;, &#8220;early_data&#8221;, &#8220;cookie&#8221;, &#8220;supported_versions&#8221;, &#8220;certificate_authorities&#8221;, &#8220;oid_filters&#8221;, &#8220;post_handshake_auth&#8221;, and &#8220;signature_algorithms_certs&#8221;, extensions with the values defined in this document and the Recommended value of &#8220;Yes&#8221;.</li>
 <li>IANA [SHALL update/has updated] this registry to include a &#8220;TLS 1.3&#8221; column which lists the messages in which the extension may appear. This column [SHALL be/has been] initially populated from the table in <a href="#extensions" class="xref">Section 4.2</a> with any extension not listed there marked as &#8220;-&#8220; to indicate that it is not used by TLS 1.3.</li>
 </ul>
 <p id="rfc.section.11.p.5">In addition, this document defines a new registry to be maintained by IANA:</p>
@@ -3147,6 +3159,11 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="RFC5705">[RFC5705]</b></td>
 <td class="top">
 <a>Rescorla, E.</a>, "<a href="https://tools.ietf.org/html/rfc5705">Keying Material Exporters for Transport Layer Security (TLS)</a>", RFC 5705, DOI 10.17487/RFC5705, March 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5756">[RFC5756]</b></td>
+<td class="top">
+<a>Turner, S.</a>, <a>Brown, D.</a>, <a>Yiu, K.</a>, <a>Housley, R.</a> and <a>T. Polk</a>, "<a href="https://tools.ietf.org/html/rfc5756">Updates for RSAES-OAEP and RSASSA-PSS Algorithm Parameters</a>", RFC 5756, DOI 10.17487/RFC5756, January 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5869">[RFC5869]</b></td>
@@ -3854,6 +3871,7 @@ here                  +--------+--------+
        certificate_authorities(47),                /* [[this document]] */
        oid_filters(48),                            /* [[this document]] */
        post_handshake_auth(49),                    /* [[this document]] */
+       signature_algorithms_cert(50),              /* [[this document]] */
        (65535)
    } ExtensionType;
 
@@ -3952,14 +3970,18 @@ here                  +--------+--------+
        ecdsa_secp384r1_sha384(0x0503),
        ecdsa_secp521r1_sha512(0x0603),
 
-       /* RSASSA-PSS algorithms */
-       rsa_pss_sha256(0x0804),
-       rsa_pss_sha384(0x0805),
-       rsa_pss_sha512(0x0806),
-
+       /* RSASSA-PSS algorithms with public key OID rsaEncryption */
+       rsa_pss_rsae_sha256(0x0804),
+       rsa_pss_rsae_sha384(0x0805),
+       rsa_pss_rsae_sha512(0x0806),
        /* EdDSA algorithms */
        ed25519(0x0807),
        ed448(0x0808),
+
+       /* RSASSA-PSS algorithms with public key OID RSASSA-PSS */
+       rsa_pss_pss_sha256(0x0809),
+       rsa_pss_pss_sha384(0x0810),
+       rsa_pss_pss_sha512(0x0811),
 
        /* Legacy algorithms */
        rsa_pkcs1_sha1(0x0201),
