@@ -3265,6 +3265,16 @@ TLS-Exporter(label, context_value, key_length) =
 <a>Bhargavan, K.</a>, <a>Delignat-Lavaud, A.</a>, <a>Fournet, C.</a>, <a>Kohlweiss, M.</a>, <a>Pan, J.</a>, <a>Protzenko, J.</a>, <a>Rastogi, A.</a>, <a>Swamy, N.</a>, <a>Zanella-Beguelin, S.</a> and <a>J. Zinzindohoue</a>, "<a href="https://eprint.iacr.org/2016/1178">Implementing and Proving the TLS 1.3 Record Layer</a>", Proceedings of IEEE Symposium on Security and Privacy (Oakland) 2017 , December 2016.</td>
 </tr>
 <tr>
+<td class="reference"><b id="Ben17a">[Ben17a]</b></td>
+<td class="top">
+<a>Benjamin, D.</a>, "<a href="https://datatracker.ietf.org/meeting/100/materials/slides-100-tls-sessa-tls13/">Presentation before the TLS WG at IETF 100</a>", 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="Ben17b">[Ben17b]</b></td>
+<td class="top">
+<a>Benjamin, D.</a>, "<a href="https://www.ietf.org/mail-archive/web/tls/current/msg25168.html">Additional TLS 1.3 results from Chrome</a>", 2017.</td>
+</tr>
+<tr>
 <td class="reference"><b id="BMMT15">[BMMT15]</b></td>
 <td class="top">
 <a>Badertscher, C.</a>, <a>Matt, C.</a>, <a>Maurer, U.</a> and <a>B. Tackmann</a>, "<a href="https://eprint.iacr.org/2015/394">Augmented Secure Channels and the Goal of the TLS 1.3 Record Layer</a>", ProvSec 2015 , September 2015.</td>
@@ -3408,6 +3418,16 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="REKEY">[REKEY]</b></td>
 <td class="top">
 <a>Abdalla, M.</a> and <a>M. Bellare</a>, "<a>Increasing the Lifetime of a Key: A Comparative Analysis of the Security of Re-keying Techniques</a>", ASIACRYPT2000 , October 2000.</td>
+</tr>
+<tr>
+<td class="reference"><b id="Res17a">[Res17a]</b></td>
+<td class="top">
+<a>Rescorla, E.</a>, "<a href="https://www.ietf.org/mail-archive/web/tls/current/msg25091.html">Preliminary data on Firefox TLS 1.3 Middlebox experiment</a>", 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="Res17b">[Res17b]</b></td>
+<td class="top">
+<a>Rescorla, E.</a>, "<a href="https://www.ietf.org/mail-archive/web/tls/current/msg25179.html">More compatibility measurement results</a>", 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC3552">[RFC3552]</b></td>
@@ -4226,7 +4246,7 @@ here                  +--------+--------+
 <h2 id="rfc.appendix.D.4">
 <a href="#rfc.appendix.D.4">D.4.</a> <a href="#middlebox" id="middlebox">Middlebox Compatibility Mode</a>
 </h2>
-<p id="rfc.section.D.4.p.1">Field measurements have found that a significant number of middleboxes misbehave when a TLS client/server pair negotiates TLS 1.3. Implementations can increase the chance of making connections through those middleboxes by making the TLS 1.3 handshake look more like a TLS 1.2 handshake:</p>
+<p id="rfc.section.D.4.p.1">Field measurements <a href="#Ben17a" class="xref">[Ben17a]</a>, <a href="#Ben17b" class="xref">[Ben17b]</a>, <a href="#Res17a" class="xref">[Res17a]</a>, <a href="#Res17b" class="xref">[Res17b]</a> have found that a significant number of middleboxes misbehave when a TLS client/server pair negotiates TLS 1.3. Implementations can increase the chance of making connections through those middleboxes by making the TLS 1.3 handshake look more like a TLS 1.2 handshake:</p>
 <p></p>
 
 <ul>
