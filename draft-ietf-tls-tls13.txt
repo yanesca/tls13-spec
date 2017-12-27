@@ -75,12 +75,12 @@ Internet-Draft                     TLS                     December 2017
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   4
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   5
      1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   6
      1.2.  Change Log  . . . . . . . . . . . . . . . . . . . . . . .   7
      1.3.  Major Differences from TLS 1.2  . . . . . . . . . . . . .  15
      1.4.  Updates Affecting TLS 1.2 . . . . . . . . . . . . . . . .  16
-   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  16
+   2.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .  17
      2.1.  Incorrect DHE Share . . . . . . . . . . . . . . . . . . .  20
      2.2.  Resumption and Pre-Shared Key (PSK) . . . . . . . . . . .  21
      2.3.  0-RTT Data  . . . . . . . . . . . . . . . . . . . . . . .  23
@@ -209,15 +209,15 @@ Internet-Draft                     TLS                     December 2017
      E.4.  Side Channel Attacks  . . . . . . . . . . . . . . . . . . 143
      E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 144
        E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 145
+     E.6.  Attacks on Static RSA . . . . . . . . . . . . . . . . . . 146
    Appendix F.  Working Group Information  . . . . . . . . . . . . . 146
    Appendix G.  Contributors . . . . . . . . . . . . . . . . . . . . 146
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 153
 
-1.  Introduction
 
-   RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH The source for this
-   draft is maintained in GitHub.  Suggested changes should be submitted
-   as pull requests at https://github.com/tlswg/tls13-spec.
+
+
+
 
 
 
@@ -226,6 +226,11 @@ Rescorla                  Expires June 30, 2018                 [Page 4]
 Internet-Draft                     TLS                     December 2017
 
 
+1.  Introduction
+
+   RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH The source for this
+   draft is maintained in GitHub.  Suggested changes should be submitted
+   as pull requests at https://github.com/tlswg/tls13-spec.
    Instructions are on that page as well.  Editorial changes can be
    managed in GitHub, but any substantive change should be discussed on
    the TLS mailing list.
@@ -269,11 +274,6 @@ Internet-Draft                     TLS                     December 2017
       a series of records, each of which is independently protected
       using the traffic keys.
 
-   TLS is application protocol independent; higher-level protocols can
-   layer on top of TLS transparently.  The TLS standard, however, does
-   not specify how protocols add security with TLS; how to initiate TLS
-   handshaking and how to interpret the authentication certificates
-
 
 
 
@@ -282,6 +282,10 @@ Rescorla                  Expires June 30, 2018                 [Page 5]
 Internet-Draft                     TLS                     December 2017
 
 
+   TLS is application protocol independent; higher-level protocols can
+   layer on top of TLS transparently.  The TLS standard, however, does
+   not specify how protocols add security with TLS; how to initiate TLS
+   handshaking and how to interpret the authentication certificates
    exchanged are left to the judgment of the designers and implementors
    of protocols that run on top of TLS.
 
@@ -327,16 +331,14 @@ Internet-Draft                     TLS                     December 2017
 
    sender: An endpoint that is transmitting records.
 
-   server: The endpoint which did not initiate the TLS connection.
-
-
-
 
 
 Rescorla                  Expires June 30, 2018                 [Page 6]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   server: The endpoint which did not initiate the TLS connection.
 
 1.2.  Change Log
 
@@ -384,8 +386,6 @@ Internet-Draft                     TLS                     December 2017
    -  Re-enable post-handshake client authentication even when you do
       PSK.  The previous prohibition was editorial error.
 
-   -  Remove cert_type and user_mapping, which don't work on TLS 1.3
-      anyway.
 
 
 
@@ -393,6 +393,9 @@ Rescorla                  Expires June 30, 2018                 [Page 7]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Remove cert_type and user_mapping, which don't work on TLS 1.3
+      anyway.
 
    -  Added the no_application_protocol alert from [RFC7301] to the list
       of extensions.
@@ -439,9 +442,6 @@ Internet-Draft                     TLS                     December 2017
 
    -  Fix signature_algorithms entry in extensions table.
 
-   -  Restate rule from RFC 6066 that you can't resume unless SNI is the
-      same.
-
 
 
 
@@ -449,6 +449,9 @@ Rescorla                  Expires June 30, 2018                 [Page 8]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Restate rule from RFC 6066 that you can't resume unless SNI is the
+      same.
 
    draft-17
 
@@ -493,11 +496,8 @@ Internet-Draft                     TLS                     December 2017
    -  Clarify the behavior of no exporter context and make it the same
       as an empty context.(*)
 
-   -  New KeyUpdate format that allows for requesting/not-requesting an
-      answer.  This also means changes to the key schedule to support
-      independent updates (*)
 
-   -  New certificate_required alert (*)
+
 
 
 
@@ -505,6 +505,12 @@ Rescorla                  Expires June 30, 2018                 [Page 9]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  New KeyUpdate format that allows for requesting/not-requesting an
+      answer.  This also means changes to the key schedule to support
+      independent updates (*)
+
+   -  New certificate_required alert (*)
 
    -  Forbid CertificateRequest with 0-RTT and PSK.
 
@@ -549,18 +555,17 @@ Internet-Draft                     TLS                     December 2017
    -  Move the downgrade sentinel to the end of ServerHello.Random to
       accommodate tlsdate (*).
 
-   -  Define ecdsa_sha1 (*).
-
-   -  Allow resumption even after fatal alerts.  This matches current
-      practice.
-
-
 
 
 Rescorla                  Expires June 30, 2018                [Page 10]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Define ecdsa_sha1 (*).
+
+   -  Allow resumption even after fatal alerts.  This matches current
+      practice.
 
    -  Remove non-closure warning alerts.  Require treating unknown
       alerts as fatal.
@@ -606,17 +611,15 @@ Internet-Draft                     TLS                     December 2017
 
    -  Provide a list of the PSK cipher suites.
 
-   -  Remove the ability for the ServerHello to have no extensions (this
-      aligns the syntax with the text).
-
-
-
 
 
 Rescorla                  Expires June 30, 2018                [Page 11]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Remove the ability for the ServerHello to have no extensions (this
+      aligns the syntax with the text).
 
    -  Clarify that the server can send application data after its first
       flight (0.5 RTT data)
@@ -664,15 +667,14 @@ Internet-Draft                     TLS                     December 2017
 
    draft-09
 
-   -  Change to RSA-PSS signatures for handshake messages.
-
-
 
 
 Rescorla                  Expires June 30, 2018                [Page 12]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Change to RSA-PSS signatures for handshake messages.
 
    -  Remove support for DSA.
 
@@ -721,14 +723,14 @@ Internet-Draft                     TLS                     December 2017
 
    -  Add initial 0-RTT support.
 
-   -  Remove resumption and replace with PSK + tickets.
-
 
 
 Rescorla                  Expires June 30, 2018                [Page 13]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  Remove resumption and replace with PSK + tickets.
 
    -  Move ClientKeyShare into an extension.
 
@@ -777,14 +779,14 @@ Internet-Draft                     TLS                     December 2017
 
    -  Add an explicit HelloRetryRequest to reject the client's.
 
-   draft-02
-
 
 
 Rescorla                  Expires June 30, 2018                [Page 14]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   draft-02
 
    -  Increment version number.
 
@@ -831,9 +833,7 @@ Internet-Draft                     TLS                     December 2017
       Expand Key Derivation Function (HKDF) is used as an underlying
       primitive.
 
-   -  The handshake state machine has been significantly restructured to
-      be more consistent and to remove superfluous messages such as
-      ChangeCipherSpec.
+
 
 
 
@@ -841,6 +841,10 @@ Rescorla                  Expires June 30, 2018                [Page 15]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   -  The handshake state machine has been significantly restructured to
+      be more consistent and to remove superfluous messages such as
+      ChangeCipherSpec.
 
    -  Elliptic curve algorithms are now in the base spec and includes
       new signature algorithms, such as ed25519 and ed448.  TLS 1.3
@@ -884,12 +888,8 @@ Internet-Draft                     TLS                     December 2017
    Additionally, this document clarifies some compliance requirements
    for earlier versions of TLS; see Section 9.3.
 
-2.  Protocol Overview
 
-   The cryptographic parameters used by the secure channel are produced
-   by the TLS handshake protocol.  This sub-protocol of TLS is used by
-   the client and server when first communicating with each other.  The
-   handshake protocol allows peers to negotiate a protocol version,
+
 
 
 
@@ -898,6 +898,12 @@ Rescorla                  Expires June 30, 2018                [Page 16]
 Internet-Draft                     TLS                     December 2017
 
 
+2.  Protocol Overview
+
+   The cryptographic parameters used by the secure channel are produced
+   by the TLS handshake protocol.  This sub-protocol of TLS is used by
+   the client and server when first communicating with each other.  The
+   handshake protocol allows peers to negotiate a protocol version,
    select cryptographic algorithms, optionally authenticate each other,
    and establish shared secret keying material.  Once the handshake is
    complete, the peers use the established keys to protect the
@@ -917,12 +923,6 @@ Internet-Draft                     TLS                     December 2017
    -  PSK with (EC)DHE
 
    Figure 1 below shows the basic full TLS handshake:
-
-
-
-
-
-
 
 
 
@@ -6171,6 +6171,12 @@ Internet-Draft                     TLS                     December 2017
               IEEE, "Standard Specifications for Public Key
               Cryptography", IEEE 1363 , 2000.
 
+   [JSS15]    Jager, T., Schwenk, J., and J. Somorovsky, "On the
+              Security of TLS 1.3 and QUIC Against Weaknesses in PKCS#1
+              v1.5 Encryption", Proceedings of ACM CCS 2015 , 2015,
+              <https://www.nds.rub.de/media/nds/
+              veroeffentlichungen/2015/08/21/Tls13QuicAttacks.pdf>.
+
    [KEYAGREEMENT]
               Barker, E., Chen, L., Roginsky, A., and M. Smid,
               "Recommendation for Pair-Wise Key Establishment Schemes
@@ -6205,18 +6211,16 @@ Internet-Draft                     TLS                     December 2017
               allowed during PSK", 2015, <https://www.ietf.org/mail-
               archive/web/tls/current/msg18215.html>.
 
-   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
-              Key: A Comparative Analysis of the Security of Re-keying
-              Techniques", ASIACRYPT2000 , October 2000.
-
-
-
 
 
 Rescorla                  Expires June 30, 2018               [Page 111]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
+              Key: A Comparative Analysis of the Security of Re-keying
+              Techniques", ASIACRYPT2000 , October 2000.
 
    [Res17a]   Rescorla, E., "Preliminary data on Firefox TLS 1.3
               Middlebox experiment", 2017, <https://www.ietf.org/mail-
@@ -6261,10 +6265,6 @@ Internet-Draft                     TLS                     December 2017
               Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
               January 2008, <https://www.rfc-editor.org/info/rfc5077>.
 
-   [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
-              Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
-              <https://www.rfc-editor.org/info/rfc5116>.
-
 
 
 
@@ -6273,6 +6273,10 @@ Rescorla                  Expires June 30, 2018               [Page 112]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
+              Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
+              <https://www.rfc-editor.org/info/rfc5116>.
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -6319,16 +6323,16 @@ Internet-Draft                     TLS                     December 2017
               Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
               June 2014, <https://www.rfc-editor.org/info/rfc7250>.
 
-   [RFC7465]  Popov, A., "Prohibiting RC4 Cipher Suites", RFC 7465,
-              DOI 10.17487/RFC7465, February 2015,
-              <https://www.rfc-editor.org/info/rfc7465>.
-
 
 
 Rescorla                  Expires June 30, 2018               [Page 113]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   [RFC7465]  Popov, A., "Prohibiting RC4 Cipher Suites", RFC 7465,
+              DOI 10.17487/RFC7465, February 2015,
+              <https://www.rfc-editor.org/info/rfc7465>.
 
    [RFC7568]  Barnes, R., Thomson, M., Pironti, A., and A. Langley,
               "Deprecating Secure Sockets Layer Version 3.0", RFC 7568,
@@ -6374,10 +6378,6 @@ Internet-Draft                     TLS                     December 2017
    [SSL3]     Freier, A., Karlton, P., and P. Kocher, "The SSL 3.0
               Protocol", November 1996.
 
-   [TIMING]   Boneh, D. and D. Brumley, "Remote timing attacks are
-              practical", USENIX Security Symposium, 2003.
-
-
 
 
 
@@ -6385,6 +6385,9 @@ Rescorla                  Expires June 30, 2018               [Page 114]
 
 Internet-Draft                     TLS                     December 2017
 
+
+   [TIMING]   Boneh, D. and D. Brumley, "Remote timing attacks are
+              practical", USENIX Security Symposium, 2003.
 
    [X501]     "Information Technology - Open Systems Interconnection -
               The Directory: Models", ITU-T X.501, 1993.
@@ -6396,9 +6399,6 @@ Internet-Draft                     TLS                     December 2017
    [2] https://www.ietf.org/mailman/listinfo/tls
 
    [3] https://www.ietf.org/mail-archive/web/tls/current/index.html
-
-
-
 
 
 
@@ -8122,6 +8122,21 @@ Rescorla                  Expires June 30, 2018               [Page 145]
 Internet-Draft                     TLS                     December 2017
 
 
+E.6.  Attacks on Static RSA
+
+   Although TLS 1.3 does not use RSA key transport and so is not
+   directly susceptible to Bleichenbacher-type attacks, if TLS 1.3
+   servers also support static RSA in the context of previous versions
+   of TLS, then it may be possible to impersonate the server for TLS 1.3
+   connections [JSS15].  TLS 1.3 implementations can prevent this attack
+   by disabling support for static RSA across all versions of TLS.  In
+   principle, implementations might also be able to separate
+   certificates with different keyUsage bits for static RSA decryption
+   and RSA signature, but this technique relies on clients refusing to
+   accept signatures using keys in certificates that do not have the
+   digitalSignature bit set, and many clients do not enforce this
+   restriction.
+
 Appendix F.  Working Group Information
 
    The discussion list for the IETF TLS working group is located at the
@@ -8155,6 +8170,14 @@ Appendix G.  Contributors
       davidben@google.com
 
    -  Benjamin Beurdouche
+
+
+
+Rescorla                  Expires June 30, 2018               [Page 146]
+
+Internet-Draft                     TLS                     December 2017
+
+
       INRIA & Microsoft Research
       benjamin.beurdouche@ens.fr
 
@@ -8169,14 +8192,6 @@ Appendix G.  Contributors
    -  Nelson Bolyard (co-author of [RFC4492])
       Sun Microsystems, Inc.
       nelson@bolyard.com
-
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 146]
-
-Internet-Draft                     TLS                     December 2017
-
 
    -  Ran Canetti
       IBM
@@ -8211,6 +8226,14 @@ Internet-Draft                     TLS                     December 2017
       tim@dierks.org
 
    -  Taher Elgamal
+
+
+
+Rescorla                  Expires June 30, 2018               [Page 147]
+
+Internet-Draft                     TLS                     December 2017
+
+
       Securify
       taher@securify.com
 
@@ -8226,14 +8249,6 @@ Internet-Draft                     TLS                     December 2017
       anil@busybuddha.org
 
    -  David M.  Garrett
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 147]
-
-Internet-Draft                     TLS                     December 2017
-
-
       dave@nulldereference.com
 
    -  Alessandro Ghedini
@@ -8268,6 +8283,13 @@ Internet-Draft                     TLS                     December 2017
 
    -  Alfred Hoenes
 
+
+
+Rescorla                  Expires June 30, 2018               [Page 148]
+
+Internet-Draft                     TLS                     December 2017
+
+
    -  David Hopwood
       Independent Consultant
       david.hopwood@blueyonder.co.uk
@@ -8282,13 +8304,6 @@ Internet-Draft                     TLS                     December 2017
    -  Subodh Iyengar
       Facebook
       subodh@fb.com
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 148]
-
-Internet-Draft                     TLS                     December 2017
-
 
    -  Benjamin Kaduk
       Akamai
@@ -8324,6 +8339,13 @@ Internet-Draft                     TLS                     December 2017
       University of North Carolina at Chapel Hill
       xiaoyin.l@outlook.com
 
+
+
+Rescorla                  Expires June 30, 2018               [Page 149]
+
+Internet-Draft                     TLS                     December 2017
+
+
    -  Ilari Liusvaara
       Independent
       ilariliusvaara@welho.com
@@ -8338,14 +8360,6 @@ Internet-Draft                     TLS                     December 2017
 
    -  Carl Mehner
       USAA
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 149]
-
-Internet-Draft                     TLS                     December 2017
-
-
       carl.mehner@usaa.com
 
    -  Jan Mikkelsen
@@ -8380,6 +8394,14 @@ Internet-Draft                     TLS                     December 2017
       INRIA
       alfredo.pironti@inria.fr
 
+
+
+
+Rescorla                  Expires June 30, 2018               [Page 150]
+
+Internet-Draft                     TLS                     December 2017
+
+
    -  Andrei Popov
       Microsoft
       andrei.popov@microsoft.com
@@ -8394,14 +8416,6 @@ Internet-Draft                     TLS                     December 2017
 
    -  Kyle Rose
       Akamai Technologies
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 150]
-
-Internet-Draft                     TLS                     December 2017
-
-
       krose@krose.org
 
    -  Jim Roskind
@@ -8436,6 +8450,14 @@ Internet-Draft                     TLS                     December 2017
 
    -  Brian Sniffen
       Akamai Technologies
+
+
+
+Rescorla                  Expires June 30, 2018               [Page 151]
+
+Internet-Draft                     TLS                     December 2017
+
+
       ietf@bts.evenmere.org
 
    -  Nick Sullivan
@@ -8449,14 +8471,6 @@ Internet-Draft                     TLS                     December 2017
    -  Tim Taubert
       Mozilla
       ttaubert@mozilla.com
-
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 151]
-
-Internet-Draft                     TLS                     December 2017
-
 
    -  Martin Thomson
       Mozilla
@@ -8492,6 +8506,14 @@ Internet-Draft                     TLS                     December 2017
       NCC Group
       david.wong@nccgroup.trust
 
+
+
+
+Rescorla                  Expires June 30, 2018               [Page 152]
+
+Internet-Draft                     TLS                     December 2017
+
+
    -  Tim Wright
       Vodafone
       timothy.wright@vodafone.com
@@ -8504,34 +8526,12 @@ Internet-Draft                     TLS                     December 2017
       Internet Initiative Japan Inc.
       kazu@iij.ad.jp
 
-
-
-
-
-
-Rescorla                  Expires June 30, 2018               [Page 152]
-
-Internet-Draft                     TLS                     December 2017
-
-
 Author's Address
 
    Eric Rescorla
    RTFM, Inc.
 
    EMail: ekr@rtfm.com
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
