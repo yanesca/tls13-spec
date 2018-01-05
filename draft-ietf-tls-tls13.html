@@ -760,7 +760,16 @@ address {
 </h2>
 <p id="rfc.section.1.2.p.1">RFC EDITOR PLEASE DELETE THIS SECTION.</p>
 <p id="rfc.section.1.2.p.2">(*) indicates changes to the wire protocol which may require implementations to update.</p>
-<p id="rfc.section.1.2.p.3">draft-22 - Implement changes for improved middlebox penetration (*)</p>
+<p id="rfc.section.1.2.p.3">draft-23 - Renumber key_share (*)</p>
+<p></p>
+
+<ul>
+<li>Add a new extension and new code points to allow negotiating PSS separately for certificates and CertificateVerify (*)</li>
+<li>Slightly restrict when CCS must be accepted to amke implementation easier.</li>
+<li>Document protocol invariants</li>
+<li>Add some text on the security of static RSA.</li>
+</ul>
+<p id="rfc.section.1.2.p.5">draft-22 - Implement changes for improved middlebox penetration (*)</p>
 <p></p>
 
 <ul>
@@ -770,7 +779,7 @@ address {
 <li>Allow an empty ticket_nonce (*)</li>
 <li>Remove requirement to immediately respond to close_notify with close_notify (allowing half-close)</li>
 </ul>
-<p id="rfc.section.1.2.p.5">draft-21</p>
+<p id="rfc.section.1.2.p.7">draft-21</p>
 <p></p>
 
 <ul>
@@ -779,7 +788,7 @@ address {
 <li>Update state machine to show rekeying events</li>
 <li>Add discussion of 0-RTT and replay. Recommend that implementations implement some anti-replay mechanism.</li>
 </ul>
-<p id="rfc.section.1.2.p.7">draft-20</p>
+<p id="rfc.section.1.2.p.9">draft-20</p>
 <p></p>
 
 <ul>
@@ -791,7 +800,7 @@ address {
 <li>Added the no_application_protocol alert from <a href="#RFC7301" class="xref">[RFC7301]</a> to the list of extensions.</li>
 <li>Added discussion of traffic analysis and side channel attacks.</li>
 </ul>
-<p id="rfc.section.1.2.p.9">draft-19</p>
+<p id="rfc.section.1.2.p.11">draft-19</p>
 <p></p>
 
 <ul>
@@ -808,7 +817,7 @@ address {
 <li>Require peer public key validation</li>
 <li>Add state machine diagram.</li>
 </ul>
-<p id="rfc.section.1.2.p.11">draft-18</p>
+<p id="rfc.section.1.2.p.13">draft-18</p>
 <p></p>
 
 <ul>
@@ -816,7 +825,7 @@ address {
 <li>Fix signature_algorithms entry in extensions table.</li>
 <li>Restate rule from RFC 6066 that you can&#8217;t resume unless SNI is the same.</li>
 </ul>
-<p id="rfc.section.1.2.p.13">draft-17</p>
+<p id="rfc.section.1.2.p.15">draft-17</p>
 <p></p>
 
 <ul>
@@ -833,7 +842,7 @@ address {
 <li>Explicitly allow predicting client Finished for NST</li>
 <li>Clarify conditions for allowing 0-RTT with PSK</li>
 </ul>
-<p id="rfc.section.1.2.p.15">draft-16</p>
+<p id="rfc.section.1.2.p.17">draft-16</p>
 <p></p>
 
 <ul>
@@ -846,7 +855,7 @@ address {
 <li>Forbid CertificateRequest with 0-RTT and PSK.</li>
 <li>Relax requirement to check SNI for 0-RTT.</li>
 </ul>
-<p id="rfc.section.1.2.p.17">draft-15</p>
+<p id="rfc.section.1.2.p.19">draft-15</p>
 <p></p>
 
 <ul>
@@ -861,7 +870,7 @@ address {
 <li>Remove old PRNG text.</li>
 <li>Explicitly require checking that handshake records not span key changes.</li>
 </ul>
-<p id="rfc.section.1.2.p.19">draft-14</p>
+<p id="rfc.section.1.2.p.21">draft-14</p>
 <p></p>
 
 <ul>
@@ -879,7 +888,7 @@ address {
 <li>Major editorial restructuring.</li>
 <li>Replace the Security Analysis section with a WIP draft.</li>
 </ul>
-<p id="rfc.section.1.2.p.21">draft-13</p>
+<p id="rfc.section.1.2.p.23">draft-13</p>
 <p></p>
 
 <ul>
@@ -895,7 +904,7 @@ address {
 <li>Remove the redundant length fields in KeyShareEntry.</li>
 <li>Define a cookie field for HRR.</li>
 </ul>
-<p id="rfc.section.1.2.p.23">draft-12</p>
+<p id="rfc.section.1.2.p.25">draft-12</p>
 <p></p>
 
 <ul>
@@ -908,7 +917,7 @@ address {
 <li>Define exporters.</li>
 <li>Editorial cleanup</li>
 </ul>
-<p id="rfc.section.1.2.p.25">draft-11</p>
+<p id="rfc.section.1.2.p.27">draft-11</p>
 <p></p>
 
 <ul>
@@ -921,14 +930,14 @@ address {
 <li>Remove early_handshake content type. Terminate 0-RTT data with an alert.</li>
 <li>Reset sequence number upon key change (as proposed by Fournet et al.)</li>
 </ul>
-<p id="rfc.section.1.2.p.27">draft-10</p>
+<p id="rfc.section.1.2.p.29">draft-10</p>
 <p></p>
 
 <ul>
 <li>Remove ClientCertificateTypes field from CertificateRequest and add extensions.</li>
 <li>Merge client and server key shares into a single extension.</li>
 </ul>
-<p id="rfc.section.1.2.p.29">draft-09</p>
+<p id="rfc.section.1.2.p.31">draft-09</p>
 <p></p>
 
 <ul>
@@ -942,7 +951,7 @@ address {
 <li>Deprecate SHA-1 with signatures.</li>
 <li>Add MTI algorithms.</li>
 </ul>
-<p id="rfc.section.1.2.p.31">draft-08</p>
+<p id="rfc.section.1.2.p.33">draft-08</p>
 <p></p>
 
 <ul>
@@ -955,7 +964,7 @@ address {
 <li>Change code point for server_configuration to avoid collision with server_hello_done.</li>
 <li>Relax certificate_list ordering requirement to match current practice.</li>
 </ul>
-<p id="rfc.section.1.2.p.33">draft-07</p>
+<p id="rfc.section.1.2.p.35">draft-07</p>
 <p></p>
 
 <ul>
@@ -965,7 +974,7 @@ address {
 <li>Move ClientKeyShare into an extension.</li>
 <li>Move to HKDF.</li>
 </ul>
-<p id="rfc.section.1.2.p.35">draft-06</p>
+<p id="rfc.section.1.2.p.37">draft-06</p>
 <p></p>
 
 <ul>
@@ -974,14 +983,14 @@ address {
 <li>Update format of signatures with context.</li>
 <li>Remove explicit IV.</li>
 </ul>
-<p id="rfc.section.1.2.p.37">draft-05</p>
+<p id="rfc.section.1.2.p.39">draft-05</p>
 <p></p>
 
 <ul>
 <li>Prohibit SSL negotiation for backwards compatibility.</li>
 <li>Fix which MS is used for exporters.</li>
 </ul>
-<p id="rfc.section.1.2.p.39">draft-04</p>
+<p id="rfc.section.1.2.p.41">draft-04</p>
 <p></p>
 
 <ul>
@@ -991,7 +1000,7 @@ address {
 <li>Remove renegotiation.</li>
 <li>Remove point format negotiation.</li>
 </ul>
-<p id="rfc.section.1.2.p.41">draft-03</p>
+<p id="rfc.section.1.2.p.43">draft-03</p>
 <p></p>
 
 <ul>
@@ -1001,7 +1010,7 @@ address {
 <li>Rename {Client,Server}KeyExchange to {Client,Server}KeyShare.</li>
 <li>Add an explicit HelloRetryRequest to reject the client&#8217;s.</li>
 </ul>
-<p id="rfc.section.1.2.p.43">draft-02</p>
+<p id="rfc.section.1.2.p.45">draft-02</p>
 <p></p>
 
 <ul>
