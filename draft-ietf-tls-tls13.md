@@ -5315,7 +5315,7 @@ For this to work, implementations MUST correctly handle extensible fields:
   two connections separately. Safely deploying a TLS terminator requires
   additional security considerations which are beyond the scope of this document.
 
-- An middlebox which forwards ClientHello parameters it does not understand MUST
+- A middlebox which forwards ClientHello parameters it does not understand MUST
   NOT process any messages beyond that ClientHello. It MUST forward all
   subsequent traffic unmodified. Otherwise, it may fail to interoperate with
   newer clients and servers.
